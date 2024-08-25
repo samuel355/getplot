@@ -1,0 +1,103 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-0.071551984041917, 5.72102968000268],
+          [-0.071239509780235, 5.7202981966333],
+          [-0.070943777812209, 5.71955836232282],
+          [-0.070670953005174, 5.71887721081962]
+        ]
+      },
+      "properties": {
+        "name": "NTHC Road",
+        "fill-opacity": 0,
+        "stroke-opacity": 1,
+        "stroke": "#ff0000"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-0.070739587532299, 5.71910601427278],
+          [-0.069433401183847, 5.71948208567868]
+        ]
+      },
+      "properties": {
+        "name": "NTHC Street 1",
+        "fill-opacity": 0,
+        "stroke-opacity": 1,
+        "stroke": "#ff0000"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-0.070925353657099, 5.71957679022631],
+          [-0.069761943788835, 5.71991234883079]
+        ]
+      },
+      "properties": {
+        "name": "NTHC Street 2",
+        "fill-opacity": 0,
+        "stroke-opacity": 1,
+        "stroke": "#ff0000"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-0.071026558700128, 5.71984847437916],
+          [-0.0699092821716, 5.72026451669373]
+        ]
+      },
+      "properties": {
+        "name": "NTHC Street 3",
+        "fill-opacity": 0,
+        "stroke-opacity": 1,
+        "stroke": "#ff0000"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-0.071221821410246, 5.72032633457952],
+          [-0.070095078603465, 5.72077692092282]
+        ]
+      },
+      "properties": {
+        "name": "NTHC Street 4",
+        "fill-opacity": 0,
+        "stroke-opacity": 1,
+        "stroke": "#ff0000"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-0.071418683045481, 5.72078534691026],
+          [-0.070668434463922, 5.7211674249302]
+        ]
+      },
+      "properties": {
+        "name": "NTHC Street 5",
+        "fill-opacity": 0,
+        "stroke-opacity": 1,
+        "stroke": "#ff0000"
+      }
+    }
+  ]
+}

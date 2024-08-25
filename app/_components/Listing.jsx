@@ -1,0 +1,160 @@
+import { Bath, BedDouble, CarFront, MapPin, Ruler, Search } from "lucide-react";
+import Image from "next/image";
+import React, { useState } from "react";
+import GoogleAddressSearch from "./GoogleAddressSearch";
+import { Button } from "@/components/ui/button";
+import FilterSesction from "./FilterSesction";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+const Listing = ({
+  listing,
+  handleSearchClick,
+  searchedAddress,
+  searchedCoordinates,
+  getSearchedResult,
+
+  setBathCount,
+  setBedCount,
+  setParkingCount,
+  setHomeType,
+
+  showSA,
+  setShowSA,
+}) => {
+  const [address, setAddress] = useState();
+  const router = useRouter();
+  return (
+    <div>
+      <div className="">
+        <div className="p-1 flex items-center gap-2 justify-between">
+          <GoogleAddressSearch
+            selectedAddress={(value) => {
+              setShowSA(false);
+              searchedAddress(value);
+              setAddress(value);
+            }}
+            setCoordinates={(value) => searchedCoordinates(value)}
+          />
+          <Button onClick={handleSearchClick} className="flex gap-2">
+            {" "}
+            <Search className="h-4 w-4" />{" "}
+            <span className="hidden lg:block md:block xl:block">Search</span>
+          </Button>
+        </div>
+
+        <div>
+          <FilterSesction
+            setBedCount={setBedCount}
+            setBathCount={setBathCount}
+            setParkingCount={setParkingCount}
+            setHomeType={setHomeType}
+          />
+        </div>
+      </div>
+
+      <div className="">
+        <div className="text-center text-gray-500 my-3">
+          {showSA && address && (
+            <div>
+              <h2 className="text-lg">
+                Found{" "}
+                <span className="text-primary font-bold">
+                  {listing?.length}
+                </span>{" "}
+                Results in{" "}
+                <span className="font-bold text-primary">{address.label}</span>
+              </h2>
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 pb-11">
+          {listing?.length > 0
+            ? listing.map((item, index) => (
+                <div
+                  key={index}
+                  className="shadow-sm rounded p-2 hover:border hover:border-primary"
+                >
+                  <Link href={"/view-house-listing/" + item.id}>
+                    <Image
+                      className="object-cover h-[150px] rounded cursor-pointer"
+                      src={item.houseListingImages[0]?.url}
+                      width={800}
+                      height={150}
+                    />
+                  </Link>
+                  <div className="flex flex-col gap-2 mt-3">
+                    <h2 className="font-bold text-xl text-primary">
+                      GHS {item.price.toLocaleString()}
+                    </h2>
+                    <h2 className="flex gap-2 items-center text-sm text-gray-500">
+                      <MapPin className="h-4 w-4" /> {item.address}
+                    </h2>
+                  </div>
+                  <div className="bg-slate-100 rounded-md p-2 text-gray-400 mt-3">
+                    <div className="flex items-center justify-between text-sm mt-3 border-b pb-2">
+                      <p className="flex items-center gap-1">
+                        <BedDouble className="h-4 w-4" /> <span>Bedrooms</span>
+                      </p>
+                      <p className="">
+                        <span>{item?.bedroom}</span>
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm py-2 border-b">
+                      <p className="flex items-center gap-1">
+                        <Bath className="h-4 w-4" /> <span>Bathrooms</span>
+                      </p>
+                      <p className="">
+                        <span>{item?.bathroom}</span>
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm py-2 border-b">
+                      <p className="flex items-center gap-1">
+                        <Ruler className="h-4 w-4" /> <span>Area Size</span>
+                      </p>
+                      <p className="">
+                        <span>{item?.areaSize} sqft.</span>
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm py-2">
+                      <p className="flex items-center gap-1">
+                        <CarFront className="h-4 w-4" />{" "}
+                        <span>Parking Area</span>
+                      </p>
+                      <p className="">
+                        <span>{item?.parking} </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={() =>
+                      router.push("/view-house-listing/" + item.id)
+                    }
+                    className="w-full my-2 text-base cursor-pointer"
+                  >
+                    View Details
+                  </Button>
+                </div>
+              ))
+            : [1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
+                <div
+                  key={index}
+                  className="h-[230px] w-full bg-slate-200 animate-pulse rounded-lg"
+                ></div>
+              ))}
+
+          {getSearchedResult && <p>No Results found</p>}
+
+          {listing.length <= 0 && <p>No Listing found</p>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Listing;

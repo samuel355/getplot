@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Folder><name>roads</name>
+  <Placemark>
+	<name>NTHC Road</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <MultiGeometry><LineString><coordinates>-0.071551984041917,5.72102968000268 -0.071239509780235,5.7202981966333 -0.070943777812209,5.71955836232282 -0.070670953005174,5.71887721081962</coordinates></LineString></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<name>NTHC Street 1</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <MultiGeometry><LineString><coordinates>-0.070739587532299,5.71910601427278 -0.069433401183847,5.71948208567868</coordinates></LineString></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<name>NTHC Street 2</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <MultiGeometry><LineString><coordinates>-0.070925353657099,5.71957679022631 -0.069761943788835,5.71991234883079</coordinates></LineString></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<name>NTHC Street 3</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <MultiGeometry><LineString><coordinates>-0.071026558700128,5.71984847437916 -0.0699092821716,5.72026451669373</coordinates></LineString></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<name>NTHC Street 4</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <MultiGeometry><LineString><coordinates>-0.071221821410246,5.72032633457952 -0.070095078603465,5.72077692092282</coordinates></LineString></MultiGeometry>
+  </Placemark>
+  <Placemark>
+	<name>NTHC Street 5</name>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+      <MultiGeometry><LineString><coordinates>-0.071418683045481,5.72078534691026 -0.070668434463922,5.7211674249302</coordinates></LineString></MultiGeometry>
+  </Placemark>
+</Folder>
+</Document></kml>

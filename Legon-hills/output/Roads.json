@@ -1,0 +1,73 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [1237244.66736078, 381683.5654318749],
+          [1237358.6404546245, 381418.3880335301],
+          [1237466.534983464, 381150.17135268275],
+          [1237566.0714854216, 380903.229649353]
+        ]
+      },
+      "properties": { "Name": "NTHC Road" }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [1237540.9974047758, 380986.19256391394],
+          [1238015.4104079031, 381123.3876756293]
+        ]
+      },
+      "properties": { "Name": "NTHC Street 1" }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [1237473.2190305304, 381156.86727194616],
+          [1237895.7742759583, 381279.28149805346]
+        ]
+      },
+      "properties": { "Name": "NTHC Street 2" }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [1237436.2846248064, 381255.36693534144],
+          [1237842.0288388927, 381406.9511501546]
+        ]
+      },
+      "properties": { "Name": "NTHC Street 3" }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [1237365.051441154, 381428.606037985],
+          [1237774.2148480553, 381592.727293121]
+        ]
+      },
+      "properties": { "Name": "NTHC Street 4" }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [1237293.248392032, 381595.0067549979],
+          [1237565.64408632, 381734.05392948806]
+        ]
+      },
+      "properties": { "Name": "NTHC Street 5" }
+    }
+  ]
+}

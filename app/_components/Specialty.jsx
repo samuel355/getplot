@@ -23,7 +23,7 @@ const Speciality = () => {
               <div className="text-primary/80 rounded-full bg-cyan-100">
                 <Check className="p-1" />
               </div>
-              <p>Outstanding Property</p>
+              <p>Outstanding Properties</p>
             </div>
             <div className="flex flex-align-center gap-x-2">
               <div className="text-primary/80 rounded-full bg-cyan-100">
@@ -41,7 +41,7 @@ const Speciality = () => {
               <div className="text-primary/80 rounded-full bg-cyan-100">
                 <Check className="p-1" />
               </div>
-              <p>Modern city locations and exceptional lifestyle</p>
+              <p>Serviced affordable lands</p>
             </div>
             <Link href={""} className="mt-4 flex items-center underline font-bold">
               Read More <ArrowRight className="ml-1 w-5 h-5 animate-pulse" />
@@ -57,7 +57,7 @@ const Speciality = () => {
             />
             <div className="absolute -bottom-10 sm:bottom-5 -left-2 md:-left-20">
               <div className="p-3 bg-white rounded-lg shadow-md w-72 flex items-center gap-x-3 dark:bg-dark-light">
-                <h1 className="text-sm">We have been serving our customers for over 70 years</h1>
+                <h1 className="text-sm">We have been serving our customers for over 10 years</h1>
                 <div className="text-primary/80 rounded-full bg-cyan-100 p-2">
                   <Users className="w-5 h-5" />
                 </div>

@@ -19,7 +19,7 @@ const HomeFilters = () => {
         </div>
 
         <div className="w-full p-2 rounded-lg bg-slate-100 dark:bg-hover-color-dark card-bordered">
-          <h1 className="font-bold">Property Type</h1>
+          <h1 className="font-bold">Land Type</h1>
           <div className="flex items-center gap-x-2 mt-1">
             <Building className="w-5 h-5 text-gray-500" />
             <select
@@ -27,13 +27,9 @@ const HomeFilters = () => {
               id=""
               className="w-full bg-transparent border-0 outline-none dark:bg-hover-color-dark opacity-70"
             >
-              <option value="condors">Condors</option>
-              <option value="offfice buildings">Offfice Buildings</option>
-              <option value="apartments">Apartments</option>
-              <option value="mansions">Mansions</option>
-              <option value="real estate">Real Estate</option>
-              <option value="penthouse">Penthouse</option>
-              <option value="living room">Living Room</option>
+              <option value="All">All</option>
+              <option value="Serviced">Serviced</option>
+              <option value="Unserviced">Unserviced</option>
             </select>
           </div>
         </div>
@@ -52,22 +48,7 @@ const HomeFilters = () => {
               <option value="GHS. 120,000 - GHS. 200,000">GHS. 120,000 - GHS. 200,000</option>
               <option value="GHS. 200,000 - GHS. 300,000">GHS. 200,000 - GHS. 300,000</option>
               <option value="GHS. 300,000 - GHS. 500,000">GHS. 300,000 - GHS. 500,000</option>
-              <option value="GHS. 500,000 - GHS. 1000,000">GHS. 500,000 - GHS. 1,000,000</option>
-            </select>
-          </div>
-        </div>
-
-        <div className=" w-full p-2 border rounded-lg bg-slate-100 dark:bg-hover-color-dark dark:border-dark-light">
-          <h1 className="font-bold">For</h1>
-          <div className="flex items-center gap-x-2 mt-1">
-            <Briefcase className="w-5 h-5 text-gray-500" />
-            <select
-              name=""
-              id=""
-              className="w-full bg-transparent border-0 outline-none opacity-70 dark:bg-hover-color-dark"
-            >
-              <option value="sell">Sell</option>
-              <option value="rent">Rent</option>
+              <option value="GHS. 500,000 - GHS. 1000,000">GHS. 500,000 - GHS. 1,000,000+</option>
             </select>
           </div>
         </div>

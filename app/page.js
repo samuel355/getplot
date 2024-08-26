@@ -29,7 +29,7 @@ const Home = () => {
         <HomeFilters />
         <Invests />
         <Speciality />
-        <Featured />
+        {/* <Featured /> */}
         <Footer />
       </div>
     </div>

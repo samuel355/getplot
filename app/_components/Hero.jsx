@@ -46,7 +46,7 @@ const Hero = () => {
         </div>
       </div>
       <div className="flex-1 basis-[20rem] mt-8 md:-mt-8 items-center place-items-center">
-        <img src="/hero.png" alt="" className="w-full object-cover" />
+        <img src="/hero-land.png" alt="" className="w-full object-cover" />
       </div>
     </div>
   );

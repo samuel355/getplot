@@ -47,6 +47,7 @@ const Map = ({ parcels, center }) => {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
   });
 
+
   const onLoad = useCallback(
     function callback(map) {
       const bounds = new window.google.maps.LatLngBounds(center);

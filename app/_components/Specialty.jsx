@@ -43,7 +43,7 @@ const Speciality = () => {
               </div>
               <p>Serviced affordable lands</p>
             </div>
-            <Link href={""} className="mt-4 flex items-center underline font-bold">
+            <Link href={"/get-plot"} className="mt-4 flex items-center underline font-bold">
               Read More <ArrowRight className="ml-1 w-5 h-5 animate-pulse" />
             </Link>
           </div>

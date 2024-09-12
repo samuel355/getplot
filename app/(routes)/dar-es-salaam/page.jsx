@@ -43,7 +43,7 @@ const page = () => {
           DAR-ES-SALAAM SITE
         </h1>
         <div className="px-28 my-3 underline">
-          <a target="_blank" href={'https://earth.google.com/web/@5.72013147,-0.07041293,25.77825883a,1000d,30y,0h,0t,0r/data=OgMKATA'}> View site in Google Earth</a>
+          <a target="_blank" href={'https://earth.google.com/web/@6.75924,-1.499013,304.3205279a,1000d,30y,0h,0t,0r/data=MigKJgokCiAxU2ZFcWkxa09Edjd1c09Qc3MtZjJ6djFjbEdSc1ozdyACOgMKATA'}> View site in Google Earth</a>
         </div>
         <Map geoJsonData={plots} parcels={plots} center={center} />
       </div>

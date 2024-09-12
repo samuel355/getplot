@@ -23,10 +23,10 @@ export default function Page() {
               </h2>
 
               <p className="mt-4 leading-relaxed text-white/90">
-                Discover your dream home with our real estate app! Browse
-                thousands of listings, connect with trusted agents, and find the
+                Discover your dream land with our real estate app! Browse
+                hundreds of land listings, connect with trusted agents, and find the
                 perfect property tailored to your needs. With intuitive search
-                filters and real-time updates, your next home is just a tap
+                filters and real-time updates, your next land is just a tap
                 away. Simplify your property search and embark on your journey
                 to homeownership today!
               </p>

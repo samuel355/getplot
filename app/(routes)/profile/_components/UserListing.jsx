@@ -85,7 +85,7 @@ const UserListing = () => {
                     </Link>
                     <div className="flex flex-col gap-2 mt-3">
                       <h2 className="font-bold text-xl text-primary">
-                        GHS {item.price.toeString()}
+                        GHS {item.price.toString()}
                       </h2>
                       <h2 className="flex gap-2 items-center text-sm text-gray-500">
                         <MapPin className="h-4 w-4" /> {item.address}

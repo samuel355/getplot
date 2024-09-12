@@ -23,12 +23,12 @@ export default function Page() {
                 </h2>
 
                 <p className="mt-4 leading-relaxed text-white/90">
-                  Discover your dream home with our real estate app! Browse
-                  thousands of listings, connect with trusted agents, and find
-                  the perfect property tailored to your needs. With intuitive
-                  search filters and real-time updates, your next home is just a
-                  tap away. Simplify your property search and embark on your
-                  journey to homeownership today!
+                  Discover your dream land with our real estate app! Browse
+                  hundreds of land listings, connect with trusted agents, and
+                  find the perfect property tailored to your needs. With
+                  intuitive search filters and real-time updates, your next land
+                  is just a tap away. Simplify your property search and embark
+                  on your journey to homeownership today!
                 </p>
               </div>
             </div>
@@ -40,8 +40,7 @@ export default function Page() {
                 <a
                   className="inline-flex size-16 items-center justify-center rounded-full bg-white text-blue-600 sm:size-20"
                   href="#"
-                >
-                </a>
+                ></a>
 
                 <h1 className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
                   Welcome to <br /> Get One Plot

@@ -36,7 +36,6 @@ import ListItem from "./ListItem";
 const HeaderAlt = () => {
   const path = usePathname();
   const { user, isSignedIn } = useUser();
-  console.log(user)
   const router = useRouter();
 
   useEffect(() => {

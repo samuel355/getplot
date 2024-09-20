@@ -115,7 +115,7 @@ const EditPlot = () => {
       setFnameEr(true);
       toast.error("Enter first name");
       return;
-    } else {
+    } else { 
       setFnameEr(false); //
     }
 
@@ -406,10 +406,11 @@ const EditPlot = () => {
                         disabled
                         name="plotSize"
                         value={
-                          allDetails?.properties?.Shape_Length != NaN ? allDetails.properties.Area + ' Acres' : 
-                          parseFloat(
-                            allDetails?.properties?.Shape_Length?.toFixed(5)
-                          ) + " Acres "
+                          allDetails?.properties?.Shape_Length != NaN
+                            ? allDetails.properties.Area + " Acres"
+                            : parseFloat(
+                                allDetails?.properties?.Shape_Length?.toFixed(5)
+                              ) + " Acres "
                         }
                       />
                       <small className="text-red-800"></small>

@@ -288,7 +288,6 @@ const EditPlot = () => {
             data.message === "Verification successful"
           ) {
             //Send details to email and update plot details and redirect to thank you page
-            //console.log(JSON.stringify(data.data));
             const paymentData = JSON.stringify(data.data);
             const amount = data.data.amount / 100;
             // json.parse(data.data)
@@ -334,7 +333,8 @@ const EditPlot = () => {
       })
       .eq("id", id)
       .select();
-
+      
+      //Send Email to the customer
     if (dbData) {
       const res = await fetch("/api/send-email", {
         method: "POST",

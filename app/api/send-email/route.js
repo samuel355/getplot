@@ -9,7 +9,7 @@ export async function POST(request) {
       await request.json();
     const subject = "Plot Payment";
 
-    // Path to the email template
+    // Path to the email templates
     const templatePath = path.resolve(
       process.cwd(),
       "emails",

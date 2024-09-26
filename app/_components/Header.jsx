@@ -36,7 +36,10 @@ import ListItem from "./ListItem";
 const HeaderAlt = () => {
   const path = usePathname();
   const { user, isSignedIn } = useUser();
+<<<<<<< HEAD
   console.log(user?.publicMetadata.role)
+=======
+>>>>>>> frontend
   const router = useRouter();
 
   useEffect(() => {

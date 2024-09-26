@@ -5,24 +5,22 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    const { to, firstname, lastname, paidAmount, plotDetails, plotSize } =
-      await request.json();
-    const subject = "Plot Payment";
+    const { from, subject, fullname, phone, message } = await request.json();
 
-    // Path to the email templates
+     // Path to the email templates
     const templatePath = path.resolve(
       process.cwd(),
       "emails",
-      "payment.ejs"
+      "receivemail.ejs"
     );
 
     // Render the template with the provided data
     const htmlContent = await ejs.renderFile(templatePath, {
-      firstname,
-      lastname,
-      paidAmount,
-      plotDetails,
-      plotSize,
+      fullname,
+      email: from,
+      phone,
+      subject,
+      message,
     });
 
     // Create a Nodemailer transporter using SMTP
@@ -38,14 +36,13 @@ export async function POST(request) {
 
     // Send email
     await transporter.sendMail({
-      from: process.env.SMTP_FROM, // sender address
-      to: to, // list of receivers
+      from: from, // sender address
+      to: process.env.SMTP_EMAIL, // list of receivers
       subject: subject, // Subject line
       html: htmlContent, // HTML body
-    });
+    }); 
 
-    console.log("Email sent successfully");
-    return NextResponse.json({ message: "Email sent successfully" });
+    return NextResponse.json({ message: "Email sent successfully. \n Our Rep will contact you shortly" });
   } catch (error) {
     console.error("Error sending email:", error);
     return NextResponse.json(

@@ -9,32 +9,101 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Header from "@/app/_components/Header";
+import { Loader } from "lucide-react";
 
 export default function Contact() {
-  const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
-  const [name, setName] = useState("");
-  const [message, setMessage] = useState("");
-  const [status, setStatus] = useState("");
+  const [contactData, setContactData] = useState({
+    fullname: "",
+    subject: "",
+    message: "",
+    email: "",
+    phone: "",
+  });
+  const [message, setMessage] = useState();
+  const[loading, setLoading] = useState(false);
+
+  const onInputChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setContactData({ ...contactData, [name]: value });
+  };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
+    if (contactData.fullname === "" || contactData.fullname.length < 5) {
+      setLoading(false);
+      return toast.error("Enter your full name");
+    }
+    const emailRegexPattern =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-    const res = await fetch("/api/send-email", {
+    const validateEmail = (email) => {
+      return emailRegexPattern.test(email);
+    };
+
+    if (!validateEmail(contactData.email)) {
+      setLoading(false);
+      return toast.error("Please enter a valid email");
+    }
+
+    if (contactData.email === "") {
+      setLoading(false);
+      return toast.error("Please enter your email");
+    }
+    if (contactData.phone === "") {
+      setLoading(false);
+      return toast.error("Please enter your phone number");
+    }
+    if (contactData.subject === "") {
+      setLoading(false);
+      return toast.error("Please add subject");
+    }
+    if (contactData.message === "") {
+      setLoading(false);
+      return toast.error("Please enter your message");
+    }
+
+    const res = await fetch("/api/receive-email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        to: email,
-        subject: subject,
-        name: name,
-        message: message,
+        subject: contactData.subject,
+        fullname: contactData.fullname,
+        message: contactData.message,
+        from: contactData.email,
+        phone: contactData.phone,
       }),
     });
 
-    const data = await res.json();
-    setMessage(data.message);
+    if (res.status === 200 && res.ok) {
+      const data = await res.json();
+      console.log(data.message);
+      toast.success(data.message);
+      setContactData({
+        fullname: "",
+        subject: "",
+        message: "",
+        phone: "",
+        email: "",
+      });
+      setLoading(false);
+    } else {
+      setLoading(false);
+      toast.error(
+        "Sorry Something went wrong sending your email. \n Try again later"
+      );
+      setContactData({
+        fullname: "",
+        subject: "",
+        message: "",
+        phone: "",
+        email: "",
+      });
+      console.log(res);
+    }
   };
 
   return (
@@ -161,44 +230,72 @@ export default function Contact() {
               <form class="mt-8 space-y-4">
                 <input
                   type="text"
-                  placeholder="Name"
+                  placeholder="Full Name"
+                  required
+                  onChange={onInputChange}
+                  name="fullname"
+                  value={contactData.fullname}
                   class="w-full rounded-md py-3 px-4 text-sm outline-priamry/80"
                 />
                 <input
                   type="email"
+                  name="email"
+                  value={contactData.email}
+                  onChange={onInputChange}
                   placeholder="Email"
                   class="w-full rounded-md py-3 px-4 text-sm outline-priamry/80"
                 />
                 <input
+                  type="tel"
+                  name="phone"
+                  value={contactData.phone}
+                  onChange={onInputChange}
+                  placeholder="Phone"
+                  class="w-full rounded-md py-3 px-4 text-sm outline-priamry/80"
+                />
+                <input
                   type="text"
+                  name="subject"
+                  onChange={onInputChange}
+                  value={contactData.subject}
                   placeholder="Subject"
                   class="w-full rounded-md py-3 px-4 text-sm outline-priamry/80"
                 />
                 <textarea
-                  placeholder="Message"
+                  placeholder="Enter Message"
+                  name="message"
+                  onChange={onInputChange}
+                  value={contactData.message}
                   rows="6"
                   class="w-full rounded-md px-4 text-sm pt-3 outline-priamry/80"
                 ></textarea>
                 <button
+                  onClick={handleSubmit}
                   type="button"
                   class="text-white bg-primary hover:bg-primary/90 font-semibold rounded-md text-sm px-4 py-3 flex items-center justify-center w-full"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16px"
-                    height="16px"
-                    fill="#fff"
-                    class="mr-2"
-                    viewBox="0 0 548.244 548.244"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M392.19 156.054 211.268 281.667 22.032 218.58C8.823 214.168-.076 201.775 0 187.852c.077-13.923 9.078-26.24 22.338-30.498L506.15 1.549c11.5-3.697 24.123-.663 32.666 7.88 8.542 8.543 11.577 21.165 7.879 32.666L390.89 525.906c-4.258 13.26-16.575 22.261-30.498 22.338-13.923.076-26.316-8.823-30.728-22.032l-63.393-190.153z"
-                      clip-rule="evenodd"
-                      data-original="#000000"
-                    />
-                  </svg>
-                  Send Message
+                  {loading ? (
+                    <Loader className="animate-spin" />
+                  ) : (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16px"
+                        height="16px"
+                        fill="#fff"
+                        class="mr-2"
+                        viewBox="0 0 548.244 548.244"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M392.19 156.054 211.268 281.667 22.032 218.58C8.823 214.168-.076 201.775 0 187.852c.077-13.923 9.078-26.24 22.338-30.498L506.15 1.549c11.5-3.697 24.123-.663 32.666 7.88 8.542 8.543 11.577 21.165 7.879 32.666L390.89 525.906c-4.258 13.26-16.575 22.261-30.498 22.338-13.923.076-26.316-8.823-30.728-22.032l-63.393-190.153z"
+                          clip-rule="evenodd"
+                          data-original="#000000"
+                        />
+                      </svg>
+                      Send Message
+                    </>
+                  )}
                 </button>
               </form>
             </div>

@@ -25,10 +25,10 @@ const Hero = () => {
           </p>
         </div>
         <Button
-          onClick={() => router.push("/get-plot")}
+          onClick={() => router.push("/nthc")}
           className="mt-4 btn-primary capitalize text-base"
         >
-          View Lands
+          View out sites
         </Button>
         <div className="mt-6 text-center flex flex-align-center gap-x-6">
           <div className="bg-cyan-100 p-2">

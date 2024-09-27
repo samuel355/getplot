@@ -33,6 +33,7 @@ const Map = ({ parcels, center }) => {
   const { user, isSignedIn } = useUser();
   const [newPriceEr, setNewPriceEr] = useState(false);
 
+  console.log(user?.publicMetadata?.role)
   const [loading, setLoading] = useState(false);
 
   const mapContainerStyle = {
@@ -145,7 +146,7 @@ const Map = ({ parcels, center }) => {
             Reserve Plot
           </a>
 
-          <a style= "display: ${!user && 'none'}" href="${path}/edit-plot/${id}" id="edit_plot_button" class="border px-4 py-1 mb-2 rounded-md text-sm font-normal">
+          <a style= "display: ${user?.publicMetadata?.role != 'sysadmin' && 'none'}" href="${path}/edit-plot/${id}" id="edit_plot_button" class="border px-4 py-1 mb-2 rounded-md text-sm font-normal">
             Edit Plot
           </a>
 
@@ -153,7 +154,7 @@ const Map = ({ parcels, center }) => {
             Call For Info
           </a>
 
-          <button style= "display: ${!user && 'none'}" id="changePlotID" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>
+          <button style= "display: ${user?.publicMetadata?.role != 'sysadmin' && 'none'}" id="changePlotID" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>
         </div>
       </div>
     `;
@@ -264,7 +265,7 @@ const Map = ({ parcels, center }) => {
       } else {
         setNewPriceEr(false);
         setLoading(false);
-        console.log(newAmount);
+        
       }
     }
     let database;

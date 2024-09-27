@@ -12,8 +12,39 @@ import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
 import { Tag } from "primereact/tag";
 import { ProductService } from "./ProductService";
+import { usePathname, useRouter } from "next/navigation";
+import { useUser } from '@clerk/nextjs';
+import { Loader } from 'lucide-react';
 
 export default function BasicFilterDemo() {
+
+  const [loading, setLoading] = useState(true);
+  const path = usePathname();
+  const { user, isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
+  console.log(user?.publicMetadata);
+
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/");
+      setLoading(false);
+      return;
+    } else if(isLoaded && user?.publicMetadata?.role != 'sysadmin'){
+      router.push("/");
+      setLoading(false);
+      return;
+    } else {
+      setLoading(false);
+    }
+  }, [user, router, isLoaded]);
+
+  if (loading) {
+    <div className="flex flex-col justify-center items-center pt-5">
+      <Loader className="animate-spin" />
+    </div>
+  }
+
+
   const [customers, setCustomers] = useState(null);
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -24,7 +55,6 @@ export default function BasicFilterDemo() {
     verified: { value: null, matchMode: FilterMatchMode.EQUALS },
   });
 
-  const [loading, setLoading] = useState(true);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
 
   const [representatives] = useState([

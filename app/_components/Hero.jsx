@@ -5,7 +5,7 @@ const Hero = () => {
   const router = useRouter();
   return (
     <div
-      className="relative z-0 flex flex-wrap min-h-screen gap-2 mt-0 md:-mt-10 flex-center-center pt-12 lg:px-14 md:px-14 px-8"
+      className="relative z-0 flex flex-wrap min-h-screen gap-2 mt-0 mb-0 md:-mt-10 flex-center-center pt-12 lg:px-14 md:px-14 px-8 h-screen"
       style={{
         background: "url('/hero-bg-pattern.png')",
         backgroundRepeat: "no-repeat",

@@ -43,7 +43,7 @@ const page = () => {
           NTHC SITE
         </h1>
         <div className="px-28 my-3 underline">
-          <a target="_blank" href={'https://earth.google.com/web/@5.72013147,-0.07041293,25.77825883a,1000d,30y,0h,0t,0r/data=OgMKATA'}> View site in Google Earth</a>
+          <a target="_blank" href={'https://earth.google.com/web/@6.667374,-1.6625795,243.92036376a,1000d,30y,0h,0t,0r/data=CgRCAggBMigKJgokCiAxa05NMTVJN2JvUGVUUkNTSXNtTUNzb1ZsOERpMUg4dyACOgMKATA'}> View site in Google Earth</a>
         </div>
         <Map geoJsonData={plots} parcels={plots} center={center} />
       </div>

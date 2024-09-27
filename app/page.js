@@ -26,7 +26,7 @@ const Home = () => {
       <Header />
       <div className="pt-[7rem]">
         <Hero />
-        <HomeFilters />
+        {/* <HomeFilters /> */}
         <Invests />
         <Speciality />
         {/* <Featured /> */}

@@ -13,7 +13,7 @@ export async function POST(request) {
       "emails",
       "receivemail.ejs"
     );
-
+ 
     // Render the template with the provided data
     const htmlContent = await ejs.renderFile(templatePath, {
       fullname,

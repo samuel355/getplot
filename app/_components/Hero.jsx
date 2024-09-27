@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { ArrowDown, ArrowDown01, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const Hero = () => {
@@ -24,12 +26,16 @@ const Hero = () => {
             we connect you with the right land to build your dreams.
           </p>
         </div>
-        <Button
-          onClick={() => router.push("/nthc")}
-          className="mt-4 btn-primary capitalize text-base"
-        >
+        <Button className="mt-4 button-primay text-center rounded-sm px-4 py-2 capitalize text-base flex gap-2 bg-primary text-white" >
           View out sites
+          <span> <ArrowDown  /> </span>
         </Button>
+        <div className='flex gap-4 flex-wrap mt-3'>
+            <Link className="text-primary hover:underline" href="/legon-hills">Legon Hilss (Santor)</Link>
+            <Link className="text-primary hover:underline" href="/nthc">NTHC (Kumasi)</Link>
+            <Link className="text-primary hover:underline" href="/dar-es-salaam">Dar Es Salaam (Kumasi)</Link>
+            <Link className="text-primary hover:underline" href="/trabuom">Trabuom(Kumasi)</Link>
+        </div>
         <div className="mt-6 text-center flex flex-align-center gap-x-6">
           <div className="bg-cyan-100 p-2">
             <h1 className="text-xl font-bold">

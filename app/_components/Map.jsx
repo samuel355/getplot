@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GoogleMap, Polygon, useJsApiLoader } from "@react-google-maps/api";
 import mapboxgl from "mapbox-gl";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -41,7 +41,8 @@ const Map = ({ parcels, center }) => {
     width: "85%",
   };
 
-  const zoom = 17;
+
+  const zoom = path === '/trabuom' ? 14 : 17;
 
   const { isLoaded, i } = useJsApiLoader({
     id: "google-map-script",

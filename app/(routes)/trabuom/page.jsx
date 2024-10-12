@@ -2,10 +2,28 @@
 import { useEffect, useState } from "react";
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
 import { supabase } from "@/utils/supabase/client";
+import { usePathname, useRouter } from "next/navigation";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "react-toastify";
+import { toast as tToast } from "sonner";
+import { Loader } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 const containerStyle = {
-  width: "100%",
-  height: "600px",
+  height: "75vh",
+  width: "85%",
 };
 
 const center = {
@@ -44,13 +62,20 @@ const Map = () => {
   const [polygons, setPolygons] = useState([]);
   const [map, setMap] = useState(null); // Store the map object here
   const [mapBounds, setMapBounds] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [plotID, setPlotID] = useState();
+  const path = usePathname();
+  const [newPrice, setNewPrice] = useState("");
+  const { user, isSignedIn } = useUser();
+  const [newPriceEr, setNewPriceEr] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
   });
 
   // Fetch all polygons and filter by map bounds
   const fetchPolygons = async (bounds) => {
-    const { data, error } = await supabase.from("trabuom").select("*");
     // First batch (records 0 to 999)
     let { data: records1, error1 } = await supabase
       .from("trabuom")
@@ -77,7 +102,8 @@ const Map = () => {
 
     // Combine the results
     let allRecords = [...records1, ...records2, ...records3, ...records4];
-
+    
+    let error = error1 | error2 | error3 | error4;
     if (error) {
       console.error("Error fetching polygons:", error);
     } else {
@@ -124,33 +150,192 @@ const Map = () => {
     }
   }, [mapBounds]);
 
+  const onClose = () => {
+    setModalOpen(true);
+    if (openInfoWindow) {
+      openInfoWindow.close();
+    }
+  };
+
+  //Add info Window
+  var openInfoWindow = null;
+  const handleInfo = (coordinates, text1, text2, id, amount, status) => {
+    console.log(id)
+    const contentString = `
+        <div class="max-w-sm rounded overflow-hidden shadow-lg">
+          <div class="px-6 py-4 flex flex-col">
+            <div class="font-bold md:text-lg lg:text-lg text-sm mb-2">Plot Number ${text1}, ${text2}</div>
+            <hr />
+            <a style="display: ${
+              status === "Sold" || status === "Reserved" ? "none" : "block"
+            }"  href="${path}/buy-plot/${id}" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal">
+              Buy Plot
+            </a>
+  
+            <a style="display: ${
+              status === "Reserved" || status === "Sold" ? "none" : "block"
+            }" href="${path}/reserve-plot/${id}" id="reserve_plot_button" class="border mb-1 px-4 py-1 my-2 rounded-md text-sm font-normal">
+              Reserve Plot
+            </a>
+  
+            <a style= "display: ${
+              user?.publicMetadata?.role != "sysadmin" && "none"
+            }" href="${path}/edit-plot/${id}" id="edit_plot_button" class="border px-4 py-1 mb-2 rounded-md text-sm font-normal">
+              Edit Plot
+            </a>
+  
+            <a href="tel:0322008282" class="border px-4 py-1 rounded-md text-sm font-normal">
+              Call For Info
+            </a>
+  
+            <button style= "display: ${
+              user?.publicMetadata?.role != "sysadmin" && "none"
+            }" id="changePlotID" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>
+          </div>
+        </div>
+      `;
+
+    const polygonCoords = coordinates.map((coord) => ({
+      lng: coord[0],
+      lat: coord[1],
+    }));
+
+    // Calculate the centroid of the polygon
+    const bounds = new google.maps.LatLngBounds();
+    polygonCoords.forEach((coord) => bounds.extend(coord));
+    const centroid = bounds.getCenter();
+
+    if (openInfoWindow) {
+      openInfoWindow.close();
+    }
+
+    // Create a new info window
+    const infoWindow = new google.maps.InfoWindow({
+      position: centroid,
+    });
+
+    infoWindow.setContent(contentString);
+    infoWindow.open(map);
+
+    google.maps.event.addListener(infoWindow, "domready", () => {
+      const Btn = document.getElementById("changePlotID");
+      Btn.addEventListener("click", () => {
+        const content = Btn.getAttribute("data-text");
+        const id = Btn.getAttribute("data-id");
+        const amountStr = Btn.getAttribute("amount");
+
+        setModalOpen(true);
+
+        setTimeout(function () {
+          document.getElementById(
+            "description"
+          ).innerHTML = `Plot number ${content}`;
+
+          let amount;
+          if (amountStr === null || amountStr === "") {
+            amount = null;
+          } else {
+            amount = parseFloat(amountStr);
+          }
+
+          if (amount === null || isNaN(amount)) {
+            document.getElementById("old-price").innerHTML = "GHS. 0.00";
+          } else {
+            document.getElementById("old-price").innerHTML =
+              "GHS. " + amount.toLocaleString();
+          }
+
+          setPlotID(id);
+        }, 1000);
+
+        if (openInfoWindow) {
+          openInfoWindow.close();
+        }
+      });
+    });
+
+    openInfoWindow = infoWindow;
+  };
+
+  const handleInput = (event) => {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Prevent input if the key is not a number (0-9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  };
+
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={13}
-      onLoad={handleMapLoad} // Correctly handle onLoad
-      onBoundsChanged={handleBoundsChanged} // Update bounds when the map bounds change
-    >
-      {polygons.map((polygon, index) => (
-        <Polygon
-          key={index}
-          paths={polygon.geometry.coordinates[0].map(([lng, lat]) => ({
-            lat,
-            lng,
-          }))}
-          options={{
-            fillColor: "#00FF00",
-            fillOpacity: 0.4,
-            strokeColor: "#00FF00",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-          }}
-        />
-      ))}
-    </GoogleMap>
+    <div className="w-full flex flex-col items-center justify-center relative">
+      {modalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <button
+              className="absolute top-2 right-2 text-gray-700"
+              onClick={onClose}
+            >
+              &times;
+            </button>
+            <p>Here we go</p>
+          </div>
+        </div>
+      )}
+      <GoogleMap
+        className="relative"
+        key={"google-map-1"}
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={15}
+        onLoad={handleMapLoad} // Correctly handle onLoad
+        onBoundsChanged={handleBoundsChanged} // Update bounds when the map bounds change
+      >
+        <div className="absolute w-40 top-20 left-0 bg-white/90 shadow-md">
+          <div className="flex gap-3 max-w-36 items-center pl-2 pt-3">
+            <div className="w-4 h-4 bg-green-800"></div>
+            <span>Available</span>
+          </div>
+          <div className="flex gap-3 max-w-36 items-center pl-2 mt-2">
+            <div className="w-4 h-4 bg-black"></div>
+            <span>Reserved</span>
+          </div>
+          <div className="flex gap-3 max-w-36 items-center pl-2 mt-2 pb-3">
+            <div className="w-4 h-4 bg-red-600"></div>
+            <span>Sold</span>
+          </div>
+        </div>
+
+        {polygons.map((polygon, index) => (
+          <>
+            <Polygon
+              key={index}
+              paths={polygon.geometry.coordinates[0].map(([lng, lat]) => ({
+                lat,
+                lng,
+              }))}
+              options={{
+                fillColor: "#00FF00",
+                fillOpacity: 0.4,
+                strokeColor: "black",
+                strokeOpacity: 0.8,
+                strokeWeight: 1,
+              }}
+              onClick={() =>
+                handleInfo(
+                  polygon.geometry?.coordinates[0],
+                  polygon.properties?.Plot_No,
+                  polygon.properties?.Street_Nam,
+                  polygon.id,
+                  polygon.plotTotalAmount,
+                  polygon.status
+                )
+              }
+            />
+          </>
+        ))}
+      </GoogleMap>
+    </div>
   );
 };
 

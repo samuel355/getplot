@@ -41,7 +41,6 @@ const Map = ({ parcels, center }) => {
     width: "85%",
   };
 
-
   const zoom = path === '/trabuom' ? 15.6 : 17;
 
   const { isLoaded, i } = useJsApiLoader({

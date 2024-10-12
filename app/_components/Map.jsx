@@ -33,7 +33,7 @@ const Map = ({ parcels, center }) => {
   const { user, isSignedIn } = useUser();
   const [newPriceEr, setNewPriceEr] = useState(false);
 
-  console.log(user?.publicMetadata?.role)
+
   const [loading, setLoading] = useState(false);
 
   const mapContainerStyle = {
@@ -42,7 +42,7 @@ const Map = ({ parcels, center }) => {
   };
 
 
-  const zoom = path === '/trabuom' ? 14 : 17;
+  const zoom = path === '/trabuom' ? 15.6 : 17;
 
   const { isLoaded, i } = useJsApiLoader({
     id: "google-map-script",

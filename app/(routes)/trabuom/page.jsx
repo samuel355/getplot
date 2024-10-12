@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
 import { supabase } from "@/utils/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
-
+import {trabuomFeatures} from './trabuomData'
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { toast as tToast } from "sonner";
 import { Loader } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
+import Header from "@/app/_components/Header";
 
 const containerStyle = {
   height: "75vh",
@@ -74,46 +75,78 @@ const Map = () => {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
   });
 
+  useEffect(() => {
+    if (mapBounds) {
+      fetchPolygons(mapBounds);
+    }
+    //updatePrice();
+  }, [mapBounds]);
+
   // Fetch all polygons and filter by map bounds
   const fetchPolygons = async (bounds) => {
+    let allRecords;
+    setLoading(true);
     // First batch (records 0 to 999)
     let { data: records1, error1 } = await supabase
       .from("trabuom")
       .select("*")
       .range(0, 999);
 
-    // Second batch (records 1000 to 1999)
-    let { data: records2, error2 } = await supabase
-      .from("trabuom")
-      .select("*")
-      .range(1000, 1999);
+    if (error1) {
+      console.log(error1);
+      return;
+    }
 
-    // Third batch (records 2000 to 2999)
-    let { data: records3, error3 } = await supabase
-      .from("trabuom")
-      .select("*")
-      .range(2000, 2999);
+    if (records1 || records1 !== null) {
+      allRecords = records1;
+      // Second batch (records 1000 to 1999)
+      let { data: records2, error2 } = await supabase
+        .from("trabuom")
+        .select("*")
+        .range(1000, 1999);
 
-    // Fourth batch (records 3000 to 3279)
-    let { data: records4, error4 } = await supabase
-      .from("trabuom")
-      .select("*")
-      .range(3000, 3279);
+      if (error2) {
+        console.log(error2);
+        return;
+      }
+      if (records2 || records2 !== null) {
+        allRecords = [...allRecords, ...records2];
+        // Third batch (records 2000 to 2999)
+        let { data: records3, error3 } = await supabase
+          .from("trabuom")
+          .select("*")
+          .range(2000, 2999);
 
-    // Combine the results
-    let allRecords = [...records1, ...records2, ...records3, ...records4];
-    
-    let error = error1 | error2 | error3 | error4;
-    if (error) {
-      console.error("Error fetching polygons:", error);
-    } else {
-      // Filter polygons by checking their bounding box against the map bounds
-      const visiblePolygons = allRecords.filter((polygon) => {
-        const polygonBounds = calculateBoundingBox(polygon);
-        return isPolygonInBounds(polygonBounds, bounds);
-      });
+        if (error3) {
+          console.log(error3);
+          return;
+        }
+        if (records3 || records3 !== null) {
+          allRecords = [...allRecords, ...records3];
 
-      setPolygons(visiblePolygons);
+          // Fourth batch (records 3000 to 3279)
+          let { data: records4, error4 } = await supabase
+            .from("trabuom")
+            .select("*")
+            .range(3000, 3279);
+
+          if (error4) {
+            console.log(error4);
+            return;
+          }
+          if (records4 || records4 !== null) {
+            allRecords = [...allRecords, ...records4];
+            setLoading(false);
+            // Filter polygons by checking their bounding box against the map bounds
+            const visiblePolygons = allRecords.filter((polygon) => {
+              const polygonBounds = calculateBoundingBox(polygon);
+              return isPolygonInBounds(polygonBounds, bounds);
+            });
+
+            setPolygons(visiblePolygons);
+          }
+        }
+      }
     }
   };
 
@@ -144,12 +177,6 @@ const Map = () => {
     }
   };
 
-  useEffect(() => {
-    if (mapBounds) {
-      fetchPolygons(mapBounds);
-    }
-  }, [mapBounds]);
-
   const onClose = () => {
     setModalOpen(true);
     if (openInfoWindow) {
@@ -160,7 +187,7 @@ const Map = () => {
   //Add info Window
   var openInfoWindow = null;
   const handleInfo = (coordinates, text1, text2, id, amount, status) => {
-    console.log(id)
+    console.log(id);
     const contentString = `
         <div class="max-w-sm rounded overflow-hidden shadow-lg">
           <div class="px-6 py-4 flex flex-col">
@@ -265,77 +292,130 @@ const Map = () => {
     }
   };
 
+  // async function insertFeatures(features) {
+  //   try {
+  //     const transformedFeatures = features.map((feature) => ({
+  //       type: feature.type,
+  //       geometry: feature.geometry,
+  //       properties: feature.properties,
+  //     }));
+
+  //     const { data: checkDatabase, error: checkError } = await supabase
+  //       .from("trabuom_duplicate")
+  //       .select("*");
+
+  //     if (checkError) {
+  //       console.log(checkError);
+  //       return;
+  //     }
+  //     if (checkDatabase.length === 0) {
+  //       // Insert the transformed features into the 'trabuom' table
+  //       const { data, error } = await supabase
+  //         .from("trabuom_duplicate")
+  //         .insert(transformedFeatures)
+  //         .select("*");
+
+  //       console.log(data);
+  //       if (error) {
+  //         console.error("Error inserting features:", error);
+  //       } else {
+  //         console.log("Inserted features:", data);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.error("Error:", err);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   //insertFeatures(trabuomFeatures);
+  // }, [])
+
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <div className="w-full flex flex-col items-center justify-center relative">
-      {modalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded shadow-lg">
-            <button
-              className="absolute top-2 right-2 text-gray-700"
-              onClick={onClose}
-            >
-              &times;
-            </button>
-            <p>Here we go</p>
-          </div>
-        </div>
-      )}
-      <GoogleMap
-        className="relative"
-        key={"google-map-1"}
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={15}
-        onLoad={handleMapLoad} // Correctly handle onLoad
-        onBoundsChanged={handleBoundsChanged} // Update bounds when the map bounds change
-      >
-        <div className="absolute w-40 top-20 left-0 bg-white/90 shadow-md">
-          <div className="flex gap-3 max-w-36 items-center pl-2 pt-3">
-            <div className="w-4 h-4 bg-green-800"></div>
-            <span>Available</span>
-          </div>
-          <div className="flex gap-3 max-w-36 items-center pl-2 mt-2">
-            <div className="w-4 h-4 bg-black"></div>
-            <span>Reserved</span>
-          </div>
-          <div className="flex gap-3 max-w-36 items-center pl-2 mt-2 pb-3">
-            <div className="w-4 h-4 bg-red-600"></div>
-            <span>Sold</span>
-          </div>
-        </div>
+    <>
+      <Header />
+      <div className="w-full mx-12 overflow-x-hidden mb-8 pt-[7.5rem]">
+        <h1 className="font-bold text-lg my-4 text-center capitalize">
+          TRABOUM SITE
+        </h1>
+        <div className="w-full flex flex-col items-center justify-center relative">
+          {modalOpen && (
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+              <div className="bg-white p-6 rounded shadow-lg">
+                <button
+                  className="absolute top-2 right-2 text-gray-700"
+                  onClick={onClose}
+                >
+                  &times;
+                </button>
+                <p>Here we go</p>
+              </div>
+            </div>
+          )}
+          <GoogleMap
+            className="relative"
+            key={"google-map-1"}
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={15}
+            onLoad={handleMapLoad} // Correctly handle onLoad
+            onBoundsChanged={handleBoundsChanged} // Update bounds when the map bounds change
+          >
+            <div className="absolute w-40 top-20 left-0 bg-white/90 shadow-md">
+              <div className="flex gap-3 max-w-36 items-center pl-2 pt-3">
+                <div className="w-4 h-4 bg-green-800"></div>
+                <span>Available</span>
+              </div>
+              <div className="flex gap-3 max-w-36 items-center pl-2 mt-2">
+                <div className="w-4 h-4 bg-black"></div>
+                <span>Reserved</span>
+              </div>
+              <div className="flex gap-3 max-w-36 items-center pl-2 mt-2 pb-3">
+                <div className="w-4 h-4 bg-red-600"></div>
+                <span>Sold</span>
+              </div>
+            </div>
 
-        {polygons.map((polygon, index) => (
-          <>
-            <Polygon
-              key={index}
-              paths={polygon.geometry.coordinates[0].map(([lng, lat]) => ({
-                lat,
-                lng,
-              }))}
-              options={{
-                fillColor: "#00FF00",
-                fillOpacity: 0.4,
-                strokeColor: "black",
-                strokeOpacity: 0.8,
-                strokeWeight: 1,
-              }}
-              onClick={() =>
-                handleInfo(
-                  polygon.geometry?.coordinates[0],
-                  polygon.properties?.Plot_No,
-                  polygon.properties?.Street_Nam,
-                  polygon.id,
-                  polygon.plotTotalAmount,
-                  polygon.status
-                )
-              }
-            />
-          </>
-        ))}
-      </GoogleMap>
-    </div>
+            {/* {loading && (
+              <div className="flex flex-col justify-center items-center">
+                <Loader className="animate-spin" />
+              </div>
+            )} */}
+
+            {polygons.map((polygon, index) => (
+              <>
+                <Polygon
+                  key={index}
+                  paths={polygon.geometry.coordinates[0].map(([lng, lat]) => ({
+                    lat,
+                    lng,
+                  }))}
+                  options={{
+                    fillColor: "#00FF00",
+                    fillOpacity: 0.4,
+                    strokeColor: "black",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 1,
+                  }}
+                  onClick={() =>
+                    handleInfo(
+                      polygon.geometry?.coordinates[0],
+                      polygon.properties?.Plot_No,
+                      polygon.properties?.Street_Nam,
+                      polygon.id,
+                      polygon.plotTotalAmount,
+                      polygon.status
+                    )
+                  }
+                />
+              </>
+            ))}
+          </GoogleMap>
+        </div>
+      </div>
+    </>
   );
 };
 

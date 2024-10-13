@@ -77,7 +77,7 @@ const EditPlot = () => {
     if (id) {
       fechPlotData();
     } else {
-      router.push("/nthc");
+      router.push("/trabuom");
     }
   }, []);
 
@@ -203,7 +203,7 @@ const EditPlot = () => {
   //Fetch Plot Details From DB
   const fechPlotData = async () => {
     const { data, error } = await supabase
-      .from("nthc")
+      .from("trabuom")
       .select("*")
       .eq("id", id);
 
@@ -227,12 +227,12 @@ const EditPlot = () => {
       setCalcAmount(data[0].plotTotalAmount);
     } else {
       toast("Something went wrong fetching plot data");
-      router.push("/nthc");
+      router.push("/trabuom");
     }
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.push("/nthc");
+      router.push("/trabuom");
     }
   };
 
@@ -322,7 +322,7 @@ const EditPlot = () => {
             savePaymentDetails(paymentData, amount, data);
           } else {
             toast.error("Your Transaction verification was not successfull");
-            router.push("/nthc/payment/error");
+            router.push("/traboum/payment/error");
           }
         })
         .catch((error) => {
@@ -341,7 +341,7 @@ const EditPlot = () => {
   const savePaymentDetails = async (paymentData, amount, data) => {
     const remainingAmount = plotTotalAmount - amount
     const { data: dbData, error } = await supabase
-      .from("nthc")
+      .from("trabuom")
       .update({
         firstname: data.data.metadata.firstname,
         lastname: data.data.metadata.lastname,
@@ -383,7 +383,7 @@ const EditPlot = () => {
       });
       setVerifyLoading(false);
       toast.success("Transaction verified successfully");
-      router.push("/nthc/payment/success");
+      router.push("/trabuom/payment/success");
     }
     if (error) {
       console.log(error);

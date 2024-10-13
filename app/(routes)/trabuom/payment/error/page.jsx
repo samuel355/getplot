@@ -29,7 +29,7 @@ const ErrorPage = () => {
                   d="M7 16l-4-4m0 0l4-4m-4 4h18"
                 />
               </svg>
-              <Link href="/nthc" class="text-sm font-medium text-white"> View Plots </Link>
+              <Link href="/trabuom" class="text-sm font-medium text-white"> View Plots </Link>
             </a>
           </div>
         </div>

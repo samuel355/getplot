@@ -68,7 +68,7 @@ const EditPlot = () => {
     if (id) {
       fechPlotData();
     } else {
-      router.push("/nthc");
+      router.push("/trabuom");
     }
   }, []);
 
@@ -186,7 +186,7 @@ const EditPlot = () => {
     //Update plot details with plotData on Supabase
     setLoader2(true);
     const { data, error } = await supabase
-      .from("nthc")
+      .from("trabuom")
       .update({
         status: plotData.status,
         firstname: plotData.firstname,
@@ -221,7 +221,7 @@ const EditPlot = () => {
   //Fetch Plot Details From DB
   const fechPlotData = async () => {
     const { data, error } = await supabase
-      .from("nthc")
+      .from("trabuom")
       .select("*")
       .eq("id", id);
 
@@ -243,12 +243,12 @@ const EditPlot = () => {
       });
     } else {
       toast("Something went wrong fetching plot data");
-      router.replace("/nthc");
+      router.replace("/trabuom");
     }
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.push("/nthc");
+      router.push("/trabuom");
     }
   };
 

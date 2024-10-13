@@ -172,3 +172,6 @@ body {
 .gm-ui-hover-effect span:hover {
   color: red;
 }
+td{
+  padding: 0.5rem !important;
+}

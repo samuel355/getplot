@@ -394,9 +394,9 @@ const Map = () => {
                   }))}
                   options={{
                     fillColor: "#00FF00",
-                    fillOpacity: 0.4,
+                    fillOpacity: 0.8,
                     strokeColor: "black",
-                    strokeOpacity: 0.8,
+                    strokeOpacity: 0.4,
                     strokeWeight: 1,
                   }}
                   onClick={() =>

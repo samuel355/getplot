@@ -105,7 +105,7 @@ export function DataTable({ columns, data }) {
       </div>
       
       {/* Pagination Controls */}
-      <div className="flex items-center justify-between space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
           onClick={() => {

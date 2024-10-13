@@ -172,8 +172,11 @@ body {
 .gm-ui-hover-effect span:hover {
   color: red;
 }
-td{
+td, tr{
   padding: 0.5rem !important;
+}
+.tranform-sentence{
+  text-transform: capitalize;
 }
 
 @media (max-width: 988px) {

@@ -71,8 +71,8 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="fixed top-0">
-      <div className="h-screen flex flex-col justify-between p-4 w-full bg-primary/10">
+    <div className="fixed top-0 border-r bg-white">
+      <div className="h-screen flex flex-col justify-between p-4 w-full ">
         <div>
           <div className="border-b pb-3">
             <h2 className="text-primary text-xl font-semibold">Get One Plot</h2>

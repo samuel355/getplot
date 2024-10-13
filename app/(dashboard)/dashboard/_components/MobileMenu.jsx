@@ -75,7 +75,7 @@ const MobileMenu = () => {
   ];
 
   return (
-    <div className="lg:hidden md:hidden flex items-center justify-between w-full py-2 px-4">
+    <div className="lg:hidden md:hidden flex items-center justify-between w-full py-2 px-4 mobile-menu">
       <Menu
         className="w-5 h-5 text-gray-400 hover:text-gray-700"
         onClick={() => setIsOpen(true)}

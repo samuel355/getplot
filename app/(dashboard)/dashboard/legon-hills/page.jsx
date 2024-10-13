@@ -5,7 +5,7 @@ import { supabase } from "@/utils/supabase/client";
 import { DataTable } from "../_components/DataTable";
 import { columns } from "../_components/Columns";
 
-export default function DarEsSalaam() {
+export default function Trabuom() {
   const [plotData, setPlotData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +18,7 @@ export default function DarEsSalaam() {
     setLoading(true);
     // First batch (records 0 to 999)
     let { data: records1, error1 } = await supabase
-      .from("dar_es_salaam")
+      .from("legon_hills")
       .select(
         `
         id, 
@@ -46,7 +46,7 @@ export default function DarEsSalaam() {
       allRecords = records1;
       setPlotData(allRecords);
       // Second batch (records 1000 to 1999)
-      let { data: records2, error2 } = await supabase.from("dar_es_salaam").select(`
+      let { data: records2, error2 } = await supabase.from("legon_hills").select(`
         id, 
         
         properties->>Plot_No,
@@ -70,7 +70,7 @@ export default function DarEsSalaam() {
         setPlotData(allRecords);
         // Third batch (records 2000 to 2999)
         let { data: records3, error3 } = await supabase
-          .from("dar_es_salaam")
+          .from("legon_hills")
           .select(
             `
             id, 
@@ -99,7 +99,7 @@ export default function DarEsSalaam() {
 
           // Fourth batch (records 3000 to 3279)
           let { data: records4, error4 } = await supabase
-            .from("dar_es_salaam")
+            .from("legon_hills")
             .select(
               `
               id, 
@@ -134,7 +134,7 @@ export default function DarEsSalaam() {
   return (
     <div>
       <div className="fixed top-0 pt-10 z-30 pb-2 w-full bg-white">
-        <h1 className="text-primary font-bold text-2xl">Dar Es Salaam Plot Data</h1>
+        <h1 className="text-primary font-bold text-2xl">Legon Hills Plot Data</h1>
       </div>
       <div className="mt-14">
         <DataTable data={plotData} columns={columns} />

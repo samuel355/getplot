@@ -131,11 +131,14 @@ export default function Trabuom() {
     }
   };
 
-
   return (
-    <div className="">
-      <h1 className="text-primary font-bold text-2xl">Trabuom Plot Data</h1>
-      <DataTable data={plotData} columns={columns} />
+    <div>
+      <div className="fixed top-0 pt-10 z-30 pb-2 w-full bg-white">
+        <h1 className="text-primary font-bold text-2xl">Trabuom Plot Data</h1>
+      </div>
+      <div className="mt-14">
+        <DataTable data={plotData} columns={columns} />
+      </div>
     </div>
   );
 }

@@ -175,3 +175,17 @@ body {
 td{
   padding: 0.5rem !important;
 }
+
+@media (max-width: 988px) {
+  .sidebar{
+    display: none !important;
+  }
+  .mobile-menu{
+    display: flex !important;
+
+  }
+  .main-content{
+    margin-left: 0 !important;
+    width: 100vw !important;
+  }
+}

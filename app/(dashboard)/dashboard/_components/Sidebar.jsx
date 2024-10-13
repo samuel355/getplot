@@ -32,41 +32,27 @@ const Sidebar = () => {
     },
     {
       id: 2,
-      href: "/dashboard/lands",
-      title: "Lands",
+      href: "/dashboard/trabuom",
+      title: "Trabuom",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
       id: 3,
-      href: "/dashboard/houses",
-      title: "Houses",
-      icon: <Home className="w-4 h-4 ml-2" />,
+      href: "/dashboard/nthc",
+      title: "NTHC Kwadaso",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
       id: 4,
-      href: "/dashboard/users",
-      title: "Users",
-      icon: <Users className="w-4 h-4 ml-2" />,
-    },
-  ];
-  const sites = [
-    {
-      id: 1,
-      href: "/dashboard/nthc",
-      title: "NTHC",
-      icon: <DraftingCompass className="w-4 h-4 ml-2" />,
+      href: "/dashboard/legon-hills",
+      title: "Legon Hills",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
-      id: 2,
+      id: 5,
       href: "/dashboard/dar-es-salaam",
       title: "Dar Es Salaam",
-      icon: <DraftingCompass className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 3,
-      href: "/dashboard/trabuom",
-      title: "Trabuom",
-      icon: <DraftingCompass className="w-4 h-4 ml-2" />,
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
   ];
 
@@ -93,25 +79,6 @@ const Sidebar = () => {
                       <span className="absolute w-[3px] h-4 bg-primary left-0 top-[4px]"></span>
                     )}
                     <span className="ml-2">{link.title}</span>
-                  </Link>
-                </li>
-              ))}
-              <div className="py-6">
-                <h1 className="text-primary text-muted text-sm">Land Sites</h1>
-              </div>
-              {sites.map((site) => (
-                <li key={site.id} className="p-1 hover:bg-gray-100 rounded-sm">
-                  <Link
-                    href={site.href}
-                    className={`relative flex items-center ${
-                      path === site.href && "font-semibold"
-                    }`}
-                  >
-                    {site.icon}
-                    {path === site.href && (
-                      <span className="absolute w-[3px] h-4 bg-primary left-0 top-[4px]"></span>
-                    )}
-                    <span className="ml-2">{site.title}</span>
                   </Link>
                 </li>
               ))}

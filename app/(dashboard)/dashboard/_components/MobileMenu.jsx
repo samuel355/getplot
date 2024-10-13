@@ -36,21 +36,27 @@ const MobileMenu = () => {
     },
     {
       id: 2,
-      href: "/dashboard/lands",
-      title: "Lands",
+      href: "/dashboard/trabuom",
+      title: "Trabuom",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
       id: 3,
-      href: "/dashboard/houses",
-      title: "Houses",
-      icon: <Home className="w-4 h-4 ml-2" />,
+      href: "/dashboard/nthc",
+      title: "NTHC Kwadaso",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
       id: 4,
-      href: "/dashboard/users",
-      title: "Users",
-      icon: <Users className="w-4 h-4 ml-2" />,
+      href: "/dashboard/legon-hills",
+      title: "Legon Hills",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
+    },
+    {
+      id: 5,
+      href: "/dashboard/dar-es-salaam",
+      title: "Dar Es Salaam",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
   ];
   const sites = [
@@ -134,6 +140,13 @@ const MobileMenu = () => {
                     Get One Plot
                   </h2>
                 </div>
+
+                <div className="py-6">
+                  <h1 className="text-primary text-muted text-sm">
+                    Land Sites
+                  </h1>
+                </div>
+
                 <nav className="pt-2">
                   <ul className="flex flex-col gap-1">
                     {menuLinks.map((link) => (
@@ -160,30 +173,13 @@ const MobileMenu = () => {
                         Land Sites
                       </h1>
                     </div>
-                    {sites.map((site) => (
-                      <li
-                        key={site.id}
-                        className="p-1 hover:bg-gray-100 rounded-sm"
-                      >
-                        <Link
-                          href={site.href}
-                          className={`relative flex items-center ${
-                            path === site.href && "font-semibold"
-                          }`}
-                        >
-                          {site.icon}
-                          {path === site.href && (
-                            <span className="absolute w-[3px] h-4 bg-primary left-0 top-[4px]"></span>
-                          )}
-                          <span className="ml-2">{site.title}</span>
-                        </Link>
-                      </li>
-                    ))}
                   </ul>
                 </nav>
               </div>
               <footer className="">
-                <p className="text-gray-500 text-center text-sm mb-3 font-light">All Rights Reserved @2024</p>
+                <p className="text-gray-500 text-center text-sm mb-3 font-light">
+                  All Rights Reserved @2024
+                </p>
               </footer>
             </div>
           </div>

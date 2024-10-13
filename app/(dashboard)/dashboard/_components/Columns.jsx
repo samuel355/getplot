@@ -11,14 +11,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
-// Define the columns
+
+export default function columnPage() {
+  const path = usePathname()
+  const router = useRouter()
+}
+
+
 export const columns = [
   {
     accessorKey: "Plot_No",
     cell: (info) => info.getValue(),
     className: "text-center w-2",
-    
+
     header: ({ column }) => {
       return (
         <Button
@@ -79,6 +87,7 @@ export const columns = [
     cell: (info) => info.getValue(),
     className: "text-right",
     cell: ({ row }) => {
+      const rowData = row.original;
       return (
         <DropdownMenu className="">
           <DropdownMenuTrigger asChild>
@@ -90,8 +99,12 @@ export const columns = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/dashboard/plot-details/${rowData.id}`}>View</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`edit-plot/${rowData.id}`}>Edit</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

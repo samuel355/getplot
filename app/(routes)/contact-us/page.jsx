@@ -110,17 +110,18 @@ export default function Contact() {
     <>
       <Header />
       <div class="my-6 mb-24 pt-[7.5rem]">
-        <div class="max-w-6xl mx-auto bg-primary rounded-lg">
+        <div class="max-w-6xl mx-auto rounded-lg">
           <div class="grid md:grid-cols-2 items-center gap-16 sm:p-10 p-4 ">
             <div>
-              <h1 class="text-4xl font-extrabold text-white">Get in Touch</h1>
-              <p class="text-sm text-gray-200 mt-3">
+              <h1 class="text-4xl font-extrabold text-primary">Get in Touch</h1>
+              <p class="text-sm text-gray-700 mt-3">
                 Have any issue, idea, or input? Then reach out we'd love to hear
                 about it and provide help.
               </p>
-              <ul class="mt-12 space-y-8">
+              <ul class="mt-8 space-y-5">
                 <li class="flex items-center">
                   <svg
+                  className="bg-primary p-1 w-6 h-6 rounded-md"
                     xmlns="http://www.w3.org/2000/svg"
                     width="16px"
                     height="16px"
@@ -132,12 +133,13 @@ export default function Contact() {
                       data-original="#000000"
                     />
                   </svg>
-                  <a href="javascript:void(0)" class="text-white text-sm ml-3">
+                  <a href="javascript:void(0)" class="text-primary text-sm ml-3">
                     <strong>info@getoneplot.com</strong>
                   </a>
                 </li>
                 <li class="flex items-center">
                   <svg
+                  className="bg-primary p-1 w-6 h-6 rounded-md"
                     xmlns="http://www.w3.org/2000/svg"
                     width="16px"
                     height="16px"
@@ -149,12 +151,13 @@ export default function Contact() {
                       data-original="#000000"
                     ></path>
                   </svg>
-                  <a href="javascript:void(0)" class="text-white text-sm ml-3">
+                  <a href="javascript:void(0)" class="text-primary text-sm ml-3">
                     <strong>+233 32 200 8282</strong>
                   </a>
                 </li>
                 <li class="flex items-center">
                   <svg
+                  className="bg-primary p-1 w-6 h-6 rounded-md"
                     xmlns="http://www.w3.org/2000/svg"
                     width="16px"
                     height="16px"
@@ -170,7 +173,7 @@ export default function Contact() {
                       data-original="#000000"
                     ></path>
                   </svg>
-                  <a href="javascript:void(0)" class="text-white text-sm ml-3">
+                  <a href="javascript:void(0)" class="text-primary text-sm ml-3">
                     <strong>Dichemso - Manhyia Rd. Kumasi-Ghana</strong>
                   </a>
                 </li>
@@ -179,6 +182,7 @@ export default function Contact() {
                 <li class="bg-primary hover:bg-primary/90 border h-10 w-10 rounded-full flex items-center justify-center shrink-0">
                   <a href="javascript:void(0)">
                     <svg
+                    className="bg-primary p-1 w-6 h-6 rounded-md"
                       xmlns="http://www.w3.org/2000/svg"
                       width="18px"
                       height="18px"
@@ -195,6 +199,7 @@ export default function Contact() {
                 <li class="bg-primary hover:bg-primary/90 h-10 w-10 border rounded-full flex items-center justify-center shrink-0">
                   <a href="javascript:void(0)">
                     <svg
+                    className="bg-primary p-1 w-6 h-6 rounded-md"
                       xmlns="http://www.w3.org/2000/svg"
                       width="18px"
                       height="18px"
@@ -211,6 +216,7 @@ export default function Contact() {
                 <li class="bg-primary hover:bg-primary/90 h-10 w-10 border rounded-full flex items-center justify-center shrink-0">
                   <a href="javascript:void(0)">
                     <svg
+                    className="bg-primary p-1 w-6 h-6 rounded-md"
                       xmlns="http://www.w3.org/2000/svg"
                       width="18px"
                       height="18px"

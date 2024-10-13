@@ -9,18 +9,33 @@ import {
 } from "@/components/ui/navigation-menu";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import ListItem from "./ListItem";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Menu } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 const Header = () => {
   const path = usePathname();
+  const router = useRouter();
+  const { user, isSignedIn } = useUser();
   return (
     <header className="fixed top-0 w-full bg-white shadow-sm z-20">
       {/* Flex container to handle layout */}
-      <div className="flex items-center px-8 py-2">
+      <div className="flex items-center px-8 py-2 justify-between">
         {/* Logo section */}
-        <div className="w-full">
+        <div className="">
           <Link href={"/"}>
             <Image
               src={"/logo.png"}
@@ -33,7 +48,7 @@ const Header = () => {
         </div>
 
         {/* Navigation Menu section */}
-        <nav className="hidden lg:flex space-x-6 w-full">
+        <nav className="hidden lg:flex space-x-6">
           <NavigationMenu>
             <NavigationMenuList className="flex items-center space-x-4">
               <NavigationMenuItem>
@@ -79,6 +94,71 @@ const Header = () => {
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
+
+        <div className="block lg:hidden xl:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Menu />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <button
+                    className={`hover:text-primary text-base ${
+                      path == "/" && "text-primary font-semibold"
+                    }`}
+                    onClick={() => router.replace("/")}
+                  >
+                    Home
+                  </button>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuGroup className="w-[240px]">
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <button
+                        className={`hover:text-primary text-base `}
+                      >
+                        Our Sites
+                      </button>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                      <ul className="grid gap-3 p-3 py-5 md:w-[240px] lg:w-[230px] xl:w-[240px] grid-cols-1">
+                        <ListItem href="/nthc" title="NTHC">
+                          NTHC (Kwadaso)
+                        </ListItem>
+                        <ListItem href="/dar-es-salaam" title="Dar Es Salaam">
+                          Dar Es Salaam (Ejisu)
+                        </ListItem>
+                        <ListItem href="/trabuom" title="Trabuom">
+                          Trabuom
+                        </ListItem>
+                        <ListItem href="/legon-hills" title="Legon Hills">
+                          Legon Hills
+                        </ListItem>
+                      </ul>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                </DropdownMenuGroup>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem>
+                  <button
+                    className={`hover:text-primary text-base ${
+                      path == "/contact-us" && "text-primary font-semibold"
+                    }`}
+                    onClick={() => router.push("/contact-us")}
+                  >
+                    Contact Us
+                  </button>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );

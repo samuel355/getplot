@@ -14,13 +14,6 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-
-export default function columnPage() {
-  const path = usePathname()
-  const router = useRouter()
-}
-
-
 export const columns = [
   {
     accessorKey: "Plot_No",
@@ -100,10 +93,13 @@ export const columns = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/dashboard/plot-details/${rowData.id}`}>View</Link>
+              <Link href={`/dashboard/plot-details/${rowData.id}`}>View Details</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link href={`edit-plot/${rowData.id}`}>Edit</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <button onClick={getDbName}>Delete</button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -111,3 +107,7 @@ export const columns = [
     },
   },
 ];
+
+function getDbName() {
+  const dbName = document.getElementById('databaseName').value
+}

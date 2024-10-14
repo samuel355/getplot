@@ -8,7 +8,7 @@ import { columns } from "../_components/Columns";
 export default function DarEsSalaam() {
   const [plotData, setPlotData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const databaseName = 'dar_es_salaam'
   useEffect(() => {
     fetchPlotData();
   }, []);
@@ -137,7 +137,7 @@ export default function DarEsSalaam() {
         <h1 className="text-primary font-bold text-2xl">Dar Es Salaam Plot Data</h1>
       </div>
       <div className="mt-14">
-        <DataTable data={plotData} columns={columns} />
+        <DataTable databaseName={databaseName} data={plotData} columns={columns} />
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input" // Create a simple input component
 
-export function DataTable({ columns, data }) {
+export function DataTable({ columns, data, databaseName }) {
   const [sorting, setSorting] = useState([])
   const [globalFilter, setGlobalFilter] = useState("")
   const [pageSize, setPageSize] = useState(20) // State for page size
@@ -67,6 +67,7 @@ export function DataTable({ columns, data }) {
       {/* Add horizontal scroll */}
       <div className="overflow-x-auto">
         <div className="rounded-md border">
+          <input value={databaseName} className="hidden" id="databaseName" />
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map(headerGroup => (

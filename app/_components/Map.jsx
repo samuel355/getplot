@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GoogleMap, Polygon, useJsApiLoader } from "@react-google-maps/api";
 import mapboxgl from "mapbox-gl";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +33,7 @@ const Map = ({ parcels, center }) => {
   const { user, isSignedIn } = useUser();
   const [newPriceEr, setNewPriceEr] = useState(false);
 
-  console.log(user?.publicMetadata?.role)
+
   const [loading, setLoading] = useState(false);
 
   const mapContainerStyle = {
@@ -41,7 +41,7 @@ const Map = ({ parcels, center }) => {
     width: "85%",
   };
 
-  const zoom = 17;
+  const zoom = path === '/trabuom' ? 15.6 : 17;
 
   const { isLoaded, i } = useJsApiLoader({
     id: "google-map-script",
@@ -150,8 +150,12 @@ const Map = ({ parcels, center }) => {
             Edit Plot
           </a>
 
-          <a href="tel:0322008282" class="border px-4 py-1 rounded-md text-sm font-normal">
+          <a href="tel:0248838005" class="border px-4 py-1 rounded-md text-sm font-normal">
             Call For Info
+          </a>
+
+          <a href="" class="border px-4 py-1 rounded-md text-sm font-normal mt-1">
+            Express Interest
           </a>
 
           <button style= "display: ${user?.publicMetadata?.role != 'sysadmin' && 'none'}" id="changePlotID" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>

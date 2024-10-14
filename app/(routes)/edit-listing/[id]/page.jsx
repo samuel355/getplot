@@ -414,7 +414,7 @@ const EditListing = () => {
                       {loader ? (
                         <Loader className="animate-spin" />
                       ) : (
-                        "Save and Published"
+                        "Save and Publish"
                       )}
                     </button>
                   </div>

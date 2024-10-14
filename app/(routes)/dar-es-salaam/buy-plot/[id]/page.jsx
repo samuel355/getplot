@@ -415,9 +415,7 @@ const EditPlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            allDetails.properties.Shape_Length !== undefined
-                              ? allDetails?.properties?.Shape_Length?.toFixed(5)
-                              : allDetails?.properties?.SHAPE_Leng?.toFixed(5)
+                            (allDetails?.properties?.Area).toFixed(5)
                           ) + " Acres "
                         }
                       />
@@ -1519,9 +1517,7 @@ const EditPlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            allDetails.properties.Shape_Length !== undefined
-                              ? allDetails?.properties?.Shape_Length?.toFixed(5)
-                              : allDetails?.properties?.SHAPE_Leng?.toFixed(5)
+                            (allDetails?.properties?.Area).toFixed(5)
                           ) + " Acres "
                         }
                       />

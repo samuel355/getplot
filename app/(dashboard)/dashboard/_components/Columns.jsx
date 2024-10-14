@@ -1,15 +1,16 @@
 "use client";
+
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
@@ -24,6 +25,47 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+
+export function ViewPlotDialog({ open, onOpenChange, plotId, table }) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>View Plot</DialogTitle>
+          <DialogDescription>
+            Viewing details for Plot ID: {plotId} in {table}.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Name
+            </Label>
+            <Input
+              id="name"
+              defaultValue="Pedro Duarte"
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="username" className="text-right">
+              Username
+            </Label>
+            <Input
+              id="username"
+              defaultValue="@peduarte"
+              className="col-span-3"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="submit">Save changes</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export const columns = [
   {
@@ -95,46 +137,59 @@ export const columns = [
     className: "text-right",
     cell: ({ row }) => {
       const rowData = row.original;
-      let plotId = rowData.id
+      let plotId = rowData.id;
       const pathname = usePathname();
       const router = useRouter();
 
-      let table
-      if(pathname.includes('trabuom')){
-        table = 'trabuom'
+      const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+      let table;
+      if (pathname.includes("trabuom")) {
+        table = "trabuom";
       }
-      if(pathname.includes('nthc')){
-        table = 'nthc'
+      if (pathname.includes("nthc")) {
+        table = "nthc";
       }
-      if(pathname.includes('legon-hills')){
-        table = 'legon-hills'
+      if (pathname.includes("legon-hills")) {
+        table = "legon-hills";
       }
-      if(pathname.includes('dar-es-salaam')){
-        table = 'dar-es-salaam'
+      if (pathname.includes("dar-es-salaam")) {
+        table = "dar-es-salaam";
       }
 
       return (
-        <DropdownMenu className="">
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={``}>View Details</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href={`/dashboard/edit-plot/${plotId}?table=${table}`}>Edit Plot</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <button>Delete Plot</button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu className="">
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setIsDialogOpen(true)}>
+                View Details
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href={`/dashboard/edit-plot/${plotId}?table=${table}`}>
+                  Edit Plot
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <button>Delete Plot</button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          {/* ViewPlotDialog opens immediately when state is set */}
+          <ViewPlotDialog
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            plotId={plotId}
+            table={table}
+          />
+        </>
       );
     },
   },

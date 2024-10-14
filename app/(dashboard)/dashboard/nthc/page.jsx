@@ -8,7 +8,7 @@ import { columns } from "../_components/Columns";
 export default function NTHC() {
   const [plotData, setPlotData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const databaseName = 'nthc'
   useEffect(() => {
     fetchPlotData();
   }, []);
@@ -135,7 +135,7 @@ export default function NTHC() {
   return (
     <div className="">
       <h1 className="text-primary font-bold text-2xl">NTHC Plot Data</h1>
-      <DataTable data={plotData} columns={columns} />
+      <DataTable databaseName={databaseName} data={plotData} columns={columns} />
     </div>
   );
 }

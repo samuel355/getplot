@@ -8,7 +8,7 @@ import { columns } from "../_components/Columns";
 export default function Trabuom() {
   const [plotData, setPlotData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const databaseName = 'legon_hills'
   useEffect(() => {
     fetchPlotData();
   }, []);
@@ -137,7 +137,7 @@ export default function Trabuom() {
         <h1 className="text-primary font-bold text-2xl">Legon Hills Plot Data</h1>
       </div>
       <div className="mt-14">
-        <DataTable data={plotData} columns={columns} />
+        <DataTable databaseName={databaseName} data={plotData} columns={columns} />
       </div>
     </div>
   );

@@ -28,8 +28,8 @@ const containerStyle = {
 };
 
 const center = {
-  lat: 6.5901048210000681,
-  lng: -1.7678195729999402,
+  lat: 6.5967673180000475,
+  lng: -1.7712607859999707,
 };
 
 // Function to calculate the bounding box for a polygon

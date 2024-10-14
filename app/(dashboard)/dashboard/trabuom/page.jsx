@@ -6,9 +6,9 @@ import { DataTable } from "../_components/DataTable";
 import { columns } from "../_components/Columns";
 
 export default function Trabuom() {
-  const [plotData, setPlotData] = useState([]);
+  const [plotData, setPlotData] = useState([{ database: "trabuom" }]);
   const [loading, setLoading] = useState(false);
-
+  const databaseName = 'trabuom'
   useEffect(() => {
     fetchPlotData();
   }, []);
@@ -137,7 +137,7 @@ export default function Trabuom() {
         <h1 className="text-primary font-bold text-2xl">Trabuom Plot Data</h1>
       </div>
       <div className="mt-14">
-        <DataTable data={plotData} columns={columns} />
+        <DataTable databaseName={databaseName} data={plotData} columns={columns} />
       </div>
     </div>
   );

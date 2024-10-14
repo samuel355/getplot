@@ -31,7 +31,7 @@ const Hero = () => {
           <span> <ArrowDown  /> </span>
         </Button>
         <div className='flex gap-4 flex-wrap mt-3'>
-            <Link className="text-primary hover:underline" href="/legon-hills">Legon Hilss (Santor)</Link>
+            <Link className="text-primary hover:underline" href="/legon-hills">Legon Hills (Santor)</Link>
             <Link className="text-primary hover:underline" href="/nthc">NTHC (Kumasi)</Link>
             <Link className="text-primary hover:underline" href="/dar-es-salaam">Dar Es Salaam (Kumasi)</Link>
             <Link className="text-primary hover:underline" href="/trabuom">Trabuom(Kumasi)</Link>

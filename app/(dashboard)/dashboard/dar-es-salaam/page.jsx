@@ -133,8 +133,8 @@ export default function DarEsSalaam() {
 
   return (
     <div>
-      <div className="fixed top-0 pt-10 z-30 pb-2 w-full bg-white">
-        <h1 className="text-primary font-bold text-2xl">Dar Es Salaam Plot Data</h1>
+      <div className="-mt-5">
+        <h1 className="text-primary font-bold text-2xl">Dar Es Salaam Plot</h1>
       </div>
       <div className="mt-14">
         <DataTable databaseName={databaseName} data={plotData} columns={columns} />

@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Loader, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,43 +25,624 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/utils/supabase/client";
+import { toast } from "react-toastify";
+import OptGroup from "./OptGroup";
+import { Textarea } from "@/components/ui/textarea";
+import { toast as sonarToast } from "sonner";
 
-export function ViewPlotDialog({ open, onOpenChange, plotId, table }) {
+const plotInfo = {
+  firstname: "",
+  lastname: "",
+  email: "",
+  residentialAddress: "",
+  country: "",
+  phone: "",
+  plotDetails: "",
+  agent: "",
+  plotTotalAmount: 0,
+  paidAmount: 0,
+  remainingAmount: 0,
+  remarks: "",
+  plotStatus: "",
+  status: "",
+};
+
+export function ViewPlotDialog({
+  open,
+  onOpenChange,
+  plotId,
+  table,
+  setIsDialogOpen,
+}) {
+  const [loader1, setLoader1] = useState(false);
+  const [loader2, setLoader2] = useState(false);
+  const [step1, setStep1] = useState(true);
+  const [step2, setStep2] = useState(false);
+  const [plotData, setPlotData] = useState(plotInfo);
+  const [allDetails, setAllDetails] = useState();
+  const [calcAmount, setCalcAmount] = useState(0);
+  const [plotDataLoading, setPlotDataLoading] = useState(false);
+
+  const {
+    firstname,
+    lastname,
+    email,
+    country,
+    phone,
+    residentialAddress,
+    agent,
+    plotTotalAmount,
+    paidAmount,
+    remainingAmount,
+    remarks,
+    status,
+    plotStatus,
+  } = plotData;
+
+  const [loading, setLoading] = useState(false);
+
+  // Errors Checks
+  const [statusEr, setStatusEr] = useState(false);
+  const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
+  const [paidAmtEr, setPaidAmtEr] = useState(false);
+  const [fnameEr, setFnameEr] = useState(false);
+  const [lnameEr, setLnameEr] = useState(false);
+  const [emailEr, setEmailEr] = useState(false);
+  const [countryEr, setCountryEr] = useState(false);
+  const [phoneEr, setPhoneEr] = useState(false);
+  const [resAddressEr, setResAddressEr] = useState(false);
+
+  let databaseName;
+  if (table && table === "nthc") {
+    databaseName = "nthc";
+  }
+  if (table && table === "dar-es-salaam") {
+    databaseName = "dar_es_salaam";
+  }
+  if (table && table === "trabuom") {
+    databaseName = "trabuom";
+  }
+  if (table && table === "legon_hills") {
+    databaseName = "legon_hills";
+  }
+
+  useEffect(() => {
+    if (plotId && databaseName) {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const { data, error } = await supabase
+            .from(databaseName)
+            .select("*")
+            .eq("id", plotId);
+
+          if (data) {
+            setPlotDataLoading(false);
+            setAllDetails(data[0]);
+            setPlotData({
+              firstname: data[0].firstname,
+              lastname: data[0].lastname,
+              email: data[0].email,
+              residentialAddress: data[0].residentialAddress,
+              country: data[0].country,
+              phone: data[0].phone,
+              agent: data[0].agent,
+              plotTotalAmount: data[0].plotTotalAmount,
+              paidAmount: data[0].paidAmount,
+              remainingAmount: data[0].remainingAmount,
+              remarks: data[0].remarks,
+              plotStatus: data[0].status,
+            });
+          }
+          if (error) {
+            setPlotDataLoading(false);
+            toast.error("Error occurred fetching plot details");
+            console.log(error);
+          }
+        } catch (error) {
+          setPlotDataLoading(false);
+          console.log(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchData();
+    }
+  }, [plotId, databaseName]);
+
+  const handleStep1 = (e) => {
+    e.preventDefault();
+    if (plotStatus === null && status === undefined) {
+      setStatusEr(true);
+      toast.error("Please select status");
+      return;
+    } else if (plotStatus === null && status === "Change Status") {
+      setStatusEr(true);
+      toast.error("Please select status");
+      return;
+    } else {
+      setStatusEr(false);
+    }
+
+    if (status === "Sold" || status === "Reserved") {
+      if (plotTotalAmount === null || plotTotalAmount === 0) {
+        setPlotTotalAmountEr(true);
+        toast.error("Please enter plot total amount");
+        return;
+      } else {
+        setPlotTotalAmountEr(false);
+      }
+
+      if (paidAmount === null || paidAmount === 0) {
+        setPaidAmtEr(true);
+        toast.error("Please add amount paid");
+        return;
+      } else {
+        setPaidAmtEr(false);
+      }
+
+      if (paidAmount - plotTotalAmount > 0) {
+        toast.error(
+          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot."
+        );
+        return;
+      }
+    }
+
+    setStep1(false);
+    setStep2(true);
+  };
+
+  const handlePrev = () => {
+    setStep1(true);
+    setStep2(false);
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    if (firstname === null || firstname === undefined || firstname === "") {
+      setFnameEr(true);
+      toast.error("Enter first name");
+      return;
+    } else {
+      setFnameEr(false); //
+    }
+
+    if (lastname === null || lastname === undefined || lastname === "") {
+      setLnameEr(true);
+      toast.error("Enter last name");
+      return;
+    } else {
+      setLnameEr(false); //
+    }
+
+    if (email === null || email === undefined || email === "") {
+      setEmailEr(true);
+      toast.error("Enter Email");
+      return;
+    } else {
+      setEmailEr(false); //
+    }
+
+    if (
+      country === null ||
+      country === undefined ||
+      country === "" ||
+      country === "Select Country"
+    ) {
+      setCountryEr(true);
+      toast.error("Choose Country");
+      return;
+    } else {
+      setCountryEr(false); //
+    }
+
+    if (phone === null || phone === undefined || phone === "") {
+      setPhoneEr(true);
+      toast.error("Enter phone number");
+      return;
+    } else if (phone.length !== 10) {
+      setPhoneEr(false);
+      toast.error("Phone number must be 10");
+      return;
+    } else {
+      setPhoneEr(false); //
+    }
+    if (
+      residentialAddress === null ||
+      residentialAddress === undefined ||
+      residentialAddress === ""
+    ) {
+      setResAddressEr(true);
+      toast.error("Enter phone number");
+      return;
+    } else {
+      setResAddressEr(false); //
+    }
+
+    //Update plot details with plotData on Supabase
+    setLoader2(true);
+    const { data, error } = await supabase
+      .from(databaseName)
+      .update({
+        status: plotData.status,
+        firstname: plotData.firstname,
+        lastname: plotData.lastname,
+        email: plotData.email,
+        country: plotData.country,
+        phone: plotData.phone,
+        residentialAddress: plotData.residentialAddress,
+        agent: plotData.agent,
+        plotTotalAmount: plotData.plotTotalAmount,
+        paidAmount: plotData.paidAmount,
+        remainingAmount: plotData.remainingAmount,
+        remarks: plotData.remarks,
+      })
+      .eq("id", plotId)
+      .select("*");
+
+    if (data) {
+      sonarToast("Plot details updated successfully");
+      setLoader2(false);
+      console.log("updated successfully");
+      setIsDialogOpen(false);
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+    if (error) {
+      console.log(error);
+      toast.error("Sorry errror happened updating the plot details");
+      setLoader2(false);
+    }
+  };
+
+  const onInputChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setPlotData({ ...plotData, [name]: value });
+  };
+
+  let amtRemaining = 0;
+  const handleCalculateAmount = () => {
+    amtRemaining = plotTotalAmount - paidAmount;
+    setCalcAmount(amtRemaining);
+    setPlotData({ ...plotData, remainingAmount: amtRemaining });
+  };
+
+  const handleInput = (event) => {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Prevent input if the key is not a number (0-9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-[95vw]">
         <DialogHeader>
-          <DialogTitle>View Plot</DialogTitle>
-          <DialogDescription>
-            Viewing details for Plot ID: {plotId} in {table}.
-          </DialogDescription>
+          <DialogTitle className="font-bold">Edit Plot Details</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              defaultValue="Pedro Duarte"
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input
-              id="username"
-              defaultValue="@peduarte"
-              className="col-span-3"
-            />
-          </div>
+        <div>
+          {plotDataLoading && (
+            <div className="flex flex-col justify-center items-center">
+              <Loader className="animate-spin text-primary z-50" />
+            </div>
+          )}
+          {allDetails && (
+            <form onSubmit={handleFormSubmit}>
+              {/* Step 1 */}
+
+              {step1 && (
+                <div className="pt-4">
+                  <div className="flex flex-col space-y-4">
+                    <div className="flex gap-2 items-center">
+                      <p className="text-gray-900 font-semibold text-sm w-1/4">
+                        Plot Details
+                      </p>
+                      <Input
+                        type="text"
+                        disabled
+                        name="plotDetails"
+                        className="w-3/4"
+                        value={
+                          "Plot Number " +
+                          allDetails?.properties?.Plot_No +
+                          " " +
+                          allDetails?.properties?.Street_Nam
+                        }
+                      />
+                      <small className="text-red-800"></small>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <p className="text-gray-900 font-semibold text-sm w-1/4">
+                        Plot Status
+                      </p>
+                      <Input
+                        type="text"
+                        disabled
+                        className="w-3/4"
+                        name="plotStatus"
+                        value={plotStatus}
+                      />
+                      <small className="text-red-900"></small>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <h2 className="text-md font-semibold text-sm w-1/4">
+                        Change Plot Status
+                      </h2>
+                      <div className="w-3/4">
+                        <select
+                          onChange={onInputChange}
+                          className="w-full py-[9px] bg-white rounded-md text-dark border px-2"
+                          name="status"
+                          value={status}
+                          style={{ border: statusEr && `1px solid red` }}
+                        >
+                          <option value="Change Status"> Change Status</option>
+                          <option value="Sold">Sold</option>
+                          <option value="Reserved">Reserve</option>
+                          <option value="Available">Available</option>
+                        </select>
+                        {statusEr && (
+                          <small className="text-red-900">
+                            Choose Plot Status
+                          </small>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 items-center">
+                      <h2 className="text-gray-900 font-semibold w-1/4 text-sm">
+                        Total Amount
+                      </h2>
+                      <div className="w-3/4">
+                        <Input
+                          placeholder="Plot Total Amount"
+                          name="plotTotalAmount"
+                          type="number"
+                          onChange={onInputChange}
+                          value={plotTotalAmount}
+                          onKeyPress={handleInput}
+                          onKeyUp={handleCalculateAmount}
+                          style={{
+                            border: plotTotalAmountEr && `1px solid red`,
+                          }}
+                        />
+                        {plotTotalAmountEr && (
+                          <small className="text-red-900">
+                            Enter Plot amount
+                          </small>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 items-center">
+                      <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                        Paid Amount
+                      </h2>
+                      <div className="w-3/4">
+                        <Input
+                          placeholder="Paid Amount"
+                          name="paidAmount"
+                          type="number"
+                          onChange={onInputChange}
+                          value={paidAmount}
+                          onKeyPress={handleInput}
+                          onKeyUp={handleCalculateAmount}
+                          style={{ border: paidAmtEr && `1px solid red` }}
+                        />
+                        {paidAmtEr && (
+                          <small className="text-red-900">
+                            Enter amount paid
+                          </small>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 items-center">
+                      <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                        Remaining Amount
+                      </h2>
+                      <Input
+                        placeholder="Remaining Amount"
+                        name="remainingAmount"
+                        type="number"
+                        onChange={onInputChange}
+                        value={remainingAmount}
+                        onKeyPress={handleInput}
+                        onKeyUp={handleCalculateAmount}
+                        disabled
+                        className="w-3/4"
+                      />
+                      <small className="text-red-800"></small>
+                    </div>
+                  </div>
+                  <div className="mt-6">
+                    <h2 className="text-gray-900 font-semibold text-sm">
+                      Remarks
+                    </h2>
+                    <Textarea
+                      onChange={onInputChange}
+                      name="remarks"
+                      value={remarks}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5">
+                    <button
+                      onClick={handleStep1}
+                      className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                    >
+                      {loader1 ? <Loader className="animate-spin" /> : "Next"}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step2 */}
+
+              {step2 && (
+                <div className="px-6 pt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center">
+                    <div className="">
+                      <h2 className="text-gray-900 font-semibold text-sm">
+                        First Name
+                      </h2>
+                      <Input
+                        type="text"
+                        placeholder="First Name"
+                        name="firstname"
+                        onChange={onInputChange}
+                        value={firstname}
+                        style={{ border: fnameEr && `1px solid red` }}
+                      />
+                      {fnameEr && (
+                        <small className="text-red-900">
+                          Enter your firstname
+                        </small>
+                      )}
+                    </div>
+                    <div className="">
+                      <h2 className="text-gray-900 font-semibold text-sm">
+                        Last Name(s)
+                      </h2>
+                      <Input
+                        type="text"
+                        name="lastname"
+                        onChange={onInputChange}
+                        value={lastname}
+                        style={{ border: lnameEr && `1px solid red` }}
+                      />
+                      {lnameEr && (
+                        <small className="text-red-900">
+                          Enter your last name(s)
+                        </small>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2 flex-col">
+                      <h2 className="text-gray-900 font-semibold text-sm">
+                        Email Address
+                      </h2>
+                      <Input
+                        placeholder="Email Address"
+                        name="email"
+                        type="email"
+                        onChange={onInputChange}
+                        value={email}
+                        style={{ border: emailEr && `1px solid red` }}
+                      />
+                      {emailEr && (
+                        <small className="text-red-900">Enter your email</small>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2 flex-col">
+                      <h2 className="text-gray-900 font-semibold text-sm">
+                        Country
+                      </h2>
+                      <select
+                        onChange={onInputChange}
+                        className="w-full py-[9px] bg-white rounded-md text-dark border px-2"
+                        name="country"
+                        id="countryCode"
+                        value={country}
+                        style={{ border: countryEr && `1px solid red` }}
+                      >
+                        <option value="Select Country"> Select Country</option>
+                        <option data-countrycode="GH" value="Ghana (+233)">
+                          Ghana (+233)
+                        </option>
+
+                        <OptGroup />
+                      </select>
+                      {countryEr && (
+                        <small className="text-red-900">
+                          Selecet your country
+                        </small>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2 flex-col">
+                      <h2 className="text-gray-900 font-semibold text-sm">
+                        Phone Number
+                      </h2>
+                      <Input
+                        placeholder="Phone Number"
+                        name="phone"
+                        type="number"
+                        onChange={onInputChange}
+                        value={phone}
+                        onKeyPress={handleInput}
+                        style={{ border: phoneEr && `1px solid red` }}
+                      />
+                      {phoneEr && (
+                        <small className="text-red-900">
+                          Enter Phone Number
+                        </small>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2 flex-col">
+                      <h2 className="text-gray-900 font-semibold text-sm">
+                        Residential Address
+                      </h2>
+                      <Input
+                        placeholder="Residential Address"
+                        name="residentialAddress"
+                        type="text"
+                        onChange={onInputChange}
+                        value={residentialAddress}
+                        style={{ border: resAddressEr && `1px solid red` }}
+                      />
+                      <small className="text-red-800"></small>
+                    </div>
+
+                    <div className="flex gap-2 flex-col">
+                      <h2 className="text-gray-900 font-semibold text-sm">
+                        Agent
+                      </h2>
+                      <Input
+                        placeholder="Agent"
+                        name="agent"
+                        type="text"
+                        onChange={onInputChange}
+                        value={agent}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                    <button
+                      onClick={handlePrev}
+                      disabled={loader2}
+                      className="bg-white border text-primary py-2 px-4 rounded-md shadow-md"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="submit"
+                      className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                    >
+                      {loader2 ? (
+                        <Loader className="animate-spin" />
+                      ) : (
+                        "Save and Publish"
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </form>
+          )}
         </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
@@ -137,7 +718,7 @@ export const columns = [
     className: "text-right",
     cell: ({ row }) => {
       const rowData = row.original;
-      let plotId = rowData.id;
+      const plotId = rowData.id;
       const pathname = usePathname();
       const router = useRouter();
 
@@ -170,11 +751,11 @@ export const columns = [
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setIsDialogOpen(true)}>
-                View Details
+                Edit Plot
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link href={`/dashboard/edit-plot/${plotId}?table=${table}`}>
-                  Edit Plot
+                  View Plot
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
@@ -183,12 +764,15 @@ export const columns = [
             </DropdownMenuContent>
           </DropdownMenu>
           {/* ViewPlotDialog opens immediately when state is set */}
-          <ViewPlotDialog
-            open={isDialogOpen}
-            onOpenChange={setIsDialogOpen}
-            plotId={plotId}
-            table={table}
-          />
+          {isDialogOpen && (
+            <ViewPlotDialog
+              open={isDialogOpen}
+              onOpenChange={setIsDialogOpen}
+              plotId={plotId}
+              table={table}
+              setIsDialogOpen={setIsDialogOpen}
+            />
+          )}
         </>
       );
     },

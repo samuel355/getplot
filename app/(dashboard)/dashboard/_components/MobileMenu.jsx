@@ -168,11 +168,6 @@ const MobileMenu = () => {
                         </Link>
                       </li>
                     ))}
-                    <div className="py-6">
-                      <h1 className="text-primary text-muted text-sm">
-                        Land Sites
-                      </h1>
-                    </div>
                   </ul>
                 </nav>
               </div>

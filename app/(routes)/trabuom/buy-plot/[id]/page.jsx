@@ -257,6 +257,7 @@ const EditPlot = () => {
       if (response.status === "success") {
         setVerifyLoading(true);
         toast.success("Thank you! your payment was made");
+        router.push("/trabuom/payment/success");
         verifyTransaction(response.reference);
       }
     },
@@ -358,7 +359,7 @@ const EditPlot = () => {
       });
       setVerifyLoading(false);
       toast.success("Transaction verified successfully");
-      router.push("/trabuom/payment/success");
+    
     }
     if (error) {
       console.log(error);

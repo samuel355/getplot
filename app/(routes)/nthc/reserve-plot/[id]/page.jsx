@@ -116,6 +116,12 @@ const EditPlot = () => {
       );
       return;
     }
+    if (initialDeposit > plotTotalAmount) {
+      toast.error(
+        `Check the initial deposit. It must be greater than the plot amount`
+      );
+      return;
+    }
 
     setStep1(false);
     setStep2(true);
@@ -281,6 +287,7 @@ const EditPlot = () => {
     onSuccess: (response) => {
       if (response.status === "success") {
         setVerifyLoading(true);
+        router.push("/nthc/payment/success");
         toast.success("Thank you! your payment was made");
         verifyTransaction(response.reference);
       }
@@ -355,7 +362,8 @@ const EditPlot = () => {
         remarks: data.data.metadata.remarks,
         paymentDetails: paymentData,
         paymentId: data.data.id,
-        paymentReference: data.data.reference
+        paymentReference: data.data.reference,
+        status: 'Reserved',
       })
       .eq("id", id)
       .select();
@@ -383,7 +391,7 @@ const EditPlot = () => {
       });
       setVerifyLoading(false);
       toast.success("Transaction verified successfully");
-      router.push("/nthc/payment/success");
+      
     }
     if (error) {
       console.log(error);

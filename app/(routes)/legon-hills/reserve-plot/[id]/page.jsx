@@ -77,7 +77,7 @@ const EditPlot = () => {
     if (id) {
       fechPlotData();
     } else {
-      router.push("/legon-hills");
+      router.push("/nthc");
     }
   }, []);
 
@@ -110,17 +110,15 @@ const EditPlot = () => {
     } else {
       setInitialDepositEr(false);
     }
-    if(initialDeposit > plotTotalAmount){
-      setInitialDepositEr(true);
-      toast.error("Deposit Amount cannot be greater than the plot amount");
-      return;
-    }else {
-      setInitialDepositEr(false);
-    }
-
     if (initialDeposit < initialDepo) {
       toast.error(
         `Check the initial deposit. It must be at least GHS. ${initialDepo.toLocaleString()}`
+      );
+      return;
+    }
+    if (initialDeposit > plotTotalAmount) {
+      toast.error(
+        `Check the initial deposit. It must be greater than the plot amount`
       );
       return;
     }
@@ -235,12 +233,12 @@ const EditPlot = () => {
       setCalcAmount(data[0].plotTotalAmount);
     } else {
       toast("Something went wrong fetching plot data");
-      router.push("/legon-hills");
+      router.push("/nthc");
     }
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.push("/legon-hills");
+      router.push("/nthc");
     }
   };
 
@@ -289,6 +287,7 @@ const EditPlot = () => {
     onSuccess: (response) => {
       if (response.status === "success") {
         setVerifyLoading(true);
+        router.push("/nthc/payment/success");
         toast.success("Thank you! your payment was made");
         verifyTransaction(response.reference);
       }
@@ -330,7 +329,7 @@ const EditPlot = () => {
             savePaymentDetails(paymentData, amount, data);
           } else {
             toast.error("Your Transaction verification was not successfull");
-            router.push("/legon-hills/payment/error");
+            router.push("/nthc/payment/error");
           }
         })
         .catch((error) => {
@@ -363,7 +362,8 @@ const EditPlot = () => {
         remarks: data.data.metadata.remarks,
         paymentDetails: paymentData,
         paymentId: data.data.id,
-        paymentReference: data.data.reference
+        paymentReference: data.data.reference,
+        status: 'Reserved',
       })
       .eq("id", id)
       .select();
@@ -391,7 +391,7 @@ const EditPlot = () => {
       });
       setVerifyLoading(false);
       toast.success("Transaction verified successfully");
-      router.push("/legon-hills/payment/success");
+      
     }
     if (error) {
       console.log(error);
@@ -439,7 +439,6 @@ const EditPlot = () => {
                         disabled
                         name="plotSize"
                         value={
-                          allDetails?.properties?.Shape_Length != NaN ? allDetails.properties.Area + ' Acres' : 
                           parseFloat(
                             allDetails?.properties?.Shape_Length?.toFixed(5)
                           ) + " Acres "
@@ -502,7 +501,7 @@ const EditPlot = () => {
                       You still have:
                     </h2>
                     <p className="font-medium text-lg">
-                      {`GHS. (${calcAmount?.toLocaleString()}) To Pay`}
+                      {`GHS. (${calcAmount.toLocaleString()}) To Pay`}
                     </p>
                   </div>
 

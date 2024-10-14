@@ -150,8 +150,12 @@ const Map = ({ parcels, center }) => {
             Edit Plot
           </a>
 
-          <a href="tel:0322008282" class="border px-4 py-1 rounded-md text-sm font-normal">
+          <a href="tel:0248838005" class="border px-4 py-1 rounded-md text-sm font-normal">
             Call For Info
+          </a>
+
+          <a href="" class="border px-4 py-1 rounded-md text-sm font-normal mt-1">
+            Express Interest
           </a>
 
           <button style= "display: ${user?.publicMetadata?.role != 'sysadmin' && 'none'}" id="changePlotID" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>

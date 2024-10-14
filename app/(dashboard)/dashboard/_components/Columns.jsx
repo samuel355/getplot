@@ -13,6 +13,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+let dbName;
+// function getDbName(){
+//   const value = document.getElementById('databaseName').value
+//   dbName = value
+//   console.log(dbName);
+//   location.href = `/dashboard/edit-plot/${rowData.id}?dbName=${dbName}`
+// }
 
 export const columns = [
   {
@@ -47,14 +54,17 @@ export const columns = [
   {
     accessorKey: "firstname",
     header: "First Name",
+    cell: (info) => info.getValue(),
   },
   {
     accessorKey: "lastname",
     header: "Last Name",
+    cell: (info) => info.getValue(),
   },
   {
     accessorKey: "phone",
     header: "Contact",
+    cell: (info) => info.getValue(),
   },
   {
     accessorKey: "plotTotalAmount",
@@ -80,6 +90,15 @@ export const columns = [
     cell: (info) => info.getValue(),
     className: "text-right",
     cell: ({ row }) => {
+      let dbName;
+      function getDbName() {
+        const value = document.getElementById("databaseName").value;
+        dbName = value;
+        console.log(dbName);
+        const href = `/dashboard/edit-plot/${rowData.id}?dbName=${dbName}`;
+        location.href = href
+      }
+
       const rowData = row.original;
       return (
         <DropdownMenu className="">
@@ -91,15 +110,15 @@ export const columns = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator/>
             <DropdownMenuItem>
-              <Link href={`/dashboard/plot-details/${rowData.id}`}>View Details</Link>
+              <Link href={``}>View Details</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={`edit-plot/${rowData.id}`}>Edit</Link>
+              <p onClick={getDbName}>Edit Plot</p>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <button onClick={getDbName}>Delete</button>
+              <button>Delete Plot</button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -107,7 +126,3 @@ export const columns = [
     },
   },
 ];
-
-function getDbName() {
-  const dbName = document.getElementById('databaseName').value
-}

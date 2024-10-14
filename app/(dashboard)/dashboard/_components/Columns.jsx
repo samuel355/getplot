@@ -1,4 +1,15 @@
 "use client";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
@@ -13,13 +24,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-let dbName;
-// function getDbName(){
-//   const value = document.getElementById('databaseName').value
-//   dbName = value
-//   console.log(dbName);
-//   location.href = `/dashboard/edit-plot/${rowData.id}?dbName=${dbName}`
-// }
 
 export const columns = [
   {
@@ -90,16 +94,25 @@ export const columns = [
     cell: (info) => info.getValue(),
     className: "text-right",
     cell: ({ row }) => {
-      let dbName;
-      function getDbName() {
-        const value = document.getElementById("databaseName").value;
-        dbName = value;
-        console.log(dbName);
-        const href = `/dashboard/edit-plot/${rowData.id}?dbName=${dbName}`;
-        location.href = href
+      const rowData = row.original;
+      let plotId = rowData.id
+      const pathname = usePathname();
+      const router = useRouter();
+
+      let table
+      if(pathname.includes('trabuom')){
+        table = 'trabuom'
+      }
+      if(pathname.includes('nthc')){
+        table = 'nthc'
+      }
+      if(pathname.includes('legon-hills')){
+        table = 'legon-hills'
+      }
+      if(pathname.includes('dar-es-salaam')){
+        table = 'dar-es-salaam'
       }
 
-      const rowData = row.original;
       return (
         <DropdownMenu className="">
           <DropdownMenuTrigger asChild>
@@ -110,12 +123,12 @@ export const columns = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator/>
+            <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Link href={``}>View Details</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <p onClick={getDbName}>Edit Plot</p>
+              <Link href={`/dashboard/edit-plot/${plotId}?table=${table}`}>Edit Plot</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <button>Delete Plot</button>

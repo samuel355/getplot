@@ -407,7 +407,7 @@ const EditPlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            allDetails?.properties?.Shape_Length?.toFixed(5)
+                            (allDetails?.properties?.SHAPE_Area * 3109111.525693)?.toFixed(5)
                           ) + " Acres "
                         }
                       />
@@ -1509,7 +1509,7 @@ const EditPlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            allDetails?.properties?.Shape_Length?.toFixed(5)
+                            (allDetails?.properties?.SHAPE_Area * 3109111.525693)?.toFixed(5)
                           ) + " Acres "
                         }
                       />

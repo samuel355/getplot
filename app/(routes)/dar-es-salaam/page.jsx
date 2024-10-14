@@ -42,9 +42,9 @@ const page = () => {
         <h1 className="font-bold text-lg my-4 text-center capitalize">
           DAR-ES-SALAAM SITE
         </h1>
-        <div className="px-28 my-3 underline">
+        {/* <div className="px-28 my-3 underline">
           <a target="_blank" href={'https://earth.google.com/web/@6.75907642,-1.49897003,305.36581143a,1154.03037981d,30y,0h,0t,0r/data=CgRCAggBMigKJgokCiAxU2ZFcWkxa09Edjd1c09Qc3MtZjJ6djFjbEdSc1ozdyACOgMKATA'}> View site in Google Earth</a>
-        </div>
+        </div> */}
         <Map geoJsonData={plots} parcels={plots} center={center} />
       </div>
       <Footer />

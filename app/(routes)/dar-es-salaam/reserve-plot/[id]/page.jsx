@@ -28,7 +28,7 @@ const plotInfo = {
   initialDeposite: 0,
 };
 
-const ReservePlot = () => {
+const EditPlot = () => {
   const [loader1, setLoader1] = useState(false);
   const [loader2, setLoader2] = useState(false);
   const [loader3, setLoader3] = useState(false);
@@ -77,7 +77,7 @@ const ReservePlot = () => {
     if (id) {
       fechPlotData();
     } else {
-      router.push("/dar-es-salaam");
+      router.push("/nthc");
     }
   }, []);
 
@@ -113,6 +113,12 @@ const ReservePlot = () => {
     if (initialDeposit < initialDepo) {
       toast.error(
         `Check the initial deposit. It must be at least GHS. ${initialDepo.toLocaleString()}`
+      );
+      return;
+    }
+    if (initialDeposit > plotTotalAmount) {
+      toast.error(
+        `Check the initial deposit. It must be greater than the plot amount`
       );
       return;
     }
@@ -227,12 +233,12 @@ const ReservePlot = () => {
       setCalcAmount(data[0].plotTotalAmount);
     } else {
       toast("Something went wrong fetching plot data");
-      router.push("/dar-es-salaam");
+      router.push("/nthc");
     }
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.push("/dar-es-salaam");
+      router.push("/nthc");
     }
   };
 
@@ -281,6 +287,7 @@ const ReservePlot = () => {
     onSuccess: (response) => {
       if (response.status === "success") {
         setVerifyLoading(true);
+        router.push("/nthc/payment/success");
         toast.success("Thank you! your payment was made");
         verifyTransaction(response.reference);
       }
@@ -322,7 +329,7 @@ const ReservePlot = () => {
             savePaymentDetails(paymentData, amount, data);
           } else {
             toast.error("Your Transaction verification was not successfull");
-            router.push("/dar-es-salaam/payment/error");
+            router.push("/nthc/payment/error");
           }
         })
         .catch((error) => {
@@ -355,7 +362,8 @@ const ReservePlot = () => {
         remarks: data.data.metadata.remarks,
         paymentDetails: paymentData,
         paymentId: data.data.id,
-        paymentReference: data.data.reference
+        paymentReference: data.data.reference,
+        status: 'Reserved',
       })
       .eq("id", id)
       .select();
@@ -383,7 +391,7 @@ const ReservePlot = () => {
       });
       setVerifyLoading(false);
       toast.success("Transaction verified successfully");
-      router.push("/dar-es-salaam/payment/success");
+      
     }
     if (error) {
       console.log(error);
@@ -392,7 +400,7 @@ const ReservePlot = () => {
 
   return (
     <>
-      <Header />
+    <Header />
       {allDetails && (
         <div className="w-full px-10 md:px-16 lg:px-48 xl:px-48 mb-10 pt-[7.5rem]">
           <h2 className="font-bold text-2xl text-center mb-5">Plot Details</h2>
@@ -432,7 +440,7 @@ const ReservePlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            allDetails?.properties?.Shape_Length?.toFixed(5)
+                            (allDetails?.properties?.Area).toFixed(5)
                           ) + " Acres "
                         }
                       />
@@ -1562,7 +1570,7 @@ const ReservePlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            allDetails?.properties?.Shape_Length?.toFixed(5)
+                            (allDetails?.properties?.Area).toFixed(5)
                           ) + " Acres "
                         }
                       />
@@ -1598,4 +1606,4 @@ const ReservePlot = () => {
   );
 };
 
-export default ReservePlot;
+export default EditPlot;

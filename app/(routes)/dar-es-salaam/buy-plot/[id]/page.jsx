@@ -257,6 +257,7 @@ const EditPlot = () => {
       if (response.status === "success") {
         setVerifyLoading(true);
         toast.success("Thank you! your payment was made");
+        router.push("/dar-es-salaam/payment/success");
         verifyTransaction(response.reference);
       }
     },
@@ -362,7 +363,7 @@ const EditPlot = () => {
       });
       setVerifyLoading(false);
       toast.success("Transaction verified successfully");
-      router.push("/dar-es-salaam/payment/success");
+      
     }
     if (error) {
       console.log(error);
@@ -415,9 +416,7 @@ const EditPlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            allDetails.properties.Shape_Length !== undefined
-                              ? allDetails?.properties?.Shape_Length?.toFixed(5)
-                              : allDetails?.properties?.SHAPE_Leng?.toFixed(5)
+                            (allDetails?.properties?.Area).toFixed(5)
                           ) + " Acres "
                         }
                       />
@@ -1519,9 +1518,7 @@ const EditPlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            allDetails.properties.Shape_Length !== undefined
-                              ? allDetails?.properties?.Shape_Length?.toFixed(5)
-                              : allDetails?.properties?.SHAPE_Leng?.toFixed(5)
+                            (allDetails?.properties?.Area).toFixed(5)
                           ) + " Acres "
                         }
                       />

@@ -18,40 +18,47 @@ import {
   LayoutDashboard,
   Users,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const Sidebar = () => {
   const path = usePathname();
+  const searchParams = useSearchParams();
+  const search = searchParams.get("table");
 
   const menuLinks = [
     {
       id: 1,
       href: "/dashboard",
       title: "Dashboard",
+      query: 'dashboard',
       icon: <LayoutDashboard className="w-4 h-4 ml-2" />,
     },
     {
       id: 2,
       href: "/dashboard/trabuom",
       title: "Trabuom",
+      query:"trabuom",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
       id: 3,
       href: "/dashboard/nthc",
       title: "NTHC Kwadaso",
+      query: 'nthc',
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
       id: 4,
       href: "/dashboard/legon-hills",
       title: "Legon Hills",
+      query: 'legon-hills',
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
       id: 5,
       href: "/dashboard/dar-es-salaam",
       title: "Dar Es Salaam",
+      query: 'dar-es-salaam',
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
   ];
@@ -71,7 +78,8 @@ const Sidebar = () => {
                   <Link
                     href={link.href}
                     className={`relative flex items-center ${
-                      path === link.href && "font-semibold"
+                      path === link.href ||
+                      (search?.includes(link?.query) && "font-semibold")
                     }`}
                   >
                     {link.icon}

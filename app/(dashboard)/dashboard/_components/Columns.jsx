@@ -322,12 +322,13 @@ export function ViewPlotDialog({
       event.preventDefault();
     }
   };
-
+console.log(plotId)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[95vw]">
         <DialogHeader>
           <DialogTitle className="font-bold">Edit Plot Details</DialogTitle>
+          <small>{plotId}</small>
         </DialogHeader>
         <div>
           {plotDataLoading && (

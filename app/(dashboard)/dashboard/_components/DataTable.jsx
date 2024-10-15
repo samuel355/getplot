@@ -19,6 +19,7 @@ export function DataTable({ columns, data }) {
 
   // Global filter function to check all columns for a match with filterValue
   const globalFilterFn = (row, columnId, filterValue) => {
+    console.log("Filtering row:", row.original);
     return row.original // `row.original` gives access to the raw row data
       ? Object.values(row.original).some(value =>
           String(value).toLowerCase().includes(filterValue.toLowerCase())

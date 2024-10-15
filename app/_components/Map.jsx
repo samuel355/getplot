@@ -224,7 +224,7 @@ const Map = ({ parcels, center }) => {
 
     openInfoWindow = infoWindow;
   };
-
+  
   function getColorBasedOnStatus(status) {
     if (status === null || status === "Available" || status === undefined) {
       return "green";
@@ -273,7 +273,7 @@ const Map = ({ parcels, center }) => {
       }
     }
     let database;
-    //console.log(plotID)
+
     if (path === "/nthc") {
       database = "nthc";
     }

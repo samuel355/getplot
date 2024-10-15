@@ -20,7 +20,7 @@ export default function Contact() {
     phone: "",
   });
   const [message, setMessage] = useState();
-  const[loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onInputChange = (e) => {
     e.preventDefault();

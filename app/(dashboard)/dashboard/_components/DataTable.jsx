@@ -34,6 +34,16 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
+import { FileText, Sheet } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { toast } from "react-toastify";
+import { exportToPdf} from "../_actions/save-pdf";
+import { exportToExcel } from "../_actions/export-excel";
 
 export function DataTable({ columns, data, loading }) {
   const [sorting, setSorting] = useState([]);
@@ -90,7 +100,7 @@ export function DataTable({ columns, data, loading }) {
   };
 
   return (
-    <div className="rounded-md border pl-2">
+    <div className="rounded-md border pl-2 mt-3">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter Street Name..."
@@ -128,30 +138,62 @@ export function DataTable({ columns, data, loading }) {
           </Button> */}
       </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="ml-auto">
-            Columns
+      <div className="flex items-center justify-between py-1 px-2">
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div>
+          <Button variant="outline" className="mr-2" onClick={() => exportToPdf(data)}>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <FileText />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Export as PDF</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {table
-            .getAllColumns()
-            .filter((column) => column.getCanHide())
-            .map((column) => {
-              return (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
-        </DropdownMenuContent>
-      </DropdownMenu>
+          <Button variant="outline" onClick={() => exportToExcel(data)}>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Sheet />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Export as Excel</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </Button>
+        </div>
+      </div>
 
       <Table>
         <TableHeader>
@@ -159,7 +201,10 @@ export function DataTable({ columns, data, loading }) {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} className={header.column.columnDef.className}>
+                  <TableHead
+                    key={header.id}
+                    className={header.column.columnDef.className}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -180,7 +225,10 @@ export function DataTable({ columns, data, loading }) {
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className={cell.column.columnDef.className}>
+                  <TableCell
+                    key={cell.id}
+                    className={cell.column.columnDef.className}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -189,14 +237,14 @@ export function DataTable({ columns, data, loading }) {
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results found
+                {loading ? "Loading..." : " No results found"}
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mr-2">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -217,6 +265,7 @@ export function DataTable({ columns, data, loading }) {
           </span>
 
           <Button
+            className="mr-2"
             variant="outline"
             onClick={() => {
               setPageIndex((old) =>

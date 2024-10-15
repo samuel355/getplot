@@ -134,7 +134,9 @@ export default function NTHC() {
 
   return (
     <div className="">
-      <h1 className="text-primary font-bold text-2xl">NTHC Plot Data</h1>
+      <div className="-mt-5">
+        <h1 className="text-primary font-bold text-2xl">NTHC Plot</h1>
+      </div>
       <DataTable databaseName={databaseName} data={plotData} columns={columns} />
     </div>
   );

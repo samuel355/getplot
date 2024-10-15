@@ -292,6 +292,20 @@ const Map = () => {
     }
   };
 
+  function getColorBasedOnStatus(status) {
+    if ( status === "Available" || status === null) {
+      return "green";
+    } else if (status === "Reserved") {
+      return "black";
+    } else if (status === "Sold") {
+      return "red";
+    }else if(status === undefined){
+      return 'blue'
+    } else {
+      return "orange"; // Optional: handle unexpected status values
+    }
+  }
+
   // async function insertFeatures(features) {
   //   try {
   //     const transformedFeatures = features.map((feature) => ({
@@ -393,10 +407,8 @@ const Map = () => {
                     lng,
                   }))}
                   options={{
-                    fillColor: "#00FF00",
-                    fillOpacity: 0.8,
-                    strokeColor: "black",
-                    strokeOpacity: 0.4,
+                    fillColor: getColorBasedOnStatus(polygon.status),
+                    fillOpacity: 0.9,
                     strokeWeight: 1,
                   }}
                   onClick={() =>

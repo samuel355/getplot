@@ -33,7 +33,6 @@ const Map = ({ parcels, center }) => {
   const { user, isSignedIn } = useUser();
   const [newPriceEr, setNewPriceEr] = useState(false);
 
-
   const [loading, setLoading] = useState(false);
 
   const mapContainerStyle = {
@@ -41,13 +40,12 @@ const Map = ({ parcels, center }) => {
     width: "85%",
   };
 
-  const zoom = path === '/trabuom' ? 15.6 : 17;
+  const zoom = path === "/trabuom" ? 15.6 : 17;
 
   const { isLoaded, i } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
   });
-
 
   const onLoad = useCallback(
     function callback(map) {
@@ -146,7 +144,9 @@ const Map = ({ parcels, center }) => {
             Reserve Plot
           </a>
 
-          <a style= "display: ${user?.publicMetadata?.role != 'sysadmin' && 'none'}" href="${path}/edit-plot/${id}" id="edit_plot_button" class="border px-4 py-1 mb-2 rounded-md text-sm font-normal">
+          <a style= "display: ${
+            user?.publicMetadata?.role != "sysadmin" && "none"
+          }" href="${path}/edit-plot/${id}" id="edit_plot_button" class="border px-4 py-1 mb-2 rounded-md text-sm font-normal">
             Edit Plot
           </a>
 
@@ -158,7 +158,9 @@ const Map = ({ parcels, center }) => {
             Express Interest
           </a>
 
-          <button style= "display: ${user?.publicMetadata?.role != 'sysadmin' && 'none'}" id="changePlotID" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>
+          <button style= "display: ${
+            user?.publicMetadata?.role != "sysadmin" && "none"
+          }" id="changePlotID" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>
         </div>
       </div>
     `;
@@ -224,7 +226,7 @@ const Map = ({ parcels, center }) => {
 
     openInfoWindow = infoWindow;
   };
-  
+
   function getColorBasedOnStatus(status) {
     if (status === null || status === "Available" || status === undefined) {
       return "green";
@@ -269,7 +271,6 @@ const Map = ({ parcels, center }) => {
       } else {
         setNewPriceEr(false);
         setLoading(false);
-        
       }
     }
     let database;
@@ -280,8 +281,8 @@ const Map = ({ parcels, center }) => {
     if (path === "/dar-es-salaam") {
       database = "dar_es_salaam";
     }
-    if(path === "/legon-hills"){
-      database = "legon_hills"
+    if (path === "/legon-hills") {
+      database = "legon_hills";
     }
 
     let plotTotalAmount;

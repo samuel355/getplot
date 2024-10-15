@@ -178,6 +178,9 @@ td, tr{
 .tranform-sentence{
   text-transform: capitalize;
 }
+.lucide .lucide-x{
+  color: red
+}
 
 @media (max-width: 988px) {
   .sidebar{

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
 import { supabase } from "@/utils/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
-import {trabuomFeatures} from './trabuomData'
+import { trabuomFeatures } from "./trabuomData";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -214,6 +214,10 @@ const Map = () => {
             <a href="tel:0322008282" class="border px-4 py-1 rounded-md text-sm font-normal">
               Call For Info
             </a>
+
+             <a href="" class="border px-4 py-1 rounded-md text-sm font-normal mt-1">
+            Express Interest
+          </a>
   
             <button style= "display: ${
               user?.publicMetadata?.role != "sysadmin" && "none"
@@ -293,14 +297,14 @@ const Map = () => {
   };
 
   function getColorBasedOnStatus(status) {
-    if ( status === "Available" || status === null) {
+    if (status === "Available" || status === null) {
       return "green";
     } else if (status === "Reserved") {
       return "black";
     } else if (status === "Sold") {
       return "red";
-    }else if(status === undefined){
-      return 'blue'
+    } else if (status === undefined) {
+      return "blue";
     } else {
       return "orange"; // Optional: handle unexpected status values
     }

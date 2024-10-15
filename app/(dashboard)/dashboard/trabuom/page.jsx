@@ -3,15 +3,18 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { DataTable } from "../_components/DataTable";
-import { columns } from "../_components/Columns";
+import { columns } from "../_components/columns";
 
 export default function Trabuom() {
-  const [plotData, setPlotData] = useState([{ database: "trabuom" }]);
+  const [plotData, setPlotData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const databaseName = 'trabuom'
+  const databaseName = "trabuom";
+
   useEffect(() => {
     fetchPlotData();
   }, []);
+
+
 
   const fetchPlotData = async (bounds) => {
     let allRecords;
@@ -22,7 +25,6 @@ export default function Trabuom() {
       .select(
         `
         id, 
-        
         properties->>Plot_No,
         properties->>Street_Nam,
         status,
@@ -116,7 +118,7 @@ export default function Trabuom() {
               remainingAmount
             `
             )
-            .range(3000, 3279);
+            .range(3000, 3220);
 
           if (error4) {
             console.log(error4);
@@ -137,7 +139,12 @@ export default function Trabuom() {
         <h1 className="text-primary font-bold text-2xl">Trabuom Plot</h1>
       </div>
       <div className="mt-14">
-        <DataTable databaseName={databaseName} data={plotData} columns={columns} />
+        <DataTable
+          loading={loading}
+          databaseName={databaseName}
+          data={plotData}
+          columns={columns}
+        />
       </div>
     </div>
   );

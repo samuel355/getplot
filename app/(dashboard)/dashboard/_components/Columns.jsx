@@ -49,6 +49,7 @@ const plotInfo = {
   status: "",
 };
 
+//View Plot Dialog
 export function ViewPlotDialog({
   open,
   onOpenChange,
@@ -322,13 +323,12 @@ export function ViewPlotDialog({
       event.preventDefault();
     }
   };
-console.log(plotId)
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[95vw]">
         <DialogHeader>
           <DialogTitle className="font-bold">Edit Plot Details</DialogTitle>
-          <small>{plotId}</small>
         </DialogHeader>
         <div>
           {plotDataLoading && (
@@ -650,6 +650,31 @@ console.log(plotId)
 }
 
 export const columns = [
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <Checkbox className="-ml-2"
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && "indeterminate")
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => {
+  //     return (
+  //       <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //     )
+  //   },
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
+  
   {
     accessorKey: "Plot_No",
     cell: (info) => info.getValue(),
@@ -658,6 +683,7 @@ export const columns = [
     header: ({ column }) => {
       return (
         <Button
+          className="flex justify-start p-1"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -669,54 +695,80 @@ export const columns = [
   },
   {
     accessorKey: "Street_Nam",
-    header: "Street",
-    cell: (info) => info.getValue(),
-    className: "text-left lowercase",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="text-left"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Street
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "status",
-    header: "Status",
-    cell: (info) => info.getValue(),
-    className: "w-2",
+    header: () => <div className="text-right">Status</div>,
   },
   {
     accessorKey: "firstname",
-    header: "First Name",
-    cell: (info) => info.getValue(),
+    header: () => <div className="text-right">First Name</div>,
   },
   {
     accessorKey: "lastname",
-    header: "Last Name",
-    cell: (info) => info.getValue(),
+    header: () => <div className="text-right">Last Name</div>,
   },
   {
     accessorKey: "phone",
-    header: "Contact",
-    cell: (info) => info.getValue(),
+    header: () => <div className="text-right">Phone</div>,
   },
   {
     accessorKey: "plotTotalAmount",
-    header: "Plot Amount",
-    cell: (info) => info.getValue(),
-    className: "w-2",
+    header: () => <div className="text-right">Plot Amount</div>,
+    cell: ({ row }) => {
+      let value = row.getValue('plotTotalAmount') ?? 0;
+      const amount = parseFloat(value);
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "GHS",
+      }).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
   },
   {
     accessorKey: "paidAmount",
-    header: "Paid (GHS)",
-    cell: (info) => info.getValue(),
-    className: "w-2",
+    header: () => <div className="text-right">Paid</div>,
+    cell: ({ row }) => {
+      let value = row.getValue('paidAmount') ?? 0;
+      const amount = parseFloat(value);
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "GHS",
+      }).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
   },
   {
     accessorKey: "remainingAmount",
-    header: "Remaining (GHS)",
-    cell: (info) => info.getValue(),
-    className: "w-2 text-right",
+    header: () => <div className="text-right">Remaining</div>,
+    cell: ({ row }) => {
+      let value = row.getValue('remainingAmount') ?? 0;
+      const amount = parseFloat(value);
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "GHS",
+      }).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
   },
   {
-    accessorKey: "actions",
-    header: "Actions",
-    cell: (info) => info.getValue(),
-    className: "text-right",
+    id: "actions",
+    header: () => <div className="text-right">Action</div>,
     cell: ({ row }) => {
       const rowData = row.original;
       const plotId = rowData.id;
@@ -760,7 +812,7 @@ export const columns = [
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <button>Delete Plot</button>
+                <button onClick={() => console.log(row.getValue('remainingAmount'))}>Delete Plot</button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

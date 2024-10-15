@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { DataTable } from "../_components/DataTable";
 import { columns } from "../_components/Columns";
+import { toast } from "react-toastify";
 
 export default function DarEsSalaam() {
   const [plotData, setPlotData] = useState([]);

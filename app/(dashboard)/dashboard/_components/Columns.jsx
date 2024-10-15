@@ -336,6 +336,9 @@ export function ViewPlotDialog({
               <Loader className="animate-spin text-primary z-50" />
             </div>
           )}
+          {loading && (<div className="flex p-8 items-center flex-col justify-center">
+            <span>Loading...</span>
+          </div>)}
           {allDetails && (
             <form onSubmit={handleFormSubmit}>
               {/* Step 1 */}

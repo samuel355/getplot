@@ -57,7 +57,7 @@ export default function Trabuom() {
           East Legon Hills Plot
         </h1>
       </div>
-      <div className="mt-14">
+      <div className="mt-2">
         <DataTable
           loading={loading}
           databaseName={databaseName}

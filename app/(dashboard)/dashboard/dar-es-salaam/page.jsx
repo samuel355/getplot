@@ -56,7 +56,7 @@ export default function DarEsSalaam() {
       <div className="-mt-5">
         <h1 className="text-primary font-bold text-2xl">Dar Es Salaam Plot</h1>
       </div>
-      <div className="mt-14">
+      <div className="mt-2">
         <DataTable
           loading={loading}
           databaseName={databaseName}

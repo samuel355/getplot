@@ -201,19 +201,41 @@ export function ExpressInterestDialog({
         .select();
 
       if (data) {
-        //Todo: send email to us after customer shows interest
+        //Send Mail
+       try {
+        const res = await fetch("/api/mail-from-interests", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstname: customerData.firstname,
+            lastname: customerData.lastname,
+            email: customerData.email,
+            country: customerData.country,
+            phone: customerData.phone,
+            plot_number: allDetails.properties.Plot_No,
+            plot_name: allDetails.properties.Street_Nam,
+            plot_amount: allDetails.plotTotalAmount,
+            message: customerData.message,
+          }),
+        });
+       } catch (error) {
+        console.log(error)
+       }
 
         sonarToast(
           "Messge Sent Successfully, We will get in touch with you soon"
         );
-        toast.success("Messge Sent Successfully, We will get in touch with you soon")
+        toast.success(
+          "Messge Sent Successfully, We will get in touch with you soon"
+        );
         setLoader2(false);
-        console.log("updated successfully");
         setIsDialogOpen(false);
       }
       if (error) {
         console.log(error);
-        toast.error("Sorry errror happened updating the plot details");
+        toast.error("Sorry errror happened with the plot details");
         setLoader2(false);
       }
     } else {
@@ -235,7 +257,7 @@ export function ExpressInterestDialog({
     }
   };
 
-console.log(allDetails);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[95vw]">

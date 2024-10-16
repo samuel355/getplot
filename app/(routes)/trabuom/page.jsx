@@ -21,6 +21,7 @@ import { toast as tToast } from "sonner";
 import { Loader } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import Header from "@/app/_components/Header";
+import { ExpressInterestDialog } from "@/app/_components/express-interest-dialog";
 
 const containerStyle = {
   height: "75vh",
@@ -60,6 +61,8 @@ const isPolygonInBounds = (polygonBounds, mapBounds) => {
 };
 
 const Map = () => {
+  const pathname = usePathname();
+
   const [polygons, setPolygons] = useState([]);
   const [map, setMap] = useState(null); // Store the map object here
   const [mapBounds, setMapBounds] = useState(null);
@@ -70,6 +73,23 @@ const Map = () => {
   const { user, isSignedIn } = useUser();
   const [newPriceEr, setNewPriceEr] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [interestPlotId, setInterestPlotId] = useState();
+
+  let table;
+  if (pathname.includes("trabuom")) {
+    table = "trabuom";
+  }
+  if (pathname.includes("nthc")) {
+    table = "nthc";
+  }
+  if (pathname.includes("legon-hills")) {
+    table = "legon-hills";
+  }
+  if (pathname.includes("dar-es-salaam")) {
+    table = "dar-es-salaam";
+  }
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
@@ -215,9 +235,9 @@ const Map = () => {
               Call For Info
             </a>
 
-             <a href="" class="border px-4 py-1 rounded-md text-sm font-normal mt-1">
+             <p id="expressInterest" data-id=${id} class="border px-4 py-1 rounded-md text-sm font-normal mt-1 cursor-pointer">
             Express Interest
-          </a>
+          </p>
   
             <button style= "display: ${
               user?.publicMetadata?.role != "sysadmin" && "none"
@@ -285,15 +305,20 @@ const Map = () => {
       });
     });
 
-    openInfoWindow = infoWindow;
-  };
+    google.maps.event.addListener(infoWindow, "domready", () => {
+      const Btn = document.getElementById("expressInterest");
+      Btn.addEventListener("click", () => {
+        const id = Btn.getAttribute("data-id");
+        setIsDialogOpen(true);
+        setInterestPlotId(id);
 
-  const handleInput = (event) => {
-    const charCode = event.which ? event.which : event.keyCode;
-    // Prevent input if the key is not a number (0-9)
-    if (charCode < 48 || charCode > 57) {
-      event.preventDefault();
-    }
+        if (openInfoWindow) {
+          openInfoWindow.close();
+        }
+      });
+    });
+
+    openInfoWindow = infoWindow;
   };
 
   function getColorBasedOnStatus(status) {
@@ -310,44 +335,124 @@ const Map = () => {
     }
   }
 
-  // async function insertFeatures(features) {
-  //   try {
-  //     const transformedFeatures = features.map((feature) => ({
-  //       type: feature.type,
-  //       geometry: feature.geometry,
-  //       properties: feature.properties,
-  //     }));
+  const handleInput = (event) => {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Prevent input if the key is not a number (0-9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  };
 
-  //     const { data: checkDatabase, error: checkError } = await supabase
-  //       .from("trabuom_duplicate")
-  //       .select("*");
+  const hanldeSaveNewPrice = async () => {
+    setLoading(true);
+    let newPrice = document.getElementById("newPrice").value;
+    let newAmount;
+    if (newPrice === undefined || newPrice === "" || newPrice === null) {
+      toast.error("Check the new Price");
+      setNewPriceEr(true);
+      setLoading(false);
+      return;
+    } else {
+      newAmount = parseFloat(newPrice);
 
-  //     if (checkError) {
-  //       console.log(checkError);
-  //       return;
-  //     }
-  //     if (checkDatabase.length === 0) {
-  //       // Insert the transformed features into the 'trabuom' table
-  //       const { data, error } = await supabase
-  //         .from("trabuom_duplicate")
-  //         .insert(transformedFeatures)
-  //         .select("*");
+      if (isNaN(newAmount) || newAmount <= 0) {
+        toast.error("Check the new Price");
+        setNewPriceEr(true);
+        setLoading(false);
+        return;
+      } else {
+        setNewPriceEr(false);
+        setLoading(false);
+      }
+    }
+    let database;
 
-  //       console.log(data);
-  //       if (error) {
-  //         console.error("Error inserting features:", error);
-  //       } else {
-  //         console.log("Inserted features:", data);
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.error("Error:", err);
-  //   }
-  // }
+    if (path === "/nthc") {
+      database = "nthc";
+    }
+    if (path === "/dar-es-salaam") {
+      database = "dar_es_salaam";
+    }
+    if (path === "/legon-hills") {
+      database = "legon_hills";
+    }
 
-  // useEffect(() => {
-  //   //insertFeatures(trabuomFeatures);
-  // }, [])
+    let plotTotalAmount;
+    let paidAmount;
+    let remainingAmount;
+    try {
+      // Await the response from Supabase
+      const response = await supabase
+        .from(database)
+        .select("plotTotalAmount, paidAmount, remainingAmount, id")
+        .eq("id", plotID);
+
+      // Destructure the response to get data and error
+      const { data, error } = response;
+
+      // Check if there's an error
+      if (error) {
+        setLoading(false);
+        setModalOpen(false);
+        console.error("Error fetching data:", error);
+        toast.error("Sorry Error occured updating the plot price");
+        return; // Exit the function if there's an error
+      }
+
+      // Ensure data exists and is in the expected format
+      if (data && data.length > 0) {
+        plotTotalAmount = data[0].plotTotalAmount;
+        paidAmount = data[0].paidAmount;
+        remainingAmount = data[0].remainingAmount;
+
+        if (plotTotalAmount === null || plotTotalAmount === undefined) {
+          plotTotalAmount = 0;
+        }
+        if (paidAmount === null || paidAmount === undefined) {
+          paidAmount = 0;
+        }
+        if (remainingAmount === null || remainingAmount === undefined) {
+          remainingAmount = 0;
+        }
+
+        remainingAmount = newAmount - paidAmount;
+      } else {
+        setLoading(false);
+        setModalOpen(false);
+        console.log("No data found for the given plot ID.");
+      }
+    } catch (error) {
+      setLoading(false);
+      setModalOpen(false);
+      console.error("Unexpected error:", err);
+    }
+
+    saveInfo(remainingAmount, newAmount, paidAmount, database);
+  };
+
+  const saveInfo = async (remainingAmount, newAmount, paidAmount, database) => {
+    const { data, error } = await supabase
+      .from(database)
+      .update({
+        plotTotalAmount: newAmount,
+        remainingAmount: remainingAmount,
+        paidAmount: paidAmount,
+      })
+      .eq("id", plotID)
+      .select();
+
+    if (data) {
+      console.log(data);
+      tToast("Plot Price updated successfully");
+      setLoading(false);
+      setModalOpen(false);
+      window.location.reload();
+    }
+    if (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
 
   if (!isLoaded) return <div>Loading...</div>;
 
@@ -372,6 +477,51 @@ const Map = () => {
               </div>
             </div>
           )}
+          <form>
+            <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+              <DialogTrigger asChild></DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Change Plot Price</DialogTitle>
+                  <DialogDescription className="flex items-center gap-4 text-gray-800 text-sm">
+                    <span className="font-semibold text-sm">
+                      Plot Details:{" "}
+                    </span>
+                    <p className=" text-sm" id="description"></p>
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="flex items-center gap-4 font-medium">
+                    <Label htmlFor="name" className="text-right">
+                      Old Price:
+                    </Label>
+                    <p id="old-price" className="text-base text-gray-800"></p>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="newprice" className="text-right">
+                      New Price (GHS.)
+                    </Label>
+                    <Input
+                      className="col-span-3"
+                      type="number"
+                      id="newPrice"
+                      style={{ border: newPriceEr && "1px solid red" }}
+                      onKeyPress={handleInput}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button onClick={hanldeSaveNewPrice} type="button">
+                    {loading ? (
+                      <Loader className="animate-spin" />
+                    ) : (
+                      "Save changes"
+                    )}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </form>
           <GoogleMap
             className="relative"
             key={"google-map-1"}
@@ -431,6 +581,15 @@ const Map = () => {
           </GoogleMap>
         </div>
       </div>
+      {isDialogOpen && (
+        <ExpressInterestDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          plotId={interestPlotId}
+          setIsDialogOpen={setIsDialogOpen}
+          table={table}
+        />
+      )}
     </>
   );
 };

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { DataTable } from "../_components/DataTable";
-import { columns } from "../_components/Columns";
+import { columns } from "../_components/columns";
 
 export default function Trabuom() {
   const [plotData, setPlotData] = useState([]);

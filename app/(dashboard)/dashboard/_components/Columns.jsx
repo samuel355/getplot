@@ -336,9 +336,11 @@ export function ViewPlotDialog({
               <Loader className="animate-spin text-primary z-50" />
             </div>
           )}
-          {loading && (<div className="flex p-8 items-center flex-col justify-center">
-            <span>Loading...</span>
-          </div>)}
+          {loading && (
+            <div className="flex p-8 items-center flex-col justify-center">
+              <span>Loading...</span>
+            </div>
+          )}
           {allDetails && (
             <form onSubmit={handleFormSubmit}>
               {/* Step 1 */}
@@ -469,7 +471,7 @@ export function ViewPlotDialog({
                     </div>
                   </div>
                   <div className="mt-6">
-                    <h2 className="text-gray-900 font-semibold text-sm">
+                    <h2 className="text-gray-900 font-semibold text-sm mb-2">
                       Remarks
                     </h2>
                     <Textarea
@@ -493,11 +495,11 @@ export function ViewPlotDialog({
               {/* Step2 */}
 
               {step2 && (
-                <div className="px-6 pt-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center">
-                    <div className="">
-                      <h2 className="text-gray-900 font-semibold text-sm">
-                        First Name
+                <div className="pt-4">
+                  <div className="flex flex-col space-y-4">
+                    <div className=" flex items-center space-x-2">
+                      <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                        First Name:
                       </h2>
                       <Input
                         type="text"
@@ -506,6 +508,7 @@ export function ViewPlotDialog({
                         onChange={onInputChange}
                         value={firstname}
                         style={{ border: fnameEr && `1px solid red` }}
+                        className="w-3/4"
                       />
                       {fnameEr && (
                         <small className="text-red-900">
@@ -513,8 +516,8 @@ export function ViewPlotDialog({
                         </small>
                       )}
                     </div>
-                    <div className="">
-                      <h2 className="text-gray-900 font-semibold text-sm">
+                    <div className="flex items-center space-x-2">
+                      <h2 className="text-gray-900 font-semibold text-sm w-1/4">
                         Last Name(s)
                       </h2>
                       <Input
@@ -523,6 +526,7 @@ export function ViewPlotDialog({
                         onChange={onInputChange}
                         value={lastname}
                         style={{ border: lnameEr && `1px solid red` }}
+                        className="w-3/4"
                       />
                       {lnameEr && (
                         <small className="text-red-900">
@@ -531,9 +535,9 @@ export function ViewPlotDialog({
                       )}
                     </div>
 
-                    <div className="flex gap-2 flex-col">
-                      <h2 className="text-gray-900 font-semibold text-sm">
-                        Email Address
+                    <div className="flex items-center space-x-2">
+                      <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                        Email
                       </h2>
                       <Input
                         placeholder="Email Address"
@@ -542,56 +546,63 @@ export function ViewPlotDialog({
                         onChange={onInputChange}
                         value={email}
                         style={{ border: emailEr && `1px solid red` }}
+                        className="w-3/4"
                       />
                       {emailEr && (
                         <small className="text-red-900">Enter your email</small>
                       )}
                     </div>
 
-                    <div className="flex gap-2 flex-col">
-                      <h2 className="text-gray-900 font-semibold text-sm">
-                        Country
-                      </h2>
-                      <select
-                        onChange={onInputChange}
-                        className="w-full py-[9px] bg-white rounded-md text-dark border px-2"
-                        name="country"
-                        id="countryCode"
-                        value={country}
-                        style={{ border: countryEr && `1px solid red` }}
-                      >
-                        <option value="Select Country"> Select Country</option>
-                        <option data-countrycode="GH" value="Ghana (+233)">
-                          Ghana (+233)
-                        </option>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center space-x-2">
+                        <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                          Country
+                        </h2>
+                        <select
+                          onChange={onInputChange}
+                          className="py-[9px] bg-white rounded-md text-dark border px-2 w-3/4"
+                          name="country"
+                          id="countryCode"
+                          value={country}
+                          style={{ border: countryEr && `1px solid red` }}
+                        >
+                          <option value="Select Country">
+                            {" "}
+                            Select Country
+                          </option>
+                          <option data-countrycode="GH" value="Ghana (+233)">
+                            Ghana (+233)
+                          </option>
 
-                        <OptGroup />
-                      </select>
-                      {countryEr && (
-                        <small className="text-red-900">
-                          Selecet your country
-                        </small>
-                      )}
-                    </div>
+                          <OptGroup />
+                        </select>
+                        {countryEr && (
+                          <small className="text-red-900">
+                            Selecet your country
+                          </small>
+                        )}
+                      </div>
 
-                    <div className="flex gap-2 flex-col">
-                      <h2 className="text-gray-900 font-semibold text-sm">
-                        Phone Number
-                      </h2>
-                      <Input
-                        placeholder="Phone Number"
-                        name="phone"
-                        type="number"
-                        onChange={onInputChange}
-                        value={phone}
-                        onKeyPress={handleInput}
-                        style={{ border: phoneEr && `1px solid red` }}
-                      />
-                      {phoneEr && (
-                        <small className="text-red-900">
-                          Enter Phone Number
-                        </small>
-                      )}
+                      <div className="flex items-center space-x-2">
+                        <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                          Contact
+                        </h2>
+                        <Input
+                          placeholder="Phone Number"
+                          name="phone"
+                          type="number"
+                          onChange={onInputChange}
+                          value={phone}
+                          onKeyPress={handleInput}
+                          style={{ border: phoneEr && `1px solid red` }}
+                          className="w-3/4"
+                        />
+                        {phoneEr && (
+                          <small className="text-red-900">
+                            Enter Phone Number
+                          </small>
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex gap-2 flex-col">
@@ -623,7 +634,7 @@ export function ViewPlotDialog({
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                  <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-7 pb-2">
                     <button
                       onClick={handlePrev}
                       disabled={loader2}
@@ -677,7 +688,7 @@ export const columns = [
   //   enableSorting: false,
   //   enableHiding: false,
   // },
-  
+
   {
     accessorKey: "Plot_No",
     cell: (info) => info.getValue(),
@@ -731,7 +742,7 @@ export const columns = [
     accessorKey: "plotTotalAmount",
     header: () => <div className="text-right">Plot Amount</div>,
     cell: ({ row }) => {
-      let value = row.getValue('plotTotalAmount') ?? 0;
+      let value = row.getValue("plotTotalAmount") ?? 0;
       const amount = parseFloat(value);
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
@@ -745,7 +756,7 @@ export const columns = [
     accessorKey: "paidAmount",
     header: () => <div className="text-right">Paid</div>,
     cell: ({ row }) => {
-      let value = row.getValue('paidAmount') ?? 0;
+      let value = row.getValue("paidAmount") ?? 0;
       const amount = parseFloat(value);
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
@@ -759,7 +770,7 @@ export const columns = [
     accessorKey: "remainingAmount",
     header: () => <div className="text-right">Remaining</div>,
     cell: ({ row }) => {
-      let value = row.getValue('remainingAmount') ?? 0;
+      let value = row.getValue("remainingAmount") ?? 0;
       const amount = parseFloat(value);
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
@@ -815,7 +826,11 @@ export const columns = [
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <button onClick={() => console.log(row.getValue('remainingAmount'))}>Delete Plot</button>
+                <button
+                  onClick={() => console.log(row.getValue("remainingAmount"))}
+                >
+                  Delete Plot
+                </button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -21,10 +21,12 @@ import { toast } from "react-toastify";
 import { toast as tToast } from "sonner";
 import { Loader } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
+import { ExpressInterestDialog } from "./express-interest-dialog";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 const Map = ({ parcels, center }) => {
+  const pathname = usePathname()
   const [map, setMap] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [plotID, setPlotID] = useState();
@@ -32,8 +34,25 @@ const Map = ({ parcels, center }) => {
   const [newPrice, setNewPrice] = useState("");
   const { user, isSignedIn } = useUser();
   const [newPriceEr, setNewPriceEr] = useState(false);
-
   const [loading, setLoading] = useState(false);
+  const [isOpenDialog, setIsOpenDialog] = useState(false)
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [interestPlotId, setInterestPlotId] = useState();
+
+  let table;
+  if (pathname.includes("trabuom")) {
+    table = "trabuom";
+  }
+  if (pathname.includes("nthc")) {
+    table = "nthc";
+  }
+  if (pathname.includes("legon-hills")) {
+    table = "legon-hills";
+  }
+  if (pathname.includes("dar-es-salaam")) {
+    table = "dar-es-salaam";
+  }
 
   const mapContainerStyle = {
     height: "75vh",
@@ -154,9 +173,9 @@ const Map = ({ parcels, center }) => {
             Call For Info
           </a>
 
-          <a href="" class="border px-4 py-1 rounded-md text-sm font-normal mt-1">
+          <p id="expressInterest" data-id=${id} class="border px-4 cursor-pointer py-1 rounded-md text-sm font-normal mt-1">
             Express Interest
-          </a>
+          </p>
 
           <button style= "display: ${
             user?.publicMetadata?.role != "sysadmin" && "none"
@@ -217,6 +236,19 @@ const Map = ({ parcels, center }) => {
 
           setPlotID(id);
         }, 1000);
+
+        if (openInfoWindow) {
+          openInfoWindow.close();
+        }
+      });
+    });
+
+    google.maps.event.addListener(infoWindow, "domready", () => {
+      const Btn = document.getElementById("expressInterest");
+      Btn.addEventListener("click", () => {
+        const id = Btn.getAttribute("data-id");
+        setIsDialogOpen(true);
+        setInterestPlotId(id);
 
         if (openInfoWindow) {
           openInfoWindow.close();
@@ -477,6 +509,15 @@ const Map = ({ parcels, center }) => {
           </>
         ))}
       </GoogleMap>
+      {isDialogOpen && (
+        <ExpressInterestDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          plotId={interestPlotId}
+          setIsDialogOpen={setIsDialogOpen}
+          table={table}
+        />
+      )}
     </div>
   );
 };

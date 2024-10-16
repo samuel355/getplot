@@ -806,7 +806,7 @@ export const columns = [
       }
 
       return (
-        <>
+        <div className="flex justify-end">
           <DropdownMenu className="">
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -844,7 +844,7 @@ export const columns = [
               setIsDialogOpen={setIsDialogOpen}
             />
           )}
-        </>
+        </div>
       );
     },
   },

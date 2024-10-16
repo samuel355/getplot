@@ -138,7 +138,7 @@ export default function Trabuom() {
       <div className="-mt-5">
         <h1 className="text-primary font-bold text-2xl">Trabuom Plot</h1>
       </div>
-      <div className="mt-14">
+      <div className="mt-2">
         <DataTable
           loading={loading}
           databaseName={databaseName}

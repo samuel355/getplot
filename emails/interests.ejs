@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+      .email-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .email-header {
+        background-color: #003366;
+        padding: 20px;
+        color: white;
+        text-align: center;
+      }
+      .email-body {
+        padding: 20px;
+      }
+      .email-body h2 {
+        color: #003366;
+        margin-bottom: 20px;
+      }
+      .data-item {
+        margin-bottom: 10px;
+      }
+      .data-item span {
+        font-weight: bold;
+        color: #003366;
+      }
+      .email-footer {
+        background-color: #003366;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <!-- Email Header -->
+      <div class="email-header">
+        <h1>Customer & Plot Info</h1>
+      </div>
+
+      <!-- Email Body -->
+      <div class="email-body">
+        <h2>Submitted Information:</h2>
+        <div class="data-item"><span>First Name:</span> <%= firstname %></div>
+        <div class="data-item"><span>Last Name:</span>  <%= lastname %></div>
+        <div class="data-item"><span>Email:</span>  <%= email %></div>
+        <div class="data-item"><span>Country:</span>  <%= country %></div>
+        <div class="data-item"><span>Phone:</span> <%= phone %></div>
+        <div class="data-item"><span>Plot Number:</span>  <%= plot_number %></div>
+        <div class="data-item"><span>Plot Name:</span>  <%= plot_name %></div>
+        <div class="data-item"><span>Plot Amount:</span>  <%= plot_amount %></div>
+        <div class="data-item"><span>Message:</span>  <%= message %></div>
+      </div>
+
+    </div>
+  </body>
+</html>

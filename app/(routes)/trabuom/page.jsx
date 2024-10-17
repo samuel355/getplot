@@ -170,7 +170,7 @@ const Map = () => {
   };
 
   const handleMapLoad = (mapInstance) => {
-    setMap(mapInstance); // Set the map instance in state
+    setMap(mapInstance); // map instance in state
     const bounds = mapInstance.getBounds();
     if (bounds) {
       setMapBounds({

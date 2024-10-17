@@ -143,7 +143,7 @@ export function DataTable({ columns, data, loading }) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                Columns
+                Filter Columns
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

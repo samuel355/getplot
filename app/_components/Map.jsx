@@ -173,7 +173,9 @@ const Map = ({ parcels, center }) => {
             Call For Info
           </a>
 
-          <p id="expressInterest" data-id=${id} class="border px-4 cursor-pointer py-1 rounded-md text-sm font-normal mt-1">
+          <p id="expressInterest" style="display: ${
+            status === "Sold" || status === "Reserved" ? "none" : "block"
+          }" data-id=${id} class="border px-4 cursor-pointer py-1 rounded-md text-sm font-normal mt-1">
             Express Interest
           </p>
 

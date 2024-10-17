@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
 import { supabase } from "@/utils/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
-import { trabuomFeatures } from "./trabuomData";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -235,7 +234,9 @@ const Map = () => {
               Call For Info
             </a>
 
-             <p id="expressInterest" data-id=${id} class="border px-4 py-1 rounded-md text-sm font-normal mt-1 cursor-pointer">
+             <p id="expressInterest" style="display: ${
+               status === "Sold" || status === "Reserved" ? "none" : "block"
+             }" data-id=${id} class="border px-4 py-1 rounded-md text-sm font-normal mt-1 cursor-pointer">
             Express Interest
           </p>
   

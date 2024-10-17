@@ -1,8 +1,31 @@
-import React from "react";
+'use client'
+import React, { useEffect, useState } from "react";
 import Sidebar from "./dashboard/_components/Sidebar";
 import MobileMenu from "./dashboard/_components/MobileMenu";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const layout = ({ children }) => {
+  const { user, isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (isLoaded) {
+      if (!isSignedIn || user?.publicMetadata?.role !== 'sysadmin') {
+        router.push("/");
+      } else {
+        setLoading(false); // User is authorized, allow access
+      }
+    }
+  }, [user, router, isLoaded, isSignedIn]);
+
+  // Prevent rendering until we know whether the user is authorized
+  if (loading) {
+    return <div>Loading...</div>; // Or any other loading component/UI feedback
+  }
+  
+  console.log(user)
   return (
     <div className="w-full h-screen max-h-screen">
       <div className="flex flex-row gap-4 items-center">

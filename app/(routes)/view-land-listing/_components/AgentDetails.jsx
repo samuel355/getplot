@@ -3,7 +3,6 @@ import Image from "next/image";
 import React from "react";
 
 const AgentDetails = ({ listingDetails }) => {
-  
   return (
     <div className="flex gap-5 flex-wrap items-center justify-between p-5 rounded-lg shadow-sm border">
       <div className="flex items-center gap-6">

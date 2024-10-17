@@ -7,13 +7,13 @@ export async function POST(request) {
   try {
     const { from, subject, fullname, phone, message } = await request.json();
 
-     // Path to the email templates
+    // Path to the email templates
     const templatePath = path.resolve(
       process.cwd(),
       "emails",
       "receivemail.ejs"
     );
- 
+
     // Render the template with the provided data
     const htmlContent = await ejs.renderFile(templatePath, {
       fullname,
@@ -40,9 +40,11 @@ export async function POST(request) {
       to: process.env.SMTP_EMAIL, // list of receivers
       subject: subject, // Subject line
       html: htmlContent, // HTML body
-    }); 
+    });
 
-    return NextResponse.json({ message: "Email sent successfully. \n Our Rep will contact you shortly" });
+    return NextResponse.json({
+      message: "Email sent successfully. \n Our Rep will contact you shortly",
+    });
   } catch (error) {
     console.error("Error sending email:", error);
     return NextResponse.json(

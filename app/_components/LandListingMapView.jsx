@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import GoogleMapSection from "./GoogleMapSection";
 import LandListing from "./LandListing";
 
-
 const LandListingMapView = () => {
   const [listing, setListing] = useState([]);
   const [searchedAddress, setSearchedAddress] = useState();
@@ -34,7 +33,6 @@ const LandListingMapView = () => {
       console.log(error);
     }
   };
-
 
   const handleSearchClick = async () => {
     setShowSA(false);

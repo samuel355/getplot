@@ -6,7 +6,7 @@ export const exportToExcel = (data) => {
   if (data && data.length > 0) {
     // Create worksheet from data
     const worksheet = XLSX.utils.json_to_sheet(data);
-    
+
     // Create a new workbook
     const workbook = XLSX.utils.book_new();
 

@@ -10,10 +10,12 @@ const layout = ({ children }) => {
           <Sidebar />
         </div>
 
-        <div className="md:w-[75%] md:mt-0 md:ml-[22%] md:mr-[1.5rem] md:mb-[1.5rem] main-content lg:w-full xl:w-full h-full bg-white  overflow-x-hidden">
+        <div className="md:w-[75%] md:mt-0 md:ml-[22%] md:mr-[1.5rem] md:mb-[1.5rem] main-content lg:w-full xl:w-full 2xl:ml-[14.5%] xl:ml-[20%] h-full bg-white  overflow-x-hidden">
           <div className="w-full">
             <MobileMenu />
-            <div className="px-4 pt-2 md:pt-7 md:m-2 relative z-0">{children}</div>
+            <div className="px-4 pt-2 md:pt-7 md:m-2 relative z-0">
+              {children}
+            </div>
           </div>
         </div>
       </div>

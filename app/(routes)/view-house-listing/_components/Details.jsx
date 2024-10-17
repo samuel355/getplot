@@ -1,7 +1,14 @@
-
 import GoogleMapSection from "@/app/_components/GoogleMapSection";
 import { Button } from "@/components/ui/button";
-import { Bath, BedDouble, CarFront, Drill, Home, MapPin, Upload } from "lucide-react";
+import {
+  Bath,
+  BedDouble,
+  CarFront,
+  Drill,
+  Home,
+  MapPin,
+  Upload,
+} from "lucide-react";
 import React from "react";
 import AgentDetails from "./AgentDetails";
 
@@ -10,7 +17,9 @@ const Details = ({ listingDetails }) => {
     <div className="md:ml-6 lg:ml-6">
       <div className="flex items-center justify-between border-b pb-2 my-4 p-2">
         <div>
-          <h2 className="text-primary font-bold text-2xl">GHS {listingDetails?.price.toLocaleString()}</h2>
+          <h2 className="text-primary font-bold text-2xl">
+            GHS {listingDetails?.price.toLocaleString()}
+          </h2>
           <p className="flex items-center text-gray-400 mt-3">
             <MapPin className="h-6 w-6 text-gray-400" />
             <span className="text-base ml-2">{listingDetails?.address}</span>
@@ -39,7 +48,9 @@ const Details = ({ listingDetails }) => {
           <div className="flex items-center justify-center py-1 bg-cyan-100 rounded-sm shadow-sm text-primary p-2 gap-2">
             <Drill className="w-5 h-5" />
             <h2 className=" ">Size</h2>
-            <p className="text-base font-medium">{listingDetails?.areaSize} sqft</p>
+            <p className="text-base font-medium">
+              {listingDetails?.areaSize} sqft
+            </p>
           </div>
 
           <div className="flex items-center justify-center py-1 bg-cyan-100 rounded-sm shadow-sm text-primary p-2 gap-2">
@@ -65,13 +76,9 @@ const Details = ({ listingDetails }) => {
       <div className="p-2 mb-4">
         <h2 className="text-primary text-xl font-bold">Property Description</h2>
         <p>{listingDetails?.description}</p>
-        
       </div>
 
-      <div className="p-2">
-       
-      </div>
-
+      <div className="p-2"></div>
     </div>
   );
 };

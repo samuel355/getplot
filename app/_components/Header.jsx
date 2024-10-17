@@ -118,9 +118,7 @@ const Header = () => {
                 <DropdownMenuGroup className="w-[240px]">
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger>
-                      <button
-                        className={`hover:text-primary text-base `}
-                      >
+                      <button className={`hover:text-primary text-base `}>
                         Our Sites
                       </button>
                     </DropdownMenuSubTrigger>

@@ -35,7 +35,7 @@ const MapComponent = () => {
         },
         paint: {
           "line-color": "#1E90FF", // Color of the road
-          "line-width": 4,         // Thickness of the road line
+          "line-width": 4, // Thickness of the road line
         },
       });
 
@@ -51,8 +51,8 @@ const MapComponent = () => {
           "text-size": 14,
         },
         paint: {
-          "text-color": "#000",  // Label color
-          "text-halo-color": "#fff",  // Outline around text for better readability
+          "text-color": "#000", // Label color
+          "text-halo-color": "#fff", // Outline around text for better readability
           "text-halo-width": 1,
         },
       });
@@ -62,7 +62,9 @@ const MapComponent = () => {
     return () => map.remove();
   }, []);
 
-  return <div ref={mapContainerRef} style={{ width: "100%", height: "75vh" }} />;
+  return (
+    <div ref={mapContainerRef} style={{ width: "100%", height: "75vh" }} />
+  );
 };
 
 export default MapComponent;

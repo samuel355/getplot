@@ -282,7 +282,7 @@ const EditPlot = () => {
 
   return (
     <>
-    <Header />
+      <Header />
       {allDetails && (
         <div className="w-full px-10 md:px-16 lg:px-48 xl:px-48 pt-[7.5rem]">
           <h2 className="font-bold text-2xl text-center mb-5">
@@ -1445,7 +1445,7 @@ const EditPlot = () => {
                       {loader2 ? (
                         <Loader className="animate-spin" />
                       ) : (
-                       "Save and Publish"
+                        "Save and Publish"
                       )}
                     </button>
                   </div>
@@ -1453,7 +1453,6 @@ const EditPlot = () => {
               )}
 
               {/* Step 2 */}
-
             </form>
           </div>
         </div>

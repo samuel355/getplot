@@ -99,7 +99,7 @@ const HeaderAlt = () => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          
+
           <NavigationMenuItem>
             <NavigationMenuTrigger>Pages</NavigationMenuTrigger>
             <NavigationMenuContent>

@@ -10,11 +10,7 @@ export async function POST(request) {
     const subject = "Plot Payment";
 
     // Path to the email templates
-    const templatePath = path.resolve(
-      process.cwd(),
-      "emails",
-      "payment.ejs"
-    );
+    const templatePath = path.resolve(process.cwd(), "emails", "payment.ejs");
 
     // Render the template with the provided data
     const htmlContent = await ejs.renderFile(templatePath, {

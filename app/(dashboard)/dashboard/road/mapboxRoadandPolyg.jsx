@@ -60,7 +60,9 @@ const MapComponent = () => {
     return () => map.remove();
   }, []);
 
-  return <div ref={mapContainerRef} style={{ width: "100%", height: "75vh" }} />;
+  return (
+    <div ref={mapContainerRef} style={{ width: "100%", height: "75vh" }} />
+  );
 };
 
 export default MapComponent;

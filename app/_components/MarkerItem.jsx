@@ -22,7 +22,11 @@ const MarkerItem = ({ item, closeHandler, images }) => {
             position={selectedListing.coordinates}
             mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
           >
-            <MarkerListingItem closeHandler={() => setSelectedListing(null)}  item={item} images ={images} />
+            <MarkerListingItem
+              closeHandler={() => setSelectedListing(null)}
+              item={item}
+              images={images}
+            />
           </OverlayView>
         )}
       </MarkerF>

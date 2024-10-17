@@ -18,11 +18,7 @@ export async function POST(request) {
     } = await request.json();
 
     // Path to the email templates
-    const templatePath = path.resolve(
-      process.cwd(),
-      "emails",
-      "interests.ejs"
-    );
+    const templatePath = path.resolve(process.cwd(), "emails", "interests.ejs");
 
     // Render the template with the provided data
     const htmlContent = await ejs.renderFile(templatePath, {
@@ -34,7 +30,7 @@ export async function POST(request) {
       plot_number,
       plot_name,
       plot_amount,
-      message
+      message,
     });
 
     // Create a Nodemailer transporter using SMTP
@@ -52,7 +48,7 @@ export async function POST(request) {
     await transporter.sendMail({
       from: email, // sender address
       to: process.env.SMTP_EMAIL, // list of receivers
-      subject: 'Potential client to buy a land', // Subject line
+      subject: "Potential client to buy a land", // Subject line
       html: htmlContent, // HTML body
     });
 

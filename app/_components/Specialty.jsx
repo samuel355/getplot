@@ -9,14 +9,16 @@ const Speciality = () => {
           <h1 className="p-2 text-primary/80 text-sm bg-cyan-100 rounded-full w-28 text-center">
             About Us
           </h1>
-          <h1 className="font-bold text-xl capitalize mt-5">we specialize in quality home renovations</h1>
+          <h1 className="font-bold text-xl capitalize mt-5">
+            we specialize in quality home renovations
+          </h1>
           <p className="mt-3">
-            Welcome to Get One Plot Platform, your premier destination for all things
-            related to real estate buying. At Get One Plot Platform, we understand
-            that purchasing a property is not just a transaction; it's a
-            milestone in your life's journey. Whether you're a first-time buyer
-            or a seasoned investor, we're here to guide you every step of the
-            way.
+            Welcome to Get One Plot Platform, your premier destination for all
+            things related to real estate buying. At Get One Plot Platform, we
+            understand that purchasing a property is not just a transaction;
+            it's a milestone in your life's journey. Whether you're a first-time
+            buyer or a seasoned investor, we're here to guide you every step of
+            the way.
           </p>
           <div className="mt-4">
             <div className="flex flex-align-center gap-x-2">
@@ -43,8 +45,12 @@ const Speciality = () => {
               </div>
               <p>Serviced affordable lands</p>
             </div>
-            <Link href={"/trabuom"} className="mt-4 flex items-center underline font-bold">
-              Get a property <ArrowRight className="ml-1 w-5 h-5 animate-pulse" />
+            <Link
+              href={"/trabuom"}
+              className="mt-4 flex items-center underline font-bold"
+            >
+              Get a property{" "}
+              <ArrowRight className="ml-1 w-5 h-5 animate-pulse" />
             </Link>
           </div>
         </div>
@@ -57,7 +63,9 @@ const Speciality = () => {
             />
             <div className="absolute -bottom-10 sm:bottom-5 -left-2 md:-left-20">
               <div className="p-3 bg-white rounded-lg shadow-md w-72 flex items-center gap-x-3 dark:bg-dark-light">
-                <h1 className="text-sm">We have been serving our customers for over 10 years</h1>
+                <h1 className="text-sm">
+                  We have been serving our customers for over 10 years
+                </h1>
                 <div className="text-primary/80 rounded-full bg-cyan-100 p-2">
                   <Users className="w-5 h-5" />
                 </div>

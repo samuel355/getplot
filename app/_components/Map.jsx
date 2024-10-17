@@ -26,7 +26,7 @@ import { ExpressInterestDialog } from "./express-interest-dialog";
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 const Map = ({ parcels, center }) => {
-  const pathname = usePathname()
+  const pathname = usePathname();
   const [map, setMap] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [plotID, setPlotID] = useState();
@@ -35,7 +35,7 @@ const Map = ({ parcels, center }) => {
   const { user, isSignedIn } = useUser();
   const [newPriceEr, setNewPriceEr] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [interestPlotId, setInterestPlotId] = useState();

@@ -2,7 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/utils/supabase/client";
 import { useUser } from "@clerk/nextjs";
-import { Bath, BedDouble, CarFront, Loader, MapPin, PencilLine, Ruler, ScanEye, Trash } from "lucide-react";
+import {
+  Bath,
+  BedDouble,
+  CarFront,
+  Loader,
+  MapPin,
+  PencilLine,
+  Ruler,
+  ScanEye,
+  Trash,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -78,7 +88,11 @@ const UserListing = () => {
                     <Link href={"/view-user-listing/" + item.id}>
                       <Image
                         className="object-cover h-[250px] rounded cursor-pointer"
-                        src={item.houseListingImages[0]?.url ? item.houseListingImages[0]?.url : '/image-placeholder.png'}
+                        src={
+                          item.houseListingImages[0]?.url
+                            ? item.houseListingImages[0]?.url
+                            : "/image-placeholder.png"
+                        }
                         width={800}
                         height={250}
                       />
@@ -134,19 +148,22 @@ const UserListing = () => {
                     <div className="flex gap-4 items-center justify-end mt-2">
                       <Link href={"/edit-user-listing/" + item.id} className="">
                         <Button className="my-2 text-sm cursor-pointer">
-                        <PencilLine className="w-4 h-4 mr-2" />  Edit
+                          <PencilLine className="w-4 h-4 mr-2" /> Edit
                         </Button>
                       </Link>
-                      <Link href={"/view-house-listing/" + item.id} className="">
+                      <Link
+                        href={"/view-house-listing/" + item.id}
+                        className=""
+                      >
                         <Button className="my-2 text-sm cursor-pointer">
-                          <ScanEye className="w-4 h-4 mr-2" /> View 
+                          <ScanEye className="w-4 h-4 mr-2" /> View
                         </Button>
                       </Link>
 
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button variant="outline" className="text-red-600">
-                          <Trash className="w-4 h-4 mr-2" />  Delete
+                            <Trash className="w-4 h-4 mr-2" /> Delete
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px]">
@@ -169,7 +186,7 @@ const UserListing = () => {
                               className="bg-red-700 text-white"
                               type="submit"
                             >
-                              <Trash className="w-4 h-4 mr-2" />  Delete
+                              <Trash className="w-4 h-4 mr-2" /> Delete
                             </Button>
                           </DialogFooter>
                         </DialogContent>

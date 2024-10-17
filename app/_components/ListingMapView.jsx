@@ -9,15 +9,14 @@ const ListingMapView = ({ type }) => {
   const [listing, setListing] = useState([]);
   const [searchedAddress, setSearchedAddress] = useState();
   const [searchedCoordinates, setSearchedCoordinates] = useState();
-  const [getSearchedResult, setGetSearchResult] = useState(false)
+  const [getSearchedResult, setGetSearchResult] = useState(false);
 
   //Filters
-  const [showSA, setShowSA] = useState(false)
-  const [bedCount, setBedCount] = useState(0)
-  const [bathCount, setBathCount] = useState(0)
-  const [parkingCount, setParkingCount] = useState(0)
-  const [homeType, setHomeType] = useState()
-
+  const [showSA, setShowSA] = useState(false);
+  const [bedCount, setBedCount] = useState(0);
+  const [bathCount, setBathCount] = useState(0);
+  const [parkingCount, setParkingCount] = useState(0);
+  const [homeType, setHomeType] = useState();
 
   useEffect(() => {
     getLatestListing();
@@ -40,9 +39,9 @@ const ListingMapView = ({ type }) => {
   };
 
   const handleSearchClick = async () => {
-    setShowSA(false)
+    setShowSA(false);
     // const searchTerm = searchedAddress?.value?.structured_formatting?.main_text;
-    
+
     // if (searchTerm != "") {
     //   let query = supabase
     //     .from("houselistings")
@@ -58,7 +57,7 @@ const ListingMapView = ({ type }) => {
     //   if(homeType){
     //     query = query.eq('propertyType', homeType)
     //   }
-    //   const {data, error} = await query  
+    //   const {data, error} = await query
 
     //   if (data) {
     //     setShowSA(true)
@@ -89,19 +88,21 @@ const ListingMapView = ({ type }) => {
           searchedAddress={(value) => setSearchedAddress(value)}
           searchedCoordinates={(value) => setSearchedCoordinates(value)}
           getSearchedResult={getSearchedResult}
-
           setBathCount={setBathCount}
-          setBedCount ={setBedCount}
+          setBedCount={setBedCount}
           setParkingCount={setParkingCount}
           setHomeType={setHomeType}
-
           showSA={showSA}
           setShowSA={setShowSA}
         />
       </div>
 
       <div className="w-full md:w-1/2 lg:w-1/2 fixed-column ml-8 hidden md:block lg:block xl:block  pb-24">
-        <GoogleMapSection listing={listing} searchedCoordinates={searchedCoordinates} images={listing[0]?.houseListingImages} />
+        <GoogleMapSection
+          listing={listing}
+          searchedCoordinates={searchedCoordinates}
+          images={listing[0]?.houseListingImages}
+        />
       </div>
     </div>
   );

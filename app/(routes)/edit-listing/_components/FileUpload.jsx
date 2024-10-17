@@ -26,19 +26,18 @@ const FileUpload = ({ setImages, dbImages }) => {
   };
 
   const handleImageDelete = (id) => {
-    const updatedItems = imagePreview.filter(image => image.id !== id);
+    const updatedItems = imagePreview.filter((image) => image.id !== id);
     const remainingFiles = idFiles.filter((file) => file.id !== id);
-    
+
     setIdFiles(remainingFiles);
     setImages(remainingFiles);
 
     setImagePreview(updatedItems);
-
   };
 
   const handleImageDBDelete = (index) => {
-    console.log(index)
-  }
+    console.log(index);
+  };
 
   return (
     <div>
@@ -82,63 +81,56 @@ const FileUpload = ({ setImages, dbImages }) => {
         </label>
       </div>
       <div className="flex flexr-row gap-4 mt-5 flex-wrap">
-        {
-          imagePreview.length > 0 ? (
-            imagePreview.map((image) => (
-              <div className="relative" key={image.id}>
-                <img
-                  src={image.url}
-                  alt="preview"
-                  className="w-32 h-32 object-cover rounded-lg shadow-sm border-radius"
-                />
-    
-                <div className="z-20 absolute top-0 right-0 bg-white shadow-md items-center">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleImageDelete(image.id);
-                    }}
-                    className="text-center"
-                  >
-                    <X className="text-red-800 p-1" />
-                  
-                  </button>
-                </div>
-              </div>
-            ))
-          ): (
-            <></>
-          )
-        }
-        {
-          dbImages.length > 0 ? (
-            dbImages.map((image) => (
-              <div className="relative" key={image.id}>
-                <img
-                  src={image.url}
-                  alt="preview"
-                  className="w-32 h-32 object-cover rounded-lg shadow-sm border-radius"
-                />
-    
-                <div className="z-20 absolute top-0 right-0 bg-white shadow-md items-center">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleImageDBDelete(image.id);
-                    }}
-                    className="text-center"
-                  >
-                    <X className="text-red-800 p-1" />
-                  
-                  </button>
-                </div>
-              </div>
-            ))
-          ): (
-            <></>
-          )
-        }
+        {imagePreview.length > 0 ? (
+          imagePreview.map((image) => (
+            <div className="relative" key={image.id}>
+              <img
+                src={image.url}
+                alt="preview"
+                className="w-32 h-32 object-cover rounded-lg shadow-sm border-radius"
+              />
 
+              <div className="z-20 absolute top-0 right-0 bg-white shadow-md items-center">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleImageDelete(image.id);
+                  }}
+                  className="text-center"
+                >
+                  <X className="text-red-800 p-1" />
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <></>
+        )}
+        {dbImages.length > 0 ? (
+          dbImages.map((image) => (
+            <div className="relative" key={image.id}>
+              <img
+                src={image.url}
+                alt="preview"
+                className="w-32 h-32 object-cover rounded-lg shadow-sm border-radius"
+              />
+
+              <div className="z-20 absolute top-0 right-0 bg-white shadow-md items-center">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleImageDBDelete(image.id);
+                  }}
+                  className="text-center"
+                >
+                  <X className="text-red-800 p-1" />
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

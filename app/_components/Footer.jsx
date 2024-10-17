@@ -52,19 +52,30 @@ const Footer = () => {
             <h2 className="text-xl font-semibold">Services</h2>
             <ul>
               <li className="my-2">
-                <a className="text-sm hover:underline" href="#"> Order Tracking</a>
+                <a className="text-sm hover:underline" href="#">
+                  {" "}
+                  Order Tracking
+                </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">Whislist</a>
+                <a href="#" className="text-sm hover:underline">
+                  Whislist
+                </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">Terms of use</a>
+                <a href="#" className="text-sm hover:underline">
+                  Terms of use
+                </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">Contact support</a>
+                <a href="#" className="text-sm hover:underline">
+                  Contact support
+                </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">2 year guarantee</a>
+                <a href="#" className="text-sm hover:underline">
+                  2 year guarantee
+                </a>
               </li>
             </ul>
           </div>
@@ -72,20 +83,32 @@ const Footer = () => {
           <div className="flex-1 basis-[10rem]">
             <h2 className="text-xl font-semibold">Quick Links</h2>
             <ul>
-            <li className="my-2 text-muted">
-                <Link href="/contact-us" className="text-sm hover:underline"> Contact Us</Link>
+              <li className="my-2 text-muted">
+                <Link href="/contact-us" className="text-sm hover:underline">
+                  {" "}
+                  Contact Us
+                </Link>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline"> About Us</a>
+                <a href="#" className="text-sm hover:underline">
+                  {" "}
+                  About Us
+                </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">Services</a>
+                <a href="#" className="text-sm hover:underline">
+                  Services
+                </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">Blog</a>
+                <a href="#" className="text-sm hover:underline">
+                  Blog
+                </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">Portifolio</a>
+                <a href="#" className="text-sm hover:underline">
+                  Portifolio
+                </a>
               </li>
             </ul>
           </div>
@@ -94,19 +117,30 @@ const Footer = () => {
             <h2 className="text-xl font-semibold">Business</h2>
             <ul>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline"> Success</a>
+                <a href="#" className="text-sm hover:underline">
+                  {" "}
+                  Success
+                </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">Guide</a>
+                <a href="#" className="text-sm hover:underline">
+                  Guide
+                </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">Mission</a>
+                <a href="#" className="text-sm hover:underline">
+                  Mission
+                </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">Terms & Conditions</a>
+                <a href="#" className="text-sm hover:underline">
+                  Terms & Conditions
+                </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">Pricacy Policy</a>
+                <a href="#" className="text-sm hover:underline">
+                  Pricacy Policy
+                </a>
               </li>
             </ul>
           </div>
@@ -125,12 +159,17 @@ const Footer = () => {
                 className="px-4 py-[0.35rem] card-bordered dark:shadow-none outline-none bg-transparent rounded-tl-full rounded-bl-full border"
                 placeholder="Email Address..."
               />
-              <button className="text-primary bg-white px-2 py-[7px] animate-pulse rounded-tr-full rounded-br-full">Subscribe</button>
+              <button className="text-primary bg-white px-2 py-[7px] animate-pulse rounded-tr-full rounded-br-full">
+                Subscribe
+              </button>
             </div>
           </div>
         </div>
       </footer>
-      <div className="py-2 mt-3 text-center text-muted border-dark" style={{borderTop: '1px solid grey'}}>
+      <div
+        className="py-2 mt-3 text-center text-muted border-dark"
+        style={{ borderTop: "1px solid grey" }}
+      >
         <p className="text-sm">Get One Plot | All Rights Reserved</p>
       </div>
     </div>

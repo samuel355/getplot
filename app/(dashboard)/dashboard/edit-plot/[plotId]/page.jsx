@@ -83,7 +83,6 @@ const EditPlot = () => {
   const [phoneEr, setPhoneEr] = useState(false);
   const [resAddressEr, setResAddressEr] = useState(false);
 
-
   useEffect(() => {
     if (plotId && databaseName) {
       fechPlotData();
@@ -227,7 +226,7 @@ const EditPlot = () => {
     if (data) {
       toast.success("Plot details updated successfully");
       setLoader2(false);
-      router.push(`/database/${table}`)
+      router.push(`/database/${table}`);
       setTimeout(() => {
         window.location.reload();
       }, 1500);

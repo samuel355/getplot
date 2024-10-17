@@ -71,7 +71,6 @@ const HeaderAlt = () => {
         </div>
 
         <div className="hidden md:hidden lg:flex items-center gap-2">
-
           <NavigationMenuList>
             <NavigationMenuItem>
               <ListItem href={"/"} title={"Home"}>
@@ -120,7 +119,7 @@ const HeaderAlt = () => {
               </ListItem>
             </NavigationMenuItem>
 
-              {/* <NavigationMenuItem>
+            {/* <NavigationMenuItem>
               <NavigationMenuTrigger
                 className={`flex border-0 items-center hover:text-primary text-base ${
                   (path === "/about-us" && "text-primary font-extrabold") ||

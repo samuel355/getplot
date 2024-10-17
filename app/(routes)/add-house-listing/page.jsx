@@ -21,7 +21,6 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Header from "@/app/_components/Header";
 
-
 const page = () => {
   const [selectedAddress, setSelectedAddress] = useState();
   const [coordinates, setCoordinates] = useState();

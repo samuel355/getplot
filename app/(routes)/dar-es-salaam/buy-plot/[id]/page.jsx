@@ -265,7 +265,7 @@ const EditPlot = () => {
   };
 
   const verifyTransaction = async (reference) => {
-    setVerifyLoading(true)
+    setVerifyLoading(true);
     const secretKey = process.env.NEXT_PUBLIC_PAYSTACK_SECRET_KEY;
 
     try {
@@ -363,7 +363,6 @@ const EditPlot = () => {
       });
       setVerifyLoading(false);
       toast.success("Transaction verified successfully");
-      
     }
     if (error) {
       console.log(error);

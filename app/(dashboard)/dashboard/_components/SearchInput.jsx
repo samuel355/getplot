@@ -6,5 +6,5 @@ export function SearchInput({ value, onChange, placeholder }) {
       onChange={onChange}
       placeholder={placeholder}
     />
-  )
+  );
 }

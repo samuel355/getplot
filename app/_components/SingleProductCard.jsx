@@ -5,13 +5,15 @@ import { ArrowRight, Bath, Bed, LandPlot, MapPin } from "lucide-react";
 import Image from "next/image";
 
 const SingleProductCard = ({ property }) => {
-
   return (
     <div
       className={`flex-1 basis-[18rem] shadow-light dark:border-card-dark border rounded-lg overflow-hidden relative group`}
     >
       <div className="group !opacity-100 overflow-hidden relative">
-        <Link href={"/view-house-listing/"+property.id} className="!opacity-100">
+        <Link
+          href={"/view-house-listing/" + property.id}
+          className="!opacity-100"
+        >
           <Image
             width={240}
             height={350}
@@ -30,7 +32,10 @@ const SingleProductCard = ({ property }) => {
       </div>
       <CardLabels purpose={property.type} />
       <div className="p-3">
-        <Link href={"/view-house-listing/"+property.id} className="group-hover:text-primary transition-a">
+        <Link
+          href={"/view-house-listing/" + property.id}
+          className="group-hover:text-primary transition-a"
+        >
           <h1 className="text-lg font-bold capitalize">{property.title}</h1>
         </Link>
         <div className="flex justify-between mt-3">
@@ -55,9 +60,11 @@ const SingleProductCard = ({ property }) => {
         </div>
 
         <div className="mt-4 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-primary">GHS. {property.price.toLocaleString()}</h1>
+          <h1 className="text-lg font-semibold text-primary">
+            GHS. {property.price.toLocaleString()}
+          </h1>
           <Link
-            href={"/view-house-listing/"+property.id}
+            href={"/view-house-listing/" + property.id}
             className="btn btn-secondary animate-pulse flex items-center hover:underline"
           >
             View Details <ArrowRight className="w-5 h-5" />{" "}

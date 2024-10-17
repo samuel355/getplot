@@ -41,7 +41,6 @@ const SuccessPage = () => {
                 />
               </svg>
               <Link href="/trabuom" class="text-sm font-medium text-white mt-3">
-                
                 You can buy or reserve other plots{" "}
               </Link>
             </a>

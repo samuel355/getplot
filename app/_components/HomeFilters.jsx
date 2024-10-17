@@ -43,12 +43,24 @@ const HomeFilters = () => {
               id=""
               className="w-full bg-transparent border-0 outline-none dark:bg-hover-color-dark opacity-70"
             >
-              <option value="GHS. 40,000 - GHS. 80,000">GHS. 40,000 - GHS. 80,000</option>
-              <option value="GHS. 80,000 - GHS. 120,000">GHS. 80,000 - GHS. 120,000</option>
-              <option value="GHS. 120,000 - GHS. 200,000">GHS. 120,000 - GHS. 200,000</option>
-              <option value="GHS. 200,000 - GHS. 300,000">GHS. 200,000 - GHS. 300,000</option>
-              <option value="GHS. 300,000 - GHS. 500,000">GHS. 300,000 - GHS. 500,000</option>
-              <option value="GHS. 500,000 - GHS. 1000,000">GHS. 500,000 - GHS. 1,000,000+</option>
+              <option value="GHS. 40,000 - GHS. 80,000">
+                GHS. 40,000 - GHS. 80,000
+              </option>
+              <option value="GHS. 80,000 - GHS. 120,000">
+                GHS. 80,000 - GHS. 120,000
+              </option>
+              <option value="GHS. 120,000 - GHS. 200,000">
+                GHS. 120,000 - GHS. 200,000
+              </option>
+              <option value="GHS. 200,000 - GHS. 300,000">
+                GHS. 200,000 - GHS. 300,000
+              </option>
+              <option value="GHS. 300,000 - GHS. 500,000">
+                GHS. 300,000 - GHS. 500,000
+              </option>
+              <option value="GHS. 500,000 - GHS. 1000,000">
+                GHS. 500,000 - GHS. 1,000,000+
+              </option>
             </select>
           </div>
         </div>

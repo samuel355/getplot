@@ -1,7 +1,6 @@
-
-import { CircleX } from 'lucide-react'
-import Link from 'next/link'
-import React from 'react'
+import { CircleX } from "lucide-react";
+import Link from "next/link";
+import React from "react";
 
 const ErrorPage = () => {
   return (
@@ -9,11 +8,9 @@ const ErrorPage = () => {
       <div class="flex h-[60vh] items-center justify-center">
         <div>
           <div class="flex flex-col items-center space-y-2">
-            <CircleX className='w-10 h-10 text-red-700' />
+            <CircleX className="w-10 h-10 text-red-700" />
             <h1 class="text-4xl font-bold">Payment Unsuccessfull</h1>
-            <p>
-              Your Payment was unsuccessful. Try again Later
-            </p>
+            <p>Your Payment was unsuccessful. Try again Later</p>
             <a class="inline-flex items-center rounded border border-indigo-600 bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 focus:outline-none focus:ring">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -29,13 +26,16 @@ const ErrorPage = () => {
                   d="M7 16l-4-4m0 0l4-4m-4 4h18"
                 />
               </svg>
-              <Link href="/legon-hills" class="text-sm font-medium text-white"> View Plots </Link>
+              <Link href="/legon-hills" class="text-sm font-medium text-white">
+                {" "}
+                View Plots{" "}
+              </Link>
             </a>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ErrorPage
+export default ErrorPage;

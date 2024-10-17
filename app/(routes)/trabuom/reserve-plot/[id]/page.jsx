@@ -346,7 +346,7 @@ const EditPlot = () => {
   };
 
   const savePaymentDetails = async (paymentData, amount, data) => {
-    const remainingAmount = plotTotalAmount - amount
+    const remainingAmount = plotTotalAmount - amount;
     const { data: dbData, error } = await supabase
       .from("trabuom")
       .update({
@@ -363,7 +363,7 @@ const EditPlot = () => {
         paymentDetails: paymentData,
         paymentId: data.data.id,
         paymentReference: data.data.reference,
-        status: 'Reserved',
+        status: "Reserved",
       })
       .eq("id", id)
       .select();
@@ -391,7 +391,6 @@ const EditPlot = () => {
       });
       setVerifyLoading(false);
       toast.success("Transaction verified successfully");
-      
     }
     if (error) {
       console.log(error);
@@ -400,7 +399,7 @@ const EditPlot = () => {
 
   return (
     <>
-    <Header />
+      <Header />
       {allDetails && (
         <div className="w-full px-10 md:px-16 lg:px-48 xl:px-48 mb-10 pt-[7.5rem]">
           <h2 className="font-bold text-2xl text-center mb-5">Plot Details</h2>
@@ -440,7 +439,10 @@ const EditPlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            (allDetails?.properties?.Shape_Area * 3109111.525693)?.toFixed(5)
+                            (
+                              allDetails?.properties?.Shape_Area *
+                              3109111.525693
+                            )?.toFixed(5)
                           ) + " Acres "
                         }
                       />
@@ -1570,7 +1572,10 @@ const EditPlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            (allDetails?.properties?.Shape_Area * 3109111.525693)?.toFixed(5)
+                            (
+                              allDetails?.properties?.Shape_Area *
+                              3109111.525693
+                            )?.toFixed(5)
                           ) + " Acres "
                         }
                       />

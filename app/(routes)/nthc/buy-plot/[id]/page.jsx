@@ -334,8 +334,8 @@ const EditPlot = () => {
       })
       .eq("id", id)
       .select();
-      
-      //Send Email to the customer
+
+    //Send Email to the customer
     if (dbData) {
       const res = await fetch("/api/send-email", {
         method: "POST",
@@ -359,7 +359,6 @@ const EditPlot = () => {
       });
       setVerifyLoading(false);
       toast.success("Transaction verified successfully");
-      
     }
     if (error) {
       console.log(error);
@@ -408,7 +407,10 @@ const EditPlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            (allDetails?.properties?.SHAPE_Area * 3109111.525693)?.toFixed(5)
+                            (
+                              allDetails?.properties?.SHAPE_Area *
+                              3109111.525693
+                            )?.toFixed(5)
                           ) + " Acres "
                         }
                       />
@@ -1510,7 +1512,10 @@ const EditPlot = () => {
                         name="plotSize"
                         value={
                           parseFloat(
-                            (allDetails?.properties?.SHAPE_Area * 3109111.525693)?.toFixed(5)
+                            (
+                              allDetails?.properties?.SHAPE_Area *
+                              3109111.525693
+                            )?.toFixed(5)
                           ) + " Acres "
                         }
                       />

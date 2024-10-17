@@ -18,18 +18,18 @@ export default function Page() {
               </a>
 
               <div className="bg-primary/70 p-4">
-              <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-                Welcome to <br /> Get One Plot
-              </h2>
+                <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
+                  Welcome to <br /> Get One Plot
+                </h2>
 
-              <p className="mt-4 leading-relaxed text-white/90">
-                Discover your dream land with our real estate app! Browse
-                hundreds of land listings, connect with trusted agents, and find the
-                perfect property tailored to your needs. With intuitive search
-                filters and real-time updates, your next land is just a tap
-                away. Simplify your property search and embark on your journey
-                to homeownership today!
-              </p>
+                <p className="mt-4 leading-relaxed text-white/90">
+                  Discover your dream land with our real estate app! Browse
+                  hundreds of land listings, connect with trusted agents, and
+                  find the perfect property tailored to your needs. With
+                  intuitive search filters and real-time updates, your next land
+                  is just a tap away. Simplify your property search and embark
+                  on your journey to homeownership today!
+                </p>
               </div>
             </div>
           </section>

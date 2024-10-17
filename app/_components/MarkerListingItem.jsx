@@ -10,12 +10,11 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 const MarkerListingItem = ({ item, closeHandler, images }) => {
-
   const handleGetDirections = () => {
-    const container = document.getElementById("locate")
-    container.style.display = 'block'
-    document.getElementById("locationContainer").scrollTop = 0
-    closeHandler()
+    const container = document.getElementById("locate");
+    container.style.display = "block";
+    document.getElementById("locationContainer").scrollTop = 0;
+    closeHandler();
   };
 
   return (

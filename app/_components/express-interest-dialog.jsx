@@ -202,27 +202,27 @@ export function ExpressInterestDialog({
 
       if (data) {
         //Send Mail
-       try {
-        const res = await fetch("/api/mail-from-interests", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            firstname: customerData.firstname,
-            lastname: customerData.lastname,
-            email: customerData.email,
-            country: customerData.country,
-            phone: customerData.phone,
-            plot_number: allDetails.properties.Plot_No,
-            plot_name: allDetails.properties.Street_Nam,
-            plot_amount: allDetails.plotTotalAmount,
-            message: customerData.message,
-          }),
-        });
-       } catch (error) {
-        console.log(error)
-       }
+        try {
+          const res = await fetch("/api/mail-from-interests", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              firstname: customerData.firstname,
+              lastname: customerData.lastname,
+              email: customerData.email,
+              country: customerData.country,
+              phone: customerData.phone,
+              plot_number: allDetails.properties.Plot_No,
+              plot_name: allDetails.properties.Street_Nam,
+              plot_amount: allDetails.plotTotalAmount,
+              message: customerData.message,
+            }),
+          });
+        } catch (error) {
+          console.log(error);
+        }
 
         sonarToast(
           "Messge Sent Successfully, We will get in touch with you soon"
@@ -256,7 +256,6 @@ export function ExpressInterestDialog({
       event.preventDefault();
     }
   };
-
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

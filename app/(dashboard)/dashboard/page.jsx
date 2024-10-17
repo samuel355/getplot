@@ -1,5 +1,5 @@
-'use client'
-import Link from "next/link"
+"use client";
+import Link from "next/link";
 import {
   Activity,
   ArrowUpRight,
@@ -10,22 +10,18 @@ import {
   Package2,
   Search,
   Users,
-} from "lucide-react"
+} from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,9 +29,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Table,
   TableBody,
@@ -43,11 +39,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { DashboardIcon } from "@radix-ui/react-icons"
+} from "@/components/ui/table";
+import { DashboardIcon } from "@radix-ui/react-icons";
 
 export const description =
-  "An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image."
+  "An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image.";
 
 const Dashboard = () => {
   return (
@@ -93,8 +89,9 @@ const Dashboard = () => {
               <CardTitle className="text-sm font-medium">
                 Total Revenue
               </CardTitle>
-              <span className="h-4 w-4 text-muted-foreground text-sm font-bold">GHS</span>
-              
+              <span className="h-4 w-4 text-muted-foreground text-sm font-bold">
+                GHS
+              </span>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">₵ 45,231.89</div>
@@ -143,9 +140,7 @@ const Dashboard = () => {
           </Card>
         </div>
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3 mt-3">
-          <Card
-            className="xl:col-span-2" x-chunk="dashboard-01-chunk-4"
-          >
+          <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
                 <CardTitle>Transactions</CardTitle>
@@ -367,6 +362,6 @@ const Dashboard = () => {
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 export default Dashboard;

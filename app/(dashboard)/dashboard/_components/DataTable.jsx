@@ -42,7 +42,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from "react-toastify";
-import { exportToPdf} from "../_actions/save-pdf";
+import { exportToPdf } from "../_actions/save-pdf";
 import { exportToExcel } from "../_actions/export-excel";
 
 export function DataTable({ columns, data, loading }) {
@@ -168,7 +168,11 @@ export function DataTable({ columns, data, loading }) {
           </DropdownMenu>
         </div>
         <div>
-          <Button variant="outline" className="mr-2" onClick={() => exportToPdf(data)}>
+          <Button
+            variant="outline"
+            className="mr-2"
+            onClick={() => exportToPdf(data)}
+          >
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>

@@ -14,8 +14,6 @@ export default function Trabuom() {
     fetchPlotData();
   }, []);
 
-
-
   const fetchPlotData = async (bounds) => {
     let allRecords;
     setLoading(true);
@@ -149,4 +147,3 @@ export default function Trabuom() {
     </div>
   );
 }
-

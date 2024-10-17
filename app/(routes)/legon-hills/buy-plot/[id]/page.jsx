@@ -115,7 +115,7 @@ const EditPlot = () => {
       setFnameEr(true);
       toast.error("Enter first name");
       return;
-    } else { 
+    } else {
       setFnameEr(false); //
     }
 
@@ -359,7 +359,6 @@ const EditPlot = () => {
       });
       setVerifyLoading(false);
       toast.success("Transaction verified successfully");
-      
     }
     if (error) {
       console.log(error);
@@ -1511,9 +1510,8 @@ const EditPlot = () => {
                         disabled
                         name="plotSize"
                         value={
-                          parseFloat(
-                            allDetails?.properties?.Area?.toFixed(5)
-                          ) + " Acres "
+                          parseFloat(allDetails?.properties?.Area?.toFixed(5)) +
+                          " Acres "
                         }
                       />
                       <small className="text-red-800"></small>

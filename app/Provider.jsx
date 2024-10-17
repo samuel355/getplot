@@ -6,6 +6,7 @@ const Provider = ({ children }) => {
   return (
     <div>
       <LoadScript
+        id="google-maps-plots"
         googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
         libraries={[
           "places",
@@ -17,9 +18,9 @@ const Provider = ({ children }) => {
           "visualization",
           "drawing",
           "core",
-          "geometry", 
+          "geometry",
           "streetView",
-          "journeySharing"
+          "journeySharing",
         ]}
       >
         <div className="flex flex-col items-center">{children}</div>

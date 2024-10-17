@@ -3006,7 +3006,6 @@ export const parcels = {
       },
     },
 
-
     {
       type: "Feature",
       geometry: {

@@ -664,6 +664,7 @@ export function ViewPlotDialog({
 }
 
 export const columns = [
+  
   // {
   //   id: "select",
   //   header: ({ table }) => (

@@ -80,8 +80,8 @@
 * {
   font-family: "Outfit", sans-serif;
 }
-tr{
-  border-bottom: 1px solid #eee !important
+tr {
+  border-bottom: 1px solid #eee !important;
 }
 html,
 body {
@@ -149,8 +149,6 @@ body {
   height: 6.3rem;
 }
 
-
-
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -172,26 +170,39 @@ body {
 .gm-ui-hover-effect span:hover {
   color: red;
 }
-td, tr{
+td,
+tr {
   padding: 0.5rem !important;
 }
-.tranform-sentence{
+.tranform-sentence {
   text-transform: capitalize;
 }
-.lucide .lucide-x{
-  color: red
+.lucide .lucide-x {
+  color: red;
 }
 
+@media (max-width: 768px) {
+  .main-content {
+    margin: 0 1.5rem 1.5rem 1.5rem !important;
+  }
+}
 @media (max-width: 988px) {
-  .sidebar{
+  .sidebar {
     display: none !important;
   }
-  .mobile-menu{
+  .mobile-menu {
     display: flex !important;
-
   }
-  .main-content{
+  .main-content {
     margin-left: 0 !important;
     width: 100vw !important;
+  }
+}
+
+@media (max-width: 1074px) {
+  .main-content {
+    margin-right: 0 !important;
+    width: 100vw !important;
+    overflow-x: scroll;
   }
 }

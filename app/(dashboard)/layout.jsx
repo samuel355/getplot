@@ -24,8 +24,7 @@ const layout = ({ children }) => {
   if (loading) {
     return <div>Loading...</div>; // Or any other loading component/UI feedback
   }
-  
-  console.log(user)
+
   return (
     <div className="w-full h-screen max-h-screen">
       <div className="flex flex-row gap-4 items-center">

@@ -91,6 +91,14 @@ const Header = () => {
                   Contact Us
                 </ListItem>
               </NavigationMenuItem>
+
+              {isSignedIn && user?.publicMetadata?.role === "sysadmin" && (
+                <NavigationMenuItem>
+                  <ListItem href={"/dashboard"} title={"Dashboard"}>
+                    Dashboard
+                  </ListItem>
+                </NavigationMenuItem>
+              )}
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
@@ -153,6 +161,19 @@ const Header = () => {
                     Contact Us
                   </button>
                 </DropdownMenuItem>
+
+                {isSignedIn && user?.publicMetadata?.role === "sysadmin" && (
+                  <DropdownMenuItem>
+                    <button
+                      className={`hover:text-primary text-base ${
+                        path == "/dashboard" && "text-primary font-semibold"
+                      }`}
+                      onClick={() => router.push("/dashboard")}
+                    >
+                      Dashboard
+                    </button>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -22,6 +22,7 @@ import {
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -81,34 +82,14 @@ const MobileMenu = () => {
   ];
 
   return (
-    <div className="lg:hidden md:hidden flex items-center justify-between w-full py-2 px-4 mobile-menu">
+    <div className="lg:hidden md:hidden flex items-center justify-between py-3 px-5 mobile-menu">
       <Menu
         className="w-5 h-5 text-gray-400 hover:text-gray-700"
         onClick={() => setIsOpen(true)}
       />
 
-      <div>
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-3 justify-between hover:bg-slate-200 p-1 rounded-sm">
-            <div className="flex gap-1">
-              <Image
-                className="object-cover rounded-lg"
-                src={"/avatars/avatar-1.png"}
-                width={40}
-                height={40}
-                alt="avatar"
-              />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[200px] mr-1">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="pt-2">
+        <UserButton />
       </div>
 
       {isOpen && (

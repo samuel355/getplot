@@ -16,11 +16,14 @@ import {
   Home,
   LandPlot,
   LayoutDashboard,
+  User,
   Users,
 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { UserButton, useUser } from "@clerk/nextjs";
 
 const Sidebar = () => {
+  const { user } = useUser();
   const path = usePathname();
   const searchParams = useSearchParams();
   const search = searchParams.get("table");
@@ -94,32 +97,15 @@ const Sidebar = () => {
           </nav>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-3 justify-between hover:bg-slate-200 p-1 rounded-sm">
-            <div className="flex gap-1">
-              <Image
-                className="object-cover rounded-lg"
-                src={"/avatars/avatar-1.png"}
-                width={40}
-                height={40}
-                alt="avatar"
-              />
-              <div className="flex flex-col">
-                <p className="text-left">Email</p>
-                <span className="text-gray-400 text-sm">samuel@gmail.com</span>
-              </div>
-            </div>
-            <ArrowRight />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[220px]">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex flex-col gap-2 hover:bg-gray-100 p-2 rounded-md w-full">
+          <div className="flex items-center gap-2">
+            <UserButton />
+            <p className="text-left">{user?.fullName}</p>
+          </div>
+          <p className=" text-xs">
+            {user.emailAddresses[0].emailAddress}
+          </p>
+        </div>
       </div>
     </div>
   );

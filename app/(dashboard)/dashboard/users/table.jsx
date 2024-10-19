@@ -41,11 +41,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { toast } from "react-toastify";
-import { exportToPdf } from "../_actions/save-pdf";
-import { exportToExcel } from "../_actions/export-excel";
+import { exportToPdf } from "./actions/save-pdf";
+import { exportToExcel } from "./actions/export-excel";
 
-export function DataTable({ columns, data, loading }) {
+export function UsersTable({ data, columns }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -53,7 +52,6 @@ export function DataTable({ columns, data, loading }) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
-  const [selectedData, setSelected] = useState([]);
 
   const globalFilterFn = (row, columnId, filterValue) => {
     return row.original // `row.original` access to the raw row data

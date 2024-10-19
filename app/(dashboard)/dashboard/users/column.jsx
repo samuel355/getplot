@@ -1,8 +1,12 @@
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+
 export const columns = [
   {
-    accessorKey: "Email",
+    accessorKey: "email",
     cell: (info) => info.getValue(),
-    className: "text-center w-2",
+    className: "text-left",
 
     header: ({ column }) => {
       return (
@@ -11,7 +15,7 @@ export const columns = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          No.
+          Email
           <ArrowUpDown className="ml-1 h-4" />
         </Button>
       );
@@ -30,7 +34,7 @@ export const columns = [
     header: () => <div className="text-right">First Name</div>,
   },
   {
-    accessorKey: "lastname",
+    accessorKey: "lastName",
     header: () => <div className="text-right">Last Name</div>,
   },
   {

@@ -17,6 +17,7 @@ import {
   LayoutDashboard,
   Menu,
   Users,
+  Users2,
   X,
 } from "lucide-react";
 
@@ -133,7 +134,9 @@ const MobileMenu = () => {
                     {menuLinks.map((link) => (
                       <li
                         key={link.id}
-                        className="p-1 hover:bg-gray-100 rounded-sm"
+                        className={`p-1 hover:bg-gray-100 rounded-sm text-sm ${
+                          path === link.href && "bg-gray-100"
+                        }`}
                       >
                         <Link
                           href={link.href}
@@ -149,6 +152,20 @@ const MobileMenu = () => {
                         </Link>
                       </li>
                     ))}
+
+                    <li
+                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-5 ${
+                        path === "/dashboard/users" && "bg-gray-100"
+                      }`}
+                    >
+                      <Link
+                        href={"/dashboard/users"}
+                        className="flex gap-2 items-center"
+                      >
+                        {" "}
+                        <Users2 className="w-4 h-4" /> <span>Users</span>
+                      </Link>
+                    </li>
                   </ul>
                 </nav>
               </div>

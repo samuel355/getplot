@@ -2,6 +2,8 @@
 import { createClerkClient } from "@clerk/clerk-sdk-node";
 
 import { useEffect, useState } from "react";
+import { UsersTable } from "./table";
+import { columns } from "./column";
 
 const Users = () => {
   const [clientList, setClientList] = useState([]);
@@ -47,11 +49,13 @@ const Users = () => {
     })
   );
 
-  console.log(selectData);
   return (
     <div>
       <div className="-mt-5">
         <h1 className="text-primary font-bold text-2xl">Users</h1>
+      </div>
+      <div className="mt-2">
+        <UsersTable data={selectData} columns={columns} />
       </div>
     </div>
   );

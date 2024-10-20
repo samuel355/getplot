@@ -20,6 +20,7 @@ const Users = () => {
         const data = await response.json();
         setClientList(data);
       } catch (err) {
+        setLoading(false)
         setError(err.message);
       } finally {
         setLoading(false);
@@ -55,7 +56,7 @@ const Users = () => {
         <h1 className="text-primary font-bold text-2xl">Users</h1>
       </div>
       <div className="mt-2">
-        <UsersTable data={selectData} columns={columns} />
+        <UsersTable data={selectData} columns={columns} loading={loading} />
       </div>
     </div>
   );

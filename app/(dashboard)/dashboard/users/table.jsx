@@ -44,7 +44,7 @@ import {
 import { exportToPdf } from "./actions/save-pdf";
 import { exportToExcel } from "./actions/export-excel";
 
-export function UsersTable({ data, columns }) {
+export function UsersTable({ data, columns, loading }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});

@@ -829,7 +829,7 @@ export const columns = [
             </DropdownMenuContent>
           </DropdownMenu>
           {/* ViewPlotDialog opens immediately when state is set */}
-          {isDialogOpen && (
+          {isDialogOpen ? (
             <ViewPlotDialog
               open={isDialogOpen}
               onOpenChange={setIsDialogOpen}
@@ -837,7 +837,7 @@ export const columns = [
               table={table}
               setIsDialogOpen={setIsDialogOpen}
             />
-          )}
+          ) : (<></>)}
         </div>
       );
     },

@@ -1,7 +1,7 @@
 import { createClerkClient } from '@clerk/clerk-sdk-node';
 const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
-export async function POST(request, responds) {
+export async function POST(request) {
   try {
     const { userId, role } = await request.json();
     

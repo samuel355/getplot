@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import Sidebar from "./dashboard/_components/Sidebar";
 import MobileMenu from "./dashboard/_components/MobileMenu";
@@ -12,10 +12,15 @@ const layout = ({ children }) => {
 
   useEffect(() => {
     if (isLoaded) {
-      if (!isSignedIn || user?.publicMetadata?.role !== 'sysadmin') {
+      if (!isSignedIn) {
+        router.push("/");
+      } else if (
+        user?.publicMetadata?.role !== "sysadmin" &&
+        user?.publicMetadata?.role !== "admin"
+      ) {
         router.push("/");
       } else {
-        setLoading(false); // User is authorized, allow access
+        setLoading(false);
       }
     }
   }, [user, router, isLoaded, isSignedIn]);

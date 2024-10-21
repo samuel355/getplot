@@ -99,6 +99,13 @@ const Header = () => {
                   </ListItem>
                 </NavigationMenuItem>
               )}
+              {isSignedIn && user?.publicMetadata?.role === "admin" && (
+                <NavigationMenuItem>
+                  <ListItem href={"/dashboard"} title={"Dashboard"}>
+                    Dashboard
+                  </ListItem>
+                </NavigationMenuItem>
+              )}
             </NavigationMenuList>
           </NavigationMenu>
         </nav>

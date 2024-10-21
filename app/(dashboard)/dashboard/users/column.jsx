@@ -210,23 +210,29 @@ export const columns = [
   },
   {
     accessorKey: "role",
-    header: () => <div className="text-right">Role</div>,
+    header: () => <div className="">Role</div>,
   },
   {
     accessorKey: "username",
-    header: () => <div className="text-right">Username</div>,
+    header: () => <div className="">Username</div>,
   },
   {
     accessorKey: "firstName",
-    header: () => <div className="text-right">First Name</div>,
+    header: () => <div className="">First Name</div>,
   },
   {
     accessorKey: "lastName",
-    header: () => <div className="text-right">Last Name</div>,
+    header: () => <div className="">Last Name</div>,
   },
   {
     id: "actions",
-    header: () => <div className="text-right">Action</div>,
+    header: () => {
+      const { user } = useUser();
+      user?.publicMetadata.role !== 'sysadmin' ? (<></>) :
+      (
+        <div className="text-right">Action</div>
+      )
+    },
     cell: ({ row }) => {
       const rowData = row.original;
       const userId = rowData.id;

@@ -18,6 +18,7 @@ import {
   LayoutDashboard,
   User,
   Users,
+  Users2,
 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
@@ -77,7 +78,12 @@ const Sidebar = () => {
           <nav className="pt-2">
             <ul className="flex flex-col gap-1">
               {menuLinks.map((link) => (
-                <li key={link.id} className="p-1 hover:bg-gray-100 rounded-sm">
+                <li
+                  key={link.id}
+                  className={`p-1 hover:bg-gray-100 rounded-sm text-sm ${
+                    path === link.href && "bg-gray-100"
+                  }`}
+                >
                   <Link
                     href={link.href}
                     className={`relative flex items-center ${
@@ -93,6 +99,20 @@ const Sidebar = () => {
                   </Link>
                 </li>
               ))}
+
+              <li
+                className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-5 ${
+                  path === "/dashboard/users" && "bg-gray-100"
+                }`}
+              >
+                <Link
+                  href={"/dashboard/users"}
+                  className="flex gap-2 items-center"
+                >
+                  {" "}
+                  <Users2 className="w-4 h-4" /> <span>Users</span>
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>
@@ -102,9 +122,7 @@ const Sidebar = () => {
             <UserButton />
             <p className="text-left">{user?.fullName}</p>
           </div>
-          <p className=" text-xs">
-            {user.emailAddresses[0].emailAddress}
-          </p>
+          <p className=" text-xs">{user.emailAddresses[0].emailAddress}</p>
         </div>
       </div>
     </div>

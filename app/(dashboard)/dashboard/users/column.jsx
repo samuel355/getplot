@@ -40,7 +40,7 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
   const [userLoading, setUserLoading] = useState(true);
   const [role, setRole] = useState();
   const [roleError, setRoleError] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (userId) {
@@ -72,11 +72,11 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
 
   const handleForm = async (event) => {
     event.preventDefault();
-    setLoading(true)
+    setLoading(true);
     if (role === undefined || role === null) {
       setRoleError(true);
       toast.error("Choose Role");
-      setLoading(false)
+      setLoading(false);
     } else {
       setRoleError(false);
       const response = await fetch(`/api/edit-user-role`, {
@@ -87,10 +87,10 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
         body: JSON.stringify({ userId, role }),
       });
       if (!response.ok) {
-        setLoading(false)
+        setLoading(false);
         throw new Error("Failed to edit user role");
       }
-      setLoading(false)
+      setLoading(false);
       setDialogOpen(false);
       tToast("Role edited successfully");
       setTimeout(() => {
@@ -120,7 +120,7 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
               <Input
                 disabled
                 id="name"
-                defaultValue={user.firstName ?? '' + " " + user.lastName ?? ''}
+                defaultValue={user.firstName ?? "" + " " + user.lastName ?? ""}
                 className="col-span-3"
                 disabbled
               />
@@ -169,7 +169,13 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
                 <span className="text-red-600 text-xs"> Choose Role</span>
               )}
               <DialogFooter className={"mt-3"}>
-                <Button type="submit">{loading ? (<Loader className="w-4 h-4 animate-spin text-white z-50" />): 'Save changes'}</Button>
+                <Button type="submit">
+                  {loading ? (
+                    <Loader className="w-4 h-4 animate-spin text-white z-50" />
+                  ) : (
+                    "Save changes"
+                  )}
+                </Button>
               </DialogFooter>
             </form>
           </div>
@@ -228,10 +234,9 @@ export const columns = [
     id: "actions",
     header: () => {
       const { user } = useUser();
-      user?.publicMetadata.role !== 'sysadmin' ? (<></>) :
-      (
-        <div className="text-right">Action</div>
-      )
+      if (user.publicMetadata.role === "sysadmin") {
+        return <div className="text-right">Action</div>;
+      }
     },
     cell: ({ row }) => {
       const rowData = row.original;
@@ -242,7 +247,7 @@ export const columns = [
       return (
         <>
           <div className="flex justify-end">
-            {user.publicMetadata.role === 'sysadmin' && (
+            {user.publicMetadata.role === "sysadmin" && (
               <Button
                 onClick={() => setDialogOpen((prevState) => !prevState)}
                 variant="ghost"

@@ -15,7 +15,6 @@ async function insertFeatures(features) {
       return;
     }
     if (checkDatabase.length === 0) {
-      // Insert the transformed features into the 'trabuom' table
       const { data, error } = await supabase
         .from("trabuom_duplicate")
         .insert(transformedFeatures)

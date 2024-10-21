@@ -25,9 +25,8 @@ const layout = ({ children }) => {
     }
   }, [user, router, isLoaded, isSignedIn]);
 
-  // Prevent rendering until we know whether the user is authorized
   if (loading) {
-    return <div>Loading...</div>; // Or any other loading component/UI feedback
+    return <div>Loading...</div>; 
   }
 
   return (

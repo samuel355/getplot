@@ -174,6 +174,18 @@ const Header = () => {
                     </button>
                   </DropdownMenuItem>
                 )}
+                 {isSignedIn && user?.publicMetadata?.role === "admin" && (
+                  <DropdownMenuItem>
+                    <button
+                      className={`hover:text-primary text-base ${
+                        path == "/dashboard" && "text-primary font-semibold"
+                      }`}
+                      onClick={() => router.push("/dashboard")}
+                    >
+                      Dashboard
+                    </button>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -4,7 +4,8 @@ import Map from "@/app/_components/Map";
 import { supabase } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import Header from "@/app/_components/Header";
-
+import { insertFeatures } from "../../_actions/upload-plots-into-db";
+import {trabuomFeatures} from '../trabuom/trabuomFeature'
 const page = () => {
   const [plots, setPlots] = useState([]);
   const [center, setCenter] = useState({
@@ -13,11 +14,11 @@ const page = () => {
   });
 
   useEffect(() => {
-    getPlost();
+    getPlots();
   }, []);
 
   //Fetch Plots from supabase
-  const getPlost = async () => {
+  const getPlots = async () => {
     const { data, error } = await supabase.from("nthc").select("*");
 
     if (data) {

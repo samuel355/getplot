@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
 import { supabase } from "@/utils/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
@@ -21,7 +21,8 @@ import { Loader } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import Header from "@/app/_components/Header";
 import { ExpressInterestDialog } from "@/app/_components/express-interest-dialog";
-
+import { insertFeatures } from "../../_actions/upload-plots-into-db";
+import {trabuomFeatures} from './trabuomFeature'
 const containerStyle = {
   height: "75vh",
   width: "85%",
@@ -98,7 +99,6 @@ const Map = () => {
     if (mapBounds) {
       fetchPolygons(mapBounds);
     }
-    //updatePrice();
   }, [mapBounds]);
 
   // Fetch all polygons and filter by map bounds
@@ -147,7 +147,7 @@ const Map = () => {
           let { data: records4, error4 } = await supabase
             .from("trabuom")
             .select("*")
-            .range(3000, 3279);
+            .range(3000, 3050);
 
           if (error4) {
             console.log(error4);
@@ -156,7 +156,8 @@ const Map = () => {
           if (records4 || records4 !== null) {
             allRecords = [...allRecords, ...records4];
             setLoading(false);
-            // Filter polygons by checking their bounding box against the map bounds
+            
+            //Filter polygons by checking their bounding box against the map bounds
             const visiblePolygons = allRecords.filter((polygon) => {
               const polygonBounds = calculateBoundingBox(polygon);
               return isPolygonInBounds(polygonBounds, bounds);

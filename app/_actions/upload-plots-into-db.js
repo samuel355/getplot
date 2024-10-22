@@ -1,4 +1,7 @@
-async function insertFeatures(features) {
+import { useRef, useEffect } from "react";
+import { supabase } from "@/utils/supabase/client";
+
+export async function insertFeatures(features) {
   try {
     const transformedFeatures = features.map((feature) => ({
       type: feature.type,
@@ -6,32 +9,28 @@ async function insertFeatures(features) {
       properties: feature.properties,
     }));
 
-    const { data: checkDatabase, error: checkError } = await supabase
-      .from("trabuom_duplicate")
+    const { data, error } = await supabase
+      .from("trabuom")
+      .insert(transformedFeatures)
       .select("*");
 
-    if (checkError) {
-      console.log(checkError);
-      return;
-    }
-    if (checkDatabase.length === 0) {
-      const { data, error } = await supabase
-        .from("trabuom_duplicate")
-        .insert(transformedFeatures)
-        .select("*");
-
-      console.log(data);
-      if (error) {
-        console.error("Error inserting features:", error);
-      } else {
-        console.log("Inserted features:", data);
-      }
+    console.log(data);
+    if (error) {
+      console.error("Error inserting features:", error);
+    } else {
+      console.log("Inserted features:", data);
     }
   } catch (err) {
     console.error("Error:", err);
   }
 }
 
-useEffect(() => {
-  //insertFeatures(trabuomFeatures);
-}, []);
+
+// const insertCalled = useRef(false);
+
+// useEffect(() => {
+//   if (!insertCalled.current) {
+//     insertFeatures(trabuomFeatures);
+//     insertCalled.current = true; // Prevent further inserts
+//   }
+// }, [trabuomFeatures]); 

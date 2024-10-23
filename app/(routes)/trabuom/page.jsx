@@ -103,72 +103,68 @@ const Map = () => {
 
   // Fetch all polygons and filter by map bounds
   const fetchPolygons = async (bounds) => {
-    let allRecords;
-    setLoading(true);
-    // First batch (records 0 to 999)
-    let { data: records1, error1 } = await supabase
-      .from("trabuom")
-      .select("*")
-      .range(0, 999);
-
-    if (error1) {
-      console.log(error1);
+    const cacheKey = "trabuom_polygons";
+    const cacheExpiryKey = "trabuom_polygons_expiry";
+    const cacheExpiryDuration = 1 * 60 * 60 * 1000; 
+    
+    const currentTime = Date.now();
+    
+    // Check if polygons exist in localStorage and are still valid
+    const cachedPolygons = localStorage.getItem(cacheKey);
+    const cachedExpiry = localStorage.getItem(cacheExpiryKey);
+    
+    if (cachedPolygons && cachedExpiry && currentTime < parseInt(cachedExpiry)) {
+      // Use cached data
+      const polygons = JSON.parse(cachedPolygons);
+      
+      const visiblePolygons = polygons.filter((polygon) => {
+        const polygonBounds = calculateBoundingBox(polygon);
+        return isPolygonInBounds(polygonBounds, bounds);
+      });
+      
+      setPolygons(visiblePolygons);
       return;
     }
-
-    if (records1 || records1 !== null) {
-      allRecords = records1;
-      // Second batch (records 1000 to 1999)
-      let { data: records2, error2 } = await supabase
-        .from("trabuom")
-        .select("*")
-        .range(1000, 1999);
-
-      if (error2) {
-        console.log(error2);
-        return;
+  
+    let allRecords = [];
+    setLoading(true);
+  
+    // Fetch from Supabase if no valid cache
+    const fetchBatch = async (start, end) => {
+      let { data, error } = await supabase.from("trabuom").select("*").range(start, end);
+      if (error) {
+        console.log(error);
+        return [];
       }
-      if (records2 || records2 !== null) {
-        allRecords = [...allRecords, ...records2];
-        // Third batch (records 2000 to 2999)
-        let { data: records3, error3 } = await supabase
-          .from("trabuom")
-          .select("*")
-          .range(2000, 2999);
-
-        if (error3) {
-          console.log(error3);
-          return;
-        }
-        if (records3 || records3 !== null) {
-          allRecords = [...allRecords, ...records3];
-
-          // Fourth batch (records 3000 to 3279)
-          let { data: records4, error4 } = await supabase
-            .from("trabuom")
-            .select("*")
-            .range(3000, 3050);
-
-          if (error4) {
-            console.log(error4);
-            return;
-          }
-          if (records4 || records4 !== null) {
-            allRecords = [...allRecords, ...records4];
-            setLoading(false);
-            
-            //Filter polygons by checking their bounding box against the map bounds
-            const visiblePolygons = allRecords.filter((polygon) => {
-              const polygonBounds = calculateBoundingBox(polygon);
-              return isPolygonInBounds(polygonBounds, bounds);
-            });
-
-            setPolygons(visiblePolygons);
-          }
-        }
-      }
+      return data || [];
+    };
+  
+    // Fetch all records in batches
+    allRecords = [
+      ...(await fetchBatch(0, 999)),
+      ...(await fetchBatch(1000, 1999)),
+      ...(await fetchBatch(2000, 2999)),
+      ...(await fetchBatch(3000, 3050)),
+    ];
+  
+    if (allRecords.length > 0) {
+      // Save to localStorage
+      localStorage.setItem(cacheKey, JSON.stringify(allRecords));
+      localStorage.setItem(cacheExpiryKey, (currentTime + cacheExpiryDuration).toString());
+  
+      // Filter polygons based on bounds
+      const visiblePolygons = allRecords.filter((polygon) => {
+        const polygonBounds = calculateBoundingBox(polygon);
+        return isPolygonInBounds(polygonBounds, bounds);
+      });
+  
+      setPolygons(visiblePolygons);
     }
+    
+    setLoading(false);
   };
+  
+
 
   const handleMapLoad = (mapInstance) => {
     setMap(mapInstance); // map instance in state

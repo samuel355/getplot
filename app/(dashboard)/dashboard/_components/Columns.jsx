@@ -25,6 +25,17 @@ import { toast } from "react-toastify";
 import OptGroup from "./OptGroup";
 import { Textarea } from "@/components/ui/textarea";
 import { toast as sonarToast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const plotInfo = {
   firstname: "",
@@ -658,7 +669,6 @@ export function ViewPlotDialog({
 }
 
 export const columns = [
-  
   // {
   //   id: "select",
   //   header: ({ table }) => (
@@ -783,26 +793,31 @@ export const columns = [
       const plotId = rowData.id;
       const pathname = usePathname();
       const router = useRouter();
+      const [deleteId, setDeleteId] = useState();
 
       const [isDialogOpen, setIsDialogOpen] = useState(false);
+      const [delDialogOpen, setDelDialogOpen] = useState(false);
 
-      let table;
-      if (pathname.includes("trabuom")) {
-        table = "trabuom";
-      }
-      if (pathname.includes("nthc")) {
-        table = "nthc";
-      }
-      if (pathname.includes("legon-hills")) {
-        table = "legon-hills";
-      }
-      if (pathname.includes("dar-es-salaam")) {
-        table = "dar-es-salaam";
-      }
+    // Determine table from pathname
+    let table = "";
+    if (pathname.includes("trabuom")) table = "trabuom";
+    else if (pathname.includes("nthc")) table = "nthc";
+    else if (pathname.includes("legon-hills")) table = "legon-hills";
+    else if (pathname.includes("dar-es-salaam")) table = "dar-es-salaam";
+
+      const handleDialog = () => {
+        setIsDialogOpen(true);
+      };
+
+      const handleDeleteDialog = () => {
+        setDeleteId(plotId);
+        setDelDialogOpen(true);
+        console.log(delDialogOpen);
+      };
 
       return (
         <div className="flex justify-end">
-          <DropdownMenu className="">
+          <DropdownMenu modal={false} className="">
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -812,7 +827,7 @@ export const columns = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setIsDialogOpen(true)}>
+              <DropdownMenuItem onClick={() => handleDialog()}>
                 Edit Plot
               </DropdownMenuItem>
               <DropdownMenuItem>
@@ -820,27 +835,55 @@ export const columns = [
                   View Plot
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <button
-                  onClick={() => console.log(row.getValue("remainingAmount"))}
-                >
-                  Delete Plot
-                </button>
+              <DropdownMenuItem
+                onClick={handleDeleteDialog}
+              >
+                Delete Plot
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           {/* ViewPlotDialog opens immediately when state is set */}
-          {isDialogOpen ? (
-            <ViewPlotDialog
-              open={isDialogOpen}
-              onOpenChange={setIsDialogOpen}
-              plotId={plotId}
-              table={table}
-              setIsDialogOpen={setIsDialogOpen}
-            />
-          ) : (<></>)}
+
+          <ViewPlotDialog
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            plotId={plotId}
+            table={table}
+            setIsDialogOpen={setIsDialogOpen}
+          />
+
+          <DeletePlotDialog
+            open={delDialogOpen}
+            onOpenChange={setDelDialogOpen}
+            plotId={deleteId}
+            setDelDialogOpen={setDelDialogOpen}
+          />
         </div>
       );
     },
   },
 ];
+
+export function DeletePlotDialog({
+  plotId,
+  open,
+  onOpenChange,
+  setDelDialogOpen,
+}) {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete the plot
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <Button type="button" onClick={() => setDelDialogOpen(false)}>Cancel</Button>
+          <Button>Continue</Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}

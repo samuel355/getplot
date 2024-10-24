@@ -105,7 +105,7 @@ const Map = () => {
   const fetchPolygons = async (bounds) => {
     const cacheKey = "trabuom_polygons";
     const cacheExpiryKey = "trabuom_polygons_expiry";
-    const cacheExpiryDuration = 1 * 60 * 60 * 1000; 
+    const cacheExpiryDuration = 0.25 * 60 * 60 * 1000; //15 mins
     
     const currentTime = Date.now();
     

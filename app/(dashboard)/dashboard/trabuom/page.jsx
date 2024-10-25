@@ -22,7 +22,7 @@ export default function Trabuom() {
       .from("trabuom")
       .select(
         `
-        id, 
+        id,
         properties->>Plot_No,
         properties->>Street_Nam,
         status,
@@ -33,7 +33,7 @@ export default function Trabuom() {
         plotTotalAmount,
         paidAmount,
         remainingAmount
-      `
+      `,
       )
       .range(0, 999);
 
@@ -47,8 +47,8 @@ export default function Trabuom() {
       setPlotData(allRecords);
       // Second batch (records 1000 to 1999)
       let { data: records2, error2 } = await supabase.from("trabuom").select(`
-        id, 
-        
+        id,
+
         properties->>Plot_No,
         properties->>Street_Nam,
         status,
@@ -73,8 +73,7 @@ export default function Trabuom() {
           .from("trabuom")
           .select(
             `
-            id, 
-            
+            id,
             properties->>Plot_No,
             properties->>Street_Nam,
             status,
@@ -85,7 +84,7 @@ export default function Trabuom() {
             plotTotalAmount,
             paidAmount,
             remainingAmount
-          `
+          `,
           )
           .range(2000, 2999);
 
@@ -102,8 +101,8 @@ export default function Trabuom() {
             .from("trabuom")
             .select(
               `
-              id, 
-              
+              id,
+
               properties->>Plot_No,
               properties->>Street_Nam,
               status,
@@ -114,7 +113,7 @@ export default function Trabuom() {
               plotTotalAmount,
               paidAmount,
               remainingAmount
-            `
+            `,
             )
             .range(3000, 3220);
 

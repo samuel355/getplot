@@ -829,7 +829,7 @@ export const columns = [
       const handleDeleteDialog = async (event) => {
         event.preventDefault();
         if (plotId !== null) {
-          console.log('deleting plot...')
+          console.log("deleting plot...");
           setDelDialogOpen(true);
           const fetchPlotData = async () => {
             try {
@@ -931,8 +931,21 @@ export async function DeletePlotDialog({
     databaseName = "legon_hills";
   }
 
-  const handleDelete = async () => {
-    console.log("Delete-----: ", plotId, "from database -> ", databaseName);
+  const handleDeletePlot = async () => {
+    console.log("Delete----->: ", plotId, "from database -> ", databaseName);
+    const { data, error } = await supabase
+      .from(databaseName)
+      .delete()
+      .eq("id", plotId);
+    
+    if(error){
+      toast.error('Something went wrong deleting plot')
+    }
+    sonarToast('Plot Deleted Successfully')
+    setDelDialogOpen(false)
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   return (
@@ -959,7 +972,7 @@ export async function DeletePlotDialog({
             <Button type="button" onClick={() => setDelDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleDelete}>Continue</Button>
+            <Button onClick={handleDeletePlot}>Continue</Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       )}

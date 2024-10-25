@@ -192,7 +192,7 @@ export function ViewPlotDialog({
 
       if (paidAmount - plotTotalAmount > 0) {
         toast.error(
-          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot."
+          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot.",
         );
         return;
       }
@@ -798,21 +798,64 @@ export const columns = [
       const [isDialogOpen, setIsDialogOpen] = useState(false);
       const [delDialogOpen, setDelDialogOpen] = useState(false);
 
-    // Determine table from pathname
-    let table = "";
-    if (pathname.includes("trabuom")) table = "trabuom";
-    else if (pathname.includes("nthc")) table = "nthc";
-    else if (pathname.includes("legon-hills")) table = "legon-hills";
-    else if (pathname.includes("dar-es-salaam")) table = "dar-es-salaam";
+      const [plotData, setPlotData] = useState();
+      const [loading, setLoading] = useState(false);
+
+      // Determine table from pathname
+      let table = "";
+      if (pathname.includes("trabuom")) table = "trabuom";
+      else if (pathname.includes("nthc")) table = "nthc";
+      else if (pathname.includes("legon-hills")) table = "legon-hills";
+      else if (pathname.includes("dar-es-salaam")) table = "dar-es-salaam";
+
+      let databaseName;
+      if (table && table === "nthc") {
+        databaseName = "nthc";
+      }
+      if (table && table === "dar-es-salaam") {
+        databaseName = "dar_es_salaam";
+      }
+      if (table && table === "trabuom") {
+        databaseName = "trabuom";
+      }
+      if (table && table === "legon-hills") {
+        databaseName = "legon_hills";
+      }
 
       const handleDialog = () => {
         setIsDialogOpen(true);
       };
 
-      const handleDeleteDialog = () => {
-        setDeleteId(plotId);
-        setDelDialogOpen(true);
-        console.log(delDialogOpen);
+      const handleDeleteDialog = async (event) => {
+        event.preventDefault();
+        if (plotId !== null) {
+          console.log('deleting plot...')
+          setDelDialogOpen(true);
+          const fetchPlotData = async () => {
+            try {
+              const { data, error } = await supabase
+                .from(databaseName)
+                .select("*")
+                .eq("id", plotId);
+              if (error) {
+                console.log(error);
+                toast.error("sorry, something went wrong, try again later");
+                return;
+              }
+              setPlotData(data[0]);
+            } catch (error) {
+              console.log(error);
+              toast.error("Sorry something went wrong, try again later");
+              setDelDialogOpen(false);
+              return;
+            }
+          };
+
+          fetchPlotData();
+        } else {
+          toast.error("Something went wrong. Try again later");
+          setDelDialogOpen(false);
+        }
       };
 
       return (
@@ -835,9 +878,7 @@ export const columns = [
                   View Plot
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={handleDeleteDialog}
-              >
+              <DropdownMenuItem onClick={handleDeleteDialog}>
                 Delete Plot
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -855,8 +896,11 @@ export const columns = [
           <DeletePlotDialog
             open={delDialogOpen}
             onOpenChange={setDelDialogOpen}
-            plotId={deleteId}
+            plotId={plotId}
             setDelDialogOpen={setDelDialogOpen}
+            table={table}
+            plotData={plotData}
+            loading={loading}
           />
         </div>
       );
@@ -864,26 +908,61 @@ export const columns = [
   },
 ];
 
-export function DeletePlotDialog({
+export async function DeletePlotDialog({
   plotId,
   open,
   onOpenChange,
   setDelDialogOpen,
+  table,
+  plotData,
+  loading,
 }) {
+  let databaseName;
+  if (table && table === "nthc") {
+    databaseName = "nthc";
+  }
+  if (table && table === "dar-es-salaam") {
+    databaseName = "dar_es_salaam";
+  }
+  if (table && table === "trabuom") {
+    databaseName = "trabuom";
+  }
+  if (table && table === "legon-hills") {
+    databaseName = "legon_hills";
+  }
+
+  const handleDelete = async () => {
+    console.log("Delete-----: ", plotId, "from database -> ", databaseName);
+  };
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+      {plotData && (
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete This Plot? </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              plot
+            </AlertDialogDescription>
+          </AlertDialogHeader>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the plot
+            <p>Plot Details</p>
+            <p className="font-bold mt-2">
+              {"Plot Number " +
+                plotData.properties.Plot_No +
+                " " +
+                plotData.properties.Street_Nam}
+            </p>
           </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <Button type="button" onClick={() => setDelDialogOpen(false)}>Cancel</Button>
-          <Button>Continue</Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
+          <AlertDialogFooter>
+            <Button type="button" onClick={() => setDelDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleDelete}>Continue</Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      )}
     </AlertDialog>
   );
 }

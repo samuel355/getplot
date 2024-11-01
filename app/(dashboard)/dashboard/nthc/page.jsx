@@ -11,20 +11,6 @@ export default function NTHC() {
   const [plotInfo, setPlotInfo] = useState([]);
   const databaseName = "nthc";
   useEffect(() => {
-    // async function testPlotInfo() {
-    //   const { data, error } = await supabase
-    //     .from("trabuom")
-    //     .select(`properties->>Plot_No, properties->>Street_Nam`)
-    //     .eq("properties->>Street_Nam", "AKUA AFRIYIE STREET").eq("properties->>Plot_No", "3")
-    //   if (data) {
-    //     setPlotInfo(data);
-    //   }
-    //   if (error) {
-    //     console.log(error);
-    //   }
-    // }
-
-    // testPlotInfo();
     fetchPlotData();
   }, []);
 
@@ -35,7 +21,6 @@ export default function NTHC() {
       let { data, error } = await supabase.from("nthc").select(
         `
       id, 
-      
       properties->>Plot_No,
       properties->>Street_Nam,
       status,

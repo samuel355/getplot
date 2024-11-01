@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { DataTable } from "../_components/DataTable";
 import { columns } from "../_components/Columns";
@@ -9,7 +9,7 @@ export default function Trabuom() {
   const [plotData, setPlotData] = useState([]);
   const [loading, setLoading] = useState(false);
   const databaseName = "trabuom";
-
+  
   useEffect(() => {
     fetchPlotData();
   }, []);

@@ -9,67 +9,22 @@ export default function Trabuom() {
   const [plotData, setPlotData] = useState([]);
   const [loading, setLoading] = useState(false);
   const databaseName = "trabuom";
-  
+
   useEffect(() => {
     fetchPlotData();
   }, []);
 
-  const fetchPlotData = async (bounds) => {
-    let allRecords;
+  const fetchPlotData = async () => {
     setLoading(true);
-    // First batch (records 0 to 999)
-    let { data: records1, error1 } = await supabase
-      .from("trabuom")
-      .select(
-        `
-        id,
-        properties->>Plot_No,
-        properties->>Street_Nam,
-        status,
-        firstname,
-        lastname,
-        email,
-        phone,
-        plotTotalAmount,
-        paidAmount,
-        remainingAmount
-      `,
-      )
-      .range(0, 999);
+    try {
+      // Fetch data in batches
+      const batchSize = 950; // Adjust as needed
+      let allRecords = [];
+      let startIndex = 0;
+      let hasMoreData = true;
 
-    if (error1) {
-      console.log(error1);
-      return;
-    }
-
-    if (records1 || records1 !== null) {
-      allRecords = records1;
-      setPlotData(allRecords);
-      // Second batch (records 1000 to 1999)
-      let { data: records2, error2 } = await supabase.from("trabuom").select(`
-        id,
-
-        properties->>Plot_No,
-        properties->>Street_Nam,
-        status,
-        firstname,
-        lastname,
-        email,
-        phone,
-        plotTotalAmount,
-        paidAmount,
-        remainingAmount
-      `);
-
-      if (error2) {
-        console.log(error2);
-        return;
-      }
-      if (records2 || records2 !== null) {
-        allRecords = [...allRecords, ...records2];
-        setPlotData(allRecords);
-        // Third batch (records 2000 to 2999)
-        let { data: records3, error3 } = await supabase
+      while (hasMoreData) {
+        const { data: records, error } = await supabase
           .from("trabuom")
           .select(
             `
@@ -86,47 +41,30 @@ export default function Trabuom() {
             remainingAmount
           `,
           )
-          .range(2000, 2999);
+          .range(startIndex, startIndex + batchSize - 1);
 
-        if (error3) {
-          console.log(error3);
+        if (error) {
+          console.log(error);
+          setLoading(false);
+          toast.error("Error fetching plot data.");
           return;
         }
-        if (records3 || records3 !== null) {
-          allRecords = [...allRecords, ...records3];
-          setPlotData(allRecords);
 
-          // Fourth batch (records 3000 to 3279)
-          let { data: records4, error4 } = await supabase
-            .from("trabuom")
-            .select(
-              `
-              id,
-
-              properties->>Plot_No,
-              properties->>Street_Nam,
-              status,
-              firstname,
-              lastname,
-              email,
-              phone,
-              plotTotalAmount,
-              paidAmount,
-              remainingAmount
-            `,
-            )
-            .range(3000, 3220);
-
-          if (error4) {
-            console.log(error4);
-            return;
-          }
-          if (records4 || records4 !== null) {
-            allRecords = [...allRecords, ...records4];
-            setPlotData(allRecords);
-          }
+        if (records && records.length > 0) {
+          allRecords = [...allRecords, ...records];
+          startIndex += batchSize;
+        } else {
+          hasMoreData = false;
         }
       }
+
+      setPlotData(allRecords);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      toast.error("Error fetching plot data.");
+    } finally {
+      setLoading(false);
     }
   };
 

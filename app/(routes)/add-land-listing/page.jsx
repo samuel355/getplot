@@ -15,7 +15,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/utils/supabase/client";
 import { useUser } from "@clerk/nextjs";
-x;
 import { Formik } from "formik";
 import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";

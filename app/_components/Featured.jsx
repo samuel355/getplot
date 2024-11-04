@@ -1,5 +1,4 @@
 "use client";
-import { property } from "@/data/dummyData";
 import SingleProductCard from "./SingleProductCard";
 import { supabase } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";

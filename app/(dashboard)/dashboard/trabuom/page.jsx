@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { DataTable } from "../_components/DataTable";
 import { columns } from "../_components/Columns";
+import { insertFeatures } from "@/app/_actions/upload-plots-into-db";
+import { trabuomShapeFile } from "./trabuomshp";
 
 export default function Trabuom() {
   const [plotData, setPlotData] = useState([]);
@@ -18,7 +20,7 @@ export default function Trabuom() {
     setLoading(true);
     try {
       // Fetch data in batches
-      const batchSize = 950; // Adjust as needed
+      const batchSize = 985; // Adjust as needed
       let allRecords = [];
       let startIndex = 0;
       let hasMoreData = true;
@@ -39,7 +41,7 @@ export default function Trabuom() {
             plotTotalAmount,
             paidAmount,
             remainingAmount
-          `,
+          `
           )
           .range(startIndex, startIndex + batchSize - 1);
 

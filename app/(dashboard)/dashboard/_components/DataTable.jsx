@@ -1,5 +1,6 @@
 "use client";
-
+import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -8,21 +9,6 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import { Input } from "@/components/ui/input";
-
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
 
 import {
   Table,
@@ -32,8 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import { Input } from "@/components/ui/input";
 import { FileText, Sheet } from "lucide-react";
 import {
   Tooltip,
@@ -41,9 +26,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { toast } from "react-toastify";
 import { exportToPdf } from "../_actions/save-pdf";
 import { exportToExcel } from "../_actions/export-excel";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function DataTable({ columns, data, loading }) {
   const [sorting, setSorting] = useState([]);
@@ -58,12 +48,15 @@ export function DataTable({ columns, data, loading }) {
   const globalFilterFn = (row, columnId, filterValue) => {
     return row.original // `row.original` access to the raw row data
       ? Object.values(row.original).some((value) =>
-          String(value).toLowerCase().includes(filterValue.toLowerCase())
+          String(value).toLowerCase().includes(filterValue.toLowerCase()),
         )
       : false;
   };
 
   const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -213,7 +206,7 @@ export function DataTable({ columns, data, loading }) {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 );
@@ -229,10 +222,7 @@ export function DataTable({ columns, data, loading }) {
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    className={cell.column.columnDef.className}
-                  >
+                  <TableCell key={cell.id} className={cell.column.columnDef.className}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -247,7 +237,7 @@ export function DataTable({ columns, data, loading }) {
           )}
         </TableBody>
       </Table>
-
+      
       <div className="flex items-center justify-between mr-2">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}

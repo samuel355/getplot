@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { DataTable } from "../_components/DataTable";
 import { columns } from "../_components/Columns";
-import { insertFeatures } from "@/app/_actions/upload-plots-into-db";
-import { trabuomShapeFile } from "./trabuomshp";
 
 export default function Trabuom() {
   const [plotData, setPlotData] = useState([]);

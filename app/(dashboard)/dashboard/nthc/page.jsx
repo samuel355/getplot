@@ -8,7 +8,6 @@ import { columns } from "../_components/Columns";
 export default function NTHC() {
   const [plotData, setPlotData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [plotInfo, setPlotInfo] = useState([]);
   const databaseName = "nthc";
   useEffect(() => {
     fetchPlotData();

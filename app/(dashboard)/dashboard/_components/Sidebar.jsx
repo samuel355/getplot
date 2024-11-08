@@ -122,7 +122,7 @@ const Sidebar = () => {
             <UserButton />
             <p className="text-left">{user?.fullName}</p>
           </div>
-          <p className=" text-xs">{user.emailAddresses[0].emailAddress}</p>
+          <p className=" text-xs">{user?.emailAddresses[0]?.emailAddress}</p>
         </div>
       </div>
     </div>

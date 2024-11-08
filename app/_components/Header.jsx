@@ -31,19 +31,13 @@ const Header = () => {
   const router = useRouter();
   const { user, isSignedIn } = useUser();
   return (
-    <header className="fixed top-0 w-full bg-white shadow-sm z-20">
+    <header className="fixed top-0 w-full bg-white shadow-sm z-20 lg:mx-3">
       {/* Flex container to handle layout */}
       <div className="flex items-center px-10 py-2 justify-between">
         {/* Logo section */}
         <div className="">
           <Link href={"/"}>
-            <Image
-              src={"/logo.png"}
-              width={125}
-              height={125}
-              alt="logo"
-              className="w-auto h-auto object-cover"
-            />
+            <Image src={'/logo-lateral.svg'} className="object-cover" width={150} height={150} alt="logo" />
           </Link>
         </div>
 
@@ -181,7 +175,7 @@ const Header = () => {
                     </button>
                   </DropdownMenuItem>
                 )}
-                 {isSignedIn && user?.publicMetadata?.role === "admin" && (
+                {isSignedIn && user?.publicMetadata?.role === "admin" && (
                   <DropdownMenuItem>
                     <button
                       className={`hover:text-primary text-base ${

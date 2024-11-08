@@ -1,14 +1,12 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { ArrowUpDown, Loader, MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,25 +15,301 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/utils/supabase/client";
+import { ArrowUpDown, Loader, MoreHorizontal } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import OptGroup from "./OptGroup";
-import { Textarea } from "@/components/ui/textarea";
-import { toast as sonarToast } from "sonner";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import Link from "next/link";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+
+export const columns = [
+  {
+    accessorKey: "Plot_No",
+    cell: (info) => info.getValue(),
+    className: "text-center w-2",
+
+    header: ({ column }) => {
+      return (
+        <Button
+          className="flex justify-start p-1"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          No.
+          <ArrowUpDown className="ml-1 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "Street_Nam",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="text-left"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Street
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: () => <div className="text-right">Status</div>,
+  },
+  {
+    accessorKey: "firstname",
+    header: () => <div className="text-right">First Name</div>,
+  },
+  {
+    accessorKey: "lastname",
+    header: () => <div className="text-right">Last Name</div>,
+  },
+  {
+    accessorKey: "phone",
+    header: () => <div className="text-right">Phone</div>,
+  },
+  {
+    accessorKey: "plotTotalAmount",
+    header: () => <div className="text-right">Plot Amount</div>,
+    cell: ({ row }) => {
+      let value = row.getValue("plotTotalAmount") ?? 0;
+      const amount = parseFloat(value);
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "GHS",
+      }).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "paidAmount",
+    header: () => <div className="text-right">Paid</div>,
+    cell: ({ row }) => {
+      let value = row.getValue("paidAmount") ?? 0;
+      const amount = parseFloat(value);
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "GHS",
+      }).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "remainingAmount",
+    header: () => <div className="text-right">Remaining</div>,
+    cell: ({ row }) => {
+      let value = row.getValue("remainingAmount") ?? 0;
+      const amount = parseFloat(value);
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "GHS",
+      }).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
+  },
+  {
+    id: "actions",
+    header: () => <div className="text-right">Action </div>,
+    cell: ({ row }) => {
+      const rowData = row.original;
+      const plotId = rowData.id;
+      const pathname = usePathname();
+
+      const [isDialogOpen, setIsDialogOpen] = useState(false);
+      const [delDialogOpen, setDelDialogOpen] = useState(false);
+
+      const [plotData, setPlotData] = useState();
+      const [loadingPlot, setLoadingPlot] = useState(false);
+
+      // Determine table from pathname
+      let table = "";
+      if (pathname.includes("trabuom")) table = "trabuom";
+      else if (pathname.includes("nthc")) table = "nthc";
+      else if (pathname.includes("legon-hills")) table = "legon-hills";
+      else if (pathname.includes("dar-es-salaam")) table = "dar-es-salaam";
+
+      let databaseName;
+      if (table && table === "nthc") {
+        databaseName = "nthc";
+      }
+      if (table && table === "dar-es-salaam") {
+        databaseName = "dar_es_salaam";
+      }
+      if (table && table === "trabuom") {
+        databaseName = "trabuom";
+      }
+      if (table && table === "legon-hills") {
+        databaseName = "legon_hills";
+      }
+
+      const handleDeleteDialog = async (event) => {
+        event.preventDefault();
+        if (plotId !== null) {
+          setDelDialogOpen(true);
+          setLoadingPlot(true);
+          try {
+            const { data, error } = await supabase
+              .from(databaseName)
+              .select("*")
+              .eq("id", plotId);
+            if (error) {
+              console.log(error);
+              toast.error("sorry, something went wrong, try again later");
+              setLoadingPlot(false);
+              return;
+            }
+            setPlotData(data[0]);
+            setLoadingPlot(false);
+          } catch (error) {
+            console.log(error);
+            toast.error("Sorry something went wrong, try again later");
+            setLoadingPlot(true);
+            setDelDialogOpen(false);
+            return;
+          }
+        } else {
+          toast.error("Something went wrong. Try again later");
+          setLoadingPlot(false);
+          setDelDialogOpen(false);
+        }
+      };
+
+      return (
+        <>
+          <div className="flex justify-end">
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setIsDialogOpen(true)}>
+                  Edit Plot
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={`/dashboard/edit-plot/${plotId}?table=${table}`}>
+                    View Plot
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleDeleteDialog}>
+                  Delete Plot
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* Viw plot dialog */}
+          <ViewPlotDialog
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            plotId={plotId}
+            table={table}
+            setIsDialogOpen={setIsDialogOpen}
+          />
+
+          {/* Delete Plot dialog */}
+          <DeletePlotDialog
+            open={delDialogOpen}
+            onOpenChange={setDelDialogOpen}
+            plotId={plotId}
+            setDelDialogOpen={setDelDialogOpen}
+            table={table}
+            plotData={plotData}
+            loading={loadingPlot}
+          />
+        </>
+      );
+    },
+  },
+];
+
+const DeletePlotDialog = ({
+  plotId,
+  open,
+  onOpenChange,
+  setDelDialogOpen,
+  table,
+  plotData,
+  loading,
+}) => {
+  
+  let databaseName;
+  if (table && table === "nthc") {
+    databaseName = "nthc";
+  }
+  if (table && table === "dar-es-salaam") {
+    databaseName = "dar_es_salaam";
+  }
+  if (table && table === "trabuom") {
+    databaseName = "trabuom";
+  }
+  if (table && table === "legon-hills") {
+    databaseName = "legon_hills";
+  }
+  
+  const handleDeletePlot = async () => {
+    console.log("Delete----->: ", plotId, "from database -> ", databaseName);
+    const { data, error } = await supabase
+      .from(databaseName)
+      .delete()
+      .eq("id", plotId);
+    
+    if(error){
+      toast.error('Something went wrong deleting plot')
+    }
+    sonarToast('Plot Deleted Successfully')
+    setDelDialogOpen(false)
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
+  
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      {plotData && (
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete This Plot? </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              plot
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogDescription>
+            <p>Plot Details</p>
+            <p className="font-bold mt-2">
+              {"Plot Number " +
+                plotData.properties.Plot_No +
+                " " +
+                plotData.properties.Street_Nam}
+            </p>
+          </AlertDialogDescription>
+          <AlertDialogFooter>
+            <Button type="button" onClick={() => setDelDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleDeletePlot}>Continue</Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      )}
+    </AlertDialog>
+  );
+};
 
 const plotInfo = {
   firstname: "",
@@ -54,22 +328,21 @@ const plotInfo = {
   status: "",
 };
 
-//View Plot Dialog
-export function ViewPlotDialog({
+const ViewPlotDialog = ({
   open,
   onOpenChange,
   plotId,
   table,
   setIsDialogOpen,
-}) {
+}) => {
+  const [plotData, setPlotData] = useState(plotInfo);
+  const [allDetails, setAllDetails] = useState();
+  const [plotDataLoading, setPlotDataLoading] = useState(false);
+
   const [loader1, setLoader1] = useState(false);
   const [loader2, setLoader2] = useState(false);
   const [step1, setStep1] = useState(true);
   const [step2, setStep2] = useState(false);
-  const [plotData, setPlotData] = useState(plotInfo);
-  const [allDetails, setAllDetails] = useState();
-  const [calcAmount, setCalcAmount] = useState(0);
-  const [plotDataLoading, setPlotDataLoading] = useState(false);
 
   const {
     firstname,
@@ -87,19 +360,6 @@ export function ViewPlotDialog({
     plotStatus,
   } = plotData;
 
-  const [loading, setLoading] = useState(false);
-
-  // Errors Checks
-  const [statusEr, setStatusEr] = useState(false);
-  const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
-  const [paidAmtEr, setPaidAmtEr] = useState(false);
-  const [fnameEr, setFnameEr] = useState(false);
-  const [lnameEr, setLnameEr] = useState(false);
-  const [emailEr, setEmailEr] = useState(false);
-  const [countryEr, setCountryEr] = useState(false);
-  const [phoneEr, setPhoneEr] = useState(false);
-  const [resAddressEr, setResAddressEr] = useState(false);
-
   let databaseName;
   if (table && table === "nthc") {
     databaseName = "nthc";
@@ -110,21 +370,27 @@ export function ViewPlotDialog({
   if (table && table === "trabuom") {
     databaseName = "trabuom";
   }
-  if (table && table === "legon_hills") {
+  if (table && table === "legon-hills") {
     databaseName = "legon_hills";
   }
 
   useEffect(() => {
     if (plotId && databaseName) {
-      const fetchData = async () => {
+      setPlotDataLoading(true);
+      const fetchPlot = async () => {
         try {
-          setLoading(true);
           const { data, error } = await supabase
             .from(databaseName)
             .select("*")
             .eq("id", plotId);
-
-          if (data) {
+          if (error) {
+            toast.error("Something went wrong");
+            setPlotDataLoading(false);
+            setIsDialogOpen(false);
+            console.log(error);
+            return;
+          }
+          if (data[0]) {
             setPlotDataLoading(false);
             setAllDetails(data[0]);
             setPlotData({
@@ -141,23 +407,37 @@ export function ViewPlotDialog({
               remarks: data[0].remarks,
               plotStatus: data[0].status,
             });
-          }
-          if (error) {
+          } else {
+            console.log("Plot details unavailable");
             setPlotDataLoading(false);
-            toast.error("Error occurred fetching plot details");
-            console.log(error);
           }
         } catch (error) {
-          setPlotDataLoading(false);
           console.log(error);
-        } finally {
-          setLoading(false);
+          toast.error("Sorry try again later");
+          setPlotDataLoading(false);
+          setIsDialogOpen(false);
+          return;
         }
       };
 
-      fetchData();
+      fetchPlot();
+    } else {
+      toast.error("Sorry something went wrong");
+      setIsDialogOpen(false);
+      return;
     }
   }, [plotId, databaseName]);
+
+  // Errors Checks
+  const [statusEr, setStatusEr] = useState(false);
+  const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
+  const [paidAmtEr, setPaidAmtEr] = useState(false);
+  const [fnameEr, setFnameEr] = useState(false);
+  const [lnameEr, setLnameEr] = useState(false);
+  const [emailEr, setEmailEr] = useState(false);
+  const [countryEr, setCountryEr] = useState(false);
+  const [phoneEr, setPhoneEr] = useState(false);
+  const [resAddressEr, setResAddressEr] = useState(false);
 
   const handleStep1 = (e) => {
     e.preventDefault();
@@ -335,17 +615,14 @@ export function ViewPlotDialog({
         <DialogHeader>
           <DialogTitle className="font-bold">Edit Plot Details</DialogTitle>
         </DialogHeader>
+
         <div>
           {plotDataLoading && (
             <div className="flex flex-col justify-center items-center">
               <Loader className="animate-spin text-primary z-50" />
             </div>
           )}
-          {loading && (
-            <div className="flex p-8 items-center flex-col justify-center">
-              <span>Loading...</span>
-            </div>
-          )}
+
           {allDetails && (
             <form onSubmit={handleFormSubmit}>
               {/* Step 1 */}
@@ -666,316 +943,4 @@ export function ViewPlotDialog({
       </DialogContent>
     </Dialog>
   );
-}
-
-export const columns = [
-  // {
-  //   id: "select",
-  //   header: ({ table }) => (
-  //     <Checkbox className="-ml-2"
-  //       checked={
-  //         table.getIsAllPageRowsSelected() ||
-  //         (table.getIsSomePageRowsSelected() && "indeterminate")
-  //       }
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //     />
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //     />
-  //     )
-  //   },
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
-
-  {
-    accessorKey: "Plot_No",
-    cell: (info) => info.getValue(),
-    className: "text-center w-2",
-
-    header: ({ column }) => {
-      return (
-        <Button
-          className="flex justify-start p-1"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          No.
-          <ArrowUpDown className="ml-1 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "Street_Nam",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="text-left"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Street
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "status",
-    header: () => <div className="text-right">Status</div>,
-  },
-  {
-    accessorKey: "firstname",
-    header: () => <div className="text-right">First Name</div>,
-  },
-  {
-    accessorKey: "lastname",
-    header: () => <div className="text-right">Last Name</div>,
-  },
-  {
-    accessorKey: "phone",
-    header: () => <div className="text-right">Phone</div>,
-  },
-  {
-    accessorKey: "plotTotalAmount",
-    header: () => <div className="text-right">Plot Amount</div>,
-    cell: ({ row }) => {
-      let value = row.getValue("plotTotalAmount") ?? 0;
-      const amount = parseFloat(value);
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "GHS",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    accessorKey: "paidAmount",
-    header: () => <div className="text-right">Paid</div>,
-    cell: ({ row }) => {
-      let value = row.getValue("paidAmount") ?? 0;
-      const amount = parseFloat(value);
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "GHS",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    accessorKey: "remainingAmount",
-    header: () => <div className="text-right">Remaining</div>,
-    cell: ({ row }) => {
-      let value = row.getValue("remainingAmount") ?? 0;
-      const amount = parseFloat(value);
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "GHS",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    id: "actions",
-    header: () => <div className="text-right">Action</div>,
-    cell: ({ row }) => {
-      const rowData = row.original;
-      const plotId = rowData.id;
-      const pathname = usePathname();
-      const router = useRouter();
-      const [deleteId, setDeleteId] = useState();
-
-      const [isDialogOpen, setIsDialogOpen] = useState(false);
-      const [delDialogOpen, setDelDialogOpen] = useState(false);
-
-      const [plotData, setPlotData] = useState();
-      const [loading, setLoading] = useState(false);
-
-      // Determine table from pathname
-      let table = "";
-      if (pathname.includes("trabuom")) table = "trabuom";
-      else if (pathname.includes("nthc")) table = "nthc";
-      else if (pathname.includes("legon-hills")) table = "legon-hills";
-      else if (pathname.includes("dar-es-salaam")) table = "dar-es-salaam";
-
-      let databaseName;
-      if (table && table === "nthc") {
-        databaseName = "nthc";
-      }
-      if (table && table === "dar-es-salaam") {
-        databaseName = "dar_es_salaam";
-      }
-      if (table && table === "trabuom") {
-        databaseName = "trabuom";
-      }
-      if (table && table === "legon-hills") {
-        databaseName = "legon_hills";
-      }
-
-      const handleDialog = () => {
-        setIsDialogOpen(true);
-      };
-
-      const handleDeleteDialog = async (event) => {
-        event.preventDefault();
-        if (plotId !== null) {
-          console.log("deleting plot...");
-          setDelDialogOpen(true);
-          const fetchPlotData = async () => {
-            try {
-              const { data, error } = await supabase
-                .from(databaseName)
-                .select("*")
-                .eq("id", plotId);
-              if (error) {
-                console.log(error);
-                toast.error("sorry, something went wrong, try again later");
-                return;
-              }
-              setPlotData(data[0]);
-            } catch (error) {
-              console.log(error);
-              toast.error("Sorry something went wrong, try again later");
-              setDelDialogOpen(false);
-              return;
-            }
-          };
-
-          fetchPlotData();
-        } else {
-          toast.error("Something went wrong. Try again later");
-          setDelDialogOpen(false);
-        }
-      };
-
-      return (
-        <div className="flex justify-end">
-          <DropdownMenu modal={false} className="">
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleDialog()}>
-                Edit Plot
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link href={`/dashboard/edit-plot/${plotId}?table=${table}`}>
-                  View Plot
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleDeleteDialog}>
-                Delete Plot
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          {/* ViewPlotDialog opens immediately when state is set */}
-
-          <ViewPlotDialog
-            open={isDialogOpen}
-            onOpenChange={setIsDialogOpen}
-            plotId={plotId}
-            table={table}
-            setIsDialogOpen={setIsDialogOpen}
-          />
-
-          <DeletePlotDialog
-            open={delDialogOpen}
-            onOpenChange={setDelDialogOpen}
-            plotId={plotId}
-            setDelDialogOpen={setDelDialogOpen}
-            table={table}
-            plotData={plotData}
-            loading={loading}
-          />
-        </div>
-      );
-    },
-  },
-];
-
-export async function DeletePlotDialog({
-  plotId,
-  open,
-  onOpenChange,
-  setDelDialogOpen,
-  table,
-  plotData,
-  loading,
-}) {
-  let databaseName;
-  if (table && table === "nthc") {
-    databaseName = "nthc";
-  }
-  if (table && table === "dar-es-salaam") {
-    databaseName = "dar_es_salaam";
-  }
-  if (table && table === "trabuom") {
-    databaseName = "trabuom";
-  }
-  if (table && table === "legon-hills") {
-    databaseName = "legon_hills";
-  }
-
-  const handleDeletePlot = async () => {
-    console.log("Delete----->: ", plotId, "from database -> ", databaseName);
-    const { data, error } = await supabase
-      .from(databaseName)
-      .delete()
-      .eq("id", plotId);
-    
-    if(error){
-      toast.error('Something went wrong deleting plot')
-    }
-    sonarToast('Plot Deleted Successfully')
-    setDelDialogOpen(false)
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
-  };
-
-  return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      {plotData && (
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete This Plot? </AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              plot
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogDescription>
-            <p>Plot Details</p>
-            <p className="font-bold mt-2">
-              {"Plot Number " +
-                plotData.properties.Plot_No +
-                " " +
-                plotData.properties.Street_Nam}
-            </p>
-          </AlertDialogDescription>
-          <AlertDialogFooter>
-            <Button type="button" onClick={() => setDelDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleDeletePlot}>Continue</Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      )}
-    </AlertDialog>
-  );
-}
+};

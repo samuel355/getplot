@@ -5,7 +5,7 @@ import { supabase } from "@/utils/supabase/client";
 import { DataTable } from "../_components/DataTable";
 import { columns } from "../_components/Columns";
 
-export default function Trabuom() {
+export default function LegonHills() {
   const [plotData, setPlotData] = useState([]);
   const [loading, setLoading] = useState(false);
   const databaseName = "legon_hills";
@@ -16,11 +16,9 @@ export default function Trabuom() {
   const fetchPlotData = async () => {
     try {
       setLoading(true);
-      // First batch (records 0 to 999)
       let { data, error } = await supabase.from("legon_hills").select(
         `
-      id, 
-      
+      id,
       properties->>Plot_No,
       properties->>Street_Nam,
       status,
@@ -31,7 +29,7 @@ export default function Trabuom() {
       plotTotalAmount,
       paidAmount,
       remainingAmount
-    `
+    `,
       );
 
       if (error) {

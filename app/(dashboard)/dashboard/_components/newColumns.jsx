@@ -370,7 +370,7 @@ const ViewPlotDialog = ({
   if (table && table === "trabuom") {
     databaseName = "trabuom";
   }
-  if (table && table === "legon-hills") {
+  if (table && table === "legon_hills") {
     databaseName = "legon_hills";
   }
 

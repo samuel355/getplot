@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import OptGroup from "./OptGroup";
 import Link from "next/link";
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns = [

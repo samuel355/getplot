@@ -41,25 +41,25 @@ const Dashboard = () => {
             Dashboard
           </Link>
           <Link
-            href="#"
+            href="/dashboard/trabuom"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Trabuom
           </Link>
           <Link
-            href="#"
+            href="/dashboard/nthc"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             NTHC (Kumasi)
           </Link>
           <Link
-            href="#"
+            href="/dashboard/legon-hills"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             NTHC(Santuo)
           </Link>
           <Link
-            href="#"
+            href="/dashboard/dar-es-salaam"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Dar Es Salaam

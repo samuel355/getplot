@@ -21,7 +21,6 @@ export default function DarEsSalaam() {
       let { data, error } = await supabase.from("dar_es_salaam").select(
         `
       id, 
-      
       properties->>Plot_No,
       properties->>Street_Nam,
       status,

@@ -137,6 +137,18 @@ const Sidebar = () => {
                   Kwadaso Interested clients
                 </Link>
               </li>
+              <li
+                className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
+                  path === "/dashboard/legon-hills-interested-clients" && "bg-gray-100"
+                }`}
+              >
+                <Link
+                  href={"/dashboard/legon-hills-interested-clients"}
+                  className="flex gap-2 items-center"
+                >
+                  Legon Hills Interested clients
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>

@@ -166,6 +166,55 @@ const MobileMenu = () => {
                         <Users2 className="w-4 h-4" /> <span>Users</span>
                       </Link>
                     </li>
+                    <hr className="my-2" />
+                    <li
+                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-5 ${
+                        path === "/dashboard/trabuom-interested-clients" && "bg-gray-100"
+                      }`}
+                    >
+                      <Link
+                        href={"/dashboard/trabuom-interested-clients"}
+                        className="flex gap-2 items-center"
+                      >
+                        Trabuom Interested clients
+                      </Link>
+                    </li>
+                    <li
+                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
+                        path === "/dashboard/kwadaso-interested-clients" && "bg-gray-100"
+                      }`}
+                    >
+                      <Link
+                        href={"/dashboard/kwadaso-interested-clients"}
+                        className="flex gap-2 items-center"
+                      >
+                        Kwadaso Interested clients
+                      </Link>
+                    </li>
+                    <li
+                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
+                        path === "/dashboard/legon-hills-interested-clients" && "bg-gray-100"
+                      }`}
+                    >
+                      <Link
+                        href={"/dashboard/legon-hills-interested-clients"}
+                        className="flex gap-2 items-center"
+                      >
+                        Legon Hills Interested clients
+                      </Link>
+                    </li>
+                    <li
+                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
+                        path === "/dashboard/adense-interested-clients" && "bg-gray-100"
+                      }`}
+                    >
+                      <Link
+                        href={"/dashboard/adense-interested-clients"}
+                        className="flex gap-2 items-center"
+                      >
+                        Adense Interested clients
+                      </Link>
+                    </li>
                   </ul>
                 </nav>
               </div>

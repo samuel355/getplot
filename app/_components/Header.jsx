@@ -37,12 +37,12 @@ const Header = () => {
         {/* Logo section */}
         <div className="">
           <Link href={"/"}>
-            <Image src={'/logo-lateral.svg'} className="object-cover" width={150} height={150} alt="logo" />
+            <Image src={'/logo-lateral.svg'} className="object-cover" width={140} height={140} alt="logo" />
           </Link>
         </div>
 
         {/* Navigation Menu section */}
-        <nav className="hidden lg:flex space-x-6">
+        <nav className="hidden lg:flex space-x-5">
           <NavigationMenu>
             <NavigationMenuList className="flex items-center space-x-4">
               <NavigationMenuItem>
@@ -63,7 +63,7 @@ const Header = () => {
                   Our Sites
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="">
-                  <ul className="grid gap-3 p-3 py-5 md:w-[200px] lg:w-[230px] xl:w-[240px] grid-cols-1">
+                  <ul className="grid gap- p-3 py-5 md:w-[200px] lg:w-[230px] xl:w-[240px] grid-cols-1">
                     <ListItem href="/nthc" title="NTHC">
                       NTHC (Kwadaso)
                     </ListItem>

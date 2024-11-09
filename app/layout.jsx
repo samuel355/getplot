@@ -8,7 +8,7 @@ import ToastMessage from "./_components/ToastMessage";
 
 export const metadata = {
   developer: "Samuel Osei Adu",
-  title: "L.H.C - Get One Plot",
+  title: "Get One Plot",
   description:
     "Get One Plot, Where listing of properties and land purchase made easy",
 };

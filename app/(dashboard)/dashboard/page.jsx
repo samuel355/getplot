@@ -1,34 +1,18 @@
 "use client";
 import Link from "next/link";
 import {
-  Activity,
-  ArrowUpRight,
-  CreditCard,
   Loader,
-  Users,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
-import InterestedClients from "./_components/Interests";
 
 const Dashboard = () => {
   const [trabuomPlots, setTrabuomPlots] = useState();
@@ -38,7 +22,6 @@ const Dashboard = () => {
   const [usersList, setUsersList] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [interest, setInterest] = useState()
   
   useEffect(() => {    
     fetchPlots("trabuom");
@@ -83,7 +66,7 @@ const Dashboard = () => {
   const fetchUsers = async () => {
     setUsersLoading(true);
     try {
-      const response = await fetch("/api/users"); // Assuming your API route is under /api/users
+      const response = await fetch("/api/users"); //api/users
       if (!response.ok) {
         setUsersLoading(false);
         throw new Error("Failed to fetch client list");

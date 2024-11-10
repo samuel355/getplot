@@ -259,7 +259,7 @@ export function ExpressInterestDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw]">
+      <DialogContent className="w-[90vw]">
         <DialogHeader>
           <DialogTitle className="font-bold">Express Interest</DialogTitle>
         </DialogHeader>
@@ -471,3 +471,4 @@ export function ExpressInterestDialog({
     </Dialog>
   );
 }
+

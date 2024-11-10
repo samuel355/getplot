@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast as tToast } from "sonner";
-import { parseISO, format } from 'date-fns';
+import { parseISO, format } from "date-fns";
 import {
   Dialog,
   DialogContent,
@@ -32,157 +32,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "react-toastify";
-
-export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
-  const [userLoading, setUserLoading] = useState(true);
-  const [role, setRole] = useState();
-  const [roleError, setRoleError] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (userId) {
-      const fetchUser = async () => {
-        try {
-          const response = await fetch(`/api/get-user`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId }),
-          });
-          if (!response.ok) {
-            setUserLoading(false);
-            throw new Error("User not found");
-          }
-          const data = await response.json();
-          setUserLoading(false);
-          setUser(data);
-        } catch (error) {
-          setUserLoading(false);
-          console.log(error);
-          setError(error.message);
-        }
-      };
-      fetchUser();
-    }
-  }, [userId]);
-
-  const handleForm = async (event) => {
-    event.preventDefault();
-    setLoading(true);
-    if (role === undefined || role === null) {
-      setRoleError(true);
-      toast.error("Choose Role");
-      setLoading(false);
-    } else {
-      setRoleError(false);
-      const response = await fetch(`/api/edit-user-role`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId, role }),
-      });
-      if (!response.ok) {
-        setLoading(false);
-        throw new Error("Failed to edit user role");
-      }
-      setLoading(false);
-      setDialogOpen(false);
-      tToast("Role edited successfully");
-      setTimeout(() => {
-        window.location.reload();
-      }, 1050);
-    }
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit User Role</DialogTitle>
-          <DialogDescription>Change Role and Click Save.</DialogDescription>
-        </DialogHeader>
-        {userLoading && (
-          <div className="flex flex-col justify-center items-center">
-            <Loader className="animate-spin text-primary z-50" />
-          </div>
-        )}
-        {user && (
-          <div className="grid gap-2 py-2">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Full Name
-              </Label>
-              <Input
-                disabled
-                id="name"
-                defaultValue={user.firstName ?? "" + " " + user.lastName ?? ""}
-                className="col-span-3"
-                disabbled
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="username" className="text-right">
-                Username
-              </Label>
-              <Input
-                disabled
-                id="username"
-                defaultValue={`@${user.username}`}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="username" className="text-right">
-                Current Role
-              </Label>
-              <Input
-                disabled
-                id="username"
-                defaultValue={`${user.publicMetadata.role ?? "None"}`}
-                className="col-span-3"
-              />
-            </div>
-            <form onSubmit={handleForm}>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="username" className="text-right">
-                  Change Role
-                </Label>
-                <Select onValueChange={(event) => setRole(event)}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Change Role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Roles</SelectLabel>
-                      <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="sysadmin">System Admin</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              {roleError && (
-                <span className="text-red-600 text-xs"> Choose Role</span>
-              )}
-              <DialogFooter className={"mt-3"}>
-                <Button type="submit">
-                  {loading ? (
-                    <Loader className="w-4 h-4 animate-spin text-white z-50" />
-                  ) : (
-                    "Save changes"
-                  )}
-                </Button>
-              </DialogFooter>
-            </form>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
-  );
-}
+import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import { supabase } from "@/utils/supabase/client";
+import { Textarea } from "@/components/ui/textarea";
 
 export const clientsColumns = [
   {
@@ -222,51 +75,229 @@ export const clientsColumns = [
   {
     accessorKey: "created_at",
     header: () => <div className="">Data</div>,
-    cell: ({row}) => {
-      const dbDate = row.getValue('created_at')
-      const formatDate = format(parseISO(dbDate), "yyyy-MM-dd HH:mm:ss")
-      return <div>{ formatDate }</div>
-    }
-  }
-  // {
-  //   id: "actions",
-  //   header: () => {
-  //     const { user } = useUser();
-  //     if (user.publicMetadata.role === "sysadmin") {
-  //       return <div className="text-right">Action</div>;
-  //     }
-  //   },
-  //   cell: ({ row }) => {
-  //     const rowData = row.original;
-  //     const userId = rowData.id;
-  //     const [dialogOpen, setDialogOpen] = useState(false);
-  //     const { user } = useUser();
+    cell: ({ row }) => {
+      const dbDate = row.getValue("created_at");
+      const formatDate = format(parseISO(dbDate), "yyyy-MM-dd HH:mm:ss");
+      return <div>{formatDate}</div>;
+    },
+  },
+  {
+    id: "actions",
+    header: () => {
+      const { user } = useUser();
+      if (user.publicMetadata.role === "sysadmin") {
+        return <div className="text-right">Action</div>;
+      }
+    },
+    cell: ({ row }) => {
+      const { user } = useUser();
+      const rowData = row.original;
+      const id = rowData.id;
+      const [dialogOpen, setDialogOpen] = useState(false);
+      const pathname = usePathname();
 
-  //     return (
-  //       <>
-  //         <div className="flex justify-end">
-  //           {user.publicMetadata.role === "sysadmin" && (
-  //             <Button
-  //               onClick={() => setDialogOpen((prevState) => !prevState)}
-  //               variant="ghost"
-  //               size="small"
-  //               className="border p-1"
-  //             >
-  //               Edit User
-  //             </Button>
-  //           )}
+      let databaseName = "";
+      if (pathname.includes("trabuom-interested-clients"))
+        databaseName = "trabuom_interests";
+      else if (pathname.includes("kwadaso-interested-clients"))
+        databaseName = "nthc_interests";
+      else if (pathname.includes("legon-hills-interested-clients"))
+        databaseName = "legon_hills_interests";
+      else if (pathname.includes("adense-interested-clients"))
+        databaseName = "dar_es_salaam_interests";
 
-  //           {dialogOpen && (
-  //             <ViewUserDialog
-  //               open={dialogOpen}
-  //               onOpenChange={setDialogOpen}
-  //               userId={userId}
-  //               setDialogOpen={setDialogOpen}
-  //             />
-  //           )}
-  //         </div>
-  //       </>
-  //     );
-  //   },
-  // },
+      const handleDeleteDialog = () => {
+        console.log("here we go agaain");
+      };
+
+      return (
+        <>
+          <div className="flex justify-end">
+            {user.publicMetadata.role === "sysadmin" && (
+              <div className="flex justify-end">
+                <DropdownMenu modal={false}>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                      <span className="sr-only">Open menu</span>
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setDialogOpen(true)}>
+                      View
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleDeleteDialog}>
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
+
+            <ViewDialog
+              open={dialogOpen}
+              onOpenChange={setDialogOpen}
+              setDialogOpen={setDialogOpen}
+              id={id}
+              databaseName={databaseName}
+            />
+          </div>
+        </>
+      );
+    },
+  },
 ];
+
+const ViewDialog = ({
+  open,
+  onOpenChange,
+  setDialogOpen,
+  id,
+  databaseName,
+}) => {
+  const [details, setDetails] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (id && databaseName) {
+      setLoading(true);
+      const fetchDetails = async () => {
+        const { data, error } = await supabase
+          .from(databaseName)
+          .select(`*`)
+          .eq("id", id);
+
+        if (error) {
+          setLoading(false);
+          console.log(error);
+          toast.error("Try again later");
+        }
+        setLoading(false);
+        setDetails(data[0]);
+      };
+
+      fetchDetails();
+    } else {
+      setLoading(false);
+      toast.error("Something went wrong");
+      setDialogOpen(false);
+    }
+  }, [id, databaseName]);
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="w-90vw">
+        <DialogHeader>
+          <DialogTitle className="font-bold">Client Details</DialogTitle>
+        </DialogHeader>
+        <div>
+          {loading && (
+            <div className="flex p-8 items-center flex-col justify-center">
+              <span>Loading...</span>
+            </div>
+          )}
+
+          {details && (
+            <form>
+              <div className="pt-4">
+                <div className="flex flex-col space-y-4">
+                  <div className="flex gap-2 items-center">
+                    <p className="text-gray-900 font-semibold text-sm w-1/4">
+                      Plot Details
+                    </p>
+                    <Input
+                      type="text"
+                      disabled
+                      name="plotDetails"
+                      className="w-3/4 text-primary"
+                      value={
+                        "Plot Number " +
+                        details?.plot_number +
+                        " " +
+                        details?.plot_name
+                      }
+                    />
+                  </div>
+
+                  <hr />
+                  <div className=" flex items-center space-x-2">
+                    <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                      First Name:
+                    </h2>
+                    <Input
+                      type="text"
+                      placeholder="First Name"
+                      name="firstname"
+                      value={details?.firstname}
+                      className="w-3/4"
+                    />
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                      Last Name(s)
+                    </h2>
+                    <Input
+                      type="text"
+                      name="lastname"
+                      placeholder="Last Name(s)"
+                      value={details?.lastname}
+                      className="w-3/4"
+                    />
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                      Email
+                    </h2>
+                    <Input
+                      placeholder="Email Address"
+                      name="email"
+                      type="email"
+                      value={details?.email}
+                      className="w-3/4"
+                    />
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                      Phone
+                    </h2>
+                    <Input
+                      placeholder="Email Address"
+                      name="email"
+                      type="email"
+                      value={details?.country + details?.phone}
+                      className="w-3/4"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <h2 className="text-gray-900 font-semibold text-sm mb-2">
+                    Message
+                  </h2>
+                  <Textarea name="message" value={details?.message} />
+                </div>
+
+                <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-7 pb-2">
+                  {/* <p> Sent at {format(parseISO(details?.created_at), "yyyy-MM-dd HH:mm:ss") }</p> */}
+                  <p> Sent at {details.created_at}</p>
+                  <button
+                    onClick={() => setDialogOpen(false)}
+                    type="button"
+                    className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </form>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};

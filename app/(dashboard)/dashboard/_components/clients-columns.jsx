@@ -36,6 +36,14 @@ import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { supabase } from "@/utils/supabase/client";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const clientsColumns = [
   {
@@ -94,6 +102,9 @@ export const clientsColumns = [
       const rowData = row.original;
       const id = rowData.id;
       const [dialogOpen, setDialogOpen] = useState(false);
+      const [deleteDialog, setDeleteDialog] = useState(false);
+      const [loading, setLoading] = useState(false);
+      const [clientData, setClientData] = useState({});
       const pathname = usePathname();
 
       let databaseName = "";
@@ -106,8 +117,36 @@ export const clientsColumns = [
       else if (pathname.includes("adense-interested-clients"))
         databaseName = "dar_es_salaam_interests";
 
-      const handleDeleteDialog = () => {
-        console.log("here we go agaain");
+      const handleDeleteDialog = async (event) => {
+        event.preventDefault();
+        if (id !== null) {
+          setDeleteDialog(true);
+          setLoading(true);
+          try {
+            const { data, error } = await supabase
+              .from(databaseName)
+              .select("*")
+              .eq("id", id);
+            if (error) {
+              console.log(error);
+              toast.error("sorry, something went wrong, try again later");
+              setLoading(false);
+              return;
+            }
+            setClientData(data[0]);
+            setLoading(false);
+          } catch (error) {
+            console.log(error);
+            toast.error("Sorry something went wrong, try again later");
+            setLoading(true);
+            setDeleteDialog(false);
+            return;
+          }
+        } else {
+          toast.error("Something went wrong. Try again later");
+          setLoading(false);
+          setDeleteDialog(false);
+        }
       };
 
       return (
@@ -143,12 +182,77 @@ export const clientsColumns = [
               id={id}
               databaseName={databaseName}
             />
+
+            <DeleteDialog
+              open={deleteDialog}
+              onOpenChange={setDeleteDialog}
+              setDeleteDialog={setDeleteDialog}
+              loading={loading}
+              databaseName={databaseName}
+              id={id}
+              clientData={clientData}
+            />
           </div>
         </>
       );
     },
   },
 ];
+
+const DeleteDialog = ({
+  open,
+  onOpenChange,
+  setDeleteDialog,
+  loading,
+  databaseName,
+  id,
+  clientData,
+}) => {
+  
+  const handleDelete = async () => {
+    const { data, error } = await supabase
+      .from(databaseName)
+      .delete()
+      .eq("id", id)
+    if(error){
+      toast.error('Sorry something went wrong');
+      console.log(error)
+      setDeleteDialog(false)
+    }
+    setDeleteDialog(false)
+    tToast('Details deleted successfully')
+  };
+
+  return (
+    <>
+      <AlertDialog open={open} onOpenChange={onOpenChange}>
+        {clientData && (
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete This client info ? </AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the
+                Details
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogDescription>
+              <p>Client Name</p>
+              <p className="font-bold mt-2">
+                {" " + clientData.firstname + " " + clientData.lastname}
+              </p>
+            </AlertDialogDescription>
+            <AlertDialogFooter>
+              <Button type="button" onClick={() => setDeleteDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleDelete}>Continue</Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        )}
+      </AlertDialog>
+    </>
+  );
+};
 
 const ViewDialog = ({
   open,
@@ -282,9 +386,9 @@ const ViewDialog = ({
                   <Textarea name="message" value={details?.message} />
                 </div>
 
-                <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-7 pb-2">
+                <div className="flex items-center justify-between mt-7 pb-2">
                   {/* <p> Sent at {format(parseISO(details?.created_at), "yyyy-MM-dd HH:mm:ss") }</p> */}
-                  <p> Sent at {details.created_at}</p>
+                  <p> Sent at: {details.created_at}</p>
                   <button
                     onClick={() => setDialogOpen(false)}
                     type="button"

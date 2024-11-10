@@ -221,6 +221,9 @@ const DeleteDialog = ({
     }
     setDeleteDialog(false)
     tToast('Details deleted successfully')
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   return (

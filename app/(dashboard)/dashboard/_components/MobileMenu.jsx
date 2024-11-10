@@ -1,22 +1,11 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   DraftingCompass,
-  Home,
   LandPlot,
   LayoutDashboard,
   Menu,
-  Users,
   Users2,
   X,
 } from "lucide-react";

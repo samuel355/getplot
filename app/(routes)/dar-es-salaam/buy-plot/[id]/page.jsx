@@ -30,7 +30,6 @@ const plotInfo = {
 const EditPlot = () => {
   const [loader1, setLoader1] = useState(false);
   const [loader2, setLoader2] = useState(false);
-  const [loader3, setLoader3] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [step1, setStep1] = useState(true);
   const [step2, setStep2] = useState(false);

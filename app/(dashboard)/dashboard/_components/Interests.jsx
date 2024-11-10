@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 
 export default function InterestedClients() {
   const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchClients = async () => {

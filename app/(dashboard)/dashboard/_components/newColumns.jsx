@@ -244,8 +244,7 @@ const DeletePlotDialog = ({
   onOpenChange,
   setDelDialogOpen,
   table,
-  plotData,
-  loading,
+  plotData
 }) => {
   
   let databaseName;

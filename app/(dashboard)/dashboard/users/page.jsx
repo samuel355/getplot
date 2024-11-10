@@ -1,5 +1,4 @@
 "use client";
-import { createClerkClient } from "@clerk/clerk-sdk-node";
 
 import { useEffect, useState } from "react";
 import { UsersTable } from "./table";

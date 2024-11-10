@@ -18,13 +18,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
-
-import {
   Table,
   TableBody,
   TableCell,

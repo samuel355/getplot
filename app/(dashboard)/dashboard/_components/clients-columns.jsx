@@ -5,11 +5,8 @@ import { parseISO, format } from "date-fns";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  DialogTitle
 } from "@/components/ui/dialog";
 import {
   DropdownMenu,
@@ -19,18 +16,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown, Loader, MoreHorizontal } from "lucide-react";
-import { Label } from "@/components/ui/label";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { toast } from "react-toastify";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
@@ -203,14 +190,13 @@ const DeleteDialog = ({
   open,
   onOpenChange,
   setDeleteDialog,
-  loading,
   databaseName,
   id,
   clientData,
 }) => {
   
   const handleDelete = async () => {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from(databaseName)
       .delete()
       .eq("id", id)

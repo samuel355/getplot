@@ -18,29 +18,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
-
-import {
   Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
-import { FileText, Sheet } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 export function ClientsTable({ data, columns, loading }) {
   const [sorting, setSorting] = useState([]);
@@ -87,13 +69,6 @@ export function ClientsTable({ data, columns, loading }) {
       },
     },
   });
-
-  // Function to log selected rows
-  const handleLogSelectedRows = () => {
-    const selectedRows = table
-      .getSelectedRowModel()
-      .rows.map((row) => row.original);
-  };
 
   return (
     <div className="rounded-md border pl-2 mt-3">
@@ -149,38 +124,6 @@ export function ClientsTable({ data, columns, loading }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        
-        
-        {/* <div>
-          <Button
-            variant="outline"
-            className="mr-2"
-            onClick={() => exportToPdf(data)}
-          >
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <FileText />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Export as PDF</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </Button>
-          <Button variant="outline" onClick={() => exportToExcel(data)}>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Sheet />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Export as Excel</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </Button>
-        </div> */}
         
       </div>
 

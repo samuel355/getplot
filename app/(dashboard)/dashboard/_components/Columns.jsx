@@ -24,14 +24,22 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import OptGroup from "./OptGroup";
 import Link from "next/link";
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns = [
   {
     id: "select",
     header: ({ table }) => (
-      <Checkbox className="-ml-2"
+      <Checkbox
+        className="-ml-2"
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
@@ -43,11 +51,11 @@ export const columns = [
     cell: ({ row }) => {
       return (
         <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-      )
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      );
     },
     enableSorting: false,
     enableHiding: false,
@@ -272,7 +280,6 @@ const DeletePlotDialog = ({
   plotData,
   loading,
 }) => {
-  
   let databaseName;
   if (table && table === "nthc") {
     databaseName = "nthc";
@@ -286,24 +293,24 @@ const DeletePlotDialog = ({
   if (table && table === "legon-hills") {
     databaseName = "legon_hills";
   }
-  
+
   const handleDeletePlot = async () => {
     console.log("Delete----->: ", plotId, "from database -> ", databaseName);
     const { data, error } = await supabase
       .from(databaseName)
       .delete()
       .eq("id", plotId);
-    
-    if(error){
-      toast.error('Something went wrong deleting plot')
+
+    if (error) {
+      toast.error("Something went wrong deleting plot");
     }
-    sonarToast('Plot Deleted Successfully')
-    setDelDialogOpen(false)
+    sonarToast("Plot Deleted Successfully");
+    setDelDialogOpen(false);
     setTimeout(() => {
       window.location.reload();
     }, 1000);
   };
-  
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       {plotData && (

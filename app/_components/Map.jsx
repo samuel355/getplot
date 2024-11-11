@@ -1,8 +1,8 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { GoogleMap, Polygon, useJsApiLoader } from "@react-google-maps/api";
 import mapboxgl from "mapbox-gl";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,11 +31,9 @@ const Map = ({ parcels, center }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [plotID, setPlotID] = useState();
   const path = usePathname();
-  const [newPrice, setNewPrice] = useState("");
-  const { user, isSignedIn } = useUser();
+  const { user } = useUser();
   const [newPriceEr, setNewPriceEr] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isOpenDialog, setIsOpenDialog] = useState(false);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [interestPlotId, setInterestPlotId] = useState();
@@ -169,7 +167,9 @@ const Map = ({ parcels, center }) => {
             Edit Plot
           </a>
 
-          <a href="tel:0248838005" class="border px-4 py-1 rounded-md text-sm font-normal">
+          <a style="margin-top: ${
+            status === "Reserved" || status === "Sold" ? "7px" : "0"
+          }" href="tel:0248838005" class="border px-4 py-1 rounded-md text-sm font-normal">
             Call For Info
           </a>
 

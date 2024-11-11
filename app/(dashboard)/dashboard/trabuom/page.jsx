@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { DataTable } from "../_components/DataTable";
 import { columns } from "../_components/Columns";

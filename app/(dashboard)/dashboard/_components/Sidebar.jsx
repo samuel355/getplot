@@ -1,23 +1,9 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  ArrowRight,
-  DraftingCompass,
-  Home,
   LandPlot,
   LayoutDashboard,
-  User,
-  Users,
   Users2,
 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";

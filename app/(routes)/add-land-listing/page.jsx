@@ -30,12 +30,6 @@ const page = () => {
   const { user } = useUser();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     window.location.href = "/sign-in";
-  //   }
-  // }, [user]);
-
   //Upload Image to Supabase
   const uploadImage = async (id) => {
     for (const image of images) {

@@ -1,11 +1,8 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   GoogleMap,
-  Polygon,
   useJsApiLoader,
-  Marker,
-  DirectionsService,
   DirectionsRenderer,
 } from "@react-google-maps/api";
 import mapboxgl from "mapbox-gl";

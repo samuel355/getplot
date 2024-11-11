@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import Listing from "./Listing";
 import { supabase } from "@/utils/supabase/client";
-import { toast } from "sonner";
 import GoogleMapSection from "./GoogleMapSection";
 
 const ListingMapView = ({ type }) => {

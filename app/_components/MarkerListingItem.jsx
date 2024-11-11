@@ -1,13 +1,5 @@
-import {
-  GoogleMap,
-  Marker,
-  DirectionsService,
-  DirectionsRenderer,
-} from "@react-google-maps/api";
-import { Bath, BedDouble, CarFront, MapPin, Ruler, X } from "lucide-react";
+import { BedDouble, MapPin, Ruler, X } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import React, { useState } from "react";
 
 const MarkerListingItem = ({ item, closeHandler, images }) => {
   const handleGetDirections = () => {

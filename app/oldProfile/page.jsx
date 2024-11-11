@@ -1,7 +1,6 @@
 "use client";
-import { UserButton, UserProfile, useUser } from "@clerk/nextjs";
-import { Building2, Loader } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { UserButton, UserProfile } from "@clerk/nextjs";
+import { Building2 } from "lucide-react";
 import UserListing from "./_components/UserListing";
 
 const Profile = () => {

@@ -1,9 +1,8 @@
-import { Bath, BedDouble, CarFront, MapPin, Ruler, Search } from "lucide-react";
+import { MapPin, Ruler, Search } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import GoogleAddressSearch from "./GoogleAddressSearch";
 import { Button } from "@/components/ui/button";
-import FilterSesction from "./FilterSesction";
 import Link from "next/link";
 import LandFilterSection from "./LandFilterSection";
 import { useRouter } from "next/navigation";

@@ -45,12 +45,6 @@ const Users = () => {
     return <div>Error: {error}</div>;
   }
 
-  // const selectData = clientList?.data.map(({ id, firstName, lastName }) => ({
-  //   id,
-  //   firstName,
-  //   lastName,
-  // }));
-
   return (
     <div>
       <div className="-mt-5">

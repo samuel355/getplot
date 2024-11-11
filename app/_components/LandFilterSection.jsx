@@ -6,7 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Bath, BedDouble, CarFront } from "lucide-react";
 
 const LandFilterSection = () => {
   return (

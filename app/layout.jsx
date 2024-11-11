@@ -1,5 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
-import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import { PrimeReactProvider } from "primereact/api";
 
 import "./globals.css";
 import Provider from "./Provider";

@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import OptGroup from "./OptGroup";
 import Link from "next/link";
-import {toast as sonarToast} from 'sonner'
+import { toast as sonarToast } from "sonner";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -168,10 +168,11 @@ export const columns = [
 
       // Determine table from pathname
       let table = "";
-      if (pathname.includes("trabuom")) table = "trabuom";
-      else if (pathname.includes("nthc")) table = "nthc";
-      else if (pathname.includes("legon-hills")) table = "legon-hills";
-      else if (pathname.includes("dar-es-salaam")) table = "dar-es-salaam";
+      if (pathname === "/dashboard/trabuom") table = "trabuom";
+      else if (pathname === "/dashboard/nthc") table = "nthc";
+      else if (pathname === "/dashboard/legon-hills") table = "legon-hills";
+      else if (pathname === "/dashboard/dar-es-salaam") table = "dar-es-salaam";
+      else if (pathname === "/dashboard/yabi") table = "yabi";
 
       let databaseName;
       if (table && table === "nthc") {
@@ -185,6 +186,9 @@ export const columns = [
       }
       if (table && table === "legon-hills") {
         databaseName = "legon_hills";
+      }
+      if (table && table === "yabi") {
+        databaseName = "yabi";
       }
 
       const handleDeleteDialog = async (event) => {
@@ -293,6 +297,9 @@ const DeletePlotDialog = ({
   }
   if (table && table === "legon-hills") {
     databaseName = "legon_hills";
+  }
+  if (table && table === "yabi") {
+    databaseName = "yabi";
   }
 
   const handleDeletePlot = async () => {
@@ -406,6 +413,9 @@ const ViewPlotDialog = ({
   if (table && table === "legon-hills") {
     databaseName = "legon_hills";
   }
+  if (table && table === "yabi") {
+    databaseName = "yabi";
+  }
 
   useEffect(() => {
     if (plotId && databaseName) {
@@ -505,7 +515,7 @@ const ViewPlotDialog = ({
 
       if (paidAmount - plotTotalAmount > 0) {
         toast.error(
-          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot.",
+          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot."
         );
         return;
       }

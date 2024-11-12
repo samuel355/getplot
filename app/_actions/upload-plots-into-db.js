@@ -7,12 +7,14 @@ export async function insertFeatures(features) {
       type: feature.geometry.type,
       geometry: feature.geometry,
       properties: feature.properties,
-      status: renderStatus(feature.properties.STATUS),
-      owner_info: renderOwner(feature.properties.STATUS),
+      status: 'Available',
+      plotTotalAmount: 100000
+      //status: renderStatus(feature.properties.STATUS),
+      //owner_info: renderOwner(feature.properties.STATUS),
     }));
 
     const { data, error } = await supabase
-      .from("trabuom_duplicate")
+      .from("yabi")
       .insert(transformedFeatures)
       .select("*");
 

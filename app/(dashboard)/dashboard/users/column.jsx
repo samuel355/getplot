@@ -240,7 +240,7 @@ export const columns = [
       return (
         <>
           <div className="flex justify-end">
-            {user.publicMetadata.role === "sysadmin" && (
+            {user?.publicMetadata?.role === "sysadmin" && (
               <Button
                 onClick={() => setDialogOpen((prevState) => !prevState)}
                 variant="ghost"

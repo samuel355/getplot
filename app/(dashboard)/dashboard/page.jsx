@@ -108,7 +108,7 @@ const Dashboard = () => {
             href="/dashboard/legon-hills"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            NTHC(Santuo)
+            NTHC(Santeo)
           </Link>
           <Link
             href="/dashboard/dar-es-salaam"
@@ -146,7 +146,7 @@ const Dashboard = () => {
           <Card x-chunk="dashboard-01-chunk-1">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Plots at Santuo
+                Plots at Santeo
               </CardTitle>
             </CardHeader>
             <CardContent>

@@ -20,6 +20,10 @@ import {
 import {
   Table,
   TableRow,
+  TableHead,
+  TableCell,
+  TableHeader,
+  TableBody
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";

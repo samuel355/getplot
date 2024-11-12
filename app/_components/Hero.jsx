@@ -35,7 +35,7 @@ const Hero = () => {
         </Button>
         <div className="flex gap-4 flex-wrap mt-3">
           <Link className="text-primary hover:underline" href="/legon-hills">
-            East Legon Hills (Santuo)
+            East Legon Hills (Santeo)
           </Link>
           <Link className="text-primary hover:underline" href="/nthc">
             NTHC (Kumasi)

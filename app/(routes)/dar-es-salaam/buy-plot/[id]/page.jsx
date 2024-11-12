@@ -9,6 +9,7 @@ import { supabase } from "@/utils/supabase/client";
 import { toast } from "react-toastify";
 import { PaystackButton } from "react-paystack";
 import Header from "@/app/_components/Header";
+import { useUser } from "@clerk/nextjs";
 
 const plotInfo = {
   firstname: "",
@@ -67,6 +68,7 @@ const EditPlot = () => {
   const [countryEr, setCountryEr] = useState(false);
   const [phoneEr, setPhoneEr] = useState(false);
   const [resAddressEr, setResAddressEr] = useState(false);
+  const {user} = useUser()
 
   useEffect(() => {
     if (id) {
@@ -442,7 +444,8 @@ const EditPlot = () => {
                       )}
                     </div>
                   </div>
-                  <div className="mt-6">
+                  {user?.publicMetadata?.role === "sysadmin" & (
+                    <div className="mt-6">
                     <h2 className="text-gray-900 font-semibold">Remarks</h2>
                     <Textarea
                       onChange={onInputChange}
@@ -450,7 +453,8 @@ const EditPlot = () => {
                       value={remarks}
                     />
                   </div>
-
+                  )}
+                  
                   <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
                     <button
                       onClick={handleStep1}

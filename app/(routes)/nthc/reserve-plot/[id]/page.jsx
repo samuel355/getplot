@@ -9,6 +9,7 @@ import { supabase } from "@/utils/supabase/client";
 import { toast } from "react-toastify";
 import { PaystackButton } from "react-paystack";
 import Header from "@/app/_components/Header";
+import { useUser } from "@clerk/nextjs";
 
 const plotInfo = {
   firstname: "",
@@ -39,6 +40,7 @@ const EditPlot = () => {
   const [plotData, setPlotData] = useState(plotInfo);
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
+  const {user} = useUser()
 
   const {
     firstname,
@@ -490,7 +492,8 @@ const EditPlot = () => {
                       )}
                     </div>
                   </div>
-                  <div className="mt-6">
+                  {user?.publicMetadata?.role === 'sysadmin' && (
+                    <div className="mt-6">
                     <h2 className="text-gray-900 font-semibold">Remarks</h2>
                     <Textarea
                       onChange={onInputChange}
@@ -498,6 +501,8 @@ const EditPlot = () => {
                       value={remarks}
                     />
                   </div>
+                  )}
+                  
                   <div className="flex mt-5 gap-4 flex-row items-center border border-primary justify-center">
                     <h2 className="text-gray-900 font-semibold">
                       You still have:

@@ -53,7 +53,7 @@ const Map = ({ parcels, center }) => {
   }
 
   const mapContainerStyle = {
-    height: "75vh",
+    height: "90vh",
     width: "85%",
   };
 

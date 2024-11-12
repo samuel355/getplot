@@ -51,6 +51,13 @@ const Sidebar = () => {
       query: "dar-es-salaam",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
+    {
+      id: 5,
+      href: "/dashboard/yabi",
+      title: "Yabi",
+      query: "yabi",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
+    },
   ];
 
   return (
@@ -145,6 +152,18 @@ const Sidebar = () => {
                   className="flex gap-2 items-center"
                 >
                   Adense Interested clients
+                </Link>
+              </li>
+              <li
+                className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
+                  path === "/dashboard/yabi-interested-clients" && "bg-gray-100"
+                }`}
+              >
+                <Link
+                  href={"/dashboard/yabi-interested-clients"}
+                  className="flex gap-2 items-center"
+                >
+                  Yabi Interested clients
                 </Link>
               </li>
             </ul>

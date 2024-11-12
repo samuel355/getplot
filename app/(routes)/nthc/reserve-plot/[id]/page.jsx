@@ -197,7 +197,7 @@ const EditPlot = () => {
       residentialAddress === ""
     ) {
       setResAddressEr(true);
-      toast.error("Enter phone number");
+      toast.error("Enter Residential Address");
       return;
     } else {
       setResAddressEr(false); //

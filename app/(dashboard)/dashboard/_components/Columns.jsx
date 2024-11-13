@@ -250,6 +250,7 @@ export const columns = [
 
       const [isDialogOpen, setIsDialogOpen] = useState(false);
       const [delDialogOpen, setDelDialogOpen] = useState(false);
+      const [isViewDialog, setIsViewDialog] = useState(false)
 
       const [plotData, setPlotData] = useState();
       const [loadingPlot, setLoadingPlot] = useState(false);
@@ -327,10 +328,8 @@ export const columns = [
                 <DropdownMenuItem onClick={() => setIsDialogOpen(true)}>
                   Edit Plot
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href={`/dashboard/edit-plot/${plotId}?table=${table}`}>
-                    View Plot
-                  </Link>
+                <DropdownMenuItem onClick={() => setIsViewDialog(true)}>
+                  View Plot
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleDeleteDialog}>
                   Delete Plot
@@ -339,13 +338,22 @@ export const columns = [
             </DropdownMenu>
           </div>
 
-          {/* Viw plot dialog */}
-          <ViewPlotDialog
+          {/* Edit plot dialog */}
+          <EditPlotDialog
             open={isDialogOpen}
             onOpenChange={setIsDialogOpen}
             plotId={plotId}
             table={table}
             setIsDialogOpen={setIsDialogOpen}
+          />
+          
+          {/* View plot dialog */}
+          <ViewPlotDialog
+            open={isViewDialog}
+            onOpenChange={setIsViewDialog}
+            plotId={plotId}
+            table={table}
+            setIsDialogOpen={setIsViewDialog}
           />
 
           {/* Delete Plot dialog */}
@@ -363,6 +371,401 @@ export const columns = [
     },
   },
 ];
+
+const ViewPlotDialog = ({
+  open,
+  onOpenChange,
+  plotId,
+  table,
+  setIsDialogOpen,
+}) => {
+  const [plotData, setPlotData] = useState(plotInfo);
+  const [allDetails, setAllDetails] = useState();
+  const [plotDataLoading, setPlotDataLoading] = useState(false);
+
+  const [loader1, setLoader1] = useState(false);
+  const [loader2, setLoader2] = useState(false);
+  const [step1, setStep1] = useState(true);
+  const [step2, setStep2] = useState(false);
+
+  const {
+    firstname,
+    lastname,
+    email,
+    country,
+    phone,
+    residentialAddress,
+    agent,
+    plotTotalAmount,
+    paidAmount,
+    remainingAmount,
+    remarks,
+    status,
+    plotStatus,
+  } = plotData;
+
+  let databaseName;
+  if (table && table === "nthc") {
+    databaseName = "nthc";
+  }
+  if (table && table === "dar-es-salaam") {
+    databaseName = "dar_es_salaam";
+  }
+  if (table && table === "trabuom") {
+    databaseName = "trabuom";
+  }
+  if (table && table === "legon-hills") {
+    databaseName = "legon_hills";
+  }
+  if (table && table === "yabi") {
+    databaseName = "yabi";
+  }
+
+  useEffect(() => {
+    if (plotId && databaseName) {
+      setPlotDataLoading(true);
+      const fetchPlot = async () => {
+        try {
+          const { data, error } = await supabase
+            .from(databaseName)
+            .select("*")
+            .eq("id", plotId);
+          if (error) {
+            toast.error("Something went wrong");
+            setPlotDataLoading(false);
+            setIsDialogOpen(false);
+            console.log(error);
+            return;
+          }
+          if (data[0]) {
+            setPlotDataLoading(false);
+            setAllDetails(data[0]);
+            setPlotData({
+              firstname: data[0].firstname,
+              lastname: data[0].lastname,
+              email: data[0].email,
+              residentialAddress: data[0].residentialAddress,
+              country: data[0].country,
+              phone: data[0].phone,
+              agent: data[0].agent,
+              plotTotalAmount: data[0].plotTotalAmount,
+              paidAmount: data[0].paidAmount,
+              remainingAmount: data[0].remainingAmount,
+              remarks: data[0].remarks,
+              plotStatus: data[0].status,
+            });
+          } else {
+            console.log("Plot details unavailable");
+            setPlotDataLoading(false);
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error("Sorry try again later");
+          setPlotDataLoading(false);
+          setIsDialogOpen(false);
+          return;
+        }
+      };
+
+      fetchPlot();
+    } else {
+      toast.error("Sorry something went wrong");
+      setIsDialogOpen(false);
+      return;
+    }
+  }, [plotId, databaseName]);
+
+  // Errors Checks
+  const [statusEr, setStatusEr] = useState(false);
+  const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
+  const [paidAmtEr, setPaidAmtEr] = useState(false);
+
+  const handleStep1 = (e) => {
+    e.preventDefault();
+    if (plotStatus === null && status === undefined) {
+      setStatusEr(true);
+      toast.error("Please select status");
+      return;
+    } else if (plotStatus === null && status === "Change Status") {
+      setStatusEr(true);
+      toast.error("Please select status");
+      return;
+    } else {
+      setStatusEr(false);
+    }
+
+    if (status === "Sold" || status === "Reserved") {
+      if (plotTotalAmount === null || plotTotalAmount === 0) {
+        setPlotTotalAmountEr(true);
+        toast.error("Please enter plot total amount");
+        return;
+      } else {
+        setPlotTotalAmountEr(false);
+      }
+
+      if (paidAmount === null || paidAmount === 0) {
+        setPaidAmtEr(true);
+        toast.error("Please add amount paid");
+        return;
+      } else {
+        setPaidAmtEr(false);
+      }
+
+      if (paidAmount - plotTotalAmount > 0) {
+        toast.error(
+          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot."
+        );
+        return;
+      }
+    }
+
+    setStep1(false);
+    setStep2(true);
+  };
+
+  const handlePrev = () => {
+    setStep1(true);
+    setStep2(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="w-[95vw]">
+        <DialogHeader>
+          <DialogTitle className="font-bold text-center">Plot Details</DialogTitle>
+        </DialogHeader>
+
+        <div>
+          {plotDataLoading && (
+            <div className="flex flex-col justify-center items-center">
+              <Loader className="animate-spin text-primary z-50" />
+            </div>
+          )}
+
+          {allDetails && (
+            <form>
+              {/* Step 1 */}
+
+              {step1 && (
+                <div className="pt-4">
+                  <div className="flex flex-col space-y-4">
+                    <div className="flex gap-2 items-center">
+                      <p className="text-gray-900 font-semibold text-sm w-1/4">
+                        Plot Details
+                      </p>
+                      <Input
+                        type="text"
+                        disabled
+                        name="plotDetails"
+                        className="w-3/4"
+                        value={
+                          "Plot Number " +
+                          allDetails?.properties?.Plot_No +
+                          " " +
+                          allDetails?.properties?.Street_Nam
+                        }
+                      />
+                      <small className="text-red-800"></small>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <p className="text-gray-900 font-semibold text-sm w-1/4">
+                        Plot Status
+                      </p>
+                      <Input
+                        type="text"
+                        disabled
+                        className="w-3/4"
+                        name="plotStatus"
+                        value={plotStatus}
+                      />
+                      <small className="text-red-900"></small>
+                    </div>
+                    {
+                      allDetails.owner_info !== undefined && (
+                        <div className="flex gap-2 items-center">
+                          <p className="text-gray-900 font-semibold text-sm w-1/4">
+                            Primary Owner
+                          </p>
+                          <Input
+                            type="text"
+                            disabled
+                            className="w-3/4"
+                            name="plotStatus"
+                            value={allDetails.owner_info}
+                          />
+                          <small className="text-red-900"></small>
+                        </div>
+                      )
+                    }
+                    
+
+                    <div className="flex gap-2 items-center">
+                      <h2 className="text-gray-900 font-semibold w-1/4 text-sm">
+                        Total Amount
+                      </h2>
+                      <div className="w-3/4">
+                        <Input
+                          placeholder="Plot Total Amount"
+                          name="plotTotalAmount"
+                          type="number"
+                          value={plotTotalAmount}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 items-center">
+                      <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                        Paid Amount
+                      </h2>
+                      <div className="w-3/4">
+                        <Input
+                          placeholder="Paid Amount"
+                          name="paidAmount"
+                          type="number"
+                          value={paidAmount}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 items-center">
+                      <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                        Remaining Amount
+                      </h2>
+                      <Input
+                        placeholder="Remaining Amount"
+                        name="remainingAmount"
+                        type="number"
+                        value={remainingAmount}
+                        disabled
+                        className="w-3/4"
+                      />
+                      <small className="text-red-800"></small>
+                    </div>
+                  </div>
+                  <div className="mt-6">
+                    <h2 className="text-gray-900 font-semibold text-sm mb-2">
+                      Remarks
+                    </h2>
+                    <Textarea
+                      name="remarks"
+                      value={remarks}
+                      disabled
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5">
+                    <button
+                      onClick={handleStep1}
+                      className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                    >
+                      {loader1 ? <Loader className="animate-spin" /> : "Next"}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step2 */}
+
+              {step2 && (
+                <div className="pt-4">
+                  <div className="flex flex-col space-y-4">
+                    <div className=" flex items-center space-x-2">
+                      <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                        First Name:
+                      </h2>
+                      <Input
+                        type="text"
+                        placeholder="First Name"
+                        name="firstname"
+                        value={firstname}
+                        className="w-3/4"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                        Last Name(s)
+                      </h2>
+                      <Input
+                        type="text"
+                        name="lastname"
+                        value={lastname}
+                        className="w-3/4"
+                      />
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                        Email
+                      </h2>
+                      <Input
+                        placeholder="Email Address"
+                        name="email"
+                        type="email"
+                        value={email}
+                        className="w-3/4"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between gap-4">
+
+                      <div className="flex items-center space-x-2">
+                        <h2 className="text-gray-900 font-semibold text-sm w-1/4">
+                          Contact
+                        </h2>
+                        <Input
+                          placeholder="Phone Number"
+                          name="phone"
+                          type="number"
+                          value={phone}
+                          className="w-3/4"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 flex-col">
+                      <h2 className="text-gray-900 font-semibold text-sm">
+                        Residential Address
+                      </h2>
+                      <Input
+                        placeholder="Residential Address"
+                        name="residentialAddress"
+                        type="text"
+                        value={residentialAddress}
+                      />
+                    </div>
+
+                    <div className="flex gap-2 flex-col">
+                      <h2 className="text-gray-900 font-semibold text-sm">
+                        Agent
+                      </h2>
+                      <Input
+                        placeholder="Agent"
+                        name="agent"
+                        type="text"
+                        value={agent}
+                        disabled
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-7 pb-2">
+                    <button
+                      onClick={handlePrev}
+                      disabled={loader2}
+                      className="bg-white border text-primary py-2 px-4 rounded-md shadow-md"
+                    >
+                      Previous
+                    </button>
+                  </div>
+                </div>
+              )}
+            </form>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 const DeletePlotDialog = ({
   plotId,
@@ -456,7 +859,7 @@ const plotInfo = {
   status: "",
 };
 
-const ViewPlotDialog = ({
+const EditPlotDialog = ({
   open,
   onOpenChange,
   plotId,
@@ -1075,3 +1478,4 @@ const ViewPlotDialog = ({
     </Dialog>
   );
 };
+

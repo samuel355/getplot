@@ -598,7 +598,6 @@ const ViewPlotDialog = ({
                       )
                     }
                     
-
                     <div className="flex gap-2 items-center">
                       <h2 className="text-gray-900 font-semibold w-1/4 text-sm">
                         Total Amount
@@ -874,6 +873,7 @@ const EditPlotDialog = ({
   const [loader2, setLoader2] = useState(false);
   const [step1, setStep1] = useState(true);
   const [step2, setStep2] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false)
 
   const {
     firstname,
@@ -1126,15 +1126,21 @@ const EditPlotDialog = ({
     e.preventDefault();
     const { name, value } = e.target;
     setPlotData({ ...plotData, [name]: value });
+    const selectedStatus = e.target.value;
+    if(selectedStatus === 'Available'){
+      setIsAvailable(true)
+    }else{
+      setIsAvailable(false)
+    }
   };
 
   let amtRemaining = 0;
   const handleCalculateAmount = () => {
     amtRemaining = plotTotalAmount - paidAmount;
     setCalcAmount(amtRemaining);
-    setPlotData({ ...plotData, remainingAmount: amtRemaining });
+    setPlotData({ ...plotData, remainingAmount: amtRemaining })
   };
-
+  
   const handleInput = (event) => {
     const charCode = event.which ? event.which : event.keyCode;
     // Prevent input if the key is not a number (0-9)
@@ -1142,6 +1148,43 @@ const EditPlotDialog = ({
       event.preventDefault();
     }
   };
+  
+  const handleAvailableSubmit = async(e) => {
+    e.preventDefault()
+    //Update plot details with plotData on Supabase
+    setLoader2(true);
+    const { data, error } = await supabase
+      .from(databaseName)
+      .update({
+        status: 'Available',
+        firstname: '',
+        lastname: '',
+        email: '',
+        country: '',
+        phone: '',
+        residentialAddress: '',
+        agent: '',
+        plotTotalAmount: plotData.plotTotalAmount,
+        paidAmount: plotData.paidAmount,
+        remainingAmount: plotData.remainingAmount,
+        remarks: plotData.remarks,
+      })
+      .eq("id", plotId)
+      .select();
+
+    if (data) {
+      toast.success("Plot  updated successfully");
+      setLoader2(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1100);
+    }
+    if (error) {
+      console.log(error);
+      toast.error("Sorry errror happened updating the plot ");
+      setLoader2(false);
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -1297,14 +1340,27 @@ const EditPlotDialog = ({
                     />
                   </div>
 
-                  <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5">
-                    <button
-                      onClick={handleStep1}
-                      className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
-                    >
-                      {loader1 ? <Loader className="animate-spin" /> : "Next"}
-                    </button>
-                  </div>
+                  {
+                    isAvailable ? (
+                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                        <button
+                          onClick={handleAvailableSubmit}
+                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                        >
+                          {loader1 ? <Loader className="animate-spin" /> : "Submit"}
+                        </button>
+                      </div>
+                    ): (
+                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                        <button
+                          onClick={handleStep1}
+                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                        >
+                          {loader1 ? <Loader className="animate-spin" /> : "Next"}
+                        </button>
+                      </div>
+                    )
+                  }
                 </div>
               )}
 

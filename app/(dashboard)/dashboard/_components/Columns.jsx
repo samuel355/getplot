@@ -96,23 +96,89 @@ export const columns = [
   },
   {
     accessorKey: "status",
-    header: () => <div className="text-right">Status</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          className="flex justify-start p-1"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-1 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "firstname",
-    header: () => <div className="text-right">First Name</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          className="flex justify-start p-1"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          First Name
+          <ArrowUpDown className="ml-1 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "lastname",
-    header: () => <div className="text-right">Last Name</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          className="flex justify-start p-1"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          No.
+          <ArrowUpDown className="ml-1 h-4 w-4" />
+        </Button>
+      );
+    },    header: ({ column }) => {
+      return (
+        <Button
+          className="flex justify-start p-1"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Last Name
+          <ArrowUpDown className="ml-1 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "phone",
-    header: () => <div className="text-right">Phone</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          className="flex justify-start p-1"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Phone
+          <ArrowUpDown className="ml-1 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "plotTotalAmount",
-    header: () => <div className="text-right">Plot Amount</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          className="flex justify-start p-1"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Plot Amount
+          <ArrowUpDown className="ml-1 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       let value = row.getValue("plotTotalAmount") ?? 0;
       const amount = parseFloat(value);
@@ -126,7 +192,18 @@ export const columns = [
   },
   {
     accessorKey: "paidAmount",
-    header: () => <div className="text-right">Paid</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          className="flex justify-start p-1"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Paid
+          <ArrowUpDown className="ml-1 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       let value = row.getValue("paidAmount") ?? 0;
       const amount = parseFloat(value);
@@ -140,7 +217,18 @@ export const columns = [
   },
   {
     accessorKey: "remainingAmount",
-    header: () => <div className="text-right">Remaining</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          className="flex justify-start p-1"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Remaining
+          <ArrowUpDown className="ml-1 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       let value = row.getValue("remainingAmount") ?? 0;
       const amount = parseFloat(value);

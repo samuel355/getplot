@@ -66,6 +66,7 @@ const EditPlot = () => {
   const [countryEr, setCountryEr] = useState(false);
   const [phoneEr, setPhoneEr] = useState(false);
   const [resAddressEr, setResAddressEr] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -259,6 +260,12 @@ const EditPlot = () => {
     e.preventDefault();
     const { name, value } = e.target;
     setPlotData({ ...plotData, [name]: value });
+    const selectedStatus = e.target.value;
+    if(selectedStatus === 'Available'){
+      setIsAvailable(true)
+    }else{
+      setIsAvailable(false)
+    }
   };
 
   let amtRemaining = 0;
@@ -275,6 +282,43 @@ const EditPlot = () => {
       event.preventDefault();
     }
   };
+  
+  const handleAvailableSubmit = async(e) => {
+    e.preventDefault()
+    //Update plot details with plotData on Supabase
+    setLoader2(true);
+    const { data, error } = await supabase
+      .from("nthc")
+      .update({
+        status: 'Available',
+        firstname: '',
+        lastname: '',
+        email: '',
+        country: '',
+        phone: '',
+        residentialAddress: '',
+        agent: '',
+        plotTotalAmount: plotData.plotTotalAmount,
+        paidAmount: plotData.paidAmount,
+        remainingAmount: plotData.remainingAmount,
+        remarks: plotData.remarks,
+      })
+      .eq("id", id)
+      .select();
+
+    if (data) {
+      toast.success("Plot  updated successfully");
+      setLoader2(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1100);
+    }
+    if (error) {
+      console.log(error);
+      toast.error("Sorry errror happened updating the plot ");
+      setLoader2(false);
+    }
+  }
 
   return (
     <>
@@ -417,14 +461,28 @@ const EditPlot = () => {
                     </div>
                   )}
 
-                  <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
-                    <button
-                      onClick={handleStep1}
-                      className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
-                    >
-                      {loader1 ? <Loader className="animate-spin" /> : "Next"}
-                    </button>
-                  </div>
+                  {
+                    isAvailable ? (
+                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                        <button
+                          onClick={handleAvailableSubmit}
+                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                        >
+                          {loader1 ? <Loader className="animate-spin" /> : "Submit"}
+                        </button>
+                      </div>
+                    ): (
+                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                        <button
+                          onClick={handleStep1}
+                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                        >
+                          {loader1 ? <Loader className="animate-spin" /> : "Next"}
+                        </button>
+                      </div>
+                    )
+                  }
+                  
                 </div>
               )}
 

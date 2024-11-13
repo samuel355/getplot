@@ -40,7 +40,7 @@ const MobileMenu = () => {
     {
       id: 4,
       href: "/dashboard/legon-hills",
-      title: "Legon Hills",
+      title: "East Legon Hills",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
@@ -189,7 +189,7 @@ const MobileMenu = () => {
                         href={"/dashboard/legon-hills-interested-clients"}
                         className="flex gap-2 items-center"
                       >
-                        Legon Hills Interested clients
+                        East Legon Hills Interested clients
                       </Link>
                     </li>
                     <li

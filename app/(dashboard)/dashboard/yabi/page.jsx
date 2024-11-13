@@ -6,6 +6,8 @@ import { DataTable } from "../_components/DataTable";
 import { columns } from "../_components/Columns";
 import { insertFeatures } from "@/app/_actions/upload-plots-into-db";
 import { yabiFeature } from "./yabi-feature";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Yabi() {
   const [plotData, setPlotData] = useState([]);
@@ -59,8 +61,14 @@ export default function Yabi() {
 
   return (
     <div className="">
-      <div className="-mt-5">
+      <div className="-mt-5 flex items-center justify-between">
         <h1 className="text-primary font-bold text-2xl">Yabi Plot</h1>
+        <Link
+          href={"/yabi"}
+          className="text-primary text-base hover:underline flex items-center"
+        >
+          <span>See plots on maps span</span> <ArrowRight size={16} />
+        </Link>
       </div>
       <DataTable
         loading={loading}

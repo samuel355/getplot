@@ -101,7 +101,7 @@ const HeaderAlt = () => {
                     Trabuom
                   </ListItem>
                   <ListItem href="/legon-hills" title="Legon Hills">
-                    Legon Hills
+                    East Legon Hills
                   </ListItem>
                 </ul>
               </NavigationMenuContent>

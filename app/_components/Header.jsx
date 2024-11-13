@@ -37,7 +37,13 @@ const Header = () => {
         {/* Logo section */}
         <div className="">
           <Link href={"/"}>
-            <Image src={'/logo-lateral.svg'} className="object-cover" width={140} height={140} alt="logo" />
+            <Image
+              src={"/logo-lateral.svg"}
+              className="object-cover"
+              width={140}
+              height={140}
+              alt="logo"
+            />
           </Link>
         </div>
 
@@ -63,7 +69,7 @@ const Header = () => {
                   Our Sites
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="">
-                  <ul className="grid gap- p-3 py-5 md:w-[200px] lg:w-[230px] xl:w-[240px] grid-cols-1">
+                  <ul className="grid gap-3 p-3 py-5 md:w-[200px] lg:w-[230px] xl:w-[240px] grid-cols-1">
                     <ListItem href="/nthc" title="NTHC">
                       NTHC (Kwadaso)
                     </ListItem>
@@ -74,7 +80,10 @@ const Header = () => {
                       Trabuom
                     </ListItem>
                     <ListItem href="/legon-hills" title="Legon Hills">
-                      Legon Hills
+                      East Legon Hills
+                    </ListItem>
+                    <ListItem href="/yabi" title="Yabi">
+                      Yabi
                     </ListItem>
                   </ul>
                 </NavigationMenuContent>
@@ -104,6 +113,7 @@ const Header = () => {
           </NavigationMenu>
         </nav>
 
+        {/* Mobile */}
         <div className="block lg:hidden xl:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -123,32 +133,25 @@ const Header = () => {
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
+                <p className="ml-2">Our Sites</p>
 
-                <DropdownMenuGroup className="w-[240px]">
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                      <button className={`hover:text-primary text-base `}>
-                        Our Sites
-                      </button>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                      <ul className="grid gap-3 p-3 py-5 md:w-[240px] lg:w-[230px] xl:w-[240px] grid-cols-1">
-                        <ListItem href="/nthc" title="NTHC">
-                          NTHC (Kwadaso)
-                        </ListItem>
-                        <ListItem href="/dar-es-salaam" title="Dar Es Salaam">
-                          Dar Es Salaam (Ejisu)
-                        </ListItem>
-                        <ListItem href="/trabuom" title="Trabuom">
-                          Trabuom
-                        </ListItem>
-                        <ListItem href="/legon-hills" title="Legon Hills">
-                          Legon Hills
-                        </ListItem>
-                      </ul>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
-                </DropdownMenuGroup>
+                <ul className="grid gap-3 p-5 py-3 md:w-[340px] lg:w-[330px] xl:w-[340px] grid-cols-1">
+                  <ListItem href="/nthc" title="NTHC">
+                    NTHC (Kwadaso)
+                  </ListItem>
+                  <ListItem href="/dar-es-salaam" title="Dar Es Salaam">
+                    Dar Es Salaam (Ejisu)
+                  </ListItem>
+                  <ListItem href="/trabuom" title="Trabuom">
+                    Trabuom
+                  </ListItem>
+                  <ListItem href="/legon-hills" title="Legon Hills">
+                    East Legon Hills
+                  </ListItem>
+                  <ListItem href="/yabi" title="Yabi">
+                    Yabi
+                  </ListItem>
+                </ul>
 
                 <DropdownMenuSeparator />
 

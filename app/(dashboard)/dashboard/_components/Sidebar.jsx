@@ -1,11 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import {
-  LandPlot,
-  LayoutDashboard,
-  Users2,
-} from "lucide-react";
+import { Globe, LandPlot, LayoutDashboard, Users2 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
 
@@ -40,7 +36,7 @@ const Sidebar = () => {
     {
       id: 4,
       href: "/dashboard/legon-hills",
-      title: "Legon Hills",
+      title: "East Legon Hills",
       query: "legon-hills",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
@@ -67,6 +63,12 @@ const Sidebar = () => {
           <div className="border-b pb-3">
             <h2 className="text-primary text-xl font-semibold">Get One Plot</h2>
           </div>
+
+          <Link href={"/"} className="flex items-center gap-2">
+            <Globe className="w-4 h-4 ml-2" size={16} /> <span>Website</span>
+          </Link>
+
+          <hr />
 
           <nav className="pt-2">
             <ul className="flex flex-col gap-1">
@@ -108,7 +110,8 @@ const Sidebar = () => {
               <hr className="my-2" />
               <li
                 className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-5 ${
-                  path === "/dashboard/trabuom-interested-clients" && "bg-gray-100"
+                  path === "/dashboard/trabuom-interested-clients" &&
+                  "bg-gray-100"
                 }`}
               >
                 <Link
@@ -120,7 +123,8 @@ const Sidebar = () => {
               </li>
               <li
                 className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                  path === "/dashboard/kwadaso-interested-clients" && "bg-gray-100"
+                  path === "/dashboard/kwadaso-interested-clients" &&
+                  "bg-gray-100"
                 }`}
               >
                 <Link
@@ -132,7 +136,8 @@ const Sidebar = () => {
               </li>
               <li
                 className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                  path === "/dashboard/legon-hills-interested-clients" && "bg-gray-100"
+                  path === "/dashboard/legon-hills-interested-clients" &&
+                  "bg-gray-100"
                 }`}
               >
                 <Link
@@ -144,7 +149,8 @@ const Sidebar = () => {
               </li>
               <li
                 className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                  path === "/dashboard/adense-interested-clients" && "bg-gray-100"
+                  path === "/dashboard/adense-interested-clients" &&
+                  "bg-gray-100"
                 }`}
               >
                 <Link

@@ -51,13 +51,23 @@ const Map = ({ parcels, center }) => {
   if (pathname.includes("dar-es-salaam")) {
     table = "dar-es-salaam";
   }
+  if(pathname.includes('yabi')){
+    table = 'yabi'
+  }
 
   const mapContainerStyle = {
     height: "90vh",
-    width: "85%",
+    width: "94%",
   };
 
-  const zoom = path === "/trabuom" ? 15.6 : 17;
+
+  let zoom = 17.5;
+  if(path === '/trabuom'){
+    zoom = 17.4
+  }
+  if(path === '/yabi'){
+    zoom = 17.6
+  }
 
   const { isLoaded, i } = useJsApiLoader({
     id: "google-map-script",
@@ -323,6 +333,12 @@ const Map = ({ parcels, center }) => {
     if (path === "/legon-hills") {
       database = "legon_hills";
     }
+    if(path ==='/yabi'){
+      database= 'yabi'
+    }
+    if(path === '/trabuom'){
+      database = 'trabuom'
+    }
 
     let plotTotalAmount;
     let paidAmount;
@@ -393,7 +409,9 @@ const Map = ({ parcels, center }) => {
       tToast("Plot Price updated successfully");
       setLoading(false);
       setModalOpen(false);
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
     if (error) {
       setLoading(false);

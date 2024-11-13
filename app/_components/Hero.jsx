@@ -46,6 +46,9 @@ const Hero = () => {
           <Link className="text-primary hover:underline" href="/trabuom">
             Trabuom(Kumasi)
           </Link>
+          <Link className="text-primary hover:underline" href="/yabi">
+            Yabi(Kumasi)
+          </Link>
         </div>
         <div className="mt-6 text-center flex flex-align-center gap-x-6">
           <div className="bg-cyan-100 p-2">

@@ -5,10 +5,10 @@ import React from "react";
 const ListItem = ({ href, title, children }) => {
   const path = usePathname();
   return (
-    <div>
+    <div className="w-full">
       <Link
         href={href}
-        className={`hover:text-primary hover:bg-slate-50 px-5 py-[10px] rounded-md text-base w-full ${
+        className={`hover:text-primary hover:bg-gray-50 py-1 px-2 rounded-md text-base w-full ${
           path === href && "text-primary font-semibold"
         }`}
         title={title}

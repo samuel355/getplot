@@ -40,7 +40,7 @@ const EditPlot = () => {
   const [plotData, setPlotData] = useState(plotInfo);
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
-  const {user} = useUser()
+  const { user } = useUser();
 
   const {
     firstname,
@@ -114,13 +114,13 @@ const EditPlot = () => {
     }
     if (initialDeposit < initialDepo) {
       toast.error(
-        `Check the initial deposit. It must be at least GHS. ${initialDepo.toLocaleString()}`
+        `Check the initial deposit. It must be at least GHS. ${initialDepo.toLocaleString()}`,
       );
       return;
     }
     if (initialDeposit > plotTotalAmount) {
       toast.error(
-        `Check the initial deposit. It must be greater than the plot amount`
+        `Check the initial deposit. It must be greater than the plot amount`,
       );
       return;
     }
@@ -337,7 +337,7 @@ const EditPlot = () => {
         .catch((error) => {
           console.error(
             "There was a problem with your fetch operation:",
-            error
+            error,
           );
           toast.error("Your Transaction verification was not successfull");
         });
@@ -440,12 +440,8 @@ const EditPlot = () => {
                         disabled
                         name="plotSize"
                         value={
-                          parseFloat(
-                            (
-                              allDetails?.properties?.SHAPE_Area *
-                              3109111.525693
-                            )?.toFixed(5)
-                          ) + " Acres "
+                          parseFloat(allDetails?.properties?.Area?.toFixed(5)) +
+                          " Acres "
                         }
                       />
                       <small className="text-red-800"></small>
@@ -492,17 +488,17 @@ const EditPlot = () => {
                       )}
                     </div>
                   </div>
-                  {user?.publicMetadata?.role === 'sysadmin' && (
+                  {user?.publicMetadata?.role === "sysadmin" && (
                     <div className="mt-6">
-                    <h2 className="text-gray-900 font-semibold">Remarks</h2>
-                    <Textarea
-                      onChange={onInputChange}
-                      name="remarks"
-                      value={remarks}
-                    />
-                  </div>
+                      <h2 className="text-gray-900 font-semibold">Remarks</h2>
+                      <Textarea
+                        onChange={onInputChange}
+                        name="remarks"
+                        value={remarks}
+                      />
+                    </div>
                   )}
-                  
+
                   <div className="flex mt-5 gap-4 flex-row items-center border border-primary justify-center">
                     <h2 className="text-gray-900 font-semibold">
                       You still have:
@@ -1580,7 +1576,7 @@ const EditPlot = () => {
                             (
                               allDetails?.properties?.SHAPE_Area *
                               3109111.525693
-                            )?.toFixed(5)
+                            )?.toFixed(5),
                           ) + " Acres "
                         }
                       />

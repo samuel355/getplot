@@ -39,7 +39,7 @@ const EditPlot = () => {
   const [plotData, setPlotData] = useState(plotInfo);
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
-  const {user} = useUser()
+  const { user } = useUser();
   const {
     firstname,
     lastname,
@@ -305,7 +305,7 @@ const EditPlot = () => {
         .catch((error) => {
           console.error(
             "There was a problem with your fetch operation:",
-            error
+            error,
           );
           toast.error("Your Transaction verification was not successfull");
         });
@@ -408,12 +408,8 @@ const EditPlot = () => {
                         disabled
                         name="plotSize"
                         value={
-                          parseFloat(
-                            (
-                              allDetails?.properties?.SHAPE_Area *
-                              3109111.525693
-                            )?.toFixed(5)
-                          ) + " Acres "
+                          parseFloat(allDetails?.properties?.Area?.toFixed(5)) +
+                          " Acres "
                         }
                       />
                       <small className="text-red-800"></small>
@@ -440,17 +436,16 @@ const EditPlot = () => {
                       )}
                     </div>
                   </div>
-                  {user?.publicMetadata?.role === 'role' && (
+                  {user?.publicMetadata?.role === "role" && (
                     <div className="mt-6">
-                    <h2 className="text-gray-900 font-semibold">Remarks</h2>
-                    <Textarea
-                      onChange={onInputChange}
-                      name="remarks"
-                      value={remarks}
-                    />
-                  </div>
+                      <h2 className="text-gray-900 font-semibold">Remarks</h2>
+                      <Textarea
+                        onChange={onInputChange}
+                        name="remarks"
+                        value={remarks}
+                      />
+                    </div>
                   )}
-                  
 
                   <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
                     <button
@@ -1520,7 +1515,7 @@ const EditPlot = () => {
                             (
                               allDetails?.properties?.SHAPE_Area *
                               3109111.525693
-                            )?.toFixed(5)
+                            )?.toFixed(5),
                           ) + " Acres "
                         }
                       />

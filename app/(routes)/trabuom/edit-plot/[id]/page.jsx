@@ -35,7 +35,22 @@ const EditPlot = () => {
   const [plotData, setPlotData] = useState(plotInfo);
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
-  const {user} = useUser()
+  const {user, isSignedIn, isLoaded} = useUser()
+  const [loading, setLoading] = useState(true);
+  const { id } = useParams();
+  const router = useRouter();
+  
+  // Errors Checks
+  const [statusEr, setStatusEr] = useState(false);
+  const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
+  const [paidAmtEr, setPaidAmtEr] = useState(false);
+  const [fnameEr, setFnameEr] = useState(false);
+  const [lnameEr, setLnameEr] = useState(false);
+  const [emailEr, setEmailEr] = useState(false);
+  const [countryEr, setCountryEr] = useState(false);
+  const [phoneEr, setPhoneEr] = useState(false);
+  const [resAddressEr, setResAddressEr] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false)
   
   const {
     firstname,
@@ -53,20 +68,39 @@ const EditPlot = () => {
     plotStatus,
   } = plotData;
 
-  const { id } = useParams();
-  const router = useRouter();
+  //Fetch Plot Details From DB
+  const fechPlotData = async () => {
+    const { data, error } = await supabase
+      .from("trabuom")
+      .select("*")
+      .eq("id", id);
 
-  // Errors Checks
-  const [statusEr, setStatusEr] = useState(false);
-  const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
-  const [paidAmtEr, setPaidAmtEr] = useState(false);
-  const [fnameEr, setFnameEr] = useState(false);
-  const [lnameEr, setLnameEr] = useState(false);
-  const [emailEr, setEmailEr] = useState(false);
-  const [countryEr, setCountryEr] = useState(false);
-  const [phoneEr, setPhoneEr] = useState(false);
-  const [resAddressEr, setResAddressEr] = useState(false);
-  const [isAvailable, setIsAvailable] = useState(false)
+    if (data) {
+      setAllDetails(data[0]);
+      setPlotData({
+        firstname: data[0].firstname,
+        lastname: data[0].lastname,
+        email: data[0].email,
+        residentialAddress: data[0].residentialAddress,
+        country: data[0].country,
+        phone: data[0].phone,
+        agent: data[0].agent,
+        plotTotalAmount: data[0].plotTotalAmount,
+        paidAmount: data[0].paidAmount,
+        remainingAmount: data[0].remainingAmount,
+        remarks: data[0].remarks,
+        plotStatus: data[0].status,
+      });
+    } else {
+      toast("Something went wrong fetching plot data");
+      router.replace("/trabuom");
+    }
+    if (error) {
+      console.log(error);
+      toast("Something went wrong fetching plot data");
+      router.push("/trabuom");
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -74,7 +108,20 @@ const EditPlot = () => {
     } else {
       router.push("/trabuom");
     }
-  }, []);
+    
+    if (isLoaded) {
+      if (!isSignedIn) {
+        router.push("/");
+      } else if (
+        user?.publicMetadata?.role !== "sysadmin" &&
+        user?.publicMetadata?.role !== "admin"
+      ) {
+        router.push("/");
+      } else {
+        setLoading(false);
+      }
+    }
+  }, [user, router, isLoaded, isSignedIn]);
 
   const handleStep1 = (e) => {
     e.preventDefault();
@@ -221,41 +268,7 @@ const EditPlot = () => {
       setLoader2(false);
     }
   };
-
-  //Fetch Plot Details From DB
-  const fechPlotData = async () => {
-    const { data, error } = await supabase
-      .from("trabuom")
-      .select("*")
-      .eq("id", id);
-
-    if (data) {
-      setAllDetails(data[0]);
-      setPlotData({
-        firstname: data[0].firstname,
-        lastname: data[0].lastname,
-        email: data[0].email,
-        residentialAddress: data[0].residentialAddress,
-        country: data[0].country,
-        phone: data[0].phone,
-        agent: data[0].agent,
-        plotTotalAmount: data[0].plotTotalAmount,
-        paidAmount: data[0].paidAmount,
-        remainingAmount: data[0].remainingAmount,
-        remarks: data[0].remarks,
-        plotStatus: data[0].status,
-      });
-    } else {
-      toast("Something went wrong fetching plot data");
-      router.replace("/trabuom");
-    }
-    if (error) {
-      console.log(error);
-      toast("Something went wrong fetching plot data");
-      router.push("/trabuom");
-    }
-  };
-
+  
   const onInputChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;

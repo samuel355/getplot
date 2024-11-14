@@ -35,8 +35,24 @@ const EditPlot = () => {
   const [plotData, setPlotData] = useState(plotInfo);
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
-  const {user} = useUser()
-  
+  const { user, isSignedIn, isLoaded } = useUser();
+  const [loading, setLoading] = useState(true);
+
+  // Errors Checks
+  const [statusEr, setStatusEr] = useState(false);
+  const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
+  const [paidAmtEr, setPaidAmtEr] = useState(false);
+  const [fnameEr, setFnameEr] = useState(false);
+  const [lnameEr, setLnameEr] = useState(false);
+  const [emailEr, setEmailEr] = useState(false);
+  const [countryEr, setCountryEr] = useState(false);
+  const [phoneEr, setPhoneEr] = useState(false);
+  const [resAddressEr, setResAddressEr] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false);
+
+  const { id } = useParams();
+  const router = useRouter();
+
   const {
     firstname,
     lastname,
@@ -52,21 +68,40 @@ const EditPlot = () => {
     status,
     plotStatus,
   } = plotData;
+  
+  //Fetch Plot Details From DB
+  const fechPlotData = async () => {
+    const { data, error } = await supabase
+      .from("yabi")
+      .select("*")
+      .eq("id", id);
 
-  const { id } = useParams();
-  const router = useRouter();
-
-  // Errors Checks
-  const [statusEr, setStatusEr] = useState(false);
-  const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
-  const [paidAmtEr, setPaidAmtEr] = useState(false);
-  const [fnameEr, setFnameEr] = useState(false);
-  const [lnameEr, setLnameEr] = useState(false);
-  const [emailEr, setEmailEr] = useState(false);
-  const [countryEr, setCountryEr] = useState(false);
-  const [phoneEr, setPhoneEr] = useState(false);
-  const [resAddressEr, setResAddressEr] = useState(false);
-  const [isAvailable, setIsAvailable] = useState(false)
+    if (data) {
+      setAllDetails(data[0]);
+      setPlotData({
+        firstname: data[0].firstname,
+        lastname: data[0].lastname,
+        email: data[0].email,
+        residentialAddress: data[0].residentialAddress,
+        country: data[0].country,
+        phone: data[0].phone,
+        agent: data[0].agent,
+        plotTotalAmount: data[0].plotTotalAmount,
+        paidAmount: data[0].paidAmount,
+        remainingAmount: data[0].remainingAmount,
+        remarks: data[0].remarks,
+        plotStatus: data[0].status,
+      });
+    } else {
+      toast("Something went wrong fetching plot data");
+      router.replace("/yabi");
+    }
+    if (error) {
+      console.log(error);
+      toast("Something went wrong fetching plot data");
+      router.push("/yabi");
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -74,7 +109,20 @@ const EditPlot = () => {
     } else {
       router.push("/yabi");
     }
-  }, []);
+    
+    if (isLoaded) {
+      if (!isSignedIn) {
+        router.push("/");
+      } else if (
+        user?.publicMetadata?.role !== "sysadmin" &&
+        user?.publicMetadata?.role !== "admin"
+      ) {
+        router.push("/");
+      } else {
+        setLoading(false);
+      }
+    }
+  }, [user, router, isLoaded, isSignedIn]);
 
   const handleStep1 = (e) => {
     e.preventDefault();
@@ -109,7 +157,7 @@ const EditPlot = () => {
 
       if (paidAmount - plotTotalAmount > 0) {
         toast.error(
-          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot."
+          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot.",
         );
         return;
       }
@@ -222,49 +270,15 @@ const EditPlot = () => {
     }
   };
 
-  //Fetch Plot Details From DB
-  const fechPlotData = async () => {
-    const { data, error } = await supabase
-      .from("yabi")
-      .select("*")
-      .eq("id", id);
-
-    if (data) {
-      setAllDetails(data[0]);
-      setPlotData({
-        firstname: data[0].firstname,
-        lastname: data[0].lastname,
-        email: data[0].email,
-        residentialAddress: data[0].residentialAddress,
-        country: data[0].country,
-        phone: data[0].phone,
-        agent: data[0].agent,
-        plotTotalAmount: data[0].plotTotalAmount,
-        paidAmount: data[0].paidAmount,
-        remainingAmount: data[0].remainingAmount,
-        remarks: data[0].remarks,
-        plotStatus: data[0].status,
-      });
-    } else {
-      toast("Something went wrong fetching plot data");
-      router.replace("/yabi");
-    }
-    if (error) {
-      console.log(error);
-      toast("Something went wrong fetching plot data");
-      router.push("/yabi");
-    }
-  };
-
   const onInputChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
     setPlotData({ ...plotData, [name]: value });
     const selectedStatus = e.target.value;
-    if(selectedStatus === 'Available'){
-      setIsAvailable(true)
-    }else{
-      setIsAvailable(false)
+    if (selectedStatus === "Available") {
+      setIsAvailable(true);
+    } else {
+      setIsAvailable(false);
     }
   };
 
@@ -282,22 +296,22 @@ const EditPlot = () => {
       event.preventDefault();
     }
   };
-  
-  const handleAvailableSubmit = async(e) => {
-    e.preventDefault()
+
+  const handleAvailableSubmit = async (e) => {
+    e.preventDefault();
     //Update plot details with plotData on Supabase
     setLoader2(true);
     const { data, error } = await supabase
       .from("yabi")
       .update({
-        status: 'Available',
-        firstname: '',
-        lastname: '',
-        email: '',
-        country: '',
-        phone: '',
-        residentialAddress: '',
-        agent: '',
+        status: "Available",
+        firstname: "",
+        lastname: "",
+        email: "",
+        country: "",
+        phone: "",
+        residentialAddress: "",
+        agent: "",
         plotTotalAmount: plotData.plotTotalAmount,
         paidAmount: plotData.paidAmount,
         remainingAmount: plotData.remainingAmount,
@@ -318,7 +332,7 @@ const EditPlot = () => {
       toast.error("Sorry errror happened updating the plot ");
       setLoader2(false);
     }
-  }
+  };
 
   return (
     <>
@@ -461,28 +475,29 @@ const EditPlot = () => {
                     </div>
                   )}
 
-                  {
-                    isAvailable ? (
-                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
-                        <button
-                          onClick={handleAvailableSubmit}
-                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
-                        >
-                          {loader1 ? <Loader className="animate-spin" /> : "Submit"}
-                        </button>
-                      </div>
-                    ): (
-                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
-                        <button
-                          onClick={handleStep1}
-                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
-                        >
-                          {loader1 ? <Loader className="animate-spin" /> : "Next"}
-                        </button>
-                      </div>
-                    )
-                  }
-                  
+                  {isAvailable ? (
+                    <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                      <button
+                        onClick={handleAvailableSubmit}
+                        className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                      >
+                        {loader1 ? (
+                          <Loader className="animate-spin" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                      <button
+                        onClick={handleStep1}
+                        className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                      >
+                        {loader1 ? <Loader className="animate-spin" /> : "Next"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 

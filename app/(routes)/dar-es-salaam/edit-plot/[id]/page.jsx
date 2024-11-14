@@ -35,7 +35,70 @@ const EditPlot = () => {
   const [plotData, setPlotData] = useState(plotInfo);
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
-  const {user} = useUser()
+  
+  const { user, isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
+  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+  
+  //Fetch Plot Details From DB
+  const fechPlotData = async () => {
+    const { data, error } = await supabase
+      .from("dar_es_salaam")
+      .select("*")
+      .eq("id", id);
+
+    if (data) {
+      setAllDetails(data[0]);
+      setPlotData({
+        firstname: data[0].firstname,
+        lastname: data[0].lastname,
+        email: data[0].email,
+        residentialAddress: data[0].residentialAddress,
+        country: data[0].country,
+        phone: data[0].phone,
+        agent: data[0].agent,
+        plotTotalAmount: data[0].plotTotalAmount,
+        paidAmount: data[0].paidAmount,
+        remainingAmount: data[0].remainingAmount,
+        remarks: data[0].remarks,
+        plotStatus: data[0].status,
+      });
+    } else {
+      toast("Something went wrong fetching plot data");
+      router.replace("/dar-es-salaam");
+    }
+    if (error) {
+      console.log(error);
+      toast("Something went wrong fetching plot data");
+      router.push("/dar-es-salaam");
+    }
+  };
+  
+  useEffect(() => {
+    if (id) {
+      fechPlotData();
+    } else {
+      router.push("/dar-es-salaam");
+    }
+    
+    if (isLoaded) {
+      if (!isSignedIn) {
+        router.push("/");
+      } else if (
+        user?.publicMetadata?.role !== "sysadmin" &&
+        user?.publicMetadata?.role !== "admin"
+      ) {
+        router.push("/dar-es-salaam");
+      } else {
+        setLoading(false);
+      }
+    }
+  }, [user, router, isLoaded, isSignedIn]);
+
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
   
   const {
     firstname,
@@ -53,9 +116,6 @@ const EditPlot = () => {
     plotStatus,
   } = plotData;
 
-  const { id } = useParams();
-  const router = useRouter();
-
   // Errors Checks
   const [statusEr, setStatusEr] = useState(false);
   const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
@@ -67,14 +127,6 @@ const EditPlot = () => {
   const [phoneEr, setPhoneEr] = useState(false);
   const [resAddressEr, setResAddressEr] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false)
-
-  useEffect(() => {
-    if (id) {
-      fechPlotData();
-    } else {
-      router.push("/dar-es-salaam");
-    }
-  }, []);
 
   const handleStep1 = (e) => {
     e.preventDefault();
@@ -219,40 +271,6 @@ const EditPlot = () => {
       console.log(error);
       toast.error("Sorry errror happened updating the plot details");
       setLoader2(false);
-    }
-  };
-
-  //Fetch Plot Details From DB
-  const fechPlotData = async () => {
-    const { data, error } = await supabase
-      .from("dar_es_salaam")
-      .select("*")
-      .eq("id", id);
-
-    if (data) {
-      setAllDetails(data[0]);
-      setPlotData({
-        firstname: data[0].firstname,
-        lastname: data[0].lastname,
-        email: data[0].email,
-        residentialAddress: data[0].residentialAddress,
-        country: data[0].country,
-        phone: data[0].phone,
-        agent: data[0].agent,
-        plotTotalAmount: data[0].plotTotalAmount,
-        paidAmount: data[0].paidAmount,
-        remainingAmount: data[0].remainingAmount,
-        remarks: data[0].remarks,
-        plotStatus: data[0].status,
-      });
-    } else {
-      toast("Something went wrong fetching plot data");
-      router.replace("/dar-es-salaam");
-    }
-    if (error) {
-      console.log(error);
-      toast("Something went wrong fetching plot data");
-      router.push("/dar-es-salaam");
     }
   };
 

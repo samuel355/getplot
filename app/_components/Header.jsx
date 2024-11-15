@@ -31,7 +31,7 @@ const Header = () => {
   const router = useRouter();
   const { user, isSignedIn } = useUser();
   return (
-    <header className="fixed top-0 w-full bg-white shadow-sm z-20 lg:mx-3">
+    <header className="fixed top-0 w-full bg-white shadow-sm z-20">
       {/* Flex container to handle layout */}
       <div className="flex items-center px-10 py-2 justify-between">
         {/* Logo section */}

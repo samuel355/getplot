@@ -5,6 +5,8 @@ import { supabase } from "@/utils/supabase/client";
 import { toast } from "react-toastify";
 import { DataTable } from "../_components/DataTable";
 import { columns } from "../_components/Columns";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export default function DarEsSalaam() {
   const [plotData, setPlotData] = useState([]);

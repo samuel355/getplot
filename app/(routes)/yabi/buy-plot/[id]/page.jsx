@@ -405,7 +405,21 @@ const EditPlot = () => {
       body: plotRows,
     });
 
-    //Account Details Tables
+    // Add Plot Details Heading (with underline)
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    const plotHeadingY = doc.autoTable.previous.finalY - 20;
+    const plotHeadingX = 10;
+    doc.text("Plot Details", plotHeadingX, plotHeadingY);
+    doc.setLineWidth(0.5);
+    doc.line(
+      plotHeadingX,
+      plotHeadingY + 2,
+      plotHeadingX + doc.getTextWidth("Plot Details"),
+      plotHeadingY + 2,
+    );
+
+    // --- Account Details Tables ---
     const accountColumns = [
       { header: "Title", dataKey: "title" },
       { header: "Bank Name", dataKey: "Bank_Name" },
@@ -415,21 +429,52 @@ const EditPlot = () => {
     ];
 
     // Add Cedis Account Table
+    const cedisStartY = doc.autoTable.previous.finalY + 15; // Increased spacing
     doc.autoTable({
       columns: accountColumns,
       body: cedisAccount,
-      startY: doc.autoTable.previous.finalY + 10, // Start below previous table
+      startY: cedisStartY,
     });
 
+    // Add Cedis Account Heading (with underline)
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    const cedisHeadingY = cedisStartY - 5;
+    const cedisHeadingX = 10;
+    doc.text("Cedis Account Details", cedisHeadingX, cedisHeadingY);
+    doc.setLineWidth(0.5);
+    doc.line(
+      cedisHeadingX,
+      cedisHeadingY + 2,
+      cedisHeadingX + doc.getTextWidth("Cedis Account Details"),
+      cedisHeadingY + 2,
+    );
+
     // Add Dollar Account Table
+    const dollarStartY = doc.autoTable.previous.finalY + 15; // Increased spacing
     doc.autoTable({
       columns: accountColumns,
       body: dollarAccount,
-      startY: doc.autoTable.previous.finalY + 10, // Start below previous table
+      startY: dollarStartY,
     });
+
+    // Add Dollar Account Heading (with underline)
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    const dollarHeadingY = dollarStartY - 5;
+    const dollarHeadingX = 10;
+    doc.text("Dollar Account Details", dollarHeadingX, dollarHeadingY);
+    doc.setLineWidth(0.5);
+    doc.line(
+      dollarHeadingX,
+      dollarHeadingY + 2,
+      dollarHeadingX + doc.getTextWidth("Dollar Account Details"),
+      dollarHeadingY + 2,
+    );
 
     doc.save("plot_details.pdf");
   };
+
   return (
     <>
       <Header />

@@ -396,9 +396,12 @@ const EditPlot = () => {
       { header: "Plot No", dataKey: "Plot_No" },
       { header: "Street Name", dataKey: "Street_Nam" },
       { header: "Size (Acres)", dataKey: "Area" },
+      {header:"Plot Amount (GHS)", dataKey: "plotAmount"}
     ];
 
+    allDetails.properties.plotAmount = plotTotalAmount
     const plotRows = [allDetails.properties];
+    console.log(plotRows)
 
     const topMargin = 25;
     doc.autoTable({
@@ -410,7 +413,7 @@ const EditPlot = () => {
     // Add Plot Details Heading (with underline)
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
-    const plotHeadingY = doc.autoTable.previous.finalY - 20;
+    const plotHeadingY = doc.autoTable.previous.finalY - 29;
     const plotHeadingX = 10;
     doc.text("Plot Details", plotHeadingX, plotHeadingY);
     doc.setLineWidth(0.5);
@@ -473,6 +476,18 @@ const EditPlot = () => {
       dollarHeadingX + doc.getTextWidth("Dollar Account Details"),
       dollarHeadingY + 2,
     );
+    
+    const finalText = "To secure plot ownership, kindly make payment to the account above, either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 24 883 8005";
+    const finalTextY = doc.autoTable.previous.finalY + 15; 
+    doc.setFontSize(10); 
+    // Use doc.textWithMeasurement to handle text wrapping
+    const maxWidth = doc.internal.pageSize.getWidth() - 20; // Allow 10px margin on each side
+    const textLines = doc.splitTextToSize(finalText, maxWidth);
+    let currentY = finalTextY;
+    textLines.forEach(line => {
+      doc.text(line, 10, currentY);
+      currentY += 5; // Adjust vertical spacing between lines
+    });
 
     doc.save("plot_details.pdf");
   };

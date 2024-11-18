@@ -400,9 +400,11 @@ const EditPlot = () => {
 
     const plotRows = [allDetails.properties];
 
+    const topMargin = 25;
     doc.autoTable({
       columns: plotColumns,
       body: plotRows,
+      startY: topMargin
     });
 
     // Add Plot Details Heading (with underline)

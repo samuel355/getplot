@@ -371,7 +371,7 @@ const EditPlot = () => {
     }
   };
 
-  const handleBuyPlot = () => {
+  const handleBuyPlot = async () => {
     const cedisAccount = [
       {
         title: "CEDIS ACCOUNT",
@@ -396,24 +396,24 @@ const EditPlot = () => {
       { header: "Plot No", dataKey: "Plot_No" },
       { header: "Street Name", dataKey: "Street_Nam" },
       { header: "Size (Acres)", dataKey: "Area" },
-      {header:"Plot Amount (GHS)", dataKey: "plotAmount"}
+      { header: "Plot Amount (GHS)", dataKey: "plotAmount" },
     ];
 
-    allDetails.properties.plotAmount = plotTotalAmount
+    allDetails.properties.plotAmount = plotTotalAmount;
     const plotRows = [allDetails.properties];
-    console.log(plotRows)
+    console.log(plotRows);
 
     const topMargin = 25;
     doc.autoTable({
       columns: plotColumns,
       body: plotRows,
-      startY: topMargin
+      startY: topMargin,
     });
 
     // Add Plot Details Heading (with underline)
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
-    const plotHeadingY = doc.autoTable.previous.finalY - 29;
+    const plotHeadingY = doc.autoTable.previous.finalY - 25;
     const plotHeadingX = 10;
     doc.text("Plot Details", plotHeadingX, plotHeadingY);
     doc.setLineWidth(0.5);
@@ -476,20 +476,57 @@ const EditPlot = () => {
       dollarHeadingX + doc.getTextWidth("Dollar Account Details"),
       dollarHeadingY + 2,
     );
-    
-    const finalText = "To secure plot ownership, kindly make payment to the account above, either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 24 883 8005";
-    const finalTextY = doc.autoTable.previous.finalY + 15; 
-    doc.setFontSize(10); 
+
+    const finalText =
+      "To secure plot ownership, kindly make payment to the account above, either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 24 883 8005";
+    const finalTextY = doc.autoTable.previous.finalY + 15;
+    doc.setFontSize(10);
     // Use doc.textWithMeasurement to handle text wrapping
     const maxWidth = doc.internal.pageSize.getWidth() - 20; // Allow 10px margin on each side
     const textLines = doc.splitTextToSize(finalText, maxWidth);
     let currentY = finalTextY;
-    textLines.forEach(line => {
+    textLines.forEach((line) => {
       doc.text(line, 10, currentY);
       currentY += 5; // Adjust vertical spacing between lines
     });
 
-    doc.save("plot_details.pdf");
+    //doc.save("plot_details.pdf");
+
+    const pdfBlob = doc.output("blob"); // Get PDF as a Blob
+
+    const formData = new FormData();
+    formData.append("pdf", pdfBlob, "plot_details.pdf"); // Append PDF
+
+    //Other data
+    formData.append("to", data.data.metadata.email);
+    formData.append("firstname", data.data.metadata.firstname);
+    formData.append("lastname", data.data.metadata.lastname);
+    formData.append("paidAmount", "GHS. " + amount.toLocaleString());
+    formData.append(
+      "plotDetails",
+      "Plot Number " +
+        allDetails.properties.Plot_No +
+        " " +
+        allDetails.properties.Street_Nam,
+    );
+    formData.append(
+      "plotSize",
+      parseFloat(allDetails?.properties?.Shape_Length?.toFixed(5)) + " Acres ",
+    );
+
+    const res = await fetch("/api/buy-plot", {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) {
+      // Handle the error appropriately
+      console.error("Error sending email:", await res.text());
+      return NextResponse.json(
+        { message: "Failed to send email" },
+        { status: res.status },
+      );
+    }
+    return NextResponse.json({ message: 'Email sent successfully' });
   };
 
   return (

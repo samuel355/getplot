@@ -9,6 +9,7 @@ export async function POST(request) {
     const to = data.get('to');
     const firstname = data.get('firstname');
     const lastname = data.get('lastname');
+    const plotArea = data.get('plotArea')
     const amount = data.get('amount');
     const plotDetails = data.get('plotDetails');
     const plotSize = data.get('plotSize');
@@ -19,6 +20,7 @@ export async function POST(request) {
     const htmlContent = await ejs.renderFile(templatePath, {
       firstname,
       lastname,
+      plotArea,
       amount,
       plotDetails,
       plotSize,
@@ -33,7 +35,6 @@ export async function POST(request) {
         pass: process.env.SMTP_PASS,
       },
     });
-
 
     // Send email with attachment
     await transporter.sendMail({
@@ -50,7 +51,6 @@ export async function POST(request) {
       ],
     });
 
-    console.log("Email sent successfully");
     return NextResponse.json({ message: "Email sent successfully" });
   } catch (error) {
     console.error("Error sending email:", error);

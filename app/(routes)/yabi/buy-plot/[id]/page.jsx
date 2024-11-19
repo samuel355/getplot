@@ -372,6 +372,7 @@ const EditPlot = () => {
     }
   };
 
+  
   const handleBuyPlot = async () => {
     setLoader3(true)
     const cedisAccount = [
@@ -398,12 +399,13 @@ const EditPlot = () => {
       { header: "Plot No", dataKey: "Plot_No" },
       { header: "Street Name", dataKey: "Street_Nam" },
       { header: "Size (Acres)", dataKey: "Area" },
+      { header: "Plot Area", dataKey: "plotArea" },
       { header: "Plot Amount (GHS)", dataKey: "plotAmount" },
     ];
 
     allDetails.properties.plotAmount = plotTotalAmount;
-    const plotRows = [allDetails.properties];
-    console.log(plotRows);
+    allDetails.properties.plotArea = 'Yabi Kumasi'
+    const plotRows = [allDetails.properties];``
 
     const topMargin = 25;
     doc.autoTable({
@@ -503,6 +505,7 @@ const EditPlot = () => {
     formData.append("to", email);
     formData.append("firstname", firstname);
     formData.append("lastname", lastname);
+    formData.append("plotArea", "Yabi-Kumasi");
     formData.append("amount", "GHS. " + plotTotalAmount.toLocaleString());
     formData.append(
       "plotDetails",

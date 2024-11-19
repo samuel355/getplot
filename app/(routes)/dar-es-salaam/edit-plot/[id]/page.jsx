@@ -35,12 +35,40 @@ const EditPlot = () => {
   const [plotData, setPlotData] = useState(plotInfo);
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
-  
   const { user, isSignedIn, isLoaded } = useUser();
-  const router = useRouter();
-  const { id } = useParams();
   const [loading, setLoading] = useState(true);
-  
+
+  const {
+    firstname,
+    lastname,
+    email,
+    country,
+    phone,
+    residentialAddress,
+    agent,
+    plotTotalAmount,
+    paidAmount,
+    remainingAmount,
+    remarks,
+    status,
+    plotStatus,
+  } = plotData;
+
+  const { id } = useParams();
+  const router = useRouter();
+
+  // Errors Checks
+  const [statusEr, setStatusEr] = useState(false);
+  const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
+  const [paidAmtEr, setPaidAmtEr] = useState(false);
+  const [fnameEr, setFnameEr] = useState(false);
+  const [lnameEr, setLnameEr] = useState(false);
+  const [emailEr, setEmailEr] = useState(false);
+  const [countryEr, setCountryEr] = useState(false);
+  const [phoneEr, setPhoneEr] = useState(false);
+  const [resAddressEr, setResAddressEr] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false);
+
   //Fetch Plot Details From DB
   const fechPlotData = async () => {
     const { data, error } = await supabase
@@ -74,17 +102,17 @@ const EditPlot = () => {
       router.push("/dar-es-salaam");
     }
   };
-  
+
   useEffect(() => {
     if (id) {
       fechPlotData();
     } else {
       router.push("/dar-es-salaam");
     }
-    
+
     if (isLoaded) {
       if (!isSignedIn) {
-        router.push("/");
+        router.push("/dar-es-salaam");
       } else if (
         user?.publicMetadata?.role !== "sysadmin" &&
         user?.publicMetadata?.role !== "admin"
@@ -97,36 +125,8 @@ const EditPlot = () => {
   }, [user, router, isLoaded, isSignedIn]);
 
   if (loading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
-  
-  const {
-    firstname,
-    lastname,
-    email,
-    country,
-    phone,
-    residentialAddress,
-    agent,
-    plotTotalAmount,
-    paidAmount,
-    remainingAmount,
-    remarks,
-    status,
-    plotStatus,
-  } = plotData;
-
-  // Errors Checks
-  const [statusEr, setStatusEr] = useState(false);
-  const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
-  const [paidAmtEr, setPaidAmtEr] = useState(false);
-  const [fnameEr, setFnameEr] = useState(false);
-  const [lnameEr, setLnameEr] = useState(false);
-  const [emailEr, setEmailEr] = useState(false);
-  const [countryEr, setCountryEr] = useState(false);
-  const [phoneEr, setPhoneEr] = useState(false);
-  const [resAddressEr, setResAddressEr] = useState(false);
-  const [isAvailable, setIsAvailable] = useState(false)
 
   const handleStep1 = (e) => {
     e.preventDefault();
@@ -161,7 +161,7 @@ const EditPlot = () => {
 
       if (paidAmount - plotTotalAmount > 0) {
         toast.error(
-          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot."
+          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot.",
         );
         return;
       }
@@ -279,10 +279,10 @@ const EditPlot = () => {
     const { name, value } = e.target;
     setPlotData({ ...plotData, [name]: value });
     const selectedStatus = e.target.value;
-    if(selectedStatus === 'Available'){
-      setIsAvailable(true)
-    }else{
-      setIsAvailable(false)
+    if (selectedStatus === "Available") {
+      setIsAvailable(true);
+    } else {
+      setIsAvailable(false);
     }
   };
 
@@ -300,22 +300,22 @@ const EditPlot = () => {
       event.preventDefault();
     }
   };
-  
-  const handleAvailableSubmit = async(e) => {
-    e.preventDefault()
+
+  const handleAvailableSubmit = async (e) => {
+    e.preventDefault();
     //Update plot details with plotData on Supabase
     setLoader2(true);
     const { data, error } = await supabase
       .from("dar_es_salaam")
       .update({
-        status: 'Available',
-        firstname: '',
-        lastname: '',
-        email: '',
-        country: '',
-        phone: '',
-        residentialAddress: '',
-        agent: '',
+        status: "Available",
+        firstname: "",
+        lastname: "",
+        email: "",
+        country: "",
+        phone: "",
+        residentialAddress: "",
+        agent: "",
         plotTotalAmount: plotData.plotTotalAmount,
         paidAmount: plotData.paidAmount,
         remainingAmount: plotData.remainingAmount,
@@ -336,7 +336,7 @@ const EditPlot = () => {
       toast.error("Sorry errror happened updating the plot ");
       setLoader2(false);
     }
-  }
+  };
 
   return (
     <>
@@ -479,28 +479,29 @@ const EditPlot = () => {
                     </div>
                   )}
 
-                  {
-                    isAvailable ? (
-                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
-                        <button
-                          onClick={handleAvailableSubmit}
-                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
-                        >
-                          {loader1 ? <Loader className="animate-spin" /> : "Submit"}
-                        </button>
-                      </div>
-                    ): (
-                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
-                        <button
-                          onClick={handleStep1}
-                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
-                        >
-                          {loader1 ? <Loader className="animate-spin" /> : "Next"}
-                        </button>
-                      </div>
-                    )
-                  }
-                  
+                  {isAvailable ? (
+                    <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                      <button
+                        onClick={handleAvailableSubmit}
+                        className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                      >
+                        {loader1 ? (
+                          <Loader className="animate-spin" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                      <button
+                        onClick={handleStep1}
+                        className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                      >
+                        {loader1 ? <Loader className="animate-spin" /> : "Next"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 

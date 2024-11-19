@@ -4,7 +4,7 @@ import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 
 import { Textarea } from "@/components/ui/textarea";
-import { Loader } from "lucide-react";
+import { ContactRound, Loader, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
@@ -14,6 +14,7 @@ import Header from "@/app/_components/Header";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import OptGroup from "@/app/(dashboard)/dashboard/_components/OptGroup";
+import { NextResponse } from "next/server";
 
 const plotInfo = {
   firstname: "",
@@ -372,6 +373,7 @@ const EditPlot = () => {
   };
 
   const handleBuyPlot = async () => {
+    setLoader3(true)
     const cedisAccount = [
       {
         title: "CEDIS ACCOUNT",
@@ -498,10 +500,10 @@ const EditPlot = () => {
     formData.append("pdf", pdfBlob, "plot_details.pdf"); // Append PDF
 
     //Other data
-    formData.append("to", data.data.metadata.email);
-    formData.append("firstname", data.data.metadata.firstname);
-    formData.append("lastname", data.data.metadata.lastname);
-    formData.append("paidAmount", "GHS. " + amount.toLocaleString());
+    formData.append("to", email);
+    formData.append("firstname", firstname);
+    formData.append("lastname", lastname);
+    formData.append("amount", "GHS. " + plotTotalAmount.toLocaleString());
     formData.append(
       "plotDetails",
       "Plot Number " +
@@ -511,27 +513,28 @@ const EditPlot = () => {
     );
     formData.append(
       "plotSize",
-      parseFloat(allDetails?.properties?.Shape_Length?.toFixed(5)) + " Acres ",
+      parseFloat(allDetails?.properties?.Area?.toFixed(5)) + " Acres ",
     );
 
     const res = await fetch("/api/buy-plot", {
       method: "POST",
       body: formData,
     });
+
     if (!res.ok) {
+      setLoader3(false)
       // Handle the error appropriately
       console.error("Error sending email:", await res.text());
-      return NextResponse.json(
-        { message: "Failed to send email" },
-        { status: res.status },
-      );
+      toast.error('Sorry something went wrong. Try again later')
     }
-    return NextResponse.json({ message: 'Email sent successfully' });
+    setLoader3(false)
+    router.replace('/yabi/message')
   };
 
   return (
     <>
       <Header />
+
       {allDetails && (
         <div className="w-full px-10 md:px-16 lg:px-48 xl:px-48 pt-[7.5rem]">
           <h2 className="font-bold text-2xl text-center mb-5">Plot Details</h2>
@@ -815,6 +818,7 @@ const EditPlot = () => {
 
                   <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
                     <button
+                      disabled={loader3}
                       onClick={handlePrevLast}
                       className="bg-white text-primary py-2 px-4 rounded-md shadow-md border"
                     >

@@ -40,7 +40,7 @@ const SuccessPage = () => {
                   d="M7 16l-4-4m0 0l4-4m-4 4h18"
                 />
               </svg>
-              <Link href="/nthc" class="text-sm font-medium text-white">
+              <Link href="/legon-hills" class="text-sm font-medium text-white">
                
                 You can buy or reserve other plots{" "}
               </Link>

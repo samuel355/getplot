@@ -3,6 +3,7 @@ import "jspdf-autotable";
 import { cedisAccount } from "./cedis-account";
 import { dollarAccount } from "./dollar-account";
 import { toast } from "react-toastify";
+import { updatePlotStatus } from "./update-plot-status";
 
 export const reservePlot = async (
   allDetails,
@@ -14,7 +15,8 @@ export const reservePlot = async (
   id,
   email,
   firstname, 
-  lastname
+  lastname,
+  phone
 ) => {
   setLoader3(true);
   const doc = new jsPDF();
@@ -186,6 +188,7 @@ export const reservePlot = async (
     router.push(`/message?redirect=${redirect}`)
 
     //Update plot status to hold for 24 hours
+    updatePlotStatus(databaseName, id, firstname, lastname, email, phone)
     setLoader3(false);
   } catch (error) {
     setLoader3(false);

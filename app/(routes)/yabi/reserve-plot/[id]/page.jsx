@@ -14,6 +14,7 @@ import Header from "@/app/_components/Header";
 import { useUser } from "@clerk/nextjs";
 import OptGroup from "@/app/(dashboard)/dashboard/_components/OptGroup";
 import { Button } from "@/components/ui/button";
+import { reservePlot } from "@/app/_actions/reserve-plot";
 
 const plotInfo = {
   firstname: "",
@@ -88,6 +89,7 @@ const EditPlot = () => {
   }, []);
 
   let initialDepo = 0.25 * plotTotalAmount;
+  const databaseName = "yabi";
 
   const handleStep1 = (e) => {
     e.preventDefault();
@@ -207,7 +209,6 @@ const EditPlot = () => {
       setResAddressEr(false); //
     }
 
-    console.log(plotData);
     setStep3(true);
     setStep2(false);
   };
@@ -402,9 +403,9 @@ const EditPlot = () => {
       console.log(error);
     }
   };
-  
-  const handleReservePlot = async() => {
-    setLoader3(true)
+
+  const handleReservePlot = async () => {
+    setLoader3(true);
     const cedisAccount = [
       {
         title: "CEDIS ACCOUNT",
@@ -414,6 +415,7 @@ const EditPlot = () => {
         Branch_Name: "KNUST, KUMASI-GHANA",
       },
     ];
+
     const dollarAccount = [
       {
         title: "DOLLAR ACCOUNT",
@@ -436,7 +438,7 @@ const EditPlot = () => {
 
     allDetails.properties.plotAmount = plotTotalAmount;
     allDetails.properties.initialDeposit = initialDeposit;
-    allDetails.properties.plotArea = 'Yabi Kumasi'
+    allDetails.properties.plotArea = "Yabi Kumasi";
     const plotRows = [allDetails.properties];
 
     const topMargin = 25;
@@ -539,7 +541,10 @@ const EditPlot = () => {
     formData.append("lastname", lastname);
     formData.append("plotArea", "Yabi-Kumasi");
     formData.append("amount", "GHS. " + plotTotalAmount.toLocaleString());
-    formData.append("initialDeposit", "GHS. " + initialDeposit.toLocaleString());
+    formData.append(
+      "initialDeposit",
+      "GHS. " + initialDeposit.toLocaleString(),
+    );
     formData.append(
       "plotDetails",
       "Plot Number " +
@@ -547,6 +552,7 @@ const EditPlot = () => {
         " " +
         allDetails.properties.Street_Nam,
     );
+
     formData.append(
       "plotSize",
       parseFloat(allDetails?.properties?.Area?.toFixed(5)) + " Acres ",
@@ -558,14 +564,16 @@ const EditPlot = () => {
     });
 
     if (!res.ok) {
-      setLoader3(false)
+      setLoader3(false);
       // Handle the error appropriately
       console.error("Error sending email:", await res.text());
-      toast.error('Sorry something went wrong. Try again later')
+      toast.error("Sorry something went wrong. Try again later");
     }
-    setLoader3(false)
-    router.replace('/yabi/message')
-  }
+    setLoader3(false);
+    router.replace("/yabi/message");
+
+    //Update plot status to hold for 24 hours
+  };
 
   return (
     <>
@@ -608,7 +616,7 @@ const EditPlot = () => {
                         disabled
                         name="plotSize"
                         value={
-                          parseFloat(allDetails?.properties?.Area?.toFixed(5)) +
+                          parseFloat(allDetails?.properties?.Area?.toFixed(2)) +
                           " Acres "
                         }
                       />
@@ -650,8 +658,8 @@ const EditPlot = () => {
                       />
                       {initialDepositEr && (
                         <small className="text-red-900">
-                          Enter GHS.{" "} {initialDepo.toLocaleString()} {" "}
-                          which is at least 25% Which is of the plot amount      
+                          Enter GHS. {initialDepo.toLocaleString()} which is at
+                          least 25% Which is of the plot amount
                         </small>
                       )}
                     </div>
@@ -872,11 +880,30 @@ const EditPlot = () => {
                         disabled
                         name="plotSize"
                         value={
-                          parseFloat(allDetails?.properties?.Area?.toFixed(5)) +
+                          parseFloat(allDetails?.properties?.Area?.toFixed(2)) +
                           " Acres "
                         }
                       />
                       <small className="text-red-800"></small>
+                    </div>
+                    <div className="flex gap-2 flex-col">
+                      <h2 className="text-gray-900 font-semibold">
+                        Plot Amount (GHS)
+                      </h2>
+                      <Input
+                        name="plotTotalAmount"
+                        type="number"
+                        onChange={onInputChange}
+                        disabled
+                        value={plotTotalAmount}
+                        onKeyPress={handleInput}
+                        style={{ border: plotTotalAmountEr && `1px solid red` }}
+                      />
+                      {plotTotalAmountEr && (
+                        <small className="text-red-900">
+                          Action needed by Admin
+                        </small>
+                      )}
                     </div>
                   </div>
 
@@ -897,7 +924,24 @@ const EditPlot = () => {
                       <Loader className="animate-spin" />
                     ) : (
                       // <PaystackButton {...componentProps} />
-                      <Button onClick={handleReservePlot}>Reserve Plot</Button>
+                      <Button
+                        onClick={() =>
+                          reservePlot(
+                            allDetails,
+                            plotTotalAmount,
+                            initialDeposit,
+                            setLoader3,
+                            router,
+                            databaseName,
+                            id,
+                            email,
+                            firstname, 
+                            lastname
+                          )
+                        }
+                      >
+                        Reserve Plot
+                      </Button>
                     )}
                   </div>
                 </div>

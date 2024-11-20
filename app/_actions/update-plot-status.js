@@ -7,6 +7,8 @@ export const updatePlotStatus = async (
   lastname,
   email,
   phone,
+  country,
+  residentialAddress
 ) => {
   //Change the status for on hold for client for 50 hours and change it back to Available
   const { data, error } = await supabase
@@ -16,7 +18,9 @@ export const updatePlotStatus = async (
       firstname: firstname,
       lastname: lastname,
       email: email,
-      phone: phone
+      phone: phone,
+      country: country,
+      residentialAddress: residentialAddress
     })
     .eq("id", id);
   if (error) {

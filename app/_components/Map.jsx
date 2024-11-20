@@ -51,8 +51,8 @@ const Map = ({ parcels, center }) => {
   if (pathname.includes("dar-es-salaam")) {
     table = "dar-es-salaam";
   }
-  if(pathname.includes('yabi')){
-    table = 'yabi'
+  if (pathname.includes("yabi")) {
+    table = "yabi";
   }
 
   const mapContainerStyle = {
@@ -60,13 +60,12 @@ const Map = ({ parcels, center }) => {
     width: "94%",
   };
 
-
   let zoom = 17.5;
-  if(path === '/trabuom'){
-    zoom = 17.4
+  if (path === "/trabuom") {
+    zoom = 17.4;
   }
-  if(path === '/yabi'){
-    zoom = 17.6
+  if (path === "/yabi") {
+    zoom = 17.6;
   }
 
   const { isLoaded, i } = useJsApiLoader({
@@ -94,7 +93,7 @@ const Map = ({ parcels, center }) => {
         setMap(map);
       }, 1500);
     },
-    [map]
+    [map],
   );
 
   const onUnmount = React.useCallback(function callback(map) {
@@ -160,13 +159,17 @@ const Map = ({ parcels, center }) => {
           <div class="font-bold md:text-lg lg:text-lg text-sm mb-2">Plot Number ${text1}, ${text2}</div>
           <hr />
           <a style="display: ${
-            status === "Sold" || status === "Reserved" ? "none" : "block"
+            status === "Sold" || status === "Reserved" || status === "On Hold"
+              ? "none"
+              : "block"
           }"  href="${path}/buy-plot/${id}" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal">
             Buy Plot
           </a>
 
           <a style="display: ${
-            status === "Reserved" || status === "Sold" ? "none" : "block"
+            status === "Reserved" || status === "Sold" || status === "On Hold"
+              ? "none"
+              : "block"
           }" href="${path}/reserve-plot/${id}" id="reserve_plot_button" class="border mb-1 px-4 py-1 my-2 rounded-md text-sm font-normal">
             Reserve Plot
           </a>
@@ -184,7 +187,9 @@ const Map = ({ parcels, center }) => {
           </a>
 
           <p id="expressInterest" style="display: ${
-            status === "Sold" || status === "Reserved" ? "none" : "block"
+            status === "Sold" || status === "Reserved" || status === "On Hold"
+              ? "none"
+              : "block"
           }" data-id=${id} class="border px-4 cursor-pointer py-1 rounded-md text-sm font-normal mt-1">
             Express Interest
           </p>
@@ -219,11 +224,11 @@ const Map = ({ parcels, center }) => {
     infoWindow.open(map);
 
     google.maps.event.addListener(infoWindow, "domready", () => {
-      const callInfo = document.getElementById('call-for-info');
-      callInfo.addEventListener('click', () => {
-        alert('Call For Info \n 0322008282 or +233 24 883 8005')
-      })
-      
+      const callInfo = document.getElementById("call-for-info");
+      callInfo.addEventListener("click", () => {
+        alert("Call For Info \n 0322008282 or +233 24 883 8005");
+      });
+
       const Btn = document.getElementById("changePlotID");
       Btn.addEventListener("click", () => {
         const content = Btn.getAttribute("data-text");
@@ -233,9 +238,8 @@ const Map = ({ parcels, center }) => {
         setModalOpen(true);
 
         setTimeout(function () {
-          document.getElementById(
-            "description"
-          ).innerHTML = `Plot number ${content}`;
+          document.getElementById("description").innerHTML =
+            `Plot number ${content}`;
 
           let amount;
           if (amountStr === null || amountStr === "") {
@@ -283,8 +287,10 @@ const Map = ({ parcels, center }) => {
       return "black";
     } else if (status === "Sold") {
       return "red";
-    } else {
-      return "orange"; // Optional: handle unexpected status values
+    } else if(status === "On Hold") {
+      return "grey"; // Optional: handle unexpected status values
+    }else{
+      return 'orange'
     }
   }
 
@@ -295,6 +301,8 @@ const Map = ({ parcels, center }) => {
       return "white";
     } else if (status === "Sold") {
       return "black";
+    }else if(status === "On Hold") {
+      return "grey"; // Optional: handle unexpected status values
     } else {
       return "orange"; // Optional: handle unexpected status values
     }
@@ -333,11 +341,11 @@ const Map = ({ parcels, center }) => {
     if (path === "/legon-hills") {
       database = "legon_hills";
     }
-    if(path ==='/yabi'){
-      database= 'yabi'
+    if (path === "/yabi") {
+      database = "yabi";
     }
-    if(path === '/trabuom'){
-      database = 'trabuom'
+    if (path === "/trabuom") {
+      database = "trabuom";
     }
 
     let plotTotalAmount;
@@ -521,7 +529,7 @@ const Map = ({ parcels, center }) => {
                   feature.properties?.Street_Nam,
                   feature.id,
                   feature.plotTotalAmount,
-                  feature.status
+                  feature.status,
                 )
               }
             />
@@ -529,7 +537,7 @@ const Map = ({ parcels, center }) => {
             {markerInfo(
               feature.geometry.coordinates[0],
               feature.properties.Plot_No,
-              feature.status
+              feature.status,
             )}
           </>
         ))}

@@ -31,6 +31,7 @@
     "@react-google-maps/api": "^2.19.3",
     "@supabase/supabase-js": "^2.43.1",
     "@tanstack/react-table": "^8.20.5",
+    "bullmq": "^5.28.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",

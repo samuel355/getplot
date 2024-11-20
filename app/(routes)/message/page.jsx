@@ -43,10 +43,14 @@ const SuccessPage = () => {
             <h1 className="text-4xl font-bold">
               Payment and Plot Details sent Successfull
             </h1>
+            <p className="font-semibold text-lg">
+              The chosen plot will be on hold for you for 24 hours.
+            </p>
             <p>
               Thank you for your interest! Check your email for all the details
               and instructions.
             </p>
+            
             <a className="flex items-center rounded bg-primary px-4 py-2 text-white">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

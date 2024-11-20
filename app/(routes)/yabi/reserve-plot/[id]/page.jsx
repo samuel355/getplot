@@ -766,7 +766,9 @@ const EditPlot = () => {
                             email,
                             firstname, 
                             lastname,
-                            phone
+                            phone,
+                            country,
+                            residentialAddress
                           )
                         }
                       >

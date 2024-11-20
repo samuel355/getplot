@@ -14,9 +14,11 @@ export const reservePlot = async (
   databaseName,
   id,
   email,
-  firstname, 
+  firstname,
   lastname,
-  phone
+  phone,
+  country,
+  residentialAddress,
 ) => {
   setLoader3(true);
   const doc = new jsPDF();
@@ -33,7 +35,9 @@ export const reservePlot = async (
     allDetails.properties.plotAmount = plotTotalAmount;
     allDetails.properties.initialDeposit = initialDeposit;
     allDetails.properties.plotArea = "Yabi Kumasi";
-    allDetails.properties.Area = parseFloat(allDetails.properties.Area.toFixed(2)) ?? parseFloat(allDetails.properties.SHAPE_Area.toFixed(2));
+    allDetails.properties.Area =
+      parseFloat(allDetails.properties.Area.toFixed(2)) ??
+      parseFloat(allDetails.properties.SHAPE_Area.toFixed(2));
     const plotRows = [allDetails.properties];
 
     const topMargin = 25;
@@ -125,16 +129,16 @@ export const reservePlot = async (
     });
 
     //doc.save("plot_details.pdf");
-    
-    let plotArea = ''
-    if(databaseName === 'yabi'){
-      plotArea = 'Yabi-Kumasi'
-    }else if(databaseName === 'trabuom'){
-      plotArea='Trabuomm - Kumasi'
-    }else if(databaseName === 'dar_es_salaam'){
-      plotArea = 'Ejisu - Kumasi'
-    }else if(databaseName === 'legon_hills'){
-      plotArea = 'East Legon Hills - Accra'
+
+    let plotArea = "";
+    if (databaseName === "yabi") {
+      plotArea = "Yabi-Kumasi";
+    } else if (databaseName === "trabuom") {
+      plotArea = "Trabuomm - Kumasi";
+    } else if (databaseName === "dar_es_salaam") {
+      plotArea = "Ejisu - Kumasi";
+    } else if (databaseName === "legon_hills") {
+      plotArea = "East Legon Hills - Accra";
     }
 
     const pdfBlob = doc.output("blob"); // Get PDF as a Blob
@@ -148,7 +152,10 @@ export const reservePlot = async (
     formData.append("lastname", lastname);
     formData.append("plotArea", plotArea);
     formData.append("amount", "GHS. " + plotTotalAmount.toLocaleString());
-    formData.append("initialDeposit", "GHS. " + initialDeposit.toLocaleString());
+    formData.append(
+      "initialDeposit",
+      "GHS. " + initialDeposit.toLocaleString(),
+    );
     formData.append(
       "plotDetails",
       "Plot Number " +
@@ -168,27 +175,36 @@ export const reservePlot = async (
     });
 
     if (!res.ok) {
-      setLoader3(false)
+      setLoader3(false);
       // Handle the error appropriately
       console.error("Error sending email:", await res.text());
-      toast.error('Sorry something went wrong. Try again later')
+      toast.error("Sorry something went wrong. Try again later");
     }
 
-    let redirect = ''
-    if(databaseName === 'yabi'){
-      redirect = '/yabi'
-    }else if(databaseName === 'trabuom'){
-      redirect='/trabuom'
-    }else if(databaseName === 'dar_es_salaam'){
-      redirect = 'dar-es-salaam'
-    }else if(databaseName === 'legon_hills'){
-      redirect = 'legon-hills'
+    let redirect = "";
+    if (databaseName === "yabi") {
+      redirect = "/yabi";
+    } else if (databaseName === "trabuom") {
+      redirect = "/trabuom";
+    } else if (databaseName === "dar_es_salaam") {
+      redirect = "dar-es-salaam";
+    } else if (databaseName === "legon_hills") {
+      redirect = "legon-hills";
     }
-    
-    router.push(`/message?redirect=${redirect}`)
+
+    router.push(`/message?redirect=${redirect}`);
 
     //Update plot status to hold for 24 hours
-    updatePlotStatus(databaseName, id, firstname, lastname, email, phone)
+    updatePlotStatus(
+      databaseName,
+      id,
+      firstname,
+      lastname,
+      email,
+      phone,
+      country,
+      residentialAddress,
+    );
     setLoader3(false);
   } catch (error) {
     setLoader3(false);

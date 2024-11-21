@@ -32,7 +32,7 @@ const plotInfo = {
   initialDeposite: 0,
 };
 
-const EditPlot = () => {
+const ReservePlot = () => {
   const [loader1, setLoader1] = useState(false);
   const [loader2, setLoader2] = useState(false);
   const [loader3, setLoader3] = useState(false);
@@ -671,7 +671,7 @@ const EditPlot = () => {
                       {verifyLoading ? (
                         <Loader className="animate-spin" />
                       ) : (
-                        "Proceed to Payment"
+                        "Proceed"
                       )}
                     </button>
                   </div>
@@ -785,4 +785,4 @@ const EditPlot = () => {
   );
 };
 
-export default EditPlot;
+export default ReservePlot;

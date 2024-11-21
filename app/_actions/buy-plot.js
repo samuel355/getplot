@@ -4,6 +4,7 @@ import { cedisAccount } from "./cedis-account";
 import { dollarAccount } from "./dollar-account";
 import { toast } from "react-toastify";
 import { updatePlotStatus } from "./update-plot-status";
+import { sendSMS } from "./send-sms";
 
 export const buyPlot = async (
   allDetails,
@@ -17,7 +18,7 @@ export const buyPlot = async (
   lastname,
   phone,
   country,
-  residentialAddress,
+  residentialAddress
 ) => {
   setLoader3(true);
   const doc = new jsPDF();
@@ -32,7 +33,9 @@ export const buyPlot = async (
 
     allDetails.properties.plotAmount = plotTotalAmount;
     allDetails.properties.plotArea = "Yabi Kumasi";
-    allDetails.properties.Area = parseFloat(allDetails.properties.Area).toFixed(2)
+    allDetails.properties.Area = parseFloat(allDetails.properties.Area).toFixed(
+      2
+    );
     const plotRows = [allDetails.properties];
 
     const topMargin = 25;
@@ -54,7 +57,7 @@ export const buyPlot = async (
       plotHeadingX,
       plotHeadingY + 2,
       plotHeadingX + doc.getTextWidth("Plot Details"),
-      plotHeadingY + 2,
+      plotHeadingY + 2
     );
 
     // --- Account Details Tables ---
@@ -85,7 +88,7 @@ export const buyPlot = async (
       cedisHeadingX,
       cedisHeadingY + 2,
       cedisHeadingX + doc.getTextWidth("Cedis Account Details"),
-      cedisHeadingY + 2,
+      cedisHeadingY + 2
     );
 
     // Add Dollar Account Table
@@ -107,7 +110,7 @@ export const buyPlot = async (
       dollarHeadingX,
       dollarHeadingY + 2,
       dollarHeadingX + doc.getTextWidth("Dollar Account Details"),
-      dollarHeadingY + 2,
+      dollarHeadingY + 2
     );
 
     const finalText =
@@ -134,7 +137,7 @@ export const buyPlot = async (
       plotArea = "Ejisu - Kumasi";
     } else if (databaseName === "legon_hills") {
       plotArea = "East Legon Hills - Accra";
-    }else if (databaseName === "nthc") {
+    } else if (databaseName === "nthc") {
       plotArea = "Kwadaso - Kumasi";
     }
 
@@ -154,10 +157,13 @@ export const buyPlot = async (
       "Plot Number " +
         allDetails.properties.Plot_No +
         " " +
-        allDetails.properties.Street_Nam,
+        allDetails.properties.Street_Nam
     );
 
-    formData.append("plotSize", parseFloat(allDetails.properties.Area).toFixed(2) + " Acres ");
+    formData.append(
+      "plotSize",
+      parseFloat(allDetails.properties.Area).toFixed(2) + " Acres "
+    );
 
     const res = await fetch("/api/buy-plot", {
       method: "POST",
@@ -195,9 +201,14 @@ export const buyPlot = async (
       email,
       phone,
       country,
-      residentialAddress,
+      residentialAddress
     );
+
     setLoader3(false);
+
+    //send SMS
+    sendSMS(phone);
+    
   } catch (error) {
     setLoader3(false);
     toast.error("Sorry something went wrong try again later");

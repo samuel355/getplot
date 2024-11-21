@@ -275,7 +275,7 @@ export function ExpressInterestDialog({
                       type="text"
                       disabled
                       name="plotDetails"
-                      className="w-3/4 text-primary"
+                      className="w-3/4 text-primary lg:text-base text-sm"
                       value={
                         "Plot Number " +
                         allDetails?.properties?.Plot_No +

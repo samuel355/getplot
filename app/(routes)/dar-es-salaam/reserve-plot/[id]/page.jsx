@@ -44,7 +44,6 @@ const ReservePlot = () => {
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
   const { user } = useUser();
-  
 
   const {
     firstname,
@@ -430,7 +429,7 @@ const ReservePlot = () => {
                         disabled
                         name="plotDetails"
                         value={
-                          "Plot Number " +
+                          "Plot No. " +
                           allDetails.properties.Plot_No +
                           " " +
                           allDetails.properties.Street_Nam
@@ -504,14 +503,12 @@ const ReservePlot = () => {
                     </div>
                   )}
 
-                  <div className="flex mt-5 gap-4 flex-row items-center border border-primary justify-center">
-                    <h2 className="text-gray-900 font-semibold">
-                      You still have:
-                    </h2>
-                    <p className="font-medium text-lg">
-                      {`GHS. (${calcAmount.toLocaleString()}) To Pay`}
-                    </p>
-                  </div>
+                  <p className="text-primary font-semibold my-3">
+                    You still have:
+                    <span>
+                      {`GHS. (${calcAmount.toLocaleString()}) To Pay`}{" "}
+                    </span>
+                  </p>
 
                   <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
                     <button
@@ -751,28 +748,28 @@ const ReservePlot = () => {
                     {loader3 ? (
                       <Loader className="animate-spin" />
                     ) : (
-                     // <PaystackButton {...componentProps} />
-                     <Button
-                     onClick={() =>
-                       reservePlot(
-                         allDetails,
-                         plotTotalAmount,
-                         initialDeposit,
-                         setLoader3,
-                         router,
-                         databaseName,
-                         id,
-                         email,
-                         firstname,
-                         lastname,
-                         phone,
-                         country,
-                         residentialAddress,
-                       )
-                     }
-                   >
-                     Reserve Plot
-                   </Button>
+                      // <PaystackButton {...componentProps} />
+                      <Button
+                        onClick={() =>
+                          reservePlot(
+                            allDetails,
+                            plotTotalAmount,
+                            initialDeposit,
+                            setLoader3,
+                            router,
+                            databaseName,
+                            id,
+                            email,
+                            firstname,
+                            lastname,
+                            phone,
+                            country,
+                            residentialAddress
+                          )
+                        }
+                      >
+                        Reserve Plot
+                      </Button>
                     )}
                   </div>
                 </div>

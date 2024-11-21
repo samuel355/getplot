@@ -1,11 +1,13 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
 
-export async function POST(req) {  // Explicitly export POST handler
+//send sms api
+export async function POST(req) { 
   try {
-    const { phone, message } = await req.json(); // Use req.json() to parse body
+    const { phone, message } = await req.json();
 
     if (!phone || !message) {
+      console.log('no phone number or message')
       return NextResponse.json({ error: "Phone number and message are required" }, { status: 400 });
     }
 
@@ -29,20 +31,3 @@ export async function POST(req) {  // Explicitly export POST handler
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
-
-// try {
-//   const res = await fetch("/api/send-sms", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({ phone: contactData.phone, message: contactData.message }),
-//   });
-
-//   const data = await res.json()
-//   console.log(data.message)
-//   setLoading(false);
-// } catch (error) {
-//   setLoading(false);
-//   console.log(error);
-// }

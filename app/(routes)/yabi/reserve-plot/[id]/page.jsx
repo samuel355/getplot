@@ -391,8 +391,7 @@ const ReservePlot = () => {
             " " +
             allDetails.properties.Street_Nam,
           plotSize:
-            parseFloat(allDetails?.properties?.Area?.toFixed(2)) +
-            " Acres ",
+            parseFloat(allDetails?.properties?.Area?.toFixed(2)) + " Acres ",
         }),
       });
       setVerifyLoading(false);
@@ -503,14 +502,12 @@ const ReservePlot = () => {
                     </div>
                   )}
 
-                  <div className="flex mt-5 gap-4 flex-row items-center border border-primary justify-center">
-                    <h2 className="text-gray-900 font-semibold">
-                      You still have:
-                    </h2>
-                    <p className="font-medium text-lg">
-                      {`GHS. (${calcAmount.toLocaleString()}) To Pay`}
-                    </p>
-                  </div>
+                  <p className="text-primary font-semibold my-3">
+                    You still have:
+                    <span>
+                      {`GHS. (${calcAmount.toLocaleString()}) To Pay`}{" "}
+                    </span>
+                  </p>
 
                   <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
                     <button

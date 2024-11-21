@@ -33,23 +33,22 @@ export async function POST(request) {
       message,
     });
 
-    // Create a Nodemailer transporter using SMTP
     let transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: parseInt(process.env.SMTP_PORT || "587"),
-      secure: true, // true for 465, false for other ports
+      secure: true,
       auth: {
-        user: process.env.SMTP_USER, // your SMTP username
-        pass: process.env.SMTP_PASS, // your SMTP password
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS, 
       },
     });
 
     // Send email
     await transporter.sendMail({
-      from: email, // sender address
+      from: email, // sender
       to: process.env.SMTP_EMAIL, // list of receivers
-      subject: "Potential client to buy a land", // Subject line
-      html: htmlContent, // HTML body
+      subject: "Potential client to buy a land",
+      html: htmlContent, 
     });
 
     return NextResponse.json({

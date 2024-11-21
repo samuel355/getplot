@@ -65,7 +65,7 @@ const BuyPlot = () => {
   const { id } = useParams();
   const router = useRouter();
   const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
-  const databaseName = 'dar_es_salaam'
+  const databaseName = "dar_es_salaam";
 
   // Errors Checks
   const [statusEr, setStatusEr] = useState(false);
@@ -312,7 +312,7 @@ const BuyPlot = () => {
         .catch((error) => {
           console.error(
             "There was a problem with your fetch operation:",
-            error,
+            error
           );
           toast.error("Your Transaction verification was not successfull");
         });
@@ -362,8 +362,7 @@ const BuyPlot = () => {
             " " +
             allDetails.properties.Street_Nam,
           plotSize:
-            parseFloat(allDetails?.properties?.Area).toFixed(2) +
-            " Acres ",
+            parseFloat(allDetails?.properties?.Area).toFixed(2) + " Acres ",
         }),
       });
       setVerifyLoading(false);
@@ -391,24 +390,24 @@ const BuyPlot = () => {
                   <h4 className="my-8 font-semibold text-xl text-center underline">
                     Plot Details Information
                   </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-center">
-                    <div className="">
-                      <h2 className="text-gray-900 font-semibold">
-                        Plot Details
-                      </h2>
-                      <Input
-                        type="text"
-                        disabled
-                        name="plotDetails"
-                        value={
-                          "Plot Number " +
-                          allDetails.properties.Plot_No +
-                          " " +
-                          allDetails.properties.Street_Nam
-                        }
-                      />
-                      <small className="text-red-800"></small>
-                    </div>
+                  <div className="">
+                    <h2 className="text-gray-900 font-semibold">
+                      Plot Details
+                    </h2>
+                    <Input
+                      type="text"
+                      disabled
+                      name="plotDetails"
+                      value={
+                        "Plot Number " +
+                        allDetails.properties.Plot_No +
+                        " " +
+                        allDetails.properties.Street_Nam
+                      }
+                    />
+                    <small className="text-red-800"></small>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 items-center">
                     <div className="">
                       <h2 className="text-gray-900 font-semibold">Plot Size</h2>
                       <Input
@@ -423,7 +422,7 @@ const BuyPlot = () => {
                       <small className="text-red-800"></small>
                     </div>
 
-                    <div className="flex gap-2 flex-col">
+                    <div className="flex flex-col">
                       <h2 className="text-gray-900 font-semibold">
                         Plot Amount (GHS)
                       </h2>
@@ -499,6 +498,7 @@ const BuyPlot = () => {
                       <Input
                         type="text"
                         name="lastname"
+                        placeholder="Last Names(s)"
                         onChange={onInputChange}
                         value={lastname}
                         style={{ border: lnameEr && `1px solid red` }}

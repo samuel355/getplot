@@ -714,7 +714,7 @@ const BuyPlot = () => {
                           )
                         }
                       >
-                        Reserve Plot
+                        Buy Plot
                       </Button>
                     )}
                   </div>

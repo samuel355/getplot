@@ -132,7 +132,7 @@ export const reservePlot = async (
     if (databaseName === "yabi") {
       plotArea = "Yabi-Kumasi";
     } else if (databaseName === "trabuom") {
-      plotArea = "Trabuomm - Kumasi";
+      plotArea = "Trabuom - Kumasi";
     } else if (databaseName === "dar_es_salaam") {
       plotArea = "Ejisu - Kumasi";
     } else if (databaseName === "legon_hills") {

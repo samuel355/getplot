@@ -22,7 +22,7 @@ import { useUser } from "@clerk/nextjs";
 import Header from "@/app/_components/Header";
 import { ExpressInterestDialog } from "@/app/_components/express-interest-dialog";
 import { insertFeatures } from "../../_actions/upload-plots-into-db";
-import {trabuomFeatures} from './trabuomFeature'
+import { trabuomFeatures } from "./trabuomFeature";
 const containerStyle = {
   height: "75vh",
   width: "85%",
@@ -105,40 +105,47 @@ const Map = () => {
   const fetchPolygons = async (bounds) => {
     const cacheKey = "trabuom_polygons";
     const cacheExpiryKey = "trabuom_polygons_expiry";
-    const cacheExpiryDuration = 0.25 * 60 * 60 * 1000; //15 mins
-    
+    const cacheExpiryDuration = 0.15 * 60 * 60 * 1000; //15 mins
+
     const currentTime = Date.now();
-    
+
     // Check if polygons exist in localStorage and are still valid
     const cachedPolygons = localStorage.getItem(cacheKey);
     const cachedExpiry = localStorage.getItem(cacheExpiryKey);
-    
-    if (cachedPolygons && cachedExpiry && currentTime < parseInt(cachedExpiry)) {
+
+    if (
+      cachedPolygons &&
+      cachedExpiry &&
+      currentTime < parseInt(cachedExpiry)
+    ) {
       // Use cached data
       const polygons = JSON.parse(cachedPolygons);
-      
+
       const visiblePolygons = polygons.filter((polygon) => {
         const polygonBounds = calculateBoundingBox(polygon);
         return isPolygonInBounds(polygonBounds, bounds);
       });
-      
+
       setPolygons(visiblePolygons);
       return;
     }
-  
+
     let allRecords = [];
     setLoading(true);
-  
+
     // Fetch from Supabase if no valid cache
     const fetchBatch = async (start, end) => {
-      let { data, error } = await supabase.from("trabuom").select("*").range(start, end);
+      let { data, error } = await supabase
+        .from("trabuom")
+        .select("*")
+        .range(start, end);
       if (error) {
         console.log(error);
         return [];
       }
       return data || [];
     };
-  
+
     // Fetch all records in batches
     allRecords = [
       ...(await fetchBatch(0, 999)),
@@ -146,25 +153,23 @@ const Map = () => {
       ...(await fetchBatch(2000, 2999)),
       ...(await fetchBatch(3000, 3050)),
     ];
-  
+
     if (allRecords.length > 0) {
       // Save to localStorage
-      localStorage.setItem(cacheKey, JSON.stringify(allRecords));
-      localStorage.setItem(cacheExpiryKey, (currentTime + cacheExpiryDuration).toString());
-  
+      //localStorage.setItem(cacheKey, JSON.stringify(allRecords));
+      //localStorage.setItem(cacheExpiryKey, (currentTime + cacheExpiryDuration).toString());
+
       // Filter polygons based on bounds
       const visiblePolygons = allRecords.filter((polygon) => {
         const polygonBounds = calculateBoundingBox(polygon);
         return isPolygonInBounds(polygonBounds, bounds);
       });
-  
+
       setPolygons(visiblePolygons);
     }
-    
+
     setLoading(false);
   };
-  
-
 
   const handleMapLoad = (mapInstance) => {
     setMap(mapInstance); // map instance in state
@@ -203,46 +208,62 @@ const Map = () => {
   //Add info Window
   var openInfoWindow = null;
   const handleInfo = (coordinates, text1, text2, id, amount, status) => {
-    console.log(id);
     const contentString = `
-        <div class="max-w-sm rounded overflow-hidden shadow-lg">
-          <div class="px-6 py-4 flex flex-col">
-            <div class="font-bold md:text-lg lg:text-lg text-sm mb-2">Plot Number ${text1}, ${text2}</div>
-            <hr />
-            <a style="display: ${
-              status === "Sold" || status === "Reserved" ? "none" : "block"
-            }"  href="${path}/buy-plot/${id}" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal">
-              Buy Plot
-            </a>
-  
-            <a style="display: ${
-              status === "Reserved" || status === "Sold" ? "none" : "block"
-            }" href="${path}/reserve-plot/${id}" id="reserve_plot_button" class="border mb-1 px-4 py-1 my-2 rounded-md text-sm font-normal">
-              Reserve Plot
-            </a>
-  
-            <a style= "display: ${
-              user?.publicMetadata?.role != "sysadmin" && "none"
-            }" href="${path}/edit-plot/${id}" id="edit_plot_button" class="border px-4 py-1 mb-2 rounded-md text-sm font-normal">
-              Edit Plot
-            </a>
-  
-            <a href="tel:0322008282" class="border px-4 py-1 rounded-md text-sm font-normal">
-              Call For Info
-            </a>
+    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+      <div class="px-6 py-4 flex flex-col">
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2}</div>
+        <p style="display: ${
+            status === "On Hold" ? "block" : "none"
+          }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
+          <span style= "display: ${
+            user?.publicMetadata?.role != "sysadmin" && "none"
+            }"> 
+            You can edit this plot and change the status  
+          </span> 
+        </p>
+        <hr style="margin-bottom: 5px; margin-top: 5px" />
+        <a style="display: ${
+          status === "Sold" || status === "Reserved" || status === "On Hold"
+            ? "none"
+            : "block"
+        }"  href="${path}/buy-plot/${id}" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal">
+          Buy Plot
+        </a>
 
-             <p id="expressInterest" style="display: ${
-               status === "Sold" || status === "Reserved" ? "none" : "block"
-             }" data-id=${id} class="border px-4 py-1 rounded-md text-sm font-normal mt-1 cursor-pointer">
-            Express Interest
-          </p>
-  
-            <button style= "display: ${
-              user?.publicMetadata?.role != "sysadmin" && "none"
-            }" id="changePlotID" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>
-          </div>
-        </div>
-      `;
+        <a style="display: ${
+          status === "Reserved" || status === "Sold" || status === "On Hold"
+            ? "none"
+            : "block"
+        }" href="${path}/reserve-plot/${id}" id="reserve_plot_button" class="border mb-1 px-4 py-1 my-2 rounded-md text-sm font-normal">
+          Reserve Plot
+        </a>
+
+        <a style= "display: ${
+          user?.publicMetadata?.role != "sysadmin" && "none"
+        }" href="${path}/edit-plot/${id}" id="edit_plot_button" class="border px-4 py-1 mb-2 rounded-md text-sm font-normal">
+          Edit Plot
+        </a>
+
+        <a style="margin-top: ${
+          status === "Reserved" || status === "Sold" ? "7px" : "0"
+        }" href="tel:0248838005" id="call-for-info" class="border px-4 py-1 rounded-md text-sm font-normal">
+          Call For Info
+        </a>
+
+        <p id="expressInterest" style="display: ${
+          status === "Sold" || status === "Reserved" || status === "On Hold"
+            ? "none"
+            : "block"
+        }" data-id=${id} class="border px-4 cursor-pointer py-1 rounded-md text-sm font-normal mt-1">
+          Express Interest
+        </p>
+
+        <button style= "display: ${
+          user?.publicMetadata?.role != "sysadmin" && "none"
+        }" id="changePlotID" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>
+      </div>
+    </div>
+  `;
 
     const polygonCoords = coordinates.map((coord) => ({
       lng: coord[0],
@@ -320,14 +341,28 @@ const Map = () => {
   };
 
   function getColorBasedOnStatus(status) {
-    if (status === "Available" || status === null) {
+    if (status === null || status === "Available" || status === undefined) {
       return "green";
     } else if (status === "Reserved") {
       return "black";
     } else if (status === "Sold") {
       return "red";
-    } else if (status === undefined) {
-      return "blue";
+    } else if (status === "On Hold") {
+      return "grey"; // Optional: handle unexpected status values
+    } else {
+      return "orange";
+    }
+  }
+
+  function renderMarkerColor(status) {
+    if (status === null || status === "Available" || status === undefined) {
+      return "black";
+    } else if (status === "Reserved") {
+      return "white";
+    } else if (status === "Sold") {
+      return "black";
+    } else if (status === "On Hold") {
+      return "grey"; // Optional: handle unexpected status values
     } else {
       return "orange"; // Optional: handle unexpected status values
     }

@@ -154,52 +154,61 @@ const Map = ({ parcels, center }) => {
   var openInfoWindow = null;
   const handleInfo = (coordinates, text1, text2, id, amount, status) => {
     const contentString = `
-      <div class="max-w-sm rounded overflow-hidden shadow-lg">
-        <div class="px-6 py-4 flex flex-col">
-          <div class="font-bold md:text-lg lg:text-lg text-sm mb-2">Plot Number ${text1}, ${text2}</div>
-          <hr />
-          <a style="display: ${
-            status === "Sold" || status === "Reserved" || status === "On Hold"
-              ? "none"
-              : "block"
-          }"  href="${path}/buy-plot/${id}" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal">
-            Buy Plot
-          </a>
-
-          <a style="display: ${
-            status === "Reserved" || status === "Sold" || status === "On Hold"
-              ? "none"
-              : "block"
-          }" href="${path}/reserve-plot/${id}" id="reserve_plot_button" class="border mb-1 px-4 py-1 my-2 rounded-md text-sm font-normal">
-            Reserve Plot
-          </a>
-
-          <a style= "display: ${
+    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+      <div class="px-6 py-4 flex flex-col">
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2}</div>
+        <p style="display: ${
+            status === "On Hold" ? "block" : "none"
+          }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
+          <span style= "display: ${
             user?.publicMetadata?.role != "sysadmin" && "none"
-          }" href="${path}/edit-plot/${id}" id="edit_plot_button" class="border px-4 py-1 mb-2 rounded-md text-sm font-normal">
-            Edit Plot
-          </a>
+            }"> 
+            You can edit this plot and change the status  
+          </span> 
+        </p>
+        <hr style="margin-bottom: 5px; margin-top: 5px" />
+        <a style="display: ${
+          status === "Sold" || status === "Reserved" || status === "On Hold"
+            ? "none"
+            : "block"
+        }"  href="${path}/buy-plot/${id}" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal">
+          Buy Plot
+        </a>
 
-          <a style="margin-top: ${
-            status === "Reserved" || status === "Sold" ? "7px" : "0"
-          }" href="tel:0248838005" id="call-for-info" class="border px-4 py-1 rounded-md text-sm font-normal">
-            Call For Info
-          </a>
+        <a style="display: ${
+          status === "Reserved" || status === "Sold" || status === "On Hold"
+            ? "none"
+            : "block"
+        }" href="${path}/reserve-plot/${id}" id="reserve_plot_button" class="border mb-1 px-4 py-1 my-2 rounded-md text-sm font-normal">
+          Reserve Plot
+        </a>
 
-          <p id="expressInterest" style="display: ${
-            status === "Sold" || status === "Reserved" || status === "On Hold"
-              ? "none"
-              : "block"
-          }" data-id=${id} class="border px-4 cursor-pointer py-1 rounded-md text-sm font-normal mt-1">
-            Express Interest
-          </p>
+        <a style= "display: ${
+          user?.publicMetadata?.role != "sysadmin" && "none"
+        }" href="${path}/edit-plot/${id}" id="edit_plot_button" class="border px-4 py-1 mb-2 rounded-md text-sm font-normal">
+          Edit Plot
+        </a>
 
-          <button style= "display: ${
-            user?.publicMetadata?.role != "sysadmin" && "none"
-          }" id="changePlotID" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>
-        </div>
+        <a style="margin-top: ${
+          status === "Reserved" || status === "Sold" ? "7px" : "0"
+        }" href="tel:0248838005" id="call-for-info" class="border px-4 py-1 rounded-md text-sm font-normal">
+          Call For Info
+        </a>
+
+        <p id="expressInterest" style="display: ${
+          status === "Sold" || status === "Reserved" || status === "On Hold"
+            ? "none"
+            : "block"
+        }" data-id=${id} class="border px-4 cursor-pointer py-1 rounded-md text-sm font-normal mt-1">
+          Express Interest
+        </p>
+
+        <button style= "display: ${
+          user?.publicMetadata?.role != "sysadmin" && "none"
+        }" id="changePlotID" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>
       </div>
-    `;
+    </div>
+  `;
 
     const polygonCoords = coordinates.map((coord) => ({
       lng: coord[0],

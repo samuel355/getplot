@@ -324,7 +324,7 @@ const EditPlot = () => {
       toast.success("Plot  updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        window.location.reload();
+        window.location.href='/yabi';
       }, 1100);
     }
     if (error) {

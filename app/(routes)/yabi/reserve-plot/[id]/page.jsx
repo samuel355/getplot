@@ -44,7 +44,6 @@ const ReservePlot = () => {
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
   const { user } = useUser();
-  
 
   const {
     firstname,
@@ -392,7 +391,7 @@ const ReservePlot = () => {
             " " +
             allDetails.properties.Street_Nam,
           plotSize:
-            parseFloat(allDetails?.properties?.Shape_Length?.toFixed(5)) +
+            parseFloat(allDetails?.properties?.Area?.toFixed(2)) +
             " Acres ",
         }),
       });
@@ -751,28 +750,28 @@ const ReservePlot = () => {
                     {loader3 ? (
                       <Loader className="animate-spin" />
                     ) : (
-                     // <PaystackButton {...componentProps} />
-                     <Button
-                     onClick={() =>
-                       reservePlot(
-                         allDetails,
-                         plotTotalAmount,
-                         initialDeposit,
-                         setLoader3,
-                         router,
-                         databaseName,
-                         id,
-                         email,
-                         firstname,
-                         lastname,
-                         phone,
-                         country,
-                         residentialAddress,
-                       )
-                     }
-                   >
-                     Reserve Plot
-                   </Button>
+                      // <PaystackButton {...componentProps} />
+                      <Button
+                        onClick={() =>
+                          reservePlot(
+                            allDetails,
+                            plotTotalAmount,
+                            initialDeposit,
+                            setLoader3,
+                            router,
+                            databaseName,
+                            id,
+                            email,
+                            firstname,
+                            lastname,
+                            phone,
+                            country,
+                            residentialAddress
+                          )
+                        }
+                      >
+                        Reserve Plot
+                      </Button>
                     )}
                   </div>
                 </div>

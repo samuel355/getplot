@@ -331,9 +331,9 @@ export const columns = [
                 <DropdownMenuItem onClick={() => setIsViewDialog(true)}>
                   View Plot
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleDeleteDialog}>
+                {/* <DropdownMenuItem onClick={handleDeleteDialog}>
                   Delete Plot
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

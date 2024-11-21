@@ -317,8 +317,8 @@ const EditPlot = () => {
         residentialAddress: "",
         agent: "",
         plotTotalAmount: plotData.plotTotalAmount,
-        paidAmount: plotData.paidAmount,
-        remainingAmount: plotData.remainingAmount,
+        paidAmount: 0,
+        remainingAmount: 0,
         remarks: plotData.remarks,
       })
       .eq("id", id)
@@ -328,7 +328,7 @@ const EditPlot = () => {
       toast.success("Plot  updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        window.location.href = '/dar-es-salaam';
+        window.location.href='/dar-es-salaam';
       }, 1100);
     }
     if (error) {

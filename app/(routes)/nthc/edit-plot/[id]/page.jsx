@@ -317,8 +317,8 @@ const EditPlot = () => {
         residentialAddress: "",
         agent: "",
         plotTotalAmount: plotData.plotTotalAmount,
-        paidAmount: plotData.paidAmount,
-        remainingAmount: plotData.remainingAmount,
+        paidAmount: 0,
+        remainingAmount: 0,
         remarks: plotData.remarks,
       })
       .eq("id", id)

@@ -312,15 +312,15 @@ const EditPlot = () => {
         residentialAddress: '',
         agent: '',
         plotTotalAmount: plotData.plotTotalAmount,
-        paidAmount: plotData.paidAmount,
-        remainingAmount: plotData.remainingAmount,
+        paidAmount: 0,
+        remainingAmount: 0,
         remarks: plotData.remarks,
       })
       .eq("id", id)
       .select();
 
     if (data) {
-      toast.success("Plot  updated successfully");
+      toast.success("Plot updated successfully");
       setLoader2(false);
       setTimeout(() => {
         window.location.href='/trabuom';

@@ -35,9 +35,7 @@ export const reservePlot = async (
     allDetails.properties.plotAmount = plotTotalAmount;
     allDetails.properties.initialDeposit = initialDeposit;
     allDetails.properties.plotArea = "Yabi Kumasi";
-    allDetails.properties.Area =
-      parseFloat(allDetails.properties.Area.toFixed(2)) ??
-      parseFloat(allDetails.properties.SHAPE_Area.toFixed(2));
+    allDetails.properties.Area = parseFloat(allDetails.properties.Area).toFixed(2)
     const plotRows = [allDetails.properties];
 
     const topMargin = 25;
@@ -139,6 +137,8 @@ export const reservePlot = async (
       plotArea = "Ejisu - Kumasi";
     } else if (databaseName === "legon_hills") {
       plotArea = "East Legon Hills - Accra";
+    }else if (databaseName === "nthc") {
+      plotArea = "Kwadaso - Kumasi";
     }
 
     const pdfBlob = doc.output("blob"); // Get PDF as a Blob
@@ -164,10 +164,7 @@ export const reservePlot = async (
         allDetails.properties.Street_Nam,
     );
 
-    formData.append(
-      "plotSize",
-      parseFloat(allDetails?.properties?.Area?.toFixed(2)) + " Acres ",
-    );
+    formData.append("plotSize", parseFloat(allDetails.properties.Area).toFixed(2) + " Acres ");
 
     const res = await fetch("/api/reserve-plot", {
       method: "POST",
@@ -187,9 +184,11 @@ export const reservePlot = async (
     } else if (databaseName === "trabuom") {
       redirect = "/trabuom";
     } else if (databaseName === "dar_es_salaam") {
-      redirect = "dar-es-salaam";
+      redirect = "/dar-es-salaam";
     } else if (databaseName === "legon_hills") {
-      redirect = "legon-hills";
+      redirect = "/legon-hills";
+    } else if (databaseName === "nthc") {
+      redirect = "/nthc";
     }
 
     router.push(`/message?redirect=${redirect}`);

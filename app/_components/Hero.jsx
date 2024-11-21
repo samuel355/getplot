@@ -26,13 +26,13 @@ const Hero = () => {
             we connect you with the right land to build your dream homes.
           </p>
         </div>
-        <Button className="mt-4 button-primay text-center rounded-sm px-4 py-2 capitalize text-base flex gap-2 bg-primary text-white">
-          View out sites
+        <p className="mt-4 button-primay font-bold rounded-sm  py-2 capitalize text-base flex gap-2 text-black">
+          View our sites below
           <span>
             {" "}
-            <ArrowDown />{" "}
+            <ArrowDown size={18} />{" "}
           </span>
-        </Button>
+        </p>
         <div className="flex gap-4 flex-wrap mt-3">
           <Link className="text-primary hover:underline" href="/legon-hills">
             East Legon Hills (Santeo)

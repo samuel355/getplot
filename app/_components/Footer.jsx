@@ -54,27 +54,22 @@ const Footer = () => {
               <li className="my-2">
                 <a className="text-sm hover:underline" href="#">
                   {" "}
-                  Order Tracking
+                  Land Registration
                 </a>
               </li>
               <li className="my-2 text-muted">
                 <a href="#" className="text-sm hover:underline">
-                  Whislist
+                  Land Management
                 </a>
               </li>
               <li className="my-2 text-muted">
                 <a href="#" className="text-sm hover:underline">
-                  Terms of use
+                  Building and Contructions
                 </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">
+                <a href="/contact" className="text-sm hover:underline">
                   Contact support
-                </a>
-              </li>
-              <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">
-                  2 year guarantee
                 </a>
               </li>
             </ul>
@@ -90,56 +85,19 @@ const Footer = () => {
                 </Link>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">
+                <a href="/trabuom" className="text-sm hover:underline">
                   {" "}
-                  About Us
+                  Trabuom Site
                 </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">
-                  Services
+                <a href="/nthc" className="text-sm hover:underline">
+                  Kwadaso Lands
                 </a>
               </li>
               <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">
-                  Blog
-                </a>
-              </li>
-              <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">
-                  Portifolio
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="flex-1 basis-[10rem]">
-            <h2 className="text-xl font-semibold">Business</h2>
-            <ul>
-              <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">
-                  {" "}
-                  Success
-                </a>
-              </li>
-              <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">
-                  Guide
-                </a>
-              </li>
-              <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">
-                  Mission
-                </a>
-              </li>
-              <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">
-                  Terms & Conditions
-                </a>
-              </li>
-              <li className="my-2 text-muted">
-                <a href="#" className="text-sm hover:underline">
-                  Pricacy Policy
+                <a href="/legon-hills" className="text-sm hover:underline">
+                  East Legon Hills Land
                 </a>
               </li>
             </ul>
@@ -170,7 +128,7 @@ const Footer = () => {
         className="py-2 mt-3 text-center text-muted border-dark"
         style={{ borderTop: "1px solid grey" }}
       >
-        <p className="text-sm">Get One Plot | All Rights Reserved</p>
+        <p className="text-sm mt-6">Get One Plot | All Rights Reserved</p>
       </div>
     </div>
   );

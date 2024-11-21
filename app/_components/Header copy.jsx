@@ -270,9 +270,9 @@ const HeaderAlt = () => {
               <DropdownMenuItem>
                 <button
                   className={`hover:text-primary text-base ${
-                    path == "/get-plot" && "text-primary font-semibold"
+                    path == "/trabuom" && "text-primary font-semibold"
                   }`}
-                  onClick={() => router.push("/get-plot")}
+                  onClick={() => router.push("/trabuom")}
                 >
                   Get Land
                 </button>

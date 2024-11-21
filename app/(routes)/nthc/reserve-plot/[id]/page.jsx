@@ -46,11 +46,11 @@ const ReservePlot = () => {
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
   const { user } = useUser();
-  
-  let plot_area = allDetails?.properties?.SHAPE_Area
-  const plot_size = (plot_area *  3109111.525693).toFixed(2)
-  
-  if( allDetails !== null && allDetails?.properties){
+
+  let plot_area = allDetails?.properties?.SHAPE_Area;
+  const plot_size = (plot_area * 3109111.525693).toFixed(2);
+
+  if (allDetails !== null && allDetails?.properties) {
     allDetails.properties.Area = plot_size;
   }
 
@@ -127,13 +127,13 @@ const ReservePlot = () => {
     }
     if (initialDeposit < initialDepo) {
       toast.error(
-        `Check the initial deposit. It must be at least GHS. ${initialDepo.toLocaleString()}`,
+        `Check the initial deposit. It must be at least GHS. ${initialDepo.toLocaleString()}`
       );
       return;
     }
     if (initialDeposit > plotTotalAmount) {
       toast.error(
-        `Check the initial deposit. It must not be greater than the plot amount`,
+        `Check the initial deposit. It must not be greater than the plot amount`
       );
       return;
     }
@@ -349,7 +349,7 @@ const ReservePlot = () => {
         .catch((error) => {
           console.error(
             "There was a problem with your fetch operation:",
-            error,
+            error
           );
           toast.error("Your Transaction verification was not successfull");
         });
@@ -451,9 +451,7 @@ const ReservePlot = () => {
                         type="text"
                         disabled
                         name="plotSize"
-                        value={
-                          plot_size
-                        }
+                        value={plot_size}
                       />
                       <small className="text-red-800"></small>
                     </div>
@@ -510,14 +508,12 @@ const ReservePlot = () => {
                     </div>
                   )}
 
-                  <div className="flex mt-5 gap-4 flex-row items-center border border-primary justify-center">
-                    <h2 className="text-gray-900 font-semibold">
-                      You still have:
-                    </h2>
-                    <p className="font-medium text-lg">
-                      {`GHS. (${calcAmount.toLocaleString()}) To Pay`}
-                    </p>
-                  </div>
+                  <p className="text-primary font-semibold my-3">
+                    You still have:
+                    <span>
+                      {`GHS. (${calcAmount.toLocaleString()}) To Pay`}{" "}
+                    </span>
+                  </p>
 
                   <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
                     <button
@@ -714,9 +710,7 @@ const ReservePlot = () => {
                         type="text"
                         disabled
                         name="plotSize"
-                        value={
-                          plot_size
-                        }
+                        value={plot_size}
                       />
                       <small className="text-red-800"></small>
                     </div>
@@ -773,7 +767,7 @@ const ReservePlot = () => {
                             lastname,
                             phone,
                             country,
-                            residentialAddress,
+                            residentialAddress
                           )
                         }
                       >

@@ -2,7 +2,7 @@ import { sendingMessage1 } from "../_constants/sms-message1";
 import { sendingMessage2 } from "../_constants/sms-message2";
 import { sendingMessage3 } from "../_constants/sms-message3";
 
-export const sendSMS = async (phone) => {
+export const sendSMS = async (phone, message1) => {
   try {
     // Send the first message
     const res1 = await fetch("/api/send-sms", {
@@ -12,7 +12,7 @@ export const sendSMS = async (phone) => {
       },
       body: JSON.stringify({
         phone: phone,
-        message: sendingMessage1,
+        message: message1,
       }),
     });
     const data1 = await res1.json();

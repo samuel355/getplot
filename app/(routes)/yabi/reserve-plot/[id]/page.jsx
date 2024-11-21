@@ -1,7 +1,5 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { jsPDF } from "jspdf";
-import "jspdf-autotable";
 
 import { Textarea } from "@/components/ui/textarea";
 import { Loader } from "lucide-react";
@@ -46,6 +44,7 @@ const EditPlot = () => {
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
   const { user } = useUser();
+  
 
   const {
     firstname,
@@ -120,13 +119,13 @@ const EditPlot = () => {
     }
     if (initialDeposit < initialDepo) {
       toast.error(
-        `Check the initial deposit. It must be at least GHS. ${initialDepo.toLocaleString()}`,
+        `Check the initial deposit. It must be at least GHS. ${initialDepo.toLocaleString()}`
       );
       return;
     }
     if (initialDeposit > plotTotalAmount) {
       toast.error(
-        `Check the initial deposit. It must not be greater than the plot amount`,
+        `Check the initial deposit. It must be greater than the plot amount`
       );
       return;
     }
@@ -203,12 +202,13 @@ const EditPlot = () => {
       residentialAddress === ""
     ) {
       setResAddressEr(true);
-      toast.error("Enter Residential Address");
+      toast.error("Enter residential address");
       return;
     } else {
       setResAddressEr(false); //
     }
 
+    console.log(plotData);
     setStep3(true);
     setStep2(false);
   };
@@ -342,7 +342,7 @@ const EditPlot = () => {
         .catch((error) => {
           console.error(
             "There was a problem with your fetch operation:",
-            error,
+            error
           );
           toast.error("Your Transaction verification was not successfull");
         });
@@ -445,7 +445,7 @@ const EditPlot = () => {
                         disabled
                         name="plotSize"
                         value={
-                          parseFloat(allDetails?.properties?.Area?.toFixed(2)) +
+                          parseFloat(allDetails?.properties?.Area).toFixed(2) +
                           " Acres "
                         }
                       />
@@ -487,8 +487,8 @@ const EditPlot = () => {
                       />
                       {initialDepositEr && (
                         <small className="text-red-900">
-                          Enter GHS. {initialDepo.toLocaleString()} which is at
-                          least 25% Which is of the plot amount
+                          Initial deposit must be at least 25% Which is GHS.{" "}
+                          {initialDepo.toLocaleString()}
                         </small>
                       )}
                     </div>
@@ -671,7 +671,7 @@ const EditPlot = () => {
                       {verifyLoading ? (
                         <Loader className="animate-spin" />
                       ) : (
-                        "Proceed"
+                        "Proceed to Payment"
                       )}
                     </button>
                   </div>
@@ -709,7 +709,7 @@ const EditPlot = () => {
                         disabled
                         name="plotSize"
                         value={
-                          parseFloat(allDetails?.properties?.Area?.toFixed(2)) +
+                          parseFloat(allDetails?.properties?.Area).toFixed(2) +
                           " Acres "
                         }
                       />
@@ -738,7 +738,6 @@ const EditPlot = () => {
 
                   <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
                     <button
-                      disabled={loader3}
                       onClick={handlePrevLast}
                       className="bg-white text-primary py-2 px-4 rounded-md shadow-md border"
                     >
@@ -752,28 +751,28 @@ const EditPlot = () => {
                     {loader3 ? (
                       <Loader className="animate-spin" />
                     ) : (
-                      // <PaystackButton {...componentProps} />
-                      <Button
-                        onClick={() =>
-                          reservePlot(
-                            allDetails,
-                            plotTotalAmount,
-                            initialDeposit,
-                            setLoader3,
-                            router,
-                            databaseName,
-                            id,
-                            email,
-                            firstname, 
-                            lastname,
-                            phone,
-                            country,
-                            residentialAddress
-                          )
-                        }
-                      >
-                        Reserve Plot
-                      </Button>
+                     // <PaystackButton {...componentProps} />
+                     <Button
+                     onClick={() =>
+                       reservePlot(
+                         allDetails,
+                         plotTotalAmount,
+                         initialDeposit,
+                         setLoader3,
+                         router,
+                         databaseName,
+                         id,
+                         email,
+                         firstname,
+                         lastname,
+                         phone,
+                         country,
+                         residentialAddress,
+                       )
+                     }
+                   >
+                     Reserve Plot
+                   </Button>
                     )}
                   </div>
                 </div>

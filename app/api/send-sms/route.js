@@ -8,7 +8,7 @@ export async function POST(req) {
 
     if (!phone || !message) {
       console.log('no phone number or message')
-      return NextResponse.json({ error: "Phone number and message are required" }, { status: 400 });
+      //return NextResponse.json({ error: "Phone number and message are required" }, { status: 400 });
     }
 
     const apiKey = process.env.ARKESEL_SMS_API;
@@ -23,7 +23,8 @@ export async function POST(req) {
 
       return NextResponse.json({message: 'SMS sent successfully'})
     }else{
-      return NextResponse.json({message: 'SMS sending error'})
+      console.log('error occured sending sms')
+      //return NextResponse.json({message: 'SMS sending error'})
     }
 
   } catch (error) {

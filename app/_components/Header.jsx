@@ -20,8 +20,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
+import { buttonVariants } from "@/components/ui/button";
 
 const Header = () => {
   const path = usePathname();
@@ -55,35 +56,57 @@ const Header = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger
-                  className={`flex border-0 items-center hover:text-primary text-base ${
-                    (path === "/nthc" && "text-primary font-extrabold") ||
-                    (path === "/dar-es-salaam" &&
-                      "text-primary font-extrabold") ||
-                    (path === "/trabuom" && "text-primary font-extrabold")
-                  }`}
-                >
-                  Our Sites
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="">
-                  <ul className="grid gap-3 p-3 py-5 md:w-[200px] lg:w-[230px] xl:w-[240px] grid-cols-1">
-                    <ListItem href="/nthc" title="NTHC">
-                      NTHC (Kwadaso)
-                    </ListItem>
-                    <ListItem href="/dar-es-salaam" title="Dar Es Salaam">
-                      Dar Es Salaam (Ejisu)
-                    </ListItem>
-                    <ListItem href="/trabuom" title="Trabuom">
-                      Trabuom
-                    </ListItem>
-                    <ListItem href="/legon-hills" title="Legon Hills">
-                      East Legon Hills
-                    </ListItem>
-                    <ListItem href="/yabi" title="Yabi">
-                      Yabi
-                    </ListItem>
-                  </ul>
-                </NavigationMenuContent>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Link
+                      href={"/"}
+                      className={`${buttonVariants({ variant: "link" })} hover:text-primary hover:bg-gray-50 py-1 px-2 rounded-md w-full`}
+                    >
+                      <span
+                        className={`text-base ${
+                          (path === "/nthc" && "text-primary font-extrabold") ||
+                          (path === "/dar-es-salaam" &&
+                            "text-primary font-extrabold") ||
+                          (path === "/trabuom" &&
+                            "text-primary font-extrabold") ||
+                          (path === "/legon-hills" &&
+                            "text-primary font-extrabold") ||
+                          (path === "/yabi" && "text-primary font-extrabold")
+                        }`}
+                      >
+                        Our Sites
+                      </span>
+                      <ChevronDown />
+                    </Link>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>
+                      <ListItem href="/nthc" title="NTHC">
+                        NTHC (Kwadaso)
+                      </ListItem>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <ListItem href="/dar-es-salaam" title="Dar Es Salaam">
+                        Dar Es Salaam (Ejisu)
+                      </ListItem>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <ListItem href="/trabuom" title="Trabuom">
+                        Trabuom
+                      </ListItem>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <ListItem href="/legon-hills" title="Legon Hills">
+                        East Legon Hills
+                      </ListItem>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <ListItem href="/yabi" title="Yabi">
+                        Yabi
+                      </ListItem>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </NavigationMenuItem>
 
               <NavigationMenuItem>

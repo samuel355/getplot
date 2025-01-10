@@ -167,6 +167,14 @@ const Map = ({ parcels, center }) => {
           </span> 
         </p>
         <hr style="margin-bottom: 5px; margin-top: 5px" />
+        <button style="display: ${
+          status === "Sold" || status === "Reserved" || status === "On Hold"
+            ? "none"
+            : "block"
+        }" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal bg-black text-white"
+        >Add to Cart</button>
+
+        
         <a style="display: ${
           status === "Sold" || status === "Reserved" || status === "On Hold"
             ? "none"
@@ -174,6 +182,7 @@ const Map = ({ parcels, center }) => {
         }"  href="${path}/buy-plot/${id}" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal">
           Buy Plot
         </a>
+        
 
         <a style="display: ${
           status === "Reserved" || status === "Sold" || status === "On Hold"

@@ -38,7 +38,7 @@ const Map = ({ parcels, center }) => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [interestPlotId, setInterestPlotId] = useState();
-  const { addPlot } = useCart();
+  const { addPlot} = useCart();
 
   let table;
   if (pathname.includes("trabuom")) {

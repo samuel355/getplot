@@ -13,7 +13,7 @@ const CartItem = ({ plot }) => {
   }
   return (
     <Card key={plot.id}>
-      <CardContent className="flex flex-col md:flex-row items-start gap-4 p-4">
+      <CardContent className="flex items-start gap-4 p-4">
         <div className="flex-1 space-y-1">
           <p className="text-sm font-medium">
             {" "}

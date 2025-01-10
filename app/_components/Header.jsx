@@ -24,6 +24,7 @@ import { ChevronDown, Menu, ShoppingCart } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { buttonVariants } from "@/components/ui/button";
 import { useCart } from "@/store/useStore";
+import CartContent from "./CartContent";
 
 const Header = () => {
   const path = usePathname();
@@ -150,7 +151,7 @@ const Header = () => {
                       {plots.length > 0 ? plots.length : ""}
                     </span>
 
-                    {/* <CartContent open={cartOpen} setOpen={setCartOpen} /> */}
+                    <CartContent open={cartOpen} setOpen={setCartOpen} />
                   </div>
                 </NavigationMenuItem>
               )}

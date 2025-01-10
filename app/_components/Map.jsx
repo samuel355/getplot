@@ -22,6 +22,7 @@ import { toast as tToast } from "sonner";
 import { Loader } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { ExpressInterestDialog } from "./express-interest-dialog";
+import { useCart } from "@/store/useStore";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -37,6 +38,7 @@ const Map = ({ parcels, center }) => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [interestPlotId, setInterestPlotId] = useState();
+  const { addPlot } = useCart();
 
   let table;
   if (pathname.includes("trabuom")) {
@@ -173,7 +175,8 @@ const Map = ({ parcels, center }) => {
           status === "Sold" || status === "Reserved" || status === "On Hold"
             ? "none"
             : "block"
-        }" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal bg-black text-white" id="add-to-cart" cart-data="${JSON.stringify(feature)}"
+        }" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal bg-black text-white" id="add-to-cart" 
+        data-cart='${encodeURIComponent(JSON.stringify(feature))}'
         >Add to Cart</button>
 
         
@@ -300,9 +303,18 @@ const Map = ({ parcels, center }) => {
     // Add to cart
     google.maps.event.addListener(infoWindow, "domready", () => {
       const Btn = document.getElementById("add-to-cart");
-      Btn.addEventListener("click", () => {
-        console.log("Add to cart");
-      });
+      if (Btn) {
+        const cartData = decodeURIComponent(Btn.getAttribute("data-cart"));
+        Btn.addEventListener("click", () => {
+          try {
+            const parsedData = JSON.parse(cartData);
+            addPlot(parsedData);
+          } catch (error) {
+            console.error("Error parsing JSON:", error);
+            toast.error("Sorry Error occured adding to cart");
+          }
+        });
+      }
     });
 
     openInfoWindow = infoWindow;

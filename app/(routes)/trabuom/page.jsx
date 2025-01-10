@@ -21,8 +21,8 @@ import { Loader } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import Header from "@/app/_components/Header";
 import { ExpressInterestDialog } from "@/app/_components/express-interest-dialog";
-import { insertFeatures } from "../../_actions/upload-plots-into-db";
-import { trabuomFeatures } from "./trabuomFeature";
+import { useCart } from "@/store/useStore";
+
 const containerStyle = {
   height: "75vh",
   width: "85%",
@@ -76,6 +76,8 @@ const Map = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [interestPlotId, setInterestPlotId] = useState();
+
+  const { addPlot, isInCart } = useCart();
 
   let table;
   if (pathname.includes("trabuom")) {
@@ -207,21 +209,38 @@ const Map = () => {
 
   //Add info Window
   var openInfoWindow = null;
-  const handleInfo = (coordinates, text1, text2, id, amount, status) => {
+  const handleInfo = (
+    coordinates,
+    text1,
+    text2,
+    id,
+    amount,
+    status,
+    polygon
+  ) => {
     const contentString = `
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
       <div class="px-6 py-4 flex flex-col">
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2}</div>
         <p style="display: ${
-            status === "On Hold" ? "block" : "none"
-          }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
+          status === "On Hold" ? "block" : "none"
+        }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
           <span style= "display: ${
             user?.publicMetadata?.role != "sysadmin" && "none"
-            }"> 
+          }"> 
             You can edit this plot and change the status  
           </span> 
         </p>
         <hr style="margin-bottom: 5px; margin-top: 5px" />
+
+          <button style="display: ${
+            status === "Sold" || status === "Reserved" || status === "On Hold"
+              ? "none"
+              : "block"
+          }" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal bg-black text-white" id="add-to-cart" 
+        data-cart='${encodeURIComponent(JSON.stringify(polygon))}'
+        >Add to Cart</button>
+        
         <a style="display: ${
           status === "Sold" || status === "Reserved" || status === "On Hold"
             ? "none"
@@ -335,6 +354,37 @@ const Map = () => {
           openInfoWindow.close();
         }
       });
+    });
+
+    // Add to cart
+    google.maps.event.addListener(infoWindow, "domready", () => {
+      const Btn = document.getElementById("add-to-cart");
+      if (Btn) {
+        const cartData = decodeURIComponent(Btn.getAttribute("data-cart"));
+        Btn.addEventListener("click", () => {
+          try {
+            const parsedData = JSON.parse(cartData);
+            if (isInCart(parsedData.id)) {
+              toast.error("Plot already in cart");
+              if (openInfoWindow) {
+                openInfoWindow.close();
+              }
+            } else {
+              addPlot(parsedData);
+              tToast.success("Plot added to cart");
+              if (openInfoWindow) {
+                openInfoWindow.close();
+              }
+            }
+          } catch (error) {
+            console.error("Error parsing JSON:", error);
+            toast.error("Sorry Error occured adding to cart");
+            if (openInfoWindow) {
+              openInfoWindow.close();
+            }
+          }
+        });
+      }
     });
 
     openInfoWindow = infoWindow;
@@ -605,7 +655,8 @@ const Map = () => {
                       polygon.properties?.Street_Nam,
                       polygon.id,
                       polygon.plotTotalAmount,
-                      polygon.status
+                      polygon.status,
+                      polygon
                     )
                   }
                 />

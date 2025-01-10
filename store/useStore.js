@@ -38,6 +38,14 @@ export const useCart = create(
         const { plots } = get();
         return plots.some((plot) => plot.id === id);
       },
+
+      getTotal: () => {
+        const { plots } = get();
+        return plots.reduce(
+          (total, item) => total + item.plotTotalAmount * item.quantity,
+          0,
+        );
+      },
     }),
 
     { name: "plots" }

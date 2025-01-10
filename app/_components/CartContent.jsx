@@ -9,7 +9,7 @@ import CartItem from "./CartItem";
 import Link from "next/link";
 
 const CartContent = ({ open, setOpen }) => {
-  const { plots } = useCart();
+  const { plots, clearCart } = useCart();
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -34,7 +34,7 @@ const CartContent = ({ open, setOpen }) => {
             <div className="flex justify-between items-center p-2 border-t border-gray-200">
               <small
                 onClick={() => {
-                  // clearCart();
+                  clearCart();
                   setOpen(false);
                 }}
                 className="cursor-pointer"

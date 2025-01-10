@@ -26,11 +26,18 @@ export const useCart = create(
         });
       },
 
-      removePlot: (id) => 
+      removePlot: (id) =>
         set((state) => ({
           ...state,
           plots: state.plots.filter((plot) => plot.id !== id),
         })),
+
+      clearCart: () => set((state) => ({ ...state, plots: [] })),
+
+      isInCart: (id) => {
+        const { plots } = get();
+        return plots.some((plot) => plot.id === id);
+      },
     }),
 
     { name: "plots" }

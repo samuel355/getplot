@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import ListItem from "./ListItem";
 import {
   DropdownMenu,
@@ -20,14 +20,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Menu } from "lucide-react";
+import { ChevronDown, Menu, ShoppingCart } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { buttonVariants } from "@/components/ui/button";
+import { useCart } from "@/store/useStore";
 
 const Header = () => {
   const path = usePathname();
   const router = useRouter();
   const { user, isSignedIn } = useUser();
+
+  const [cartOpen, setCartOpen] = useState(false);
+  const { plots } = useCart();
+
   return (
     <header className="fixed top-0 w-full bg-white shadow-sm z-20">
       {/* Flex container to handle layout */}
@@ -60,7 +65,9 @@ const Header = () => {
                   <DropdownMenuTrigger>
                     <Link
                       href={"/"}
-                      className={`${buttonVariants({ variant: "link" })} hover:text-primary hover:bg-gray-50 py-1 px-2 rounded-md w-full`}
+                      className={`${buttonVariants({
+                        variant: "link",
+                      })} hover:text-primary hover:bg-gray-50 py-1 px-2 rounded-md w-full`}
                     >
                       <span
                         className={`text-base ${
@@ -127,6 +134,24 @@ const Header = () => {
                   <ListItem href={"/dashboard"} title={"Dashboard"}>
                     Dashboard
                   </ListItem>
+                </NavigationMenuItem>
+              )}
+
+              {plots.length > 0 && (
+                <NavigationMenuItem>
+                  <div className="relative">
+                    <button
+                      onClick={() => setCartOpen(!cartOpen)}
+                      className="p-2 text-gray-800 bg-gray-200 rounded-full"
+                    >
+                      <ShoppingCart size={16} />
+                    </button>
+                    <span className="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full transform translate-x-1/2 -translate-y-1/2">
+                      {plots.length > 0 ? plots.length : ""}
+                    </span>
+
+                    {/* <CartContent open={cartOpen} setOpen={setCartOpen} /> */}
+                  </div>
                 </NavigationMenuItem>
               )}
             </NavigationMenuList>

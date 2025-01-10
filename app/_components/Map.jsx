@@ -152,7 +152,7 @@ const Map = ({ parcels, center }) => {
 
   //Add info Window
   var openInfoWindow = null;
-  const handleInfo = (coordinates, text1, text2, id, amount, status) => {
+  const handleInfo = (coordinates, text1, text2, id, amount, status, feature) => {
     const contentString = `
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
       <div class="px-6 py-4 flex flex-col">
@@ -167,11 +167,13 @@ const Map = ({ parcels, center }) => {
           </span> 
         </p>
         <hr style="margin-bottom: 5px; margin-top: 5px" />
+
+
         <button style="display: ${
           status === "Sold" || status === "Reserved" || status === "On Hold"
             ? "none"
             : "block"
-        }" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal bg-black text-white"
+        }" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal bg-black text-white" id="add-to-cart" cart-data="${JSON.stringify(feature)}"
         >Add to Cart</button>
 
         
@@ -182,7 +184,7 @@ const Map = ({ parcels, center }) => {
         }"  href="${path}/buy-plot/${id}" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal">
           Buy Plot
         </a>
-        
+
 
         <a style="display: ${
           status === "Reserved" || status === "Sold" || status === "On Hold"
@@ -292,6 +294,14 @@ const Map = ({ parcels, center }) => {
         if (openInfoWindow) {
           openInfoWindow.close();
         }
+      });
+    });
+
+    // Add to cart
+    google.maps.event.addListener(infoWindow, "domready", () => {
+      const Btn = document.getElementById("add-to-cart");
+      Btn.addEventListener("click", () => {
+        console.log("Add to cart");
       });
     });
 
@@ -548,6 +558,7 @@ const Map = ({ parcels, center }) => {
                   feature.id,
                   feature.plotTotalAmount,
                   feature.status,
+                  feature
                 )
               }
             />

@@ -38,7 +38,7 @@ const Map = ({ parcels, center }) => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [interestPlotId, setInterestPlotId] = useState();
-  const { addPlot} = useCart();
+  const { addPlot, isInCart} = useCart();
 
   let table;
   if (pathname.includes("trabuom")) {
@@ -308,10 +308,24 @@ const Map = ({ parcels, center }) => {
         Btn.addEventListener("click", () => {
           try {
             const parsedData = JSON.parse(cartData);
-            addPlot(parsedData);
+            if (isInCart(parsedData.id)) {
+              toast.error("Plot already in cart");
+              if (openInfoWindow) {
+                openInfoWindow.close();
+              }  
+            } else {
+              addPlot(parsedData);
+              tToast.success("Plot added to cart");
+              if (openInfoWindow) {
+                openInfoWindow.close();
+              }          
+            }
           } catch (error) {
             console.error("Error parsing JSON:", error);
             toast.error("Sorry Error occured adding to cart");
+            if (openInfoWindow) {
+              openInfoWindow.close();
+            }
           }
         });
       }

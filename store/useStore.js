@@ -26,18 +26,13 @@ export const useCart = create(
         });
       },
 
-      removePlot: (item) => {
-        set((state) => {
-          const existingPlot = state.plots.find((plot) => plot.id === item.id);
-          if (existingPlot) {
-            return {
-              ...state,
-              plots: state.plots.filter((plot) => plot.id !== item.id),
-            };
-          }
-        });
-      },
+      removePlot: (id) => 
+        set((state) => ({
+          ...state,
+          plots: state.plots.filter((plot) => plot.id !== id),
+        })),
     }),
+
     { name: "plots" }
   )
 );

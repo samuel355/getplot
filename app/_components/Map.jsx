@@ -26,7 +26,7 @@ import { useCart } from "@/store/useStore";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-const Map = ({ parcels, center }) => {
+const Map = ({ parcels, center, setCartOpen }) => {
   const pathname = usePathname();
   const [map, setMap] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -169,7 +169,6 @@ const Map = ({ parcels, center }) => {
           </span> 
         </p>
         <hr style="margin-bottom: 5px; margin-top: 5px" />
-
 
         <button style="display: ${
           status === "Sold" || status === "Reserved" || status === "On Hold"
@@ -318,7 +317,7 @@ const Map = ({ parcels, center }) => {
               tToast.success("Plot added to cart");
               if (openInfoWindow) {
                 openInfoWindow.close();
-              }          
+              }
             }
           } catch (error) {
             console.error("Error parsing JSON:", error);

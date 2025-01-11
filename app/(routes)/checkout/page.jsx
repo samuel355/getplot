@@ -12,7 +12,7 @@ import React from "react";
 const Checkout = () => {
   const { plots, getTotal } = useCart();
   const total = getTotal();
-  console.log(plots)
+
   return (
     <>
       <Header />

@@ -363,7 +363,8 @@ const Map = () => {
         const cartData = decodeURIComponent(Btn.getAttribute("data-cart"));
         Btn.addEventListener("click", () => {
           try {
-            const parsedData = JSON.parse(cartData);
+            let parsedData = JSON.parse(cartData);
+            parsedData = {...parsedData, location: 'Trabuom-Kumasi'}
             if (isInCart(parsedData.id)) {
               toast.error("Plot already in cart");
               if (openInfoWindow) {

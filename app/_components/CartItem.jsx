@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/store/useStore";
 import { Trash2 } from "lucide-react";
 import React from "react";
@@ -23,6 +24,8 @@ const CartItem = ({ plot }) => {
           <p className="font-semibold mt-1">
             GHS {plot.plotTotalAmount.toLocaleString()}
           </p>
+          
+          <p>At {plot.location} </p>
         </div>
         <div className="flex flex-col justify-between gap-8">
           <div className="flex items-center gap-4">

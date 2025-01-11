@@ -41,20 +41,26 @@ const Map = ({ parcels, center, setCartOpen }) => {
   const { addPlot, isInCart} = useCart();
 
   let table;
+  let location;
   if (pathname.includes("trabuom")) {
     table = "trabuom";
+    location = 'Kumasi Trabuom'
   }
   if (pathname.includes("nthc")) {
     table = "nthc";
+    location = 'Kwadaso NTHC - Kumasi'
   }
   if (pathname.includes("legon-hills")) {
     table = "legon-hills";
+    location = "Santuo Accra"
   }
   if (pathname.includes("dar-es-salaam")) {
     table = "dar-es-salaam";
+    location = "Ejisu - Dar Es Salaam"
   }
   if (pathname.includes("yabi")) {
     table = "yabi";
+    location = "Yabi Kumasi"
   }
 
   const mapContainerStyle = {
@@ -306,7 +312,8 @@ const Map = ({ parcels, center, setCartOpen }) => {
         const cartData = decodeURIComponent(Btn.getAttribute("data-cart"));
         Btn.addEventListener("click", () => {
           try {
-            const parsedData = JSON.parse(cartData);
+            let parsedData = JSON.parse(cartData);
+            parsedData = {...parsedData, location}
             if (isInCart(parsedData.id)) {
               toast.error("Plot already in cart");
               if (openInfoWindow) {

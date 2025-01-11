@@ -3,15 +3,16 @@ import CartItem from "@/app/_components/CartItem";
 import Header from "@/app/_components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/store/useStore";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const Checkout = () => {
   const { plots, getTotal } = useCart();
   const total = getTotal();
+  const router = useRouter()
 
   return (
     <>
@@ -59,8 +60,8 @@ const Checkout = () => {
                         <span>Total</span>
                         <span>GHS {total.toLocaleString()}</span>
                       </div>
-                      <Button className="w-full" size="lg">
-                        Proceed to payment
+                      <Button onClick={() => router.push('/buy-plot')} className="w-full" size="lg">
+                        Proceed to Payment
                       </Button>
                     </div>
                   </CardContent>

@@ -7,6 +7,8 @@ import { useCart } from "@/store/useStore";
 import { Loader } from "lucide-react";
 import OptGroup from "@/app/(dashboard)/dashboard/_components/OptGroup";
 import { Input } from "@/components/ui/input";
+import { toast } from "react-toastify";
+import { BuyPlotCheckout } from "@/app/_actions/buy-plots-checkout";
 
 const plotInfo = {
   firstname: "",
@@ -14,15 +16,7 @@ const plotInfo = {
   email: "",
   residentialAddress: "",
   country: "",
-  phone: "",
-  plotDetails: "",
-  agent: "",
-  plotTotalAmount: 0,
-  paidAmount: 0,
-  remainingAmount: 0,
-  remarks: "",
-  plotStatus: "",
-  status: "",
+  phone: ""
 };
 
 const BuyPlot = () => {
@@ -42,19 +36,9 @@ const BuyPlot = () => {
     country,
     phone,
     residentialAddress,
-    agent,
-    plotTotalAmount,
-    paidAmount,
-    remainingAmount,
-    remarks,
-    status,
-    plotStatus,
   } = plotData;
 
     // Errors Checks
-    const [statusEr, setStatusEr] = useState(false);
-    const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
-    const [paidAmtEr, setPaidAmtEr] = useState(false);
     const [fnameEr, setFnameEr] = useState(false);
     const [lnameEr, setLnameEr] = useState(false);
     const [emailEr, setEmailEr] = useState(false);
@@ -87,6 +71,70 @@ const BuyPlot = () => {
     }
   };
 
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+
+    if (firstname === null || firstname === undefined || firstname === "") {
+      setFnameEr(true);
+      toast.error("Enter first name");
+      return;
+    } else {
+      setFnameEr(false); //
+    }
+
+    if (lastname === null || lastname === undefined || lastname === "") {
+      setLnameEr(true);
+      toast.error("Enter last name");
+      return;
+    } else {
+      setLnameEr(false); //
+    }
+
+    if (email === null || email === undefined || email === "") {
+      setEmailEr(true);
+      toast.error("Enter Email");
+      return;
+    } else {
+      setEmailEr(false); //
+    }
+    if (
+      country === null ||
+      country === undefined ||
+      country === "" ||
+      country === "Select Country"
+    ) {
+      setCountryEr(true);
+      toast.error("Choose Country");
+      return;
+    } else {
+      setCountryEr(false); //
+    }
+
+    if (phone === null || phone === undefined || phone === "") {
+      setPhoneEr(true);
+      toast.error("Enter phone number");
+      return;
+    } else if (phone.length !== 10) {
+      setPhoneEr(false);
+      toast.error("Phone number must be 10");
+      return;
+    } else {
+      setPhoneEr(false); //
+    }
+    if (
+      residentialAddress === null ||
+      residentialAddress === undefined ||
+      residentialAddress === ""
+    ) {
+      setResAddressEr(true);
+      toast.error("Enter residential address");
+      return;
+    } else {
+      setResAddressEr(false); //
+    }
+    BuyPlotCheckout(plots, plotData, setVerifyLoading)
+  }
+
   return (
     <>
       <Header />
@@ -94,22 +142,22 @@ const BuyPlot = () => {
         <h2 className="font-bold text-2xl text-center mb-5">Plot Details</h2>
 
         <div className="shadow-md border rounded-sm mt-8">
-          <form>
+          <form onSubmit={handleFormSubmit}>
             {/* STEP 1 */}
             {step1 && (
               <div className="px-6 py-4 ">
                 <h4 className="my-8 font-semibold text-xl text-center underline">
-                  Plot Details Information
+                  Plot{plots.length>1? 's': ''} Details
                 </h4>
                 <DataTable columns={columns} data={plots} />
-                <div className="flex items-center gap-8 mt-2">
-                  <p className="font-bold text-xl">Total:</p>
+                <div className="flex items-center gap-8 mt-4">
+                  <p className="font-bold text-xl">TOTAL:</p>
                   <p className="font-bold text-xl">
                     GHS. {total.toLocaleString()}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-1 pb-6">
                   <button
                     onClick={handleStep1}
                     className="bg-primary text-white py-2 px-4 rounded-md shadow-md"

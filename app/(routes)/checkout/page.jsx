@@ -13,7 +13,7 @@ const Checkout = () => {
   const { plots, getTotal } = useCart();
   const total = getTotal();
   const router = useRouter()
-console.log(plots)
+
   return (
     <>
       <Header />

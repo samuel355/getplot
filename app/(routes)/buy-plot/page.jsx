@@ -30,6 +30,7 @@ const BuyPlot = () => {
   const { plots, getTotal } = useCart();
   const total = getTotal();
   const router = useRouter();
+  console.log(plots[4])
 
   useEffect(() => {
     if(plots.length <= 0){
@@ -136,7 +137,7 @@ const BuyPlot = () => {
     }
     if (plots.length > 0) {
       setVerifyLoading(true);
-      BuyPlotCheckout(plots, plotData, setVerifyLoading);
+      BuyPlotCheckout(plots, plotData, total, setVerifyLoading);
     } else {
       toast.error("You have not selected any plot to buy");
       router.replace("/");

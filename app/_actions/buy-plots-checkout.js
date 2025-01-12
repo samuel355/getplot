@@ -113,7 +113,7 @@ export const BuyPlotCheckout = async (
     });
 
     const finalText =
-      "For us to reserve the chosen plot for you, kindly make the minimum payment to the account above, either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 24 883 8005";
+      "To claim ownership of the chosen plots, kindly make payment to the account provided above, either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 24 883 8005";
     const finalTextY = doc.autoTable.previous.finalY + 15;
     doc.setFontSize(10);
     // Use doc.textWithMeasurement to handle text wrapping

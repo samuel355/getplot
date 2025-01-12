@@ -42,25 +42,31 @@ const Map = ({ parcels, center, setCartOpen }) => {
 
   let table;
   let location;
+  let table_name;
   if (pathname.includes("trabuom")) {
     table = "trabuom";
+    table_name = 'trabuom'
     location = 'Kumasi Trabuom'
   }
   if (pathname.includes("nthc")) {
     table = "nthc";
+    table_name='nthc'
     location = 'Kwadaso NTHC - Kumasi'
   }
   if (pathname.includes("legon-hills")) {
     table = "legon-hills";
     location = "Santuo Accra"
+    table_name="legon_hills"
   }
   if (pathname.includes("dar-es-salaam")) {
     table = "dar-es-salaam";
     location = "Ejisu - Dar Es Salaam"
+    table_name="dar_es_salaam"
   }
   if (pathname.includes("yabi")) {
     table = "yabi";
     location = "Yabi Kumasi"
+    table_name="yabi"
   }
 
   const mapContainerStyle = {
@@ -313,7 +319,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
         Btn.addEventListener("click", () => {
           try {
             let parsedData = JSON.parse(cartData);
-            parsedData = {...parsedData, location}
+            parsedData = {...parsedData, location, table_name}
             if (isInCart(parsedData.id)) {
               toast.error("Plot already in cart");
               if (openInfoWindow) {

@@ -364,7 +364,7 @@ const Map = () => {
         Btn.addEventListener("click", () => {
           try {
             let parsedData = JSON.parse(cartData);
-            parsedData = {...parsedData, location: 'Trabuom-Kumasi'}
+            parsedData = {...parsedData, location: 'Trabuom-Kumasi', table_name:'trabuom'}
             if (isInCart(parsedData.id)) {
               toast.error("Plot already in cart");
               if (openInfoWindow) {

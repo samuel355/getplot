@@ -1,6 +1,6 @@
 "use client";
 import Header from "@/app/_components/Header";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataTable } from "./datatable";
 import { columns } from "./columns";
 import { useCart } from "@/store/useStore";
@@ -9,6 +9,7 @@ import OptGroup from "@/app/(dashboard)/dashboard/_components/OptGroup";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import { BuyPlotCheckout } from "@/app/_actions/buy-plots-checkout";
+import { useRouter } from "next/navigation";
 
 const plotInfo = {
   firstname: "",
@@ -16,7 +17,7 @@ const plotInfo = {
   email: "",
   residentialAddress: "",
   country: "",
-  phone: ""
+  phone: "",
 };
 
 const BuyPlot = () => {
@@ -28,23 +29,24 @@ const BuyPlot = () => {
   const [plotData, setPlotData] = useState(plotInfo);
   const { plots, getTotal } = useCart();
   const total = getTotal();
+  const router = useRouter();
 
-  const {
-    firstname,
-    lastname,
-    email,
-    country,
-    phone,
-    residentialAddress,
-  } = plotData;
+  useEffect(() => {
+    if(plots.length <= 0){
+      router.replace('/checkout')
+    }
+  }, [plots])
 
-    // Errors Checks
-    const [fnameEr, setFnameEr] = useState(false);
-    const [lnameEr, setLnameEr] = useState(false);
-    const [emailEr, setEmailEr] = useState(false);
-    const [countryEr, setCountryEr] = useState(false);
-    const [phoneEr, setPhoneEr] = useState(false);
-    const [resAddressEr, setResAddressEr] = useState(false);
+  const { firstname, lastname, email, country, phone, residentialAddress } =
+    plotData;
+
+  // Errors Checks
+  const [fnameEr, setFnameEr] = useState(false);
+  const [lnameEr, setLnameEr] = useState(false);
+  const [emailEr, setEmailEr] = useState(false);
+  const [countryEr, setCountryEr] = useState(false);
+  const [phoneEr, setPhoneEr] = useState(false);
+  const [resAddressEr, setResAddressEr] = useState(false);
 
   const handleStep1 = () => {
     setStep2(true);
@@ -132,8 +134,14 @@ const BuyPlot = () => {
     } else {
       setResAddressEr(false); //
     }
-    BuyPlotCheckout(plots, plotData, setVerifyLoading)
-  }
+    if (plots.length > 0) {
+      setVerifyLoading(true);
+      BuyPlotCheckout(plots, plotData, setVerifyLoading);
+    } else {
+      toast.error("You have not selected any plot to buy");
+      router.replace("/");
+    }
+  };
 
   return (
     <>
@@ -147,7 +155,7 @@ const BuyPlot = () => {
             {step1 && (
               <div className="px-6 py-4 ">
                 <h4 className="my-8 font-semibold text-xl text-center underline">
-                  Plot{plots.length>1? 's': ''} Details
+                  Plot{plots.length > 1 ? "s" : ""} Details
                 </h4>
                 <DataTable columns={columns} data={plots} />
                 <div className="flex items-center gap-8 mt-4">

@@ -3,6 +3,7 @@ import Header from "@/app/_components/Header";
 import React, { useState } from "react";
 import { DataTable } from "./datatable";
 import { columns } from "./columns";
+import { useCart } from "@/store/useStore";
 
 const data = [
   {
@@ -22,6 +23,8 @@ const data = [
 
 const BuyPlot = () => {
   const [step1, setStep1] = useState(true);
+  const {plots, getTotal} = useCart()
+  const total = getTotal();
   return (
     <>
       <Header />
@@ -36,7 +39,11 @@ const BuyPlot = () => {
                 <h4 className="my-8 font-semibold text-xl text-center underline">
                   Plot Details Information
                 </h4>
-                <DataTable columns={columns} data={data} />
+                <DataTable columns={columns} data={plots} />
+                <div className="flex items-center gap-8 mt-2">
+                  <p className="font-bold text-xl">Total:</p>
+                  <p className="font-bold text-xl">GHS. {total.toLocaleString()}</p>
+                </div>
               </div>
             )}
           </form>

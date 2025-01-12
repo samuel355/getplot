@@ -1,6 +1,8 @@
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import { toast } from "react-toastify";
+import { cedisAccount } from "./cedis-account";
+import { dollarAccount } from "./dollar-account";
 
 export const BuyPlotCheckout = async (
   plots,
@@ -36,9 +38,9 @@ export const BuyPlotCheckout = async (
     const plotRows = plots.map((plot) => ({
       Plot_No: plot.properties.Plot_No,
       Street_Nam: plot.properties.Street_Nam,
-      Area: plot.properties.Area 
-      ? parseFloat(plot.properties.Area).toFixed(2)
-      : (plot.properties.SHAPE_Area * 3109111.525693).toFixed(3),
+      Area: plot.properties.Area
+        ? parseFloat(plot.properties.Area).toFixed(2)
+        : (plot.properties.SHAPE_Area * 3109111.525693).toFixed(3),
       location: plot.location,
       plotTotalAmount: plot.plotTotalAmount.toLocaleString(),
     }));
@@ -57,19 +59,71 @@ export const BuyPlotCheckout = async (
     const totalY = doc.autoTable.previous.finalY + 10;
     doc.text(`Total Amount: GHS ${total.toLocaleString()}`, 14, totalY);
 
-    // Add Plot Details Heading (with underline)
-    // doc.setFontSize(16);
-    // doc.setFont("helvetica", "bold");
-    // const plotHeadingY = doc.autoTable.previous.finalY - 25;
-    // const plotHeadingX = 10;
-    // doc.text("Plot Details", plotHeadingX, plotHeadingY);
-    // doc.setLineWidth(0.5);
-    // doc.line(
-    //   plotHeadingX,
-    //   plotHeadingY + 2,
-    //   plotHeadingX + doc.getTextWidth("Plot Details"),
-    //   plotHeadingY + 2
-    // );
+    // Add Cedis Account Heading (with underline)
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    const cedisHeadingY = doc.autoTable.previous.finalY + 25;
+    const cedisHeadingX = 10;
+    doc.text("Cedis Account Details", cedisHeadingX, cedisHeadingY);
+    doc.setLineWidth(0.5);
+    doc.line(
+      cedisHeadingX,
+      cedisHeadingY + 2,
+      cedisHeadingX + doc.getTextWidth("Cedis Account Details"),
+      cedisHeadingY + 2
+    );
+
+    // --- Account Details Tables ---
+    const accountColumns = [
+      { header: "Title", dataKey: "title" },
+      { header: "Bank Name", dataKey: "Bank_Name" },
+      { header: "Account Name", dataKey: "Account_Name" },
+      { header: "Account Number", dataKey: "Account_Number" },
+      { header: "Branch Name", dataKey: "Branch_Name" },
+    ];
+
+    // Add Cedis Account Table
+    const cedisStartY = doc.autoTable.previous.finalY + 35; // Increased spacing
+    doc.autoTable({
+      columns: accountColumns,
+      body: cedisAccount,
+      startY: cedisStartY,
+    });
+
+    // Add Dollar Account Heading (with underline)
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    const dollarHeadingY = doc.autoTable.previous.finalY + 15;
+    const dollarHeadingX = 10;
+    doc.text("Dollar Account Details", dollarHeadingX, dollarHeadingY);
+    doc.setLineWidth(0.5);
+    doc.line(
+      dollarHeadingX,
+      dollarHeadingY + 2,
+      dollarHeadingX + doc.getTextWidth("Dollar Account Details"),
+      dollarHeadingY + 2
+    );
+
+    // Add Dollar Account Table
+    const dollarStartY = doc.autoTable.previous.finalY + 25 // Increased spacing
+    doc.autoTable({
+      columns: accountColumns,
+      body: dollarAccount,
+      startY: dollarStartY,
+    });
+
+    const finalText =
+      "For us to reserve the chosen plot for you, kindly make the minimum payment to the account above, either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 24 883 8005";
+    const finalTextY = doc.autoTable.previous.finalY + 15;
+    doc.setFontSize(10);
+    // Use doc.textWithMeasurement to handle text wrapping
+    const maxWidth = doc.internal.pageSize.getWidth() - 20; // Allow 10px margin on each side
+    const textLines = doc.splitTextToSize(finalText, maxWidth);
+    let currentY = finalTextY;
+    textLines.forEach((line) => {
+      doc.text(line, 10, currentY);
+      currentY += 5; // Adjust vertical spacing between lines
+    });
 
     doc.save("plot_details.pdf");
     setVerifyLoading(false);

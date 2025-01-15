@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { cedisAccount } from "./cedis-account";
 import { dollarAccount } from "./dollar-account";
 import { supabase } from "@/utils/supabase/client";
+import { sendSMS } from "./send-sms";
 
 export const BuyPlotCheckout = async (
   plots,
@@ -193,9 +194,10 @@ export const BuyPlotCheckout = async (
 
     router.push(`/message?redirect=${'trabuom'}`);
 
-    //send sms
+    const message1 = `To claim ownership of the chosen plot, kindly make the payment to either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 24 883 8005 or check your email for more info`
+    //send SMS
+    sendSMS(phone, message1);
 
-    console.log("Successfully updated all plots");
     setVerifyLoading(false);
     return { success: true };
   } catch (error) {

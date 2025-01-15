@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plot & Transaction Details</title>
+  <style>
+    body {
+      font-family: 'outfit', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      text-align: left;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: #0056b3;
+      /* Brand blue */
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 16px;
+      color: #555;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    .section-title {
+      color: #0056b3;
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background-color: #0056b3;
+      color: #fff;
+      padding: 12px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 15px 0;
+      font-size: 14px;
+      color: #777;
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 500px) {
+      .container {
+        max-width: 95%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div style="border-bottom: 1px solid gray;">
+      <img src="https://getplots.landandhomesconsult.com/logo-lateral.svg" alt="LHC logo"
+        style="width: 150px; height: 150px; object-fit: contain;">
+    </div>
+    <div class="header">
+      <h1>Plot Payment Instructions</h1>
+      <h4>Dear <%= firstname %>
+          <%= lastname %>, </h4>
+    </div>
+
+    <p>Thank you for your interest in purchasing a plot with us. Here are the plot details and next steps to own the
+      chosen plot.</p>
+
+    <div style="margin-top: 2rem;">
+      <h2 class="section-title">Plot Details</h2>
+      <% plotDetails.forEach(function(plot) { %>
+        <table>
+          <tr>
+            <th> Plot No:</th>
+            <td><%= plot.plotNo %></td>
+          </tr>
+          <tr>
+            <th> Street Name:</th>
+            <td><%= plot.streetName %></td>
+          </tr>
+          <tr>
+            <th> Area Size:</th>
+            <td><%= plot.area %></td>
+          </tr>
+          <tr>
+            <th> Location:</th>
+            <td><%= plot.location %></td>
+          </tr>
+          <tr>
+            <th> Amount:</th>
+            <td><%= plot.amount.toLocaleString()  %></td>
+          </tr>
+        </table>
+      <% }); %>
+
+      <h2>Total Plots Amount: <span> <%= total_amount.toLocaleString()  %> </span></h2>
+    </div>
+
+    <div style="margin-top: 2rem ;">
+      <p>To secure the plot ownership, kindly make payment to the account below, either the dollar account or the cedis
+        account and present your receipt in our office at Kumasi Dichemso or send your receipt to <a
+          href="mailto:client@getoneplot.com">client@getoneplot.com</a></p>
+      <p>For more information call: Call 0322008282/+233 24 883 8005</p>
+    </div>
+
+    <div style="margin-top: 2rem ;">
+      <h2 class="section-title">CEDIS (GHS) ACCOUNT</h2>
+      <table>
+        <tr>
+          <th>BANK NAME</th>
+          <td>STANBIC BANK</td>
+        </tr>
+        <tr>
+          <th>ACCOUNT NAME</th>
+          <td>LAND AND HOMES CONSULT</td>
+        </tr>
+        <tr>
+          <th>ACCOUNT NUMBER</th>
+          <td> 9040009771047</td>
+        </tr>
+        <tr>
+          <th>BRANCH</th>
+          <td>KNUST, KUMASI GHANA</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="margin-top: 2rem ;">
+      <h2 class="section-title">INTERNATIONAL (DOLLAR) ACCOUNT </h2>
+      <table>
+        <tr>
+          <th>BANK NAME</th>
+          <td>STANBIC BANK</td>
+        </tr>
+        <tr>
+          <th>ACCOUNT NAME</th>
+          <td>LAND AND HOMES CONSULT</td>
+        </tr>
+        <tr>
+          <th>ACCOUNT NUMBER</th>
+          <td> 9040011449268</td>
+        </tr>
+        <tr>
+          <th>BRANCH</th>
+          <td>KNUST, KUMASI GHANA</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="footer">
+      GetOnePlot. All rights reserved.
+    </div>
+  </div>
+</body>
+
+</html>

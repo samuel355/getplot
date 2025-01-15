@@ -3,12 +3,14 @@ import "jspdf-autotable";
 import { toast } from "react-toastify";
 import { cedisAccount } from "./cedis-account";
 import { dollarAccount } from "./dollar-account";
+import { supabase } from "@/utils/supabase/client";
 
 export const BuyPlotCheckout = async (
   plots,
   plotData,
   total,
-  setVerifyLoading
+  setVerifyLoading,
+  router
 ) => {
   try {
     setVerifyLoading(true);
@@ -105,7 +107,7 @@ export const BuyPlotCheckout = async (
     );
 
     // Add Dollar Account Table
-    const dollarStartY = doc.autoTable.previous.finalY + 25 // Increased spacing
+    const dollarStartY = doc.autoTable.previous.finalY + 25; // Increased spacing
     doc.autoTable({
       columns: accountColumns,
       body: dollarAccount,
@@ -125,8 +127,77 @@ export const BuyPlotCheckout = async (
       currentY += 5; // Adjust vertical spacing between lines
     });
 
-    doc.save("plot_details.pdf");
+    //doc.save("plot_details.pdf");
+
+    //Update plot status
+    const updates = plots.map((plot) =>
+      supabase
+        .from(plot.table_name)
+        .update({
+          status: "On Hold",
+          firstname: plotData.firstname,
+          lastname: plotData.lastname,
+          email: plotData.email,
+          phone: plotData.phone,
+          country: plotData.country,
+          residentialAddress: plotData.residentialAddress,
+        })
+        .eq("id", plot.id)
+    );
+
+    const results = await Promise.all(updates);
+
+    // Check for any errors
+    const errors = results.filter((result) => result.error);
+    if (errors.length > 0) {
+      console.log("Errors updating plots:", errors);
+      toast.error("Sorry Error occured, Try again later");
+      return { success: false, errors };
+    }
+
+    //send emaill
+    const pdfBlob = doc.output("blob"); // Get PDF as a Blob
+
+    const formData = new FormData();
+    formData.append("pdf", pdfBlob, "plot_details.pdf"); // Append PDF
+    formData.append("to", plotData.email);
+    formData.append("firstname", plotData.firstname);
+    formData.append("lastname", plotData.lastname);
+    formData.append("total_amount", total);
+
+    // Convert plots array to string
+    const plotDetails = plots.map((plot) => ({
+      plotNo: plot.properties.Plot_No,
+      streetName: plot.properties.Street_Nam,
+      area: plot.properties.Area
+        ? parseFloat(plot.properties.Area).toFixed(2)
+        : (plot.properties.SHAPE_Area * 3109111.525693).toFixed(3),
+      location: plot.location,
+      amount: plot.plotTotalAmount,
+    }));
+
+    formData.append("plotDetails", JSON.stringify(plotDetails));
+    formData.append("amount", total);
+
+    const res = await fetch("/api/checkout-plot", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      setVerifyLoading(false);
+      console.error("Error sending email:", await res.text());
+      toast.error("Sorry something went wrong. Try again later");
+      return { success: false };
+    }
+
+    router.push(`/message?redirect=${'trabuom'}`);
+
+    //send sms
+
+    console.log("Successfully updated all plots");
     setVerifyLoading(false);
+    return { success: true };
   } catch (error) {
     console.log(error);
     toast.error("Sorry error occured. Try again later");

@@ -1,4 +1,5 @@
 "use client";
+import { useCart } from "@/store/useStore";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
@@ -8,12 +9,14 @@ const SuccessPage = () => {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
   const router = useRouter();
+  const { plots, getTotal,clearCart } = useCart();
 
   useEffect(() => {
     if (redirect === "" || redirect === null || redirect === undefined) {
       router.push("/");
     }else{
       setLoading(false)
+      clearCart();
     }
   }, [redirect]);
 

@@ -9,7 +9,7 @@ const SuccessPage = () => {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
   const router = useRouter();
-  const { plots, getTotal,clearCart } = useCart();
+  const {clearCart } = useCart();
 
   useEffect(() => {
     if (redirect === "" || redirect === null || redirect === undefined) {

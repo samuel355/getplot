@@ -99,7 +99,7 @@ const EditPlot = () => {
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.push("/dar-es-salaam");
+      router.replace("/dar-es-salaam");
     }
   };
 
@@ -328,7 +328,7 @@ const EditPlot = () => {
       toast.success("Plot  updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        window.location.href='/dar-es-salaam';
+        router.replace('dar-es-salaam');
       }, 1100);
     }
     if (error) {

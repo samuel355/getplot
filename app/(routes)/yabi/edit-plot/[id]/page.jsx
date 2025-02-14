@@ -99,7 +99,7 @@ const EditPlot = () => {
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.push("/yabi");
+      router.replace("/yabi");
     }
   };
 

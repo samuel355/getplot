@@ -98,7 +98,7 @@ const EditPlot = () => {
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.push("/trabuom");
+      router.replace("/trabuom");
     }
   };
 

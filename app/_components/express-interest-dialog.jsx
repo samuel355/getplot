@@ -33,6 +33,7 @@ export function ExpressInterestDialog({
   setIsDialogOpen,
   table,
 }) {
+
   const [loader2, setLoader2] = useState(false);
   const [customerData, setCustomerData] = useState(customerInfo);
   const [allDetails, setAllDetails] = useState();
@@ -67,6 +68,10 @@ export function ExpressInterestDialog({
   if (table && table === "legon-hills") {
     databaseName = "legon_hills";
     databaseInterest = "legon_hills_interests";
+  }
+  if (table && table === "yabi") {
+    databaseName = "yabi";
+    databaseInterest = "yabi_interests";
   }
 
   useEffect(() => {

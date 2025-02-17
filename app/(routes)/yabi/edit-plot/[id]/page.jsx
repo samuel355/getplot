@@ -260,7 +260,7 @@ const EditPlot = () => {
       toast.success("Plot details updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        window.location.reload();
+        router.replace('/yabi');
       }, 1500);
     }
     if (error) {

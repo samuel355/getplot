@@ -218,10 +218,12 @@ const Map = () => {
     status,
     polygon
   ) => {
+    let plot_size = polygon?.properties?.Area.toFixed(2);
     const contentString = `
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
       <div class="px-6 py-4 flex flex-col">
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2}</div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-toop: 2px; font-weight: bold">Size:  ${plot_size} Acres </div>
         <p style="display: ${
           status === "On Hold" ? "block" : "none"
         }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 

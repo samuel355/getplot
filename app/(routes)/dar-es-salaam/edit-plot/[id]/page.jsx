@@ -328,7 +328,7 @@ const EditPlot = () => {
       toast.success("Plot  updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        router.replace('dar-es-salaam');
+        window.location.href='/dar-es-salaam'
       }, 1100);
     }
     if (error) {

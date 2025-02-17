@@ -11,7 +11,7 @@ export async function POST(request) {
     const templatePath = path.resolve(
       process.cwd(),
       "emails",
-      "receivemail.ejs"
+      "receive-emails.ejs"
     );
 
     // Render the template with the provided data

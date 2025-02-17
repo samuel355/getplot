@@ -259,7 +259,7 @@ const EditPlot = () => {
       toast.success("Plot details updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        window.location.reload();
+        router.replace('/trabuom');
       }, 1500);
     }
     if (error) {

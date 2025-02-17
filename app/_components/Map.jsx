@@ -38,35 +38,35 @@ const Map = ({ parcels, center, setCartOpen }) => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [interestPlotId, setInterestPlotId] = useState();
-  const { addPlot, isInCart} = useCart();
+  const { addPlot, isInCart } = useCart();
 
   let table;
   let location;
   let table_name;
   if (pathname.includes("trabuom")) {
     table = "trabuom";
-    table_name = 'trabuom'
-    location = 'Kumasi Trabuom'
+    table_name = "trabuom";
+    location = "Kumasi Trabuom";
   }
   if (pathname.includes("nthc")) {
     table = "nthc";
-    table_name='nthc'
-    location = 'Kwadaso NTHC - Kumasi'
+    table_name = "nthc";
+    location = "Kwadaso NTHC - Kumasi";
   }
   if (pathname.includes("legon-hills")) {
     table = "legon-hills";
-    location = "Santuo Accra"
-    table_name="legon_hills"
+    location = "Santuo Accra";
+    table_name = "legon_hills";
   }
   if (pathname.includes("dar-es-salaam")) {
     table = "dar-es-salaam";
-    location = "Ejisu - Dar Es Salaam"
-    table_name="dar_es_salaam"
+    location = "Ejisu - Dar Es Salaam";
+    table_name = "dar_es_salaam";
   }
   if (pathname.includes("yabi")) {
     table = "yabi";
-    location = "Yabi Kumasi"
-    table_name="yabi"
+    location = "Yabi Kumasi";
+    table_name = "yabi";
   }
 
   const mapContainerStyle = {
@@ -107,7 +107,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
         setMap(map);
       }, 1500);
     },
-    [map],
+    [map]
   );
 
   const onUnmount = React.useCallback(function callback(map) {
@@ -166,17 +166,42 @@ const Map = ({ parcels, center, setCartOpen }) => {
 
   //Add info Window
   var openInfoWindow = null;
-  const handleInfo = (coordinates, text1, text2, id, amount, status, feature) => {
+  const handleInfo = (
+    coordinates,
+    text1,
+    text2,
+    id,
+    amount,
+    status,
+    feature
+  ) => {
+    let plot_size;
+
+    if (pathname === "/trabuom") {
+      plot_size = feature?.properties?.Area.toFixed(2);
+    } else if (pathname === "/nthc") {
+      let plot_area = feature?.properties?.SHAPE_Area;
+      plot_size = (plot_area * 3109111.525693).toFixed(2);
+    } else if (pathname === "/legon-hills") {
+      plot_size = feature?.properties?.Area.toFixed(2);
+    } else if (pathname === "/dar-es-salaam") {
+      plot_size = feature?.properties?.Area.toFixed(2);
+    } else if (pathname === "/yabi") {
+      plot_size = feature?.properties?.Area.toFixed(2);
+    }
+
+
     const contentString = `
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
       <div class="px-6 py-4 flex flex-col">
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2}</div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-toop: 2px; font-weight: bold">Size:  ${plot_size} Acres </div>
         <p style="display: ${
-            status === "On Hold" ? "block" : "none"
-          }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
+          status === "On Hold" ? "block" : "none"
+        }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
           <span style= "display: ${
             user?.publicMetadata?.role != "sysadmin" && "none"
-            }"> 
+          }"> 
             You can edit this plot and change the status  
           </span> 
         </p>
@@ -272,8 +297,9 @@ const Map = ({ parcels, center, setCartOpen }) => {
         setModalOpen(true);
 
         setTimeout(function () {
-          document.getElementById("description").innerHTML =
-            `Plot number ${content}`;
+          document.getElementById(
+            "description"
+          ).innerHTML = `Plot number ${content}`;
 
           let amount;
           if (amountStr === null || amountStr === "") {
@@ -319,12 +345,12 @@ const Map = ({ parcels, center, setCartOpen }) => {
         Btn.addEventListener("click", () => {
           try {
             let parsedData = JSON.parse(cartData);
-            parsedData = {...parsedData, location, table_name}
+            parsedData = { ...parsedData, location, table_name };
             if (isInCart(parsedData.id)) {
               toast.error("Plot already in cart");
               if (openInfoWindow) {
                 openInfoWindow.close();
-              }  
+              }
             } else {
               addPlot(parsedData);
               tToast.success("Plot added to cart");
@@ -353,10 +379,10 @@ const Map = ({ parcels, center, setCartOpen }) => {
       return "black";
     } else if (status === "Sold") {
       return "red";
-    } else if(status === "On Hold") {
+    } else if (status === "On Hold") {
       return "grey"; // Optional: handle unexpected status values
-    }else{
-      return 'orange'
+    } else {
+      return "orange";
     }
   }
 
@@ -367,7 +393,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
       return "white";
     } else if (status === "Sold") {
       return "black";
-    }else if(status === "On Hold") {
+    } else if (status === "On Hold") {
       return "grey"; // Optional: handle unexpected status values
     } else {
       return "orange"; // Optional: handle unexpected status values
@@ -604,7 +630,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
             {markerInfo(
               feature.geometry.coordinates[0],
               feature.properties.Plot_No,
-              feature.status,
+              feature.status
             )}
           </>
         ))}

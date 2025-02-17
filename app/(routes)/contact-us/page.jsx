@@ -133,7 +133,7 @@ export default function Contact() {
                     href="javascript:void(0)"
                     class="text-primary text-sm ml-3"
                   >
-                    <strong>info@getoneplot.com</strong>
+                    <strong>landandhomesconsult@gmail.com</strong>
                   </a>
                 </li>
                 <li class="flex items-center">
@@ -151,10 +151,10 @@ export default function Contact() {
                     ></path>
                   </svg>
                   <a
-                    href="javascript:void(0)"
+                    href="tel:233248838005"
                     class="text-primary text-sm ml-3"
                   >
-                    <strong>+233 32 200 8282</strong>
+                    <strong>+233 32 200 8282/+233 24 883 8005</strong>
                   </a>
                 </li>
                 <li class="flex items-center">

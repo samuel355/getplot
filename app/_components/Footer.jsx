@@ -2,13 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/utils/supabase/client";
-import {
-  Building2,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Twitter,
-} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";

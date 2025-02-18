@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/utils/supabase/client";
 import {
   Building2,
   Facebook,
@@ -9,8 +10,47 @@ import {
   Twitter,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+
+  const subscribeNewsletter = async (e) => {
+    e.preventDefault();
+    if (email === "") {
+      return toast.error("Enter your email");
+    }
+    const emailRegexPattern =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+    const validateEmail = (email) => {
+      return emailRegexPattern.test(email);
+    };
+
+    if (!validateEmail(email)) {
+      return toast.error("Please enter a valid email");
+    }
+    setEmail("");
+
+    try {
+      const { data, error } = await supabase
+        .from("news_letter_mails")
+        .insert({ email: email })
+        .select();
+      if (data) {
+        toast.success("Thank you for subscribing to our News letter");
+        setEmail("");
+      }
+      if (error) {
+        console.log(error);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error occured \n Try again later");
+    }
+  };
+
   return (
     <div className="w-full bg-primary text-white/90 py-10">
       <footer className="px-10">
@@ -113,11 +153,18 @@ const Footer = () => {
             </p>
             <div className="justify-center my-3 flex items-center">
               <input
-                type="text"
+                type="email"
+                required
                 className="px-4 py-[0.35rem] card-bordered dark:shadow-none outline-none bg-transparent rounded-tl-full rounded-bl-full border"
                 placeholder="Email Address..."
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
-              <button className="text-primary bg-white px-2 py-[7px] animate-pulse rounded-tr-full rounded-br-full">
+              <button
+                onClick={subscribeNewsletter}
+                type="submit"
+                className="text-primary bg-white px-2 py-[7px] animate-pulse rounded-tr-full rounded-br-full"
+              >
                 Subscribe
               </button>
             </div>

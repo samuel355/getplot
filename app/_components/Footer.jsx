@@ -1,14 +1,6 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-
-import { Button } from "@/components/ui/button";
+'use client'
 import { supabase } from "@/utils/supabase/client";
-import {
-  Building2,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Twitter,
-} from "lucide-react";
+import { Building2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";

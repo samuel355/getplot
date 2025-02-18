@@ -2,6 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/utils/supabase/client";
+import {
+  Building2,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Twitter,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -56,29 +63,6 @@ const Footer = () => {
               <Building2 className="text-3xl text-white" />
               <h1 className="font-semibold">GETONEPLOT</h1>
             </Link>
-            <div className="mt-3">
-              <p className="text-sm">
-                Unveiling the Secrets to Strategic Real Estate Investment From
-                prime locations to savvy financial analysis.
-              </p>
-              <div className="gap-5 my-6 flex items-center">
-                <div className="icon-box bg-dark-light hover:bg-hover-color-dark">
-                  <Facebook />
-                </div>
-
-                <div className="icon-box bg-dark-light hover:bg-hover-color-dark">
-                  <Twitter />
-                </div>
-
-                <div className="icon-box bg-dark-light hover:bg-hover-color-dark">
-                  <Instagram />
-                </div>
-
-                <div className="icon-box bg-dark-light hover:bg-hover-color-dark">
-                  <Linkedin />
-                </div>
-              </div>
-            </div>
           </div>
 
           <div className="flex-1 basis-[10rem]">

@@ -137,7 +137,8 @@ export const columns = [
           <ArrowUpDown className="ml-1 h-4 w-4" />
         </Button>
       );
-    },    header: ({ column }) => {
+    },
+    header: ({ column }) => {
       return (
         <Button
           className="flex justify-start p-1"
@@ -250,7 +251,7 @@ export const columns = [
 
       const [isDialogOpen, setIsDialogOpen] = useState(false);
       const [delDialogOpen, setDelDialogOpen] = useState(false);
-      const [isViewDialog, setIsViewDialog] = useState(false)
+      const [isViewDialog, setIsViewDialog] = useState(false);
 
       const [plotData, setPlotData] = useState();
       const [loadingPlot, setLoadingPlot] = useState(false);
@@ -346,7 +347,7 @@ export const columns = [
             table={table}
             setIsDialogOpen={setIsDialogOpen}
           />
-          
+
           {/* View plot dialog */}
           <ViewPlotDialog
             open={isViewDialog}
@@ -388,6 +389,10 @@ const ViewPlotDialog = ({
   const [step1, setStep1] = useState(true);
   const [step2, setStep2] = useState(false);
 
+  const pathname = usePathname();
+  const [plotProperties, setPlotProperties] = useState()
+  const [plotSize, setPlotSize] = useState()
+
   const {
     firstname,
     lastname,
@@ -421,6 +426,7 @@ const ViewPlotDialog = ({
     databaseName = "yabi";
   }
 
+
   useEffect(() => {
     if (plotId && databaseName) {
       setPlotDataLoading(true);
@@ -438,6 +444,7 @@ const ViewPlotDialog = ({
             return;
           }
           if (data[0]) {
+            console.log(data[0])
             setPlotDataLoading(false);
             setAllDetails(data[0]);
             setPlotData({
@@ -532,7 +539,9 @@ const ViewPlotDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[95vw]">
         <DialogHeader>
-          <DialogTitle className="font-bold text-center">Plot Details</DialogTitle>
+          <DialogTitle className="font-bold text-center">
+            Plot Details
+          </DialogTitle>
         </DialogHeader>
 
         <div>
@@ -569,6 +578,32 @@ const ViewPlotDialog = ({
                     </div>
                     <div className="flex gap-2 items-center">
                       <p className="text-gray-900 font-semibold text-sm w-1/4">
+                        Plot Size
+                      </p>
+                      <Input
+                        type="text"
+                        disabled
+                        className="w-3/4"
+                        name="plotSize"
+                        value={
+                          pathname === "/dashboard/trabuom"
+                            ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
+                            : pathname === "/dashboard/nthc"
+                            ? `${((allDetails?.properties?.SHAPE_Area || 0) * 3109111.525693).toFixed(2)} Acres`
+                            : pathname === "/dashboard/legon-hills"
+                            ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
+                            : pathname === "/dashboard/dar-es-salaam"
+                            ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
+                            : pathname === "/dashboard/yabi"
+                            ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
+                            : ""
+                        }
+                      />
+
+                      <small className="text-red-900"></small>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <p className="text-gray-900 font-semibold text-sm w-1/4">
                         Plot Status
                       </p>
                       <Input
@@ -580,24 +615,22 @@ const ViewPlotDialog = ({
                       />
                       <small className="text-red-900"></small>
                     </div>
-                    {
-                      allDetails.owner_info !== undefined && (
-                        <div className="flex gap-2 items-center">
-                          <p className="text-gray-900 font-semibold text-sm w-1/4">
-                            Primary Owner
-                          </p>
-                          <Input
-                            type="text"
-                            disabled
-                            className="w-3/4"
-                            name="plotStatus"
-                            value={allDetails.owner_info}
-                          />
-                          <small className="text-red-900"></small>
-                        </div>
-                      )
-                    }
-                    
+                    {allDetails.owner_info !== undefined && (
+                      <div className="flex gap-2 items-center">
+                        <p className="text-gray-900 font-semibold text-sm w-1/4">
+                          Primary Owner
+                        </p>
+                        <Input
+                          type="text"
+                          disabled
+                          className="w-3/4"
+                          name="plotStatus"
+                          value={allDetails.owner_info}
+                        />
+                        <small className="text-red-900"></small>
+                      </div>
+                    )}
+
                     <div className="flex gap-2 items-center">
                       <h2 className="text-gray-900 font-semibold w-1/4 text-sm">
                         Total Amount
@@ -645,11 +678,7 @@ const ViewPlotDialog = ({
                     <h2 className="text-gray-900 font-semibold text-sm mb-2">
                       Remarks
                     </h2>
-                    <Textarea
-                      name="remarks"
-                      value={remarks}
-                      disabled
-                    />
+                    <Textarea name="remarks" value={remarks} disabled />
                   </div>
 
                   <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5">
@@ -706,7 +735,6 @@ const ViewPlotDialog = ({
                     </div>
 
                     <div className="flex items-center justify-between gap-4">
-
                       <div className="flex items-center space-x-2">
                         <h2 className="text-gray-900 font-semibold text-sm w-1/4">
                           Contact
@@ -856,6 +884,7 @@ const plotInfo = {
   remarks: "",
   plotStatus: "",
   status: "",
+  plotProperties: ""
 };
 
 const EditPlotDialog = ({
@@ -873,7 +902,7 @@ const EditPlotDialog = ({
   const [loader2, setLoader2] = useState(false);
   const [step1, setStep1] = useState(true);
   const [step2, setStep2] = useState(false);
-  const [isAvailable, setIsAvailable] = useState(false)
+  const [isAvailable, setIsAvailable] = useState(false);
 
   const {
     firstname,
@@ -889,6 +918,7 @@ const EditPlotDialog = ({
     remarks,
     status,
     plotStatus,
+    plotProperties,
   } = plotData;
 
   let databaseName;
@@ -1127,10 +1157,10 @@ const EditPlotDialog = ({
     const { name, value } = e.target;
     setPlotData({ ...plotData, [name]: value });
     const selectedStatus = e.target.value;
-    if(selectedStatus === 'Available'){
-      setIsAvailable(true)
-    }else{
-      setIsAvailable(false)
+    if (selectedStatus === "Available") {
+      setIsAvailable(true);
+    } else {
+      setIsAvailable(false);
     }
   };
 
@@ -1138,9 +1168,9 @@ const EditPlotDialog = ({
   const handleCalculateAmount = () => {
     amtRemaining = plotTotalAmount - paidAmount;
     setCalcAmount(amtRemaining);
-    setPlotData({ ...plotData, remainingAmount: amtRemaining })
+    setPlotData({ ...plotData, remainingAmount: amtRemaining });
   };
-  
+
   const handleInput = (event) => {
     const charCode = event.which ? event.which : event.keyCode;
     // Prevent input if the key is not a number (0-9)
@@ -1148,22 +1178,22 @@ const EditPlotDialog = ({
       event.preventDefault();
     }
   };
-  
-  const handleAvailableSubmit = async(e) => {
-    e.preventDefault()
+
+  const handleAvailableSubmit = async (e) => {
+    e.preventDefault();
     //Update plot details with plotData on Supabase
     setLoader2(true);
     const { data, error } = await supabase
       .from(databaseName)
       .update({
-        status: 'Available',
-        firstname: '',
-        lastname: '',
-        email: '',
-        country: '',
-        phone: '',
-        residentialAddress: '',
-        agent: '',
+        status: "Available",
+        firstname: "",
+        lastname: "",
+        email: "",
+        country: "",
+        phone: "",
+        residentialAddress: "",
+        agent: "",
         plotTotalAmount: plotData.plotTotalAmount,
         paidAmount: plotData.paidAmount,
         remainingAmount: plotData.remainingAmount,
@@ -1184,7 +1214,7 @@ const EditPlotDialog = ({
       toast.error("Sorry errror happened updating the plot ");
       setLoader2(false);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -1340,27 +1370,29 @@ const EditPlotDialog = ({
                     />
                   </div>
 
-                  {
-                    isAvailable ? (
-                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
-                        <button
-                          onClick={handleAvailableSubmit}
-                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
-                        >
-                          {loader1 ? <Loader className="animate-spin" /> : "Submit"}
-                        </button>
-                      </div>
-                    ): (
-                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
-                        <button
-                          onClick={handleStep1}
-                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
-                        >
-                          {loader1 ? <Loader className="animate-spin" /> : "Next"}
-                        </button>
-                      </div>
-                    )
-                  }
+                  {isAvailable ? (
+                    <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                      <button
+                        onClick={handleAvailableSubmit}
+                        className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                      >
+                        {loader1 ? (
+                          <Loader className="animate-spin" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                      <button
+                        onClick={handleStep1}
+                        className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                      >
+                        {loader1 ? <Loader className="animate-spin" /> : "Next"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -1534,4 +1566,3 @@ const EditPlotDialog = ({
     </Dialog>
   );
 };
-

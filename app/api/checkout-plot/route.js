@@ -32,7 +32,6 @@ export async function POST(request) {
       },
     });
 
-    // Send email with attachment
     await transporter.sendMail({
       from: process.env.SMTP_FROM,
       to: to,

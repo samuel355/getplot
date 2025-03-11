@@ -444,7 +444,6 @@ const ViewPlotDialog = ({
             return;
           }
           if (data[0]) {
-            console.log(data[0])
             setPlotDataLoading(false);
             setAllDetails(data[0]);
             setPlotData({

@@ -144,7 +144,7 @@ const Footer = () => {
         className="py-2 mt-3 text-center text-muted border-dark"
         style={{ borderTop: "1px solid grey" }}
       >
-        <p className="text-sm mt-6">Get One Plot | All Rights Reserved</p>
+        <p className="text-sm mt-6">Get One Plot | Powered by <a href="www.landandhomesconsult.com" target="_blanl">Land and Homes Consult</a></p>
       </div>
     </div>
   );

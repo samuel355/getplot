@@ -5,8 +5,8 @@ import Header from "@/app/_components/Header";
 import Footer from "@/app/_components/Footer";
 import { HeartIcon, ShareIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+// Replace Leaflet imports with Google Maps
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { mockProperties } from "../../market-place/_components/mock-data";
@@ -16,8 +16,13 @@ export default function PropertyPage({ params }) {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [mapReady, setMapReady] = useState(false);
   const router = useRouter();
+  
+  // Load Google Maps API
+  const { isLoaded: mapsLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "your-api-key-here"
+  });
   
   useEffect(() => {
     // In a real app, fetch the property from an API
@@ -34,7 +39,6 @@ export default function PropertyPage({ params }) {
     }
     
     setLoading(false);
-    setMapReady(true);
   }, [params.id, router]);
 
   if (loading || !property) {
@@ -212,26 +216,42 @@ export default function PropertyPage({ params }) {
               </div>
             </div>
 
-            {/* Location map */}
+            {/* Location map - REPLACED WITH GOOGLE MAPS */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <h3 className="text-lg font-semibold mb-4">Location</h3>
-              {mapReady && property.coordinates && (
+              {property.coordinates && (
                 <div className="h-80 rounded-lg overflow-hidden">
-                  <MapContainer 
-                    center={[property.coordinates.lat, property.coordinates.lng]} 
-                    zoom={15} 
-                    style={{ height: '100%', width: '100%' }}
-                    scrollWheelZoom={false}
-                  >
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <Marker position={[property.coordinates.lat, property.coordinates.lng]} />
-                  </MapContainer>
+                  {mapsLoaded ? (
+                    <GoogleMap
+                      mapContainerStyle={{ height: '100%', width: '100%' }}
+                      center={{
+                        lat: property.coordinates.lat,
+                        lng: property.coordinates.lng
+                      }}
+                      zoom={15}
+                      options={{
+                        fullscreenControl: false,
+                        streetViewControl: true,
+                        mapTypeControl: false,
+                        zoomControl: true
+                      }}
+                    >
+                      <Marker
+                        position={{
+                          lat: property.coordinates.lat,
+                          lng: property.coordinates.lng
+                        }}
+                      />
+                    </GoogleMap>
+                  ) : (
+                    <div className="h-full w-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500">Loading map...</span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
+            
             {/* Below the location map section */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h3 className="text-lg font-semibold mb-4">Nearby Amenities</h3>

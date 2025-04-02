@@ -1,12 +1,12 @@
 "use client";
 
 import Footer from "@/app/_components/Footer";
-import Hero from "@/app/_components/Hero";
 import Invests from "@/app/_components/Invests";
 import Speciality from "@/app/_components/Specialty";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Header from "@/app/_components/Header";
+import Hero from "./_components/Hero-section";
 
 const Home = () => {
   const router = useRouter();
@@ -17,17 +17,17 @@ const Home = () => {
     router.prefetch("/nthc");
     router.prefetch("/trabuom");
   }, [router]);
+  
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="pt-[7rem]">
+      <main className="flex-grow pt-8 md:pt-20 lg:pt-24"> {/* Responsive padding top */}
         <Hero />
-        {/* <HomeFilters /> */}
-        <Invests />
-        <Speciality />
-        {/* <Featured /> */}
-        <Footer />
-      </div>
+        {/* Optional: Uncomment if you want to use these components */}
+        {/* <Speciality /> */}
+        {/* <Invests /> */}
+      </main>
+      <Footer />
     </div>
   );
 };

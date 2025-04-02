@@ -66,7 +66,7 @@ const PropertyMap = ({ properties, loading }) => {
   }
 
   return (
-    <div className="h-[600px] rounded-lg overflow-hidden shadow-md">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden h-[600px]">
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={getMapCenter()}

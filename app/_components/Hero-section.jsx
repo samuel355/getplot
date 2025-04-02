@@ -32,7 +32,7 @@ const Hero = () => {
         </h1>
         
         <div className="pl-4 my-5 md:my-7 border-l-4 border-primary">
-          <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg">
+          <p className="text-primary dark:text-gray-300 text-base md:text-lg">
             Explore verified listings across all regions with ease. Whether
             you're seeking residential, commercial, or investment opportunities,
             we connect you with the right land to build your dreams.
@@ -45,30 +45,30 @@ const Hero = () => {
             <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
               <Check size={12} className="text-green-600 dark:text-green-400" />
             </div>
-            <p className="text-sm">Verified Land Titles</p>
+            <p className="text-base">Verified Land Titles</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
               <Check size={12} className="text-green-600 dark:text-green-400" />
             </div>
-            <p className="text-sm">Transparent Pricing</p>
+            <p className="text-base">Transparent Pricing</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
               <Check size={12} className="text-green-600 dark:text-green-400" />
             </div>
-            <p className="text-sm">Flexible Payment Plans</p>
+            <p className="text-base">Flexible Payment Plans</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
               <Check size={12} className="text-green-600 dark:text-green-400" />
             </div>
-            <p className="text-sm">Expert Consultation</p>
+            <p className="text-base">Expert Consultation</p>
           </div>
         </div>
         
         <div className="mb-6 font-medium flex gap-2 items-center text-gray-800 dark:text-gray-200">
-          <p className="text-base">Browse our Land locations</p>
+          <p className="text-xl">Browse our Land locations</p>
           <span className="animate-bounce text-primary pt-2">
             <ArrowDown size={18} />
           </span>
@@ -77,34 +77,34 @@ const Hero = () => {
         {/* Links with clear visibility - more responsive */}
         <div className="flex flex-wrap gap-2 sm:gap-3 mt-3">
           <Link 
-            className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-xs sm:text-sm" 
+            className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-lg" 
             href="/legon-hills"
           >
-            East Legon Hills
+            East Legon Hills (Accra)
           </Link>
           <Link 
-            className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-xs sm:text-sm" 
+            className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-lg" 
             href="/nthc"
           >
-            NTHC (Kumasi)
+            Kwadaso-Nwamase (Kumasi)
           </Link>
           <Link 
-            className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-xs sm:text-sm" 
+            className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-lg" 
             href="/dar-es-salaam"
           >
-            Dar Es Salaam
+            Ejisu-Adense (Kumasi)
           </Link>
           <Link 
-            className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-xs sm:text-sm" 
+            className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-lg" 
             href="/trabuom"
           >
-            Trabuom
+            Trabuom (Kumasi)
           </Link>
           <Link 
-            className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-xs sm:text-sm" 
+            className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-lg" 
             href="/yabi"
           >
-            Yabi
+            Yabi (Kumasi)
           </Link>
         </div>
         

@@ -64,7 +64,7 @@ export default function MarketPlace() {
   return (
     <>
       <Header />
-      <main className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 min-h-screen mt-24">
+      <main className=" w-full mx-auto px-10 md:px-14 py-6 min-h-screen mt-24">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">
           Property Marketplace
         </h1>

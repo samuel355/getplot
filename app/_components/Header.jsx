@@ -120,6 +120,12 @@ const Header = () => {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
+                  <ListItem href={"/market-place"} title={"Market Place"}>
+                    Maket Place
+                  </ListItem>
+                </NavigationMenuItem>
+                
+                <NavigationMenuItem>
                   <ListItem href={"/contact-us"} title={"Contact Us"}>
                     Contact Us
                   </ListItem>
@@ -184,6 +190,17 @@ const Header = () => {
                   </ul>
 
                   <DropdownMenuSeparator />
+                  
+                  <DropdownMenuItem>
+                    <button
+                      className={`hover:text-primary text-base ${
+                        path == "/market-place" && "text-primary font-semibold"
+                      }`}
+                      onClick={() => router.push("/market-place")}
+                    >
+                      Market Place
+                    </button>
+                  </DropdownMenuItem>
 
                   <DropdownMenuItem>
                     <button

@@ -35,7 +35,7 @@ export default function PropertyPage({ params }) {
       setProperty(foundProperty);
     } else {
       // Property not found, redirect to marketplace
-      router.push('/marketplace');
+      router.push('/market-place');
     }
     
     setLoading(false);

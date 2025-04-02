@@ -119,11 +119,11 @@ const Header = () => {
                   </DropdownMenu>
                 </NavigationMenuItem>
 
-                <NavigationMenuItem>
+                {/* <NavigationMenuItem>
                   <ListItem href={"/market-place"} title={"Market Place"}>
                     Maket Place
                   </ListItem>
-                </NavigationMenuItem>
+                </NavigationMenuItem> */}
                 
                 <NavigationMenuItem>
                   <ListItem href={"/contact-us"} title={"Contact Us"}>
@@ -191,7 +191,7 @@ const Header = () => {
 
                   <DropdownMenuSeparator />
                   
-                  <DropdownMenuItem>
+                  {/* <DropdownMenuItem>
                     <button
                       className={`hover:text-primary text-base ${
                         path == "/market-place" && "text-primary font-semibold"
@@ -200,7 +200,7 @@ const Header = () => {
                     >
                       Market Place
                     </button>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
 
                   <DropdownMenuItem>
                     <button

@@ -55,7 +55,7 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
     if (filters.bedrooms !== 'any') queryParams.set('bedrooms', filters.bedrooms);
     if (filters.bathrooms !== 'any') queryParams.set('bathrooms', filters.bathrooms);
     
-    router.push(`/marketplace?${queryParams.toString()}`, { scroll: false });
+    router.push(`/market-place?${queryParams.toString()}`, { scroll: false });
   };
   
   return (

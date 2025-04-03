@@ -2,20 +2,19 @@
 import { useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
 export default function ReviewSubmit({ formData, prevStep }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
+  const { user, isSignedIn } = useUser();
   
   const handleSubmit = async () => {
     setIsSubmitting(true);
     setError(null);
     
-    try {
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
-      
+    try {      
       if (!user) {
         setError("You must be logged in to submit a listing");
         return;
@@ -26,10 +25,12 @@ export default function ReviewSubmit({ formData, prevStep }) {
         ...formData,
         user_id: user.id,
         created_at: new Date(),
-        status: "pending", // Requires approval if you want moderation
+        status: "pending", // Requires approval
         location_coordinates: formData.coordinates ? 
-          `POINT(${formData.coordinates.lng} ${formData.coordinates.lat})` : null,
+          `POINT(${formData.coordinates.lat} ${formData.coordinates.lng})` : null,
       };
+      
+      console.log(listingData)
       
       // Remove the coordinates object as we've transformed it
       delete listingData.coordinates;
@@ -38,7 +39,7 @@ export default function ReviewSubmit({ formData, prevStep }) {
       const { data, error: insertError } = await supabase
         .from('properties')
         .insert(listingData)
-        .select();
+        .select('*');
         
       if (insertError) throw insertError;
       

@@ -9,7 +9,7 @@ import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { mockProperties } from "../../market-place/_components/mock-data";
+import { mockProperties } from "../../market-place/mock-data";
 
 export default function PropertyPage({ params }) {
   const [property, setProperty] = useState(null);

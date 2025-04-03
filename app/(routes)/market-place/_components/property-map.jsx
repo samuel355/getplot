@@ -32,6 +32,7 @@ const PropertyMap = ({ properties, loading }) => {
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [showPropertyList, setShowPropertyList] = useState(false);
   const [hoveredProperty, setHoveredProperty] = useState(null);
+  const [manuallyPannedTo, setManuallyPannedTo] = useState(null);
   
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
@@ -77,15 +78,18 @@ const PropertyMap = ({ properties, loading }) => {
   const onLoad = useCallback((map) => {
     mapRef.current = map;
     
-    // Fit bounds to markers when map loads
-    if (properties.length > 0) {
+    // Fit bounds to markers when map loads (only if not manually centered)
+    if (properties.length > 0 && !manuallyPannedTo) {
       fitMapToBounds();
     }
-  }, [properties]);
+  }, [properties, manuallyPannedTo]);
 
   // Function to fit map to property boundaries
   const fitMapToBounds = useCallback(() => {
     if (!mapRef.current || !filteredProperties.length) return;
+    
+    // Don't adjust bounds if we've manually set a property center
+    if (manuallyPannedTo) return;
     
     const bounds = new google.maps.LatLngBounds();
     let hasValidCoords = false;
@@ -110,14 +114,19 @@ const PropertyMap = ({ properties, loading }) => {
         }
       });
     }
-  }, [filteredProperties]);
+  }, [filteredProperties, manuallyPannedTo]);
 
-  // Effect to update bounds when filtered properties change
+  // Effect to update bounds when filtered properties change, BUT ONLY IF NOT MANUALLY PANNED
   useEffect(() => {
-    if (mapRef.current && filteredProperties.length) {
+    if (mapRef.current && filteredProperties.length && !manuallyPannedTo) {
       fitMapToBounds();
     }
-  }, [filteredProperties, fitMapToBounds]);
+  }, [filteredProperties, fitMapToBounds, manuallyPannedTo]);
+
+  // Clear the manual pan flag when filters or search changes
+  useEffect(() => {
+    setManuallyPannedTo(null);
+  }, [selectedPropertyType, searchQuery]);
 
   // Clear reference when map unmounts
   const onUnmount = useCallback(() => {
@@ -127,7 +136,15 @@ const PropertyMap = ({ properties, loading }) => {
   // Calculate the center of all properties or default to Ghana's coordinates
   const defaultCenter = { lat: 5.6037, lng: -0.1870 }; // Accra, Ghana
   
-  const getMapCenter = () => {
+  const getMapCenter = useCallback(() => {
+    // If we've manually panned to a property, prioritize that
+    if (manuallyPannedTo) {
+      return {
+        lat: manuallyPannedTo.coordinates.lat,
+        lng: manuallyPannedTo.coordinates.lng
+      };
+    }
+    
     if (filteredProperties.length === 0) return defaultCenter;
     
     const validCoordinates = filteredProperties.filter(p => 
@@ -143,18 +160,34 @@ const PropertyMap = ({ properties, loading }) => {
     const centerLng = lngs.reduce((a, b) => a + b, 0) / lngs.length;
     
     return { lat: centerLat, lng: centerLng };
-  };
+  }, [filteredProperties, manuallyPannedTo]);
 
   // Function to handle panning to a specific property
   const panToProperty = useCallback((property) => {
-    if (property && property.coordinates && mapRef.current) {
-      mapRef.current.panTo({
-        lat: property.coordinates.lat,
-        lng: property.coordinates.lng
-      });
-      mapRef.current.setZoom(16);
-      setSelectedProperty(property);
-    }
+    if (!property || !property.coordinates || !mapRef.current) return;
+    
+    // Set this property as our manual center point
+    setManuallyPannedTo(property);
+    
+    // Pan to the property
+    mapRef.current.panTo({
+      lat: property.coordinates.lat,
+      lng: property.coordinates.lng
+    });
+    
+    mapRef.current.setZoom(16);
+    setSelectedProperty(property);
+    
+    // Prevent any other centering actions for a while
+    const listener = google.maps.event.addListenerOnce(mapRef.current, 'idle', () => {
+      google.maps.event.removeListener(listener);
+    });
+  }, []);
+
+  // Function to handle marker click
+  const handleMarkerClick = useCallback((property) => {
+    setManuallyPannedTo(property);
+    setSelectedProperty(property);
   }, []);
 
   // Function to handle fullscreen toggle
@@ -199,6 +232,8 @@ const PropertyMap = ({ properties, loading }) => {
   const handlePropertyTypeChange = (type) => {
     setSelectedPropertyType(type);
     setIsFilterMenuOpen(false);
+    // Clear manual panning when changing filters
+    setManuallyPannedTo(null);
   };
 
   // Get user's current location
@@ -249,10 +284,10 @@ const PropertyMap = ({ properties, loading }) => {
 
   // Enhanced map options for better user experience
   const mapOptions = {
-    fullscreenControl: false, // We'll use our custom control
+    fullscreenControl: false,
     streetViewControl: true,
-    mapTypeControl: false, // We'll use our custom control
-    zoomControl: false, // We'll use our custom controls
+    mapTypeControl: false,
+    zoomControl: false,
     mapTypeId: mapType,
     controlSize: 32,
     gestureHandling: 'greedy',
@@ -267,6 +302,13 @@ const PropertyMap = ({ properties, loading }) => {
       },
     ],
   };
+
+  // Reset map view to show all properties
+  const resetMapView = useCallback(() => {
+    setManuallyPannedTo(null);
+    setSelectedProperty(null);
+    fitMapToBounds();
+  }, [fitMapToBounds]);
 
   if (loading) {
     return (
@@ -463,10 +505,17 @@ const PropertyMap = ({ properties, loading }) => {
           <GoogleMap
             mapContainerStyle={mapContainerStyle}
             center={getMapCenter()}
-            zoom={12}
+            zoom={manuallyPannedTo ? 16 : 12}
             onLoad={onLoad}
             onUnmount={onUnmount}
             options={mapOptions}
+            // Disable auto-panning behavior
+            onDragStart={() => {
+              // When user manually drags, prevent auto-centering
+              if (selectedProperty) {
+                setManuallyPannedTo(selectedProperty);
+              }
+            }}
           >
             {filteredProperties.map((property) => (
               property.coordinates && (
@@ -476,7 +525,7 @@ const PropertyMap = ({ properties, loading }) => {
                     lat: property.coordinates.lat,
                     lng: property.coordinates.lng
                   }}
-                  onClick={() => setSelectedProperty(property)}
+                  onClick={() => handleMarkerClick(property)}
                   animation={
                     hoveredProperty?.id === property.id 
                       ? google.maps.Animation.BOUNCE 
@@ -503,7 +552,10 @@ const PropertyMap = ({ properties, loading }) => {
                   lat: selectedProperty.coordinates.lat,
                   lng: selectedProperty.coordinates.lng
                 }}
-                onCloseClick={() => setSelectedProperty(null)}
+                onCloseClick={() => {
+                  setSelectedProperty(null);
+                  // Don't reset manuallyPannedTo so the map stays where it is
+                }}
                 options={{
                   pixelOffset: new google.maps.Size(0, -40),
                   maxWidth: 320
@@ -602,7 +654,7 @@ const PropertyMap = ({ properties, loading }) => {
           
           {/* Reset view to all properties */}
           <button 
-            onClick={fitMapToBounds}
+            onClick={resetMapView}
             className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
             title="View all properties"
           >
@@ -631,7 +683,7 @@ const PropertyMap = ({ properties, loading }) => {
         </div>
         <div className="flex items-center space-x-2">
           <button 
-            onClick={() => fitMapToBounds()}
+            onClick={resetMapView}
             className="text-primary hover:underline flex items-center gap-1"
           >
             <MapPin size={14} />

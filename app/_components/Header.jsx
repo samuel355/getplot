@@ -327,7 +327,7 @@ const Header = () => {
                     Our Sites
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                    <ul className="grid w-[400px] gap-3 p-4 md:grid-cols-2">
                       <ListItem href="/nthc" title="NTHC" isActive={path === "/nthc"}>
                         NTHC (Kwadaso)
                       </ListItem>

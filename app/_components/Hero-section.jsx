@@ -45,13 +45,13 @@ const Hero = () => {
             <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
               <Check size={12} className="text-green-600 dark:text-green-400" />
             </div>
-            <p className="text-base">Verified Land Titles</p>
+            <p className="text-base">Verified Land Sites</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
               <Check size={12} className="text-green-600 dark:text-green-400" />
             </div>
-            <p className="text-base">Transparent Pricing</p>
+            <p className="text-base">Affordable Prices</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">

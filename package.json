@@ -63,6 +63,7 @@
     "react-dropzone": "^14.3.8",
     "react-google-places-autocomplete": "^4.0.1",
     "react-hook-form": "^7.55.0",
+    "react-hot-toast": "^2.5.2",
     "react-leaflet": "^5.0.0",
     "react-paystack": "^5.0.0",
     "react-places-autocomplete": "^7.3.0",

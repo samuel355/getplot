@@ -10,6 +10,7 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { mockProperties } from "../../market-place/mock-data";
+import GoogleMapsProvider from "@/providers/google-map-provider";
 
 export default function PropertyPage({ params }) {
   const [property, setProperty] = useState(null);
@@ -18,11 +19,11 @@ export default function PropertyPage({ params }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const router = useRouter();
   
-  // Load Google Maps API
-  const { isLoaded: mapsLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "your-api-key-here"
-  });
+  // // Load Google Maps API
+  // const { isLoaded: mapsLoaded } = useJsApiLoader({
+  //   id: 'google-maps-script',
+  //   googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "your-api-key-here"
+  // });
   
   useEffect(() => {
     // In a real app, fetch the property from an API
@@ -43,7 +44,7 @@ export default function PropertyPage({ params }) {
 
   if (loading || !property) {
     return (
-      <>
+      <GoogleMapsProvider>
         <Header />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 min-h-screen">
           <div className="animate-pulse">
@@ -55,14 +56,14 @@ export default function PropertyPage({ params }) {
           </div>
         </main>
         <Footer />
-      </>
+      </GoogleMapsProvider>
     );
   }
 
   return (
     <>
       <Header />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 min-h-screen">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 min-h-screen w-full mt-20">
         <div className="mb-6">
           <button 
             onClick={() => router.back()} 
@@ -221,33 +222,27 @@ export default function PropertyPage({ params }) {
               <h3 className="text-lg font-semibold mb-4">Location</h3>
               {property.coordinates && (
                 <div className="h-80 rounded-lg overflow-hidden">
-                  {mapsLoaded ? (
-                    <GoogleMap
-                      mapContainerStyle={{ height: '100%', width: '100%' }}
-                      center={{
+                  <GoogleMap
+                    mapContainerStyle={{ height: '100%', width: '100%' }}
+                    center={{
+                      lat: property.coordinates.lat,
+                      lng: property.coordinates.lng
+                    }}
+                    zoom={15}
+                    options={{
+                      fullscreenControl: false,
+                      streetViewControl: true,
+                      mapTypeControl: false,
+                      zoomControl: true
+                    }}
+                  >
+                    <Marker
+                      position={{
                         lat: property.coordinates.lat,
                         lng: property.coordinates.lng
                       }}
-                      zoom={15}
-                      options={{
-                        fullscreenControl: false,
-                        streetViewControl: true,
-                        mapTypeControl: false,
-                        zoomControl: true
-                      }}
-                    >
-                      <Marker
-                        position={{
-                          lat: property.coordinates.lat,
-                          lng: property.coordinates.lng
-                        }}
-                      />
-                    </GoogleMap>
-                  ) : (
-                    <div className="h-full w-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500">Loading map...</span>
-                    </div>
-                  )}
+                    />
+                  </GoogleMap>
                 </div>
               )}
             </div>

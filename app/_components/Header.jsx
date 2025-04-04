@@ -32,6 +32,7 @@ const Header = () => {
   const { user, isSignedIn } = useUser();
   const [cartOpen, setCartOpen] = useState(false);
 
+   
   const { plots } = useCart();
 
   return (

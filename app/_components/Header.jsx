@@ -302,7 +302,7 @@ const Header = () => {
           {/* Navigation Menu section */}
           <nav className="hidden lg:flex space-x-5">
             <NavigationMenu>
-              <NavigationMenuList className="flex items-center space-x-4">
+              <NavigationMenuList className="flex items-center space-x-3">
                 <NavigationMenuItem>
                   <Link
                     href="/"
@@ -327,7 +327,7 @@ const Header = () => {
                     Our Sites
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:grid-cols-2">
+                    <ul className="grid w-[400px] gap-3 p-4  md:grid-cols-2">
                       <ListItem href="/nthc" title="NTHC" isActive={path === "/nthc"}>
                         NTHC (Kwadaso)
                       </ListItem>

@@ -40,15 +40,9 @@ const PropertyMap = ({ properties, loading }) => {
   const [hoveredProperty, setHoveredProperty] = useState(null);
   const [manuallyPannedTo, setManuallyPannedTo] = useState(null);
 
+  console.log(properties)
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
-
-  // // Load Google Maps API
-  // const { isLoaded } = useJsApiLoader({
-  //   id: "google-map-scriptss",
-  //   googleMapsApiKey:
-  //     process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "your-api-key-here",
-  // });
 
   // Initialize filtered properties when component mounts
   useEffect(() => {
@@ -342,14 +336,6 @@ const PropertyMap = ({ properties, loading }) => {
     );
   }
 
-  // if (!isLoaded) {
-  //   return (
-  //     <div className="bg-gray-100 rounded-lg h-[600px] flex items-center justify-center">
-  //       <p>Loading map...</p>
-  //     </div>
-  //   );
-  // }
-
   return (
     <GoogleMapsProvider>
       <div
@@ -379,7 +365,7 @@ const PropertyMap = ({ properties, loading }) => {
               </button>
             )}
           </div>
-  
+
           <div className="flex items-center ml-2 space-x-2">
             {/* List view toggle */}
             <button
@@ -400,7 +386,7 @@ const PropertyMap = ({ properties, loading }) => {
               >
                 <Filter size={20} className="text-gray-600" />
               </button>
-  
+
               {isFilterMenuOpen && (
                 <div className="absolute right-0 mt-1 w-64 bg-white rounded-md shadow-lg border z-50">
                   <div className="p-3 border-b">
@@ -468,13 +454,13 @@ const PropertyMap = ({ properties, loading }) => {
             </div>
           </div>
         </div>
-  
+
         {/* Property count badge */}
         <div className="absolute top-16 left-3 z-20 bg-white bg-opacity-90 rounded-full px-3 py-1 text-xs shadow-md">
           {filteredProperties.length}{" "}
           {filteredProperties.length === 1 ? "property" : "properties"} found
         </div>
-  
+
         {/* Main content area - map and optional sidebar */}
         <div className="flex-grow flex relative">
           {/* Property list sidebar - with fixed height and scrollable content */}
@@ -489,7 +475,7 @@ const PropertyMap = ({ properties, loading }) => {
                   <X size={18} />
                 </button>
               </div>
-  
+
               {/* Scrollable property list container */}
               <div className="flex-grow overflow-y-auto">
                 {filteredProperties.length === 0 ? (
@@ -539,7 +525,7 @@ const PropertyMap = ({ properties, loading }) => {
               </div>
             </div>
           )}
-  
+
           {/* Main map area */}
           <div className="flex-grow">
             <GoogleMap
@@ -574,7 +560,8 @@ const PropertyMap = ({ properties, loading }) => {
                       }
                       icon={{
                         url:
-                          selectedProperty && selectedProperty.id === property.id
+                          selectedProperty &&
+                          selectedProperty.id === property.id
                             ? "/images/marker-active.png"
                             : property.type === "house"
                               ? "/images/marker-house.png"
@@ -591,7 +578,7 @@ const PropertyMap = ({ properties, loading }) => {
                     />
                   ),
               )}
-  
+
               {selectedProperty && selectedProperty.coordinates && (
                 <InfoWindow
                   position={{
@@ -608,13 +595,16 @@ const PropertyMap = ({ properties, loading }) => {
                   }}
                 >
                   <div className="w-72">
-                    <PropertyCard property={selectedProperty} isCompact={true} />
+                    <PropertyCard
+                      property={selectedProperty}
+                      isCompact={true}
+                    />
                   </div>
                 </InfoWindow>
               )}
             </GoogleMap>
           </div>
-  
+
           {/* Custom map controls */}
           <div className="absolute top-4 right-4 bg-white shadow-lg rounded-lg p-2 flex flex-col gap-2 z-20">
             {/* Zoom controls */}
@@ -638,10 +628,10 @@ const PropertyMap = ({ properties, loading }) => {
             >
               <ZoomOut size={20} />
             </button>
-  
+
             {/* Separator */}
             <div className="border-t border-gray-200 my-1"></div>
-  
+
             {/* Map type control */}
             <div className="relative">
               <button
@@ -651,7 +641,7 @@ const PropertyMap = ({ properties, loading }) => {
               >
                 <Layers size={20} />
               </button>
-  
+
               {isMapTypeMenuOpen && (
                 <div className="absolute right-full mr-2 top-0 bg-white shadow-lg rounded-lg overflow-hidden">
                   <button
@@ -685,7 +675,7 @@ const PropertyMap = ({ properties, loading }) => {
                 </div>
               )}
             </div>
-  
+
             {/* Fullscreen toggle */}
             <button
               onClick={toggleFullscreen}
@@ -694,7 +684,7 @@ const PropertyMap = ({ properties, loading }) => {
             >
               <Maximize size={20} />
             </button>
-  
+
             {/* Get current location */}
             <button
               onClick={handleGetUserLocation}
@@ -703,7 +693,7 @@ const PropertyMap = ({ properties, loading }) => {
             >
               <Locate size={20} />
             </button>
-  
+
             {/* Reset view to all properties */}
             <button
               onClick={resetMapView}
@@ -712,7 +702,7 @@ const PropertyMap = ({ properties, loading }) => {
             >
               <Home size={20} />
             </button>
-  
+
             {/* Refresh map */}
             <button
               onClick={() => window.location.reload()}
@@ -723,14 +713,16 @@ const PropertyMap = ({ properties, loading }) => {
             </button>
           </div>
         </div>
-  
+
         {/* Status bar */}
         <div className="p-3 bg-white border-t flex justify-between items-center text-sm text-gray-600">
           <div>
             <span>
               {filteredProperties.length}{" "}
               {filteredProperties.length === 1 ? "property" : "properties"}
-              {selectedPropertyType !== "all" ? ` (${selectedPropertyType})` : ""}
+              {selectedPropertyType !== "all"
+                ? ` (${selectedPropertyType})`
+                : ""}
               {searchQuery ? ` matching "${searchQuery}"` : ""}
             </span>
           </div>
@@ -742,7 +734,7 @@ const PropertyMap = ({ properties, loading }) => {
               <MapPin size={14} />
               <span>View All</span>
             </button>
-  
+
             <button
               onClick={() => {
                 if (mapRef.current) {
@@ -755,7 +747,7 @@ const PropertyMap = ({ properties, loading }) => {
             >
               <ZoomIn size={18} />
             </button>
-  
+
             <button
               onClick={() => {
                 if (mapRef.current) {

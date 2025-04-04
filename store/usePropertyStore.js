@@ -1,26 +1,29 @@
-import { supabase } from '@/utils/supabase/client';
 import { create } from 'zustand';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const usePropertyStore = create((set, get) => ({
   // State
   properties: [],
-  filteredProperties: [],
   loading: false,
   error: null,
-  pagination: {
-    page: 1,
-    pageSize: 9,
-    totalCount: 0,
-    totalPages: 0
-  },
   filters: {
     propertyType: 'all',
     priceRange: [0, 1000000],
     location: 'all',
     bedrooms: 'any',
     bathrooms: 'any',
-    sortBy: 'newest',
-    searchQuery: ''
+    sortBy: 'newest'
+  },
+  pagination: {
+    page: 1,
+    pageSize: 9,
+    totalCount: 0,
+    totalPages: 0
   },
   
   // Actions
@@ -28,19 +31,18 @@ const usePropertyStore = create((set, get) => ({
     set({ loading: true, error: null });
     
     try {
-      // Prepare query with pagination
+      // Get current pagination and filters
       const { page, pageSize } = get().pagination;
+      const { propertyType, priceRange, location, bedrooms, bathrooms, sortBy } = get().filters;
+      
+      // Calculate range for pagination
       const from = (page - 1) * pageSize;
       const to = from + pageSize - 1;
       
-      // Build the query with filters
-      let query = supabase
-        .from('properties')
-        .select('*', { count: 'exact' });
+      // Start building the query
+      let query = supabase.from('properties').select('*', { count: 'exact' });
       
       // Apply filters
-      const { propertyType, priceRange, location, bedrooms, bathrooms, sortBy } = get().filters;
-      
       if (propertyType !== 'all') {
         query = query.eq('type', propertyType);
       }
@@ -77,20 +79,49 @@ const usePropertyStore = create((set, get) => ({
       // Apply pagination
       query = query.range(from, to);
       
-      // Execute the query
+      // Execute query
       const { data, error, count } = await query;
       
       if (error) throw error;
       
-      // Transform coordinates from PostGIS point to regular lat/lng format
-      const transformedData = data.map(property => {
-        // Check if location_coordinates exists and extract lat/lng
-        const coordinates = property.location_coordinates 
-          ? {
-              lat: parseFloat(property.location_coordinates.coordinates[1]),
-              lng: parseFloat(property.location_coordinates.coordinates[0])
+      // Process data to format coordinates
+      const processedData = data.map(property => {
+        // Add coordinates in the format your map component expects
+        let coordinates = null;
+        
+        if (property.location_coordinates) {
+          try {
+            // If location_coordinates is a PostGIS point stored as text or object
+            if (typeof property.location_coordinates === 'string') {
+              // Parse from WKT format or JSON string
+              if (property.location_coordinates.startsWith('POINT')) {
+                // Extract coordinates from WKT format: POINT(lng lat)
+                const match = property.location_coordinates.match(/POINT\((.+) (.+)\)/);
+                if (match) {
+                  coordinates = {
+                    lng: parseFloat(match[1]),
+                    lat: parseFloat(match[2])
+                  };
+                }
+              } else {
+                // Try parsing as JSON
+                const parsed = JSON.parse(property.location_coordinates);
+                coordinates = {
+                  lat: parsed.coordinates ? parsed.coordinates[1] : parsed.y || parsed.lat,
+                  lng: parsed.coordinates ? parsed.coordinates[0] : parsed.x || parsed.lng
+                };
+              }
+            } else if (property.location_coordinates.coordinates) {
+              // PostGIS typically stores as [longitude, latitude]
+              coordinates = {
+                lat: property.location_coordinates.coordinates[1],
+                lng: property.location_coordinates.coordinates[0]
+              };
             }
-          : null;
+          } catch (e) {
+            console.error("Error parsing coordinates:", e);
+          }
+        }
         
         return {
           ...property,
@@ -98,22 +129,20 @@ const usePropertyStore = create((set, get) => ({
         };
       });
       
-      // Update pagination
+      // Calculate total pages
       const totalPages = Math.ceil(count / pageSize);
       
       set({
-        properties: transformedData,
-        filteredProperties: transformedData,
+        properties: processedData,
+        loading: false,
         pagination: {
           ...get().pagination,
           totalCount: count,
           totalPages
-        },
-        loading: false
+        }
       });
-      
     } catch (error) {
-      console.error('Error fetching properties:', error);
+      console.error("Error fetching properties:", error);
       set({ error: error.message, loading: false });
     }
   },
@@ -123,17 +152,6 @@ const usePropertyStore = create((set, get) => ({
       pagination: {
         ...state.pagination,
         page
-      }
-    }));
-    get().fetchProperties();
-  },
-  
-  setPageSize: (pageSize) => {
-    set(state => ({
-      pagination: {
-        ...state.pagination,
-        pageSize,
-        page: 1 // Reset to first page when changing page size
       }
     }));
     get().fetchProperties();
@@ -150,55 +168,6 @@ const usePropertyStore = create((set, get) => ({
         page: 1 // Reset to first page when filters change
       }
     }));
-    get().fetchProperties();
-  },
-  
-  searchProperties: (searchQuery) => {
-    set(state => ({
-      filters: {
-        ...state.filters,
-        searchQuery
-      },
-      pagination: {
-        ...state.pagination,
-        page: 1 // Reset to first page when searching
-      }
-    }));
-    
-    // Handle client-side search if needed (for already loaded properties)
-    if (searchQuery.trim() === '') {
-      set(state => ({ filteredProperties: state.properties }));
-      return;
-    }
-    
-    const query = searchQuery.toLowerCase();
-    set(state => ({
-      filteredProperties: state.properties.filter(property => 
-        property.title?.toLowerCase().includes(query) ||
-        property.description?.toLowerCase().includes(query) ||
-        property.location?.toLowerCase().includes(query)
-      )
-    }));
-    
-    get().fetchProperties();
-  },
-  
-  resetFilters: () => {
-    set({
-      filters: {
-        propertyType: 'all',
-        priceRange: [0, 1000000],
-        location: 'all',
-        bedrooms: 'any',
-        bathrooms: 'any',
-        sortBy: 'newest',
-        searchQuery: ''
-      },
-      pagination: {
-        ...get().pagination,
-        page: 1
-      }
-    });
     get().fetchProperties();
   }
 }));

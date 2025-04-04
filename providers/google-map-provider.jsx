@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 
 export default function GoogleMapsProvider({ children }) {
   const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
+    id: "google-map-scripts",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "your-api-key-here",
   });
 

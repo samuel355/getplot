@@ -566,11 +566,12 @@ const Header = () => {
           )}
 
           {/* User button - show if signed in */}
-          {isSignedIn && (
+          
+          {/* {isSignedIn && (
             <div className="ml-4">
               <UserButton afterSignOutUrl="/" />
             </div>
-          )}
+          )} */}
           
           {/* Sign in button - show if not signed in */}
           {/* {!isSignedIn && (

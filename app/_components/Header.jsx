@@ -347,7 +347,7 @@ const Header = () => {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                {/* <NavigationMenuItem>
+                <NavigationMenuItem>
                   <Link
                     href="/market-place"
                     className={cn(
@@ -357,7 +357,7 @@ const Header = () => {
                   >
                     Market Place
                   </Link>
-                </NavigationMenuItem> */}
+                </NavigationMenuItem>
                 
                 <NavigationMenuItem>
                   <Link
@@ -371,7 +371,7 @@ const Header = () => {
                   </Link>
                 </NavigationMenuItem>
 
-                {/* {isSignedIn && (user?.publicMetadata?.role === "sysadmin" || user?.publicMetadata?.role === "admin") && (
+                {isSignedIn && (user?.publicMetadata?.role === "sysadmin" || user?.publicMetadata?.role === "admin") && (
                   <NavigationMenuItem>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -399,7 +399,7 @@ const Header = () => {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </NavigationMenuItem>
-                )} */}
+                )}
               </NavigationMenuList>
             </NavigationMenu>
           </nav>
@@ -486,7 +486,7 @@ const Header = () => {
                   </DropdownMenuItem>
 
                   <DropdownMenuSeparator />
-{/*                   
+                  
                   <DropdownMenuItem asChild>
                     <Link
                       href="/market-place"
@@ -497,7 +497,7 @@ const Header = () => {
                     >
                       Market Place
                     </Link>
-                  </DropdownMenuItem> */}
+                  </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>
                     <Link
@@ -511,7 +511,7 @@ const Header = () => {
                     </Link>
                   </DropdownMenuItem>
 
-                  {/* {isSignedIn && (user?.publicMetadata?.role === "sysadmin" || user?.publicMetadata?.role === "admin") && (
+                  {isSignedIn && (user?.publicMetadata?.role === "sysadmin" || user?.publicMetadata?.role === "admin") && (
                     <>
                       <DropdownMenuSeparator />
                       <p className="ml-2 text-xs text-gray-500 py-1">Dashboards</p>
@@ -540,7 +540,7 @@ const Header = () => {
                         </Link>
                       </DropdownMenuItem>
                     </>
-                  )} */}
+                  )}
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -567,20 +567,20 @@ const Header = () => {
 
           {/* User button - show if signed in */}
           
-          {/* {isSignedIn && (
+          {isSignedIn && (
             <div className="ml-4">
               <UserButton afterSignOutUrl="/" />
             </div>
-          )} */}
+          )}
           
           {/* Sign in button - show if not signed in */}
-          {/* {!isSignedIn && (
+          {!isSignedIn && (
             <div className="ml-4">
               <Button asChild size="sm">
                 <Link href="/sign-in">Sign In</Link>
               </Button>
             </div>
-          )} */}
+          )}
         </div>
       </div>
     </header>

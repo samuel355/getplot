@@ -106,7 +106,7 @@ export default function PropertiesDashboard() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-        <Link href="/properties/create">
+        <Link href="/properties/add-listing">
           <Button className="flex gap-2">
             <Plus className="h-4 w-4" />
             Add Property
@@ -245,7 +245,7 @@ export default function PropertiesDashboard() {
                   Get started by creating a new property.
                 </p>
                 <Button className="mt-4" asChild>
-                  <Link href="/properties/create">
+                  <Link href="/properties/add-listing">
                     <Plus className="h-4 w-4 mr-2" />
                     Add Property
                   </Link>

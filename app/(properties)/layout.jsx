@@ -1,20 +1,18 @@
-import { Toaster } from 'react-hot-toast';
-import Sidebar from './components/sidebar';
+
 import Header from './components/header';
+import Sidebar from './components/sidebar';
+import { SidebarProvider } from './contexts/sidebar-context';
 
-export default function PropertiesLayout({ children }) {
+export default function DashboardLayout({ children }) {
   return (
-
-      <div className="min-h-screen bg-background flex w-full">
-        <Sidebar />
-        <div className="flex-1">
-          <Header />
-          <main className="p-6">
-            {children}
-          </main>
+    <SidebarProvider>
+      <div className="flex min-h-screen flex-col w-full">
+        <Header />
+        <div className="flex flex-1">
+          <Sidebar />
+          <main className="flex-1 p-4 md:p-6">{children}</main>
         </div>
-        <Toaster position="top-right" />
       </div>
-
+    </SidebarProvider>
   );
 }

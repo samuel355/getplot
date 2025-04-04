@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from 'react'; // Add this import
 import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -13,17 +12,17 @@ import {
   BarChart4,
   PlusCircle,
   LogOut,
-  Menu, // Add Menu icon for toggle button
-  X // Add X icon for closing
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useClerk } from '@clerk/nextjs';
+import { useSidebar } from '../contexts/sidebar-context';
 
 export default function Sidebar() {
   const { user, isSignedIn } = useUser();
   const { signOut } = useClerk();
   const pathname = usePathname();
-  const [isMobileOpen, setIsMobileOpen] = useState(false); // Add state for mobile toggle
+  const { isMobileOpen, setIsMobileOpen } = useSidebar();
   
   if (!isSignedIn) return null;
   
@@ -42,29 +41,28 @@ export default function Sidebar() {
     { name: 'Settings', href: '/properties/admin/settings', icon: Settings },
   ];
   
-  // Mobile toggle button - Add this outside the sidebar div
-  const toggleButton = (
-    <Button 
-      variant="ghost" 
-      size="icon" 
-      className="md:hidden fixed top-3 left-3 z-50" 
-      onClick={() => setIsMobileOpen(!isMobileOpen)}
-    >
-      {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-    </Button>
-  );
-
   // The main sidebar content
   const sidebarContent = (
-    <div className="flex h-full max-h-screen flex-col gap-2">
-      <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+    <div className="flex flex-col h-screen">
+      <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 shrink-0">
         <Link href="/properties" className="flex items-center gap-2 font-semibold">
           <Building className="h-6 w-6" />
           <span>PropManager</span>
         </Link>
+        {/* Close button only for mobile */}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="ml-auto md:hidden" 
+          onClick={() => setIsMobileOpen(false)}
+        >
+          <X className="h-5 w-5" />
+        </Button>
       </div>
-      <div className="flex-1 overflow-auto py-2">
-        <nav className="grid items-start px-2 lg:px-4 gap-1">
+      
+      {/* Scrollable navigation area */}
+      <div className="flex-1 overflow-y-auto">
+        <nav className="grid items-start px-2 lg:px-4 gap-1 py-2">
           {navigation.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -113,7 +111,9 @@ export default function Sidebar() {
           )}
         </nav>
       </div>
-      <div className="mt-auto p-4 border-t">
+      
+      {/* User profile and logout - fixed at bottom */}
+      <div className="p-4 border-t shrink-0">
         <div className="flex items-center gap-3 py-2">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
             <img 
@@ -145,16 +145,17 @@ export default function Sidebar() {
   
   return (
     <>
-      {toggleButton}
-      
-      {/* Desktop sidebar */}
-      <div className="hidden border-r bg-muted/40 md:block md:w-64">
+      {/* Desktop sidebar - fixed position */}
+      <div className="hidden md:block md:w-64 border-r bg-muted/40 fixed h-screen z-10">
         {sidebarContent}
       </div>
       
-      {/* Mobile sidebar - conditional rendering based on state */}
+      {/* Spacer div to push content over - same width as sidebar */}
+      <div className="hidden md:block md:w-64 flex-shrink-0"></div>
+      
+      {/* Mobile sidebar - fixed position when open */}
       {isMobileOpen && (
-        <div className="fixed inset-0 z-40 md:hidden">
+        <div className="fixed inset-0 z-50 md:hidden">
           {/* Backdrop/overlay */}
           <div 
             className="fixed inset-0 bg-black/50" 

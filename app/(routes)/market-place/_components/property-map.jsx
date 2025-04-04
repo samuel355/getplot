@@ -352,7 +352,7 @@ const PropertyMap = ({ properties, loading }) => {
   return (
     <div
       ref={mapContainerRef}
-      className="flex flex-col h-[600px] bg-white rounded-lg shadow-md overflow-hidden relative"
+      className="flex flex-col h-[800px] bg-white rounded-lg shadow-md overflow-hidden relative"
     >
       {/* Search and filter bar */}
       <div className="flex items-center justify-between p-2 bg-white border-b z-10">

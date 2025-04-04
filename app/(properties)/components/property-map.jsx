@@ -24,7 +24,7 @@ export default function PropertyMap({ property }) {
 
   // Load Google Maps API
   const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
+    id: "google-map-scripts",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
   });
 

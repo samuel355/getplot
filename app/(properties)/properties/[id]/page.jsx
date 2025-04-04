@@ -46,6 +46,7 @@ import {
   DialogHeader, 
   DialogTitle 
 } from "@/components/ui/dialog";
+import PropertyMap from '../../components/property-map';
 
 export default function PropertyDetailPage({ params }) {
   const { id } = params;
@@ -346,10 +347,8 @@ export default function PropertyDetailPage({ params }) {
               )}
             </TabsContent>
             <TabsContent value="location" className="pt-4">
-              <div className="aspect-[16/9] bg-muted rounded-lg overflow-hidden mb-4">
-                <div className="h-full flex items-center justify-center">
-                  <p className="text-center text-muted-foreground">Map preview would be displayed here</p>
-                </div>
+              <div className="aspect-[16/9] bg-muted rounded-lg overflow-hidden mb-4 h-80">
+                <PropertyMap property={property} />
               </div>
               
               <h3 className="text-lg font-semibold mb-2">Location</h3>

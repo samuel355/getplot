@@ -46,8 +46,7 @@ export default function AddListingPage() {
 
   return (
     <>
-      <Header />
-      <main className="w-full md:w-[80%] lg:w-[60%] max-w-6xl mx-auto px-4 sm:px-6 py-16 min-h-screen mt-16 mb-16">
+      <main className="w-full md:w-[80%] lg:w-[75%] max-w-6xl mx-auto px-4 sm:px-6 py-16 min-h-screen mt-1 mb-16">
         <h1 className="text-3xl font-bold text-center mb-10">Add New Property Listing</h1>
         
         <div className="mb-10">
@@ -114,7 +113,6 @@ export default function AddListingPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

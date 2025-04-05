@@ -1,143 +1,133 @@
 "use client";
 
-import usePropertyStore from '@/store/usePropertyStore';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
-const Pagination = () => {
-  const { pagination, setPage } = usePropertyStore();
-  const { page, totalPages, totalCount } = pagination;
-  
-  // If there's only one page or no pages, don't render the pagination
-  if (totalPages <= 1) return null;
-  
-  // Generate page numbers to display (show maximum 5 page numbers)
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
+  };
+
+  // Generate page numbers to display
   const getPageNumbers = () => {
     const pageNumbers = [];
+    const maxPagesToShow = 5;
     
-    // Always show first page
-    pageNumbers.push(1);
-    
-    // Calculate range around current page
-    let startPage = Math.max(2, page - 1);
-    let endPage = Math.min(totalPages - 1, page + 1);
-    
-    // If we're at the start, show more pages after
-    if (page <= 2) {
-      endPage = Math.min(totalPages - 1, 4);
-    }
-    
-    // If we're at the end, show more pages before
-    if (page >= totalPages - 1) {
-      startPage = Math.max(2, totalPages - 3);
-    }
-    
-    // Add ellipsis after first page if needed
-    if (startPage > 2) {
-      pageNumbers.push('...');
-    }
-    
-    // Add middle page numbers
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i);
-    }
-    
-    // Add ellipsis before last page if needed
-    if (endPage < totalPages - 1) {
-      pageNumbers.push('...');
-    }
-    
-    // Always add last page if more than one page
-    if (totalPages > 1) {
+    // Always include first and last pages
+    if (totalPages <= maxPagesToShow) {
+      // If we have fewer pages than the max to show, display all pages
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // Always include first page
+      pageNumbers.push(1);
+      
+      // Calculate start and end of the range around current page
+      let startPage = Math.max(2, currentPage - 1);
+      let endPage = Math.min(totalPages - 1, currentPage + 1);
+      
+      // If we're close to the start, show more pages at the end
+      if (currentPage <= 3) {
+        endPage = Math.min(totalPages - 1, maxPagesToShow - 1);
+      }
+      
+      // If we're close to the end, show more pages at the start
+      if (currentPage >= totalPages - 2) {
+        startPage = Math.max(2, totalPages - maxPagesToShow + 2);
+      }
+      
+      // Add ellipsis before middle pages if needed
+      if (startPage > 2) {
+        pageNumbers.push('...');
+      }
+      
+      // Add middle pages
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
+      
+      // Add ellipsis after middle pages if needed
+      if (endPage < totalPages - 1) {
+        pageNumbers.push('...');
+      }
+      
+      // Always include last page
       pageNumbers.push(totalPages);
     }
     
     return pageNumbers;
   };
-  
-  const pageNumbers = getPageNumbers();
-  
+
+  // If there's only one page, don't show pagination
+  if (totalPages <= 1) {
+    return null;
+  }
+
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-6">
-      <div className="flex flex-1 justify-between sm:hidden">
+    <div className="flex items-center justify-center mt-8">
+      <nav className="relative z-0 inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
         <button
-          onClick={() => page > 1 && setPage(page - 1)}
-          disabled={page === 1}
-          className={`relative inline-flex items-center rounded-md px-4 py-2 text-sm font-medium ${
-            page === 1
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={`relative inline-flex items-center px-2 py-2 rounded-l-md border ${
+            currentPage === 1
               ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : 'bg-white text-gray-700 hover:bg-gray-50'
-          }`}
+              : 'bg-white text-gray-500 hover:bg-gray-50'
+          } text-sm font-medium`}
         >
-          Previous
+          <span className="sr-only">Previous</span>
+          <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
         </button>
-        <button
-          onClick={() => page < totalPages && setPage(page + 1)}
-          disabled={page === totalPages}
-          className={`relative ml-3 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium ${
-            page === totalPages
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : 'bg-white text-gray-700 hover:bg-gray-50'
-          }`}
-        >
-          Next
-        </button>
-      </div>
-      
-      <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{Math.min((page - 1) * pagination.pageSize + 1, totalCount)}</span> to{' '}
-            <span className="font-medium">{Math.min(page * pagination.pageSize, totalCount)}</span> of{' '}
-            <span className="font-medium">{totalCount}</span> results
-          </p>
-        </div>
         
-        <div>
-          <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-            <button
-              onClick={() => page > 1 && setPage(page - 1)}
-              disabled={page === 1}
-              className={`relative inline-flex items-center rounded-l-md px-2 py-2 ${
-                page === 1
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-white text-gray-500 hover:bg-gray-50'
-              }`}
+        {getPageNumbers().map((pageNumber, index) => (
+          pageNumber === '...' ? (
+            <span
+              key={`ellipsis-${index}`}
+              className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"
             >
-              <span className="sr-only">Previous</span>
-              <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-            
-            {pageNumbers.map((pageNumber, index) => (
-              <button
-                key={index}
-                onClick={() => pageNumber !== '...' && setPage(pageNumber)}
-                disabled={pageNumber === '...'}
-                className={`relative inline-flex items-center px-4 py-2 text-sm font-medium ${
-                  pageNumber === page
-                    ? 'bg-primary text-white'
-                    : pageNumber === '...'
-                    ? 'bg-white text-gray-700'
-                    : 'bg-white text-gray-500 hover:bg-gray-50'
-                }`}
-              >
-                {pageNumber}
-              </button>
-            ))}
-            
+              ...
+            </span>
+          ) : (
             <button
-              onClick={() => page < totalPages && setPage(page + 1)}
-              disabled={page === totalPages}
-              className={`relative inline-flex items-center rounded-r-md px-2 py-2 ${
-                page === totalPages
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-white text-gray-500 hover:bg-gray-50'
-              }`}
+              key={pageNumber}
+              onClick={() => onPageChange(pageNumber)}
+              className={`relative inline-flex items-center px-4 py-2 border ${
+                currentPage === pageNumber
+                  ? 'z-10 bg-primary border-primary text-white'
+                  : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+              } text-sm font-medium`}
             >
-              <span className="sr-only">Next</span>
-              <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+              {pageNumber}
             </button>
-          </nav>
-        </div>
+          )
+        ))}
+        
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`relative inline-flex items-center px-2 py-2 rounded-r-md border ${
+            currentPage === totalPages
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : 'bg-white text-gray-500 hover:bg-gray-50'
+          } text-sm font-medium`}
+        >
+          <span className="sr-only">Next</span>
+          <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+        </button>
+      </nav>
+      
+      <div className="hidden sm:flex ml-4 text-sm text-gray-500">
+        <span className="font-medium">{currentPage}</span>
+        <span className="mx-1">of</span>
+        <span className="font-medium">{totalPages}</span>
       </div>
     </div>
   );

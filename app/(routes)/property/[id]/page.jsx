@@ -14,17 +14,45 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import GoogleMapsProvider from "@/providers/google-map-provider";
 import usePropertyStore from "@/store/usePropertyStore";
-
+import { favoriteToasts } from "@/utils/toast";
 
 export default function PropertyPage() {
   const { selectedProperty, similarProperties, loading, error, fetchPropertyById, fetchSimilarProperties } = usePropertyStore();
+  const toggleFavorite = usePropertyStore(state => state.toggleFavorite);
+  const isFavorite = usePropertyStore(state => 
+    selectedProperty ? state.isFavorite(selectedProperty.id) : false
+  );
+  
   const [selectedImage, setSelectedImage] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const router = useRouter();
   const params = useParams();
-  
-  console.log(similarProperties)
 
+  const handleFavoriteToggle = () => {
+    if (!selectedProperty) return;
+    
+    // Trigger animation
+    setIsAnimating(true);
+    setTimeout(() => setIsAnimating(false), 1000);
+    
+    const result = toggleFavorite(selectedProperty.id);
+    
+    if (result.success) {
+      if (result.isFavorite) {
+        favoriteToasts.addedToFavorites({
+          title: selectedProperty.title,
+          image: selectedProperty.images[0]
+        });
+      } else {
+        favoriteToasts.removedFromFavorites({
+          title: selectedProperty.title
+        });
+      }
+    } else {
+      favoriteToasts.error(result.message || 'Could not update favorites');
+    }
+  };
+  
   
   useEffect(() => {
     const loadProperty = async () => {

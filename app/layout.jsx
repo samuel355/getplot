@@ -4,6 +4,7 @@ import { PrimeReactProvider } from "primereact/api";
 import "./globals.css";
 import Provider from "./Provider";
 import { Toaster } from "@/components/ui/sonner";
+import { Toaster as NewToaster } from "@/components/ui/toaster";
 import ToastMessage from "./_components/ToastMessage";
 
 export const metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
             <ToastMessage />
             <Provider>{children}</Provider>
             <Toaster />
+            <NewToaster />
           </body>
         </html>
       </ClerkProvider>

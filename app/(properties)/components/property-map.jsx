@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef, useCallback, useState } from "react";
-import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Marker, InfoWindow} from "@react-google-maps/api";
 import { MapPin, ZoomIn, ZoomOut, Maximize, Layers } from "lucide-react";
-import GoogleMapsProvider from "@/providers/google-map-provider";
 
 export default function PropertyMap({ property }) {
   const [mapType, setMapType] = useState("roadmap");
@@ -69,7 +68,6 @@ export default function PropertyMap({ property }) {
     ],
   };
   return (
-    <GoogleMapsProvider>
       <div ref={mapContainerRef} className="w-full h-full relative">
         {/* Main map */}
         <GoogleMap
@@ -176,6 +174,5 @@ export default function PropertyMap({ property }) {
           </div>
         </div>
       </div>
-    </GoogleMapsProvider>
   );
 }

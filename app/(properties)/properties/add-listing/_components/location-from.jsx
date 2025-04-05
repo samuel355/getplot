@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState, useEffect, useRef } from "react";
-import { GoogleMap, Marker, useJsApiLoader, StandaloneSearchBox } from "@react-google-maps/api";
+import { GoogleMap, Marker,StandaloneSearchBox } from "@react-google-maps/api";
 import { MapPinIcon, ArrowsPointingOutIcon, MapIcon } from '@heroicons/react/24/outline';
 
 const schema = yup.object().shape({
@@ -28,12 +28,6 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
     defaultValues: formData
   });
   
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "your-api-key-here",
-    libraries
-  });
-
   useEffect(() => {
     // Initialize marker position from existing data if available
     if (formData.coordinates) {
@@ -173,31 +167,29 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
       <form onSubmit={handleSubmit(onSubmit)}>
         <h2 className="text-xl font-semibold mb-6">Location Information</h2>
         
-        {isLoaded && (
-          <div className="mb-6">
-            <label className="block text-gray-700 mb-2 font-medium">
-              Search for Location
-            </label>
-            <StandaloneSearchBox
-              onLoad={ref => searchBoxRef.current = ref}
-              onPlacesChanged={handlePlacesChanged}
-            >
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <MapIcon className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search for an address or location"
-                  className="w-full pl-10 px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
+        <div className="mb-6">
+          <label className="block text-gray-700 mb-2 font-medium">
+            Search for Location
+          </label>
+          <StandaloneSearchBox
+            onLoad={ref => searchBoxRef.current = ref}
+            onPlacesChanged={handlePlacesChanged}
+          >
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <MapIcon className="h-5 w-5 text-gray-400" />
               </div>
-            </StandaloneSearchBox>
-            <p className="text-sm text-gray-500 mt-1">
-              Type to search for a location or use the map below to pinpoint the exact property location
-            </p>
-          </div>
-        )}
+              <input
+                type="text"
+                placeholder="Search for an address or location"
+                className="w-full pl-10 px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </StandaloneSearchBox>
+          <p className="text-sm text-gray-500 mt-1">
+            Type to search for a location or use the map below to pinpoint the exact property location
+          </p>
+        </div>
         
         <div className="mb-6">
           <label htmlFor="location" className="block text-gray-700 mb-2 font-medium">
@@ -254,54 +246,45 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
             </div>
           </div>
           
-          {isLoaded ? (
-            <div className="rounded-lg overflow-hidden border border-gray-300 shadow-md">
-              <GoogleMap
-                mapContainerStyle={mapStyles}
-                center={mapCenter}
-                zoom={mapZoom}
-                onClick={handleMapClick}
-                onLoad={onMapLoad}
-                options={{
-                  streetViewControl: false,
-                  mapTypeControl: true,
-                  fullscreenControl: true
-                }}
-              >
-                {markerPosition && (
-                  <Marker
-                    position={markerPosition}
-                    draggable={isMarkerDraggable}
-                    onDragEnd={(e) => {
-                      const newPos = {
-                        lat: e.latLng.lat(),
-                        lng: e.latLng.lng()
-                      };
-                      setMarkerPosition(newPos);
-                      
-                      // Optional: Update address via reverse geocoding
-                      if (window.google && window.google.maps) {
-                        const geocoder = new window.google.maps.Geocoder();
-                        geocoder.geocode({ location: newPos }, (results, status) => {
-                          if (status === "OK" && results[0]) {
-                            setValue("address", results[0].formatted_address);
-                          }
-                        });
-                      }
-                    }}
-                    animation={window.google?.maps.Animation.DROP}
-                  />
-                )}
-              </GoogleMap>
-            </div>
-          ) : (
-            <div className="h-96 bg-gray-100 flex items-center justify-center rounded-lg">
-              <div className="flex flex-col items-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
-                <p>Loading map...</p>
-              </div>
-            </div>
-          )}
+          <div className="rounded-lg overflow-hidden border border-gray-300 shadow-md">
+            <GoogleMap
+              mapContainerStyle={mapStyles}
+              center={mapCenter}
+              zoom={mapZoom}
+              onClick={handleMapClick}
+              onLoad={onMapLoad}
+              options={{
+                streetViewControl: false,
+                mapTypeControl: true,
+                fullscreenControl: true
+              }}
+            >
+              {markerPosition && (
+                <Marker
+                  position={markerPosition}
+                  draggable={isMarkerDraggable}
+                  onDragEnd={(e) => {
+                    const newPos = {
+                      lat: e.latLng.lat(),
+                      lng: e.latLng.lng()
+                    };
+                    setMarkerPosition(newPos);
+                    
+                    // Optional: Update address via reverse geocoding
+                    if (window.google && window.google.maps) {
+                      const geocoder = new window.google.maps.Geocoder();
+                      geocoder.geocode({ location: newPos }, (results, status) => {
+                        if (status === "OK" && results[0]) {
+                          setValue("address", results[0].formatted_address);
+                        }
+                      });
+                    }
+                  }}
+                  animation={window.google?.maps.Animation.DROP}
+                />
+              )}
+            </GoogleMap>
+          </div>
           
           <div className="mt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm">
             {markerPosition ? (

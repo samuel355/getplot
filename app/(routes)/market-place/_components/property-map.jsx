@@ -4,8 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import {
   GoogleMap,
   Marker,
-  InfoWindow,
-  useJsApiLoader,
+  InfoWindow
 } from "@react-google-maps/api";
 import PropertyCard from "./property-card";
 import {

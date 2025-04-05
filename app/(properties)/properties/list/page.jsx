@@ -374,7 +374,7 @@ function renderProperties(viewMode, properties, loading, onDelete) {
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href={`/properties/${property.id}/edit`}>
+                        <Link href={`/properties/edit-property/${property.id}`}>
                           <Pencil className="mr-2 h-4 w-4" />
                           Edit
                         </Link>
@@ -459,7 +459,7 @@ function renderProperties(viewMode, properties, loading, onDelete) {
                   </Link>
                 </Button>
                 <Button variant="outline" size="sm" asChild className="flex-1">
-                  <Link href={`/properties/${property.id}/edit`}>
+                  <Link href={`/properties/edit-property/${property.id}`}>
                     <Pencil className="mr-2 h-4 w-4" />
                     Edit
                   </Link>

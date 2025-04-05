@@ -13,72 +13,41 @@ import { GoogleMap, Marker } from "@react-google-maps/api";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import GoogleMapsProvider from "@/providers/google-map-provider";
-import { supabase } from "@/utils/supabase/client";
+import usePropertyStore from "@/store/usePropertyStore";
+
 
 export default function PropertyPage() {
-  const [property, setProperty] = useState(null);
-  const [similarProperties, setSimilarProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { selectedProperty, similarProperties, loading, error, fetchPropertyById, fetchSimilarProperties } = usePropertyStore();
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const router = useRouter();
   const params = useParams();
+  
+  console.log(similarProperties)
 
+  
   useEffect(() => {
-    const fetchProperty = async () => {
-      setLoading(true);
-
-      try {
-        const propertyId = params.id;
-
-        // Query Supabase for the specific property
-        const { data, error } = await supabase
-          .from("properties")
-          .select("*")
-          .eq("id", propertyId)
-          .single();
-
-        if (error) {
-          console.error("Error fetching property:", error);
-          router.push("/market-place");
-          return;
-        }
-
-        if (data) {
-          setProperty(data);
-          
-          // Fetch similar properties of the same type
-          const { data: similarData, error: similarError } = await supabase
-            .from("properties")
-            .select("*")
-            .eq("type", data.type)
-            .neq("id", propertyId)
-            .limit(3);
-            
-          if (!similarError && similarData) {
-            setSimilarProperties(similarData);
-          } else {
-            console.error("Error fetching similar properties:", similarError);
-          }
-          
-        } else {
-          // Property not found
-          router.push("/market-place");
-        }
-      } catch (error) {
-        console.error("Failed to fetch property:", error);
+    const loadProperty = async () => {
+      const property = await fetchPropertyById(params.id);
+      if (property) {
+        fetchSimilarProperties(property);
+      } else {
+        // Property not found or error
         router.push("/market-place");
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchProperty();
-  }, [params.id, router]);
-  
+    loadProperty();
+    
+    // Cleanup function
+    return () => {
+      // Reset selected property when unmounting
+      usePropertyStore.getState().selectedProperty = null;
+    };
+  }, [params.id, router, fetchPropertyById, fetchSimilarProperties]);
  
 
-  if (loading || !property) {
+  if (loading) {
     return (
       <GoogleMapsProvider>
         <Header />
@@ -96,7 +65,6 @@ export default function PropertyPage() {
     );
   }
 
-  console.log(property.location_coordinates)
   return (
     <GoogleMapsProvider>
       <Header />
@@ -115,26 +83,26 @@ export default function PropertyPage() {
           {/* Left column - property images and details */}
           <div className="lg:w-2/3">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {property.title}
+              {selectedProperty?.title}
             </h1>
-            <p className="text-lg text-gray-600 mb-6">{property.location}</p>
+            <p className="text-lg text-gray-600 mb-6">{selectedProperty?.location}</p>
 
             {/* Property image gallery */}
             <div className="mb-6">
               <div className="relative h-96 rounded-lg overflow-hidden mb-2">
                 <img
-                  src={property?.images[selectedImage]?.url}
-                  alt={property?.title}
+                  src={selectedProperty?.images[selectedImage]}
+                  alt={selectedProperty?.title}
                   className="w-full h-full object-cover"
                 />
 
                 {/* Image navigation buttons (only if more than one image) */}
-                {property.images && property.images.length > 1 && (
+                {selectedProperty?.images && selectedProperty.images.length > 1 && (
                   <>
                     <button
                       onClick={() =>
                         setSelectedImage((prev) =>
-                          prev === 0 ? property.images.length - 1 : prev - 1,
+                          prev === 0 ? selectedProperty.images.length - 1 : prev - 1,
                         )
                       }
                       className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70"
@@ -158,7 +126,7 @@ export default function PropertyPage() {
                     <button
                       onClick={() =>
                         setSelectedImage((prev) =>
-                          prev === property.images.length - 1 ? 0 : prev + 1,
+                          prev === selectedProperty.images.length - 1 ? 0 : prev + 1,
                         )
                       }
                       className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70"
@@ -184,14 +152,14 @@ export default function PropertyPage() {
 
                 {/* Type badge */}
                 <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-md font-medium">
-                  {property.type === "house" ? "House" : "Land"}
+                  {selectedProperty?.type === "house" ? "House" : "Land"}
                 </div>
               </div>
 
               {/* Thumbnail images */}
-              {property.images && property.images.length > 1 && (
+              {selectedProperty?.images && selectedProperty?.images.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto">
-                  {property.images.map((image, index) => (
+                  {selectedProperty?.images.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
@@ -202,8 +170,8 @@ export default function PropertyPage() {
                       }`}
                     >
                       <img
-                        src={image.url}
-                        alt={`${property.title} - image ${index + 1}`}
+                        src={image}
+                        alt={`${selectedProperty?.title} - image ${index + 1}`}
                         className="w-full h-full object-cover"
                       />
                     </button>
@@ -216,7 +184,7 @@ export default function PropertyPage() {
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-primary">
-                  ${property.price.toLocaleString()}
+                  ${selectedProperty?.price.toLocaleString()}
                 </h2>
                 <div className="flex gap-2">
                   <button
@@ -241,28 +209,28 @@ export default function PropertyPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-2">
                   <div>
                     <p className="text-gray-500 text-sm">Property Type</p>
-                    <p className="font-semibold capitalize">{property.type}</p>
+                    <p className="font-semibold capitalize">{selectedProperty?.type}</p>
                   </div>
                   <div>
                     <p className="text-gray-500 text-sm">Property Size</p>
-                    <p className="font-semibold">{property.size}</p>
+                    <p className="font-semibold">{selectedProperty?.size}</p>
                   </div>
-                  {property.type === "house" && (
+                  {selectedProperty?.type === "house" && (
                     <>
                       <div>
                         <p className="text-gray-500 text-sm">Bedrooms</p>
-                        <p className="font-semibold">{property.bedrooms}</p>
+                        <p className="font-semibold">{selectedProperty?.bedrooms}</p>
                       </div>
                       <div>
                         <p className="text-gray-500 text-sm">Bathrooms</p>
-                        <p className="font-semibold">{property.bathrooms}</p>
+                        <p className="font-semibold">{selectedProperty?.bathrooms}</p>
                       </div>
                     </>
                   )}
                   <div>
                     <p className="text-gray-500 text-sm">Listed</p>
                     <p className="font-semibold">
-                      {new Date(property.created_at || property.createdAt).toLocaleDateString(
+                      {new Date(selectedProperty?.created_at || selectedProperty?.createdAt).toLocaleDateString(
                         "en-US",
                         {
                           month: "short",
@@ -277,13 +245,13 @@ export default function PropertyPage() {
 
               <div>
                 <h3 className="text-lg font-semibold mb-2">Description</h3>
-                <p className="text-gray-700 mb-4">{property.description}</p>
+                <p className="text-gray-700 mb-4">{selectedProperty?.description}</p>
 
-                {property.features && property.features.length > 0 && (
+                {selectedProperty?.features && selectedProperty?.features.length > 0 && (
                   <>
                     <h3 className="text-lg font-semibold mb-2">Features</h3>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {property.features.map((feature, index) => (
+                      {selectedProperty?.features.map((feature, index) => (
                         <li key={index} className="flex items-center">
                           <svg
                             className="h-5 w-5 text-primary mr-2"
@@ -309,13 +277,13 @@ export default function PropertyPage() {
             {/* Location map - GOOGLE MAPS */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <h3 className="text-lg font-semibold mb-4">Location</h3>
-              {property.location_coordinates && (
+              {selectedProperty?.location_coordinates && (
                 <div className="h-80 rounded-lg overflow-hidden">
                   <GoogleMap
                     mapContainerStyle={{ height: "100%", width: "100%" }}
                     center={{
-                      lat: property.location_coordinates.coordinates[0], // Latitude is the second element
-                      lng: property.location_coordinates.coordinates[1]  // Longitude is the first element
+                      lat: selectedProperty?.location_coordinates.coordinates[0], // Latitude is the second element
+                      lng: selectedProperty?.location_coordinates.coordinates[1]  // Longitude is the first element
                     }}
                     zoom={15}
                     options={{
@@ -327,8 +295,8 @@ export default function PropertyPage() {
                   >
                     <Marker
                       position={{
-                        lat: property.location_coordinates.coordinates[0], // Latitude is the second element
-                        lng: property.location_coordinates.coordinates[1]  // Longitude is the first element
+                        lat: selectedProperty?.location_coordinates.coordinates[0], // Latitude is the second element
+                        lng: selectedProperty?.location_coordinates.coordinates[1]  // Longitude is the first element
                       }}
                     />
                   </GoogleMap>
@@ -494,7 +462,7 @@ export default function PropertyPage() {
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
                     placeholder="I'm interested in this property"
-                    defaultValue={`I'm interested in this property: ${property.title}`}
+                    defaultValue={`I'm interested in this property: ${selectedProperty?.title}`}
                   />
                 </div>
                 <button
@@ -603,7 +571,7 @@ export default function PropertyPage() {
                     >
                       <div className="h-16 w-20 rounded-md overflow-hidden flex-shrink-0">
                         <img
-                          src={similarProperty?.images[0]?.url}
+                          src={similarProperty?.images[0]}
                           alt={similarProperty.title}
                           className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-200"
                         />

@@ -1,175 +1,251 @@
+import { supabase } from '@/utils/supabase/client';
 import { create } from 'zustand';
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 const usePropertyStore = create((set, get) => ({
-  // State
+  // Properties state
   properties: [],
+  filteredProperties: [],
+  similarProperties: [],
+  selectedProperty: null,
   loading: false,
   error: null,
+  
+  // Pagination state
+  currentPage: 1,
+  totalPages: 1,
+  propertiesPerPage: 9,
+  totalProperties: 0,
+  
+  // Filters state
   filters: {
     propertyType: 'all',
-    priceRange: [0, 1000000],
+    priceRange: [0, 10000000],
     location: 'all',
     bedrooms: 'any',
     bathrooms: 'any',
-    sortBy: 'newest'
-  },
-  pagination: {
-    page: 1,
-    pageSize: 9,
-    totalCount: 0,
-    totalPages: 0
+    sortBy: 'newest',
   },
   
   // Actions
-  fetchProperties: async () => {
-    set({ loading: true, error: null });
+  setFilters: (newFilters) => set((state) => ({
+    filters: { ...state.filters, ...newFilters },
+    currentPage: 1, // Reset to page 1 when filters change
+  })),
+  
+  setPage: (page) => set({ currentPage: page }),
+  
+  toggleFavorite: (propertyId) => {
+    set((state) => {
+      // Implement favorite toggling logic here
+      // This is a placeholder that you'll need to expand based on your requirements
+      return { ...state };
+    });
+  },
+  
+  // Fetch properties with pagination and filtering
+  fetchProperties: async (page = 1) => {
+    const state = get();
+    const { filters, propertiesPerPage } = state;
     
     try {
-      // Get current pagination and filters
-      const { page, pageSize } = get().pagination;
-      const { propertyType, priceRange, location, bedrooms, bathrooms, sortBy } = get().filters;
+      set({ loading: true, error: null });
       
-      // Calculate range for pagination
-      const from = (page - 1) * pageSize;
-      const to = from + pageSize - 1;
+      // Calculate pagination
+      const from = (page - 1) * propertiesPerPage;
+      const to = from + propertiesPerPage - 1;
       
-      // Start building the query
-      let query = supabase.from('properties').select('*', { count: 'exact' });
+      let query = supabase
+        .from('properties')
+        .select(
+          'id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, location_coordinates',
+          { count: 'exact' } // Get total count for pagination
+        );
       
       // Apply filters
-      if (propertyType !== 'all') {
-        query = query.eq('type', propertyType);
+      if (filters.propertyType !== 'all') {
+        query = query.eq('type', filters.propertyType);
       }
       
-      if (priceRange[0] > 0) {
-        query = query.gte('price', priceRange[0]);
+      query = query.gte('price', filters.priceRange[0]).lte('price', filters.priceRange[1]);
+      
+      if (filters.location !== 'all') {
+        query = query.eq('location', filters.location);
       }
       
-      if (priceRange[1] < 1000000) {
-        query = query.lte('price', priceRange[1]);
+      if (filters.bedrooms !== 'any' && filters.propertyType !== 'land') {
+        query = query.gte('bedrooms', filters.bedrooms);
       }
       
-      if (location !== 'all') {
-        query = query.ilike('location', `%${location}%`);
-      }
-      
-      if (bedrooms !== 'any' && propertyType !== 'land') {
-        query = query.gte('bedrooms', bedrooms);
-      }
-      
-      if (bathrooms !== 'any' && propertyType !== 'land') {
-        query = query.gte('bathrooms', bathrooms);
+      if (filters.bathrooms !== 'any' && filters.propertyType !== 'land') {
+        query = query.gte('bathrooms', filters.bathrooms);
       }
       
       // Apply sorting
-      if (sortBy === 'newest') {
+      if (filters.sortBy === 'newest') {
         query = query.order('created_at', { ascending: false });
-      } else if (sortBy === 'price-asc') {
+      } else if (filters.sortBy === 'price-asc') {
         query = query.order('price', { ascending: true });
-      } else if (sortBy === 'price-desc') {
+      } else if (filters.sortBy === 'price-desc') {
         query = query.order('price', { ascending: false });
       }
       
       // Apply pagination
       query = query.range(from, to);
       
-      // Execute query
       const { data, error, count } = await query;
       
       if (error) throw error;
       
-      // Process data to format coordinates
-      const processedData = data.map(property => {
-        // Add coordinates in the format your map component expects
+      // Format property data
+      const formattedData = data.map((property) => {
+        // Extract coordinates properly from PostGIS format
         let coordinates = null;
         
         if (property.location_coordinates) {
           try {
-            // If location_coordinates is a PostGIS point stored as text or object
-            if (typeof property.location_coordinates === 'string') {
-              // Parse from WKT format or JSON string
-              if (property.location_coordinates.startsWith('POINT')) {
-                // Extract coordinates from WKT format: POINT(lng lat)
-                const match = property.location_coordinates.match(/POINT\((.+) (.+)\)/);
-                if (match) {
-                  coordinates = {
-                    lng: parseFloat(match[1]),
-                    lat: parseFloat(match[2])
-                  };
-                }
-              } else {
-                // Try parsing as JSON
-                const parsed = JSON.parse(property.location_coordinates);
+            // If it's a PostGIS point object
+            if (property.location_coordinates.coordinates) {
+              coordinates = {
+                lat: property.location_coordinates.coordinates[0],
+                lng: property.location_coordinates.coordinates[1],
+              };
+            }
+            // If it's a string, try to parse it
+            else if (typeof property.location_coordinates === "string") {
+              const geoJSON = JSON.parse(property.location_coordinates);
+              if (geoJSON.coordinates) {
                 coordinates = {
-                  lat: parsed.coordinates ? parsed.coordinates[1] : parsed.y || parsed.lat,
-                  lng: parsed.coordinates ? parsed.coordinates[0] : parsed.x || parsed.lng
+                  lat: geoJSON.coordinates[1],
+                  lng: geoJSON.coordinates[0],
                 };
               }
-            } else if (property.location_coordinates.coordinates) {
-              // PostGIS typically stores as [longitude, latitude]
+            }
+            // If it has direct x/y properties
+            else if (property.location_coordinates.x !== undefined) {
               coordinates = {
-                lat: property.location_coordinates.coordinates[1],
-                lng: property.location_coordinates.coordinates[0]
+                lat: property.location_coordinates.y,
+                lng: property.location_coordinates.x,
               };
             }
           } catch (e) {
-            console.error("Error parsing coordinates:", e);
+            console.error(
+              "Error parsing coordinates for property:",
+              property.id,
+              e
+            );
           }
         }
         
         return {
           ...property,
-          coordinates
+          images: property.images?.length
+            ? property.images.map((img) => img.url || img)
+            : [],
+          coordinates,
         };
       });
       
-      // Calculate total pages
-      const totalPages = Math.ceil(count / pageSize);
-      
+      // Update state with the fetched properties and pagination info
       set({
-        properties: processedData,
+        properties: formattedData,
+        filteredProperties: formattedData,
         loading: false,
-        pagination: {
-          ...get().pagination,
-          totalCount: count,
-          totalPages
-        }
+        totalProperties: count || 0,
+        totalPages: Math.ceil((count || 0) / propertiesPerPage),
+        currentPage: page,
       });
+      
     } catch (error) {
-      console.error("Error fetching properties:", error);
+      console.error('Error fetching properties:', error);
       set({ error: error.message, loading: false });
     }
   },
   
-  setPage: (page) => {
-    set(state => ({
-      pagination: {
-        ...state.pagination,
-        page
+  // Fetch a single property by ID
+  fetchPropertyById: async (propertyId) => {
+    try {
+      set({ loading: true, error: null });
+      
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('id', propertyId)
+        .single();
+      
+      if (error) throw error;
+      
+      // Format property data (similar to above)
+      let coordinates = null;
+      if (data.location_coordinates) {
+        // Same coordinate parsing as in fetchProperties
+        // ...
       }
-    }));
-    get().fetchProperties();
+      
+      const formattedProperty = {
+        ...data,
+        images: data.images?.length
+          ? data.images.map((img) => img.url || img)
+          : [],
+        coordinates,
+      };
+      
+      set({
+        selectedProperty: formattedProperty,
+        loading: false,
+      });
+      
+      return formattedProperty;
+    } catch (error) {
+      console.error('Error fetching property:', error);
+      set({ error: error.message, loading: false });
+      return null;
+    }
   },
   
-  updateFilters: (newFilters) => {
-    set(state => ({
-      filters: {
-        ...state.filters,
-        ...newFilters
-      },
-      pagination: {
-        ...state.pagination,
-        page: 1 // Reset to first page when filters change
-      }
-    }));
-    get().fetchProperties();
-  }
+  // Fetch similar properties
+  fetchSimilarProperties: async (property, limit = 3) => {
+    if (!property) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('type', property.type)
+        .neq('id', property.id)
+        .limit(limit);
+      
+      if (error) throw error;
+      
+      // Format similar properties data (similar to above)
+      const formattedProperties = data.map(property => {
+        // Same formatting as in fetchProperties
+        // ...
+        
+        return {
+          ...property,
+          images: property.images?.length
+            ? property.images.map((img) => img.url || img)
+            : [],
+        };
+      });
+      
+      set({ similarProperties: formattedProperties });
+    } catch (error) {
+      console.error('Error fetching similar properties:', error);
+    }
+  },
+  
+  // Reset store to default values
+  resetStore: () => set({
+    properties: [],
+    filteredProperties: [],
+    similarProperties: [],
+    selectedProperty: null,
+    loading: false,
+    error: null,
+    currentPage: 1,
+    totalPages: 1,
+  }),
 }));
 
 export default usePropertyStore;

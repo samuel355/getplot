@@ -35,6 +35,7 @@ import {
   Navigation,
   Info
 } from "lucide-react";
+import GoogleMapsProvider from "@/providers/google-map-provider";
 
 // Updated map container style to work with the new padding
 const containerStyle = {
@@ -111,10 +112,6 @@ const Map = () => {
   if (pathname.includes("dar-es-salaam")) {
     table = "dar-es-salaam";
   }
-
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
-  });
 
   useEffect(() => {
     if (mapBounds) {
@@ -310,6 +307,7 @@ const Map = () => {
       <div class="px-2 py-3 flex flex-col">
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2}</div>
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-toop: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(43560*plot_size).toLocaleString()} Square ft</div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 8px; font-weight: bold">GHS. ${polygon.plotTotalAmount.toLocaleString()} </div>
         <p style="display: ${
           status === "On Hold" ? "block" : "none"
         }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
@@ -525,10 +523,8 @@ const Map = () => {
     // ...
   };
 
-  if (!isLoaded) return <div>Loading...</div>;
-
   return (
-    <>
+    <GoogleMapsProvider>
       <Header />
       {/* Updated container with px-10 and md:px-14 padding */}
       <div className="w-full px-10 md:px-14 overflow-x-hidden mb-8 pt-[7.5rem]">
@@ -808,7 +804,7 @@ const Map = () => {
           table={table}
         />
       )}
-    </>
+    </GoogleMapsProvider>
   );
 };
 

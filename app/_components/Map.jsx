@@ -36,6 +36,7 @@ import {
   Navigation,
   Info
 } from "lucide-react";
+import GoogleMapsProvider from "@/providers/google-map-provider";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -100,11 +101,6 @@ const Map = ({ parcels, center, setCartOpen }) => {
   if (path === "/yabi") {
     zoom = 17.6;
   }
-
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
-  });
 
   // Function to handle fullscreen toggle
   const toggleFullscreen = () => {
@@ -287,7 +283,8 @@ const Map = ({ parcels, center, setCartOpen }) => {
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
       <div class="px-2 py-3 flex flex-col">
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2}</div>
-        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-toop: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(43560*plot_size).toLocaleString()} Square ft </div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(43560*plot_size).toLocaleString()} Square ft </div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 8px; font-weight: bold">GHS. ${feature.plotTotalAmount.toLocaleString()} </div>
         <p style="display: ${
           status === "On Hold" ? "block" : "none"
         }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
@@ -620,354 +617,356 @@ const Map = ({ parcels, center, setCartOpen }) => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center relative px-10 md:px-14">
-      {modalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded shadow-lg">
-            <button
-              className="absolute top-2 right-2 text-gray-700"
-              onClick={onClose}
-            >
-              &times;
-            </button>
-            <p>Here we go</p>
-          </div>
-        </div>
-      )}
-      <form>
-        <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-          <DialogTrigger asChild></DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Change Plot Price</DialogTitle>
-              <DialogDescription className="flex items-center gap-4 text-gray-800 text-sm">
-                <span className="font-semibold text-sm">Plot Details: </span>
-                <p className=" text-sm" id="description"></p>
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="flex items-center gap-4 font-medium">
-                <Label htmlFor="name" className="text-right">
-                  Old Price:
-                </Label>
-                <p id="old-price" className="text-base text-gray-800"></p>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="newprice" className="text-right">
-                  New Price (GHS.)
-                </Label>
-                <Input
-                  className="col-span-3"
-                  type="number"
-                  id="newPrice"
-                  style={{ border: newPriceEr && "1px solid red" }}
-                  onKeyPress={handleInput}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button onClick={hanldeSaveNewPrice} type="button">
-                {loading ? <Loader className="animate-spin" /> : "Save changes"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </form>
-      
-      <div className="w-full z-10 flex md:hidden flex-row items-center mb-4">
-        <div className="flex w-full items-center space-x-3">
-          <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
-          <span>Available</span>
-        </div>
-        <div className="flex w-full items-center space-x-3">
-          <div className="w-4 h-4 bg-black rounded-sm"></div>
-          <span>Reserved</span>
-        </div>
-        <div className="flex w-full items-center space-x-3">
-          <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
-          <span>Sold</span>
-        </div>
-      </div>
-      
-      {/* Main map container with the map-container class for fullscreen functionality */}
-      <div className="map-container relative w-full">
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={center}
-          zoom={zoom}
-          onLoad={onLoad}
-          onUnmount={onUnmount}
-          options={{
-            fullscreenControl: false, // We'll implement our own
-            streetViewControl: true,
-            mapTypeControl: false, // We'll implement our own
-            zoomControl: false, // We'll implement our own
-            scrollwheel: true,
-            gestureHandling: 'greedy', // Makes the map easier to use on mobile
-            mapTypeId: mapType,
-          }}
-          className="relative"
-        >
-          {/* Legend overlay */}
-          <div className="absolute w-40 top-20 left-0 bg-white/90 shadow-md rounded-md z-10 hidden md:flex md:flex-col justify-center items-center">
-            <div className="p-2 bg-gray-100 font-medium rounded-t-md w-full">Land Status</div>
-            <div className="flex gap-3 w-full items-center pl-2 pt-3">
-              <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
-              <span>Available</span>
-            </div>
-            <div className="flex gap-3 w-full items-center pl-2 mt-2">
-              <div className="w-4 h-4 bg-black rounded-sm"></div>
-              <span>Reserved</span>
-            </div>
-            <div className="flex gap-3 w-full items-center pl-2 mt-2 pb-3">
-              <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
-              <span>Sold</span>
-            </div>
-          </div>
-
-          {/* Custom map controls */}
-          <div 
-            id="map-controls" 
-            className="absolute top-4 right-4 bg-white shadow-lg rounded-lg p-2 flex flex-col gap-2 z-10"
-          >
-            {/* Zoom controls */}
-            <button 
-              onClick={() => map && map.setZoom(map.getZoom() + 1)}
-              className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-              title="Zoom in"
-            >
-              <ZoomIn size={20} />
-            </button>
-            <button 
-              onClick={() => map && map.setZoom(map.getZoom() - 1)}
-              className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-              title="Zoom out"
-            >
-              <ZoomOut size={20} />
-            </button>
-            
-            {/* Separator */}
-            <div className="border-t border-gray-200 my-1"></div>
-            
-            {/* Map type control */}
-            <div className="relative">
-              <button 
-                onClick={() => setIsMapTypeMenuOpen(!isMapTypeMenuOpen)}
-                className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-                title="Change map type"
+    <GoogleMapsProvider>
+      <div className="w-full flex flex-col items-center justify-center relative px-10 md:px-14">
+        {modalOpen && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded shadow-lg">
+              <button
+                className="absolute top-2 right-2 text-gray-700"
+                onClick={onClose}
               >
-                <Layers size={20} />
+                &times;
               </button>
-              
-              {isMapTypeMenuOpen && (
-                <div className="absolute right-full mr-2 top-0 bg-white shadow-lg rounded-lg overflow-hidden">
-                  <button 
-                    onClick={() => changeMapType('roadmap')}
-                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'roadmap' ? 'bg-blue-50 text-blue-600' : ''}`}
-                  >
-                    Road Map
-                  </button>
-                  <button 
-                    onClick={() => changeMapType('satellite')}
-                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'satellite' ? 'bg-blue-50 text-blue-600' : ''}`}
-                  >
-                    Satellite
-                  </button>
-                  <button 
-                    onClick={() => changeMapType('hybrid')}
-                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'hybrid' ? 'bg-blue-50 text-blue-600' : ''}`}
-                  >
-                    Hybrid
-                  </button>
-                  <button 
-                    onClick={() => changeMapType('terrain')}
-                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'terrain' ? 'bg-blue-50 text-blue-600' : ''}`}
-                  >
-                    Terrain
-                  </button>
-                </div>
-              )}
-            </div>
-            
-            {/* Fullscreen toggle */}
-            <button 
-              onClick={toggleFullscreen}
-              className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-              title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-            >
-              <Maximize size={20} />
-            </button>
-            
-            {/* Fit all parcels */}
-            <button 
-              onClick={fitBoundsToAllParcels}
-              className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-              title="Show all plots"
-            >
-              <MapPin size={20} />
-            </button>
-            
-            {/* Refresh map */}
-            <button 
-              onClick={() => window.location.reload()}
-              className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-              title="Refresh map"
-            >
-              <RefreshCw size={20} />
-            </button>
-            
-            {/* Help/Info Button */}
-            <button 
-              onClick={() => tToast.info("Click on any plot to see details and take actions", { duration: 5000 })}
-              className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-              title="Help"
-            >
-              <Info size={20} />
-            </button>
-          </div>
-
-          {/* Plot polygons */}
-          {parcels?.map((feature, index) => (
-            <React.Fragment key={index}>
-              <Polygon
-                path={asCoordinates(feature.geometry?.coordinates[0])}
-                options={{
-                  fillColor: getColorBasedOnStatus(feature.status),
-                  fillOpacity: 0.8,
-                  strokeWeight: 1,
-                  strokeColor: '#000000',
-                }}
-                onClick={() =>
-                  handleInfo(
-                    feature.geometry?.coordinates[0],
-                    feature.properties?.Plot_No,
-                    feature.properties?.Street_Nam,
-                    feature.id,
-                    feature.plotTotalAmount,
-                    feature.status,
-                    feature
-                  )
-                }
-              />
-
-              {map && markerInfo(
-                feature.geometry.coordinates[0],
-                feature.properties.Plot_No,
-                feature.status
-              )}
-            </React.Fragment>
-          ))}
-        </GoogleMap>
-        
-        {/* Mobile-friendly bottom navigation bar (visible on smaller screens) */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg z-20 flex justify-around items-center py-2 border-t">
-          <button 
-            onClick={() => map && map.setZoom(map.getZoom() + 1)}
-            className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
-          >
-            <ZoomIn size={18} />
-            <span>Zoom In</span>
-          </button>
-          <button 
-            onClick={() => map && map.setZoom(map.getZoom() - 1)}
-            className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
-          >
-            <ZoomOut size={18} />
-            <span>Zoom Out</span>
-          </button>
-          <button 
-            onClick={() => setIsMapTypeMenuOpen(!isMapTypeMenuOpen)}
-            className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
-          >
-            <Layers size={18} />
-            <span>Map Type</span>
-          </button>
-          <button 
-            onClick={fitBoundsToAllParcels}
-            className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
-          >
-            <MapPin size={18} />
-            <span>All Plots</span>
-          </button>
-        </div>
-        
-        {/* Mobile map type menu (slides up from bottom) */}
-        {isMapTypeMenuOpen && (
-          <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30" onClick={() => setIsMapTypeMenuOpen(false)}>
-            <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl p-4" onClick={e => e.stopPropagation()}>
-              <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4"></div>
-              <h3 className="text-lg font-medium mb-3">Map Type</h3>
-              <div className="grid grid-cols-2 gap-2">
-                <button 
-                  onClick={() => changeMapType('roadmap')}
-                  className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'roadmap' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
-                >
-                  <span className="mb-1">Road</span>
-                  <div className="w-10 h-10 bg-gray-100 rounded-md"></div>
-                </button>
-                <button 
-                  onClick={() => changeMapType('satellite')}
-                  className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'satellite' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
-                >
-                  <span className="mb-1">Satellite</span>
-                  <div className="w-10 h-10 bg-gray-700 rounded-md"></div>
-                </button>
-                <button 
-                  onClick={() => changeMapType('hybrid')}
-                  className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'hybrid' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
-                >
-                  <span className="mb-1">Hybrid</span>
-                  <div className="w-10 h-10 bg-gray-800 rounded-md border border-white"></div>
-                </button>
-                <button 
-                  onClick={() => changeMapType('terrain')}
-                  className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'terrain' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
-                >
-                  <span className="mb-1">Terrain</span>
-                  <div className="w-10 h-10 bg-green-100 rounded-md"></div>
-                </button>
-              </div>
-              <button 
-                onClick={() => setIsMapTypeMenuOpen(false)}
-                className="mt-4 w-full p-3 bg-primary text-white rounded-lg font-medium"
-              >
-                Close
-              </button>
+              <p>Here we go</p>
             </div>
           </div>
         )}
-      </div>
-      
-      {/* Status bar below map */}
-      <div className="w-full bg-white shadow-md rounded-md mt-2 p-2 text-sm flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <Navigation size={16} className="text-gray-500" />
-          <span>
-            {location} • {parcels?.length || 0} plots available
-          </span>
+        <form>
+          <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+            <DialogTrigger asChild></DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Change Plot Price</DialogTitle>
+                <DialogDescription className="flex items-center gap-4 text-gray-800 text-sm">
+                  <span className="font-semibold text-sm">Plot Details: </span>
+                  <p className=" text-sm" id="description"></p>
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="flex items-center gap-4 font-medium">
+                  <Label htmlFor="name" className="text-right">
+                    Old Price:
+                  </Label>
+                  <p id="old-price" className="text-base text-gray-800"></p>
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="newprice" className="text-right">
+                    New Price (GHS.)
+                  </Label>
+                  <Input
+                    className="col-span-3"
+                    type="number"
+                    id="newPrice"
+                    style={{ border: newPriceEr && "1px solid red" }}
+                    onKeyPress={handleInput}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button onClick={hanldeSaveNewPrice} type="button">
+                  {loading ? <Loader className="animate-spin" /> : "Save changes"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </form>
+        
+        <div className="w-full z-10 flex md:hidden flex-row items-center mb-4">
+          <div className="flex w-full items-center space-x-3">
+            <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
+            <span>Available</span>
+          </div>
+          <div className="flex w-full items-center space-x-3">
+            <div className="w-4 h-4 bg-black rounded-sm"></div>
+            <span>Reserved</span>
+          </div>
+          <div className="flex w-full items-center space-x-3">
+            <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
+            <span>Sold</span>
+          </div>
         </div>
-        <div>
-          <button 
-            onClick={fitBoundsToAllParcels}
-            className="text-primary hover:underline flex items-center gap-1"
+        
+        {/* Main map container with the map-container class for fullscreen functionality */}
+        <div className="map-container relative w-full">
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={zoom}
+            onLoad={onLoad}
+            onUnmount={onUnmount}
+            options={{
+              fullscreenControl: false, // We'll implement our own
+              streetViewControl: true,
+              mapTypeControl: false, // We'll implement our own
+              zoomControl: false, // We'll implement our own
+              scrollwheel: true,
+              gestureHandling: 'greedy', // Makes the map easier to use on mobile
+              mapTypeId: mapType,
+            }}
+            className="relative"
           >
-            <MapPin size={14} />
-            <span>View All Plots</span>
-          </button>
+            {/* Legend overlay */}
+            <div className="absolute w-40 top-20 left-0 bg-white/90 shadow-md rounded-md z-10 hidden md:flex md:flex-col justify-center items-center">
+              <div className="p-2 bg-gray-100 font-medium rounded-t-md w-full">Land Status</div>
+              <div className="flex gap-3 w-full items-center pl-2 pt-3">
+                <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
+                <span>Available</span>
+              </div>
+              <div className="flex gap-3 w-full items-center pl-2 mt-2">
+                <div className="w-4 h-4 bg-black rounded-sm"></div>
+                <span>Reserved</span>
+              </div>
+              <div className="flex gap-3 w-full items-center pl-2 mt-2 pb-3">
+                <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
+                <span>Sold</span>
+              </div>
+            </div>
+  
+            {/* Custom map controls */}
+            <div 
+              id="map-controls" 
+              className="absolute top-4 right-4 bg-white shadow-lg rounded-lg p-2 flex flex-col gap-2 z-10"
+            >
+              {/* Zoom controls */}
+              <button 
+                onClick={() => map && map.setZoom(map.getZoom() + 1)}
+                className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
+                title="Zoom in"
+              >
+                <ZoomIn size={20} />
+              </button>
+              <button 
+                onClick={() => map && map.setZoom(map.getZoom() - 1)}
+                className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
+                title="Zoom out"
+              >
+                <ZoomOut size={20} />
+              </button>
+              
+              {/* Separator */}
+              <div className="border-t border-gray-200 my-1"></div>
+              
+              {/* Map type control */}
+              <div className="relative">
+                <button 
+                  onClick={() => setIsMapTypeMenuOpen(!isMapTypeMenuOpen)}
+                  className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
+                  title="Change map type"
+                >
+                  <Layers size={20} />
+                </button>
+                
+                {isMapTypeMenuOpen && (
+                  <div className="absolute right-full mr-2 top-0 bg-white shadow-lg rounded-lg overflow-hidden">
+                    <button 
+                      onClick={() => changeMapType('roadmap')}
+                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'roadmap' ? 'bg-blue-50 text-blue-600' : ''}`}
+                    >
+                      Road Map
+                    </button>
+                    <button 
+                      onClick={() => changeMapType('satellite')}
+                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'satellite' ? 'bg-blue-50 text-blue-600' : ''}`}
+                    >
+                      Satellite
+                    </button>
+                    <button 
+                      onClick={() => changeMapType('hybrid')}
+                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'hybrid' ? 'bg-blue-50 text-blue-600' : ''}`}
+                    >
+                      Hybrid
+                    </button>
+                    <button 
+                      onClick={() => changeMapType('terrain')}
+                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'terrain' ? 'bg-blue-50 text-blue-600' : ''}`}
+                    >
+                      Terrain
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              {/* Fullscreen toggle */}
+              <button 
+                onClick={toggleFullscreen}
+                className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
+                title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+              >
+                <Maximize size={20} />
+              </button>
+              
+              {/* Fit all parcels */}
+              <button 
+                onClick={fitBoundsToAllParcels}
+                className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
+                title="Show all plots"
+              >
+                <MapPin size={20} />
+              </button>
+              
+              {/* Refresh map */}
+              <button 
+                onClick={() => window.location.reload()}
+                className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
+                title="Refresh map"
+              >
+                <RefreshCw size={20} />
+              </button>
+              
+              {/* Help/Info Button */}
+              <button 
+                onClick={() => tToast.info("Click on any plot to see details and take actions", { duration: 5000 })}
+                className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
+                title="Help"
+              >
+                <Info size={20} />
+              </button>
+            </div>
+  
+            {/* Plot polygons */}
+            {parcels?.map((feature, index) => (
+              <React.Fragment key={index}>
+                <Polygon
+                  path={asCoordinates(feature.geometry?.coordinates[0])}
+                  options={{
+                    fillColor: getColorBasedOnStatus(feature.status),
+                    fillOpacity: 0.8,
+                    strokeWeight: 1,
+                    strokeColor: '#000000',
+                  }}
+                  onClick={() =>
+                    handleInfo(
+                      feature.geometry?.coordinates[0],
+                      feature.properties?.Plot_No,
+                      feature.properties?.Street_Nam,
+                      feature.id,
+                      feature.plotTotalAmount,
+                      feature.status,
+                      feature
+                    )
+                  }
+                />
+  
+                {map && markerInfo(
+                  feature.geometry.coordinates[0],
+                  feature.properties.Plot_No,
+                  feature.status
+                )}
+              </React.Fragment>
+            ))}
+          </GoogleMap>
+          
+          {/* Mobile-friendly bottom navigation bar (visible on smaller screens) */}
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg z-20 flex justify-around items-center py-2 border-t">
+            <button 
+              onClick={() => map && map.setZoom(map.getZoom() + 1)}
+              className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
+            >
+              <ZoomIn size={18} />
+              <span>Zoom In</span>
+            </button>
+            <button 
+              onClick={() => map && map.setZoom(map.getZoom() - 1)}
+              className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
+            >
+              <ZoomOut size={18} />
+              <span>Zoom Out</span>
+            </button>
+            <button 
+              onClick={() => setIsMapTypeMenuOpen(!isMapTypeMenuOpen)}
+              className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
+            >
+              <Layers size={18} />
+              <span>Map Type</span>
+            </button>
+            <button 
+              onClick={fitBoundsToAllParcels}
+              className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
+            >
+              <MapPin size={18} />
+              <span>All Plots</span>
+            </button>
+          </div>
+          
+          {/* Mobile map type menu (slides up from bottom) */}
+          {isMapTypeMenuOpen && (
+            <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30" onClick={() => setIsMapTypeMenuOpen(false)}>
+              <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl p-4" onClick={e => e.stopPropagation()}>
+                <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4"></div>
+                <h3 className="text-lg font-medium mb-3">Map Type</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <button 
+                    onClick={() => changeMapType('roadmap')}
+                    className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'roadmap' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
+                  >
+                    <span className="mb-1">Road</span>
+                    <div className="w-10 h-10 bg-gray-100 rounded-md"></div>
+                  </button>
+                  <button 
+                    onClick={() => changeMapType('satellite')}
+                    className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'satellite' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
+                  >
+                    <span className="mb-1">Satellite</span>
+                    <div className="w-10 h-10 bg-gray-700 rounded-md"></div>
+                  </button>
+                  <button 
+                    onClick={() => changeMapType('hybrid')}
+                    className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'hybrid' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
+                  >
+                    <span className="mb-1">Hybrid</span>
+                    <div className="w-10 h-10 bg-gray-800 rounded-md border border-white"></div>
+                  </button>
+                  <button 
+                    onClick={() => changeMapType('terrain')}
+                    className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'terrain' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
+                  >
+                    <span className="mb-1">Terrain</span>
+                    <div className="w-10 h-10 bg-green-100 rounded-md"></div>
+                  </button>
+                </div>
+                <button 
+                  onClick={() => setIsMapTypeMenuOpen(false)}
+                  className="mt-4 w-full p-3 bg-primary text-white rounded-lg font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
         </div>
+        
+        {/* Status bar below map */}
+        <div className="w-full bg-white shadow-md rounded-md mt-2 p-2 text-sm flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Navigation size={16} className="text-gray-500" />
+            <span>
+              {location} • {parcels?.length || 0} plots available
+            </span>
+          </div>
+          <div>
+            <button 
+              onClick={fitBoundsToAllParcels}
+              className="text-primary hover:underline flex items-center gap-1"
+            >
+              <MapPin size={14} />
+              <span>View All Plots</span>
+            </button>
+          </div>
+        </div>
+        
+        {/* Express Interest Dialog */}
+        {isDialogOpen && (
+          <ExpressInterestDialog
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            plotId={interestPlotId}
+            setIsDialogOpen={setIsDialogOpen}
+            table={table}
+          />
+        )}
       </div>
-      
-      {/* Express Interest Dialog */}
-      {isDialogOpen && (
-        <ExpressInterestDialog
-          open={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
-          plotId={interestPlotId}
-          setIsDialogOpen={setIsDialogOpen}
-          table={table}
-        />
-      )}
-    </div>
+    </GoogleMapsProvider>
   );
 };
 

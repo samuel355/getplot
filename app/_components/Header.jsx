@@ -347,7 +347,7 @@ const Header = () => {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                {/* <NavigationMenuItem>
+                <NavigationMenuItem>
                   <Link
                     href="/market-place"
                     className={cn(
@@ -357,7 +357,7 @@ const Header = () => {
                   >
                     Market Place
                   </Link>
-                </NavigationMenuItem> */}
+                </NavigationMenuItem>
                 
                 <NavigationMenuItem>
                   <Link
@@ -390,12 +390,12 @@ const Header = () => {
                             <span>Land Sites Dashboard</span>
                           </Link>
                         </DropdownMenuItem>
-                        {/* <DropdownMenuItem asChild>
+                        <DropdownMenuItem asChild>
                           <Link href="/properties" className="flex items-center gap-2">
                             <Building className="h-4 w-4" />
                             <span>Properties Dashboard</span>
                           </Link>
-                        </DropdownMenuItem> */}
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </NavigationMenuItem>
@@ -487,7 +487,7 @@ const Header = () => {
 
                   <DropdownMenuSeparator />
                   
-                  {/* <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild>
                     <Link
                       href="/market-place"
                       className={cn(
@@ -497,7 +497,7 @@ const Header = () => {
                     >
                       Market Place
                     </Link>
-                  </DropdownMenuItem> */}
+                  </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>
                     <Link
@@ -527,7 +527,7 @@ const Header = () => {
                           Land Sites Dashboard
                         </Link>
                       </DropdownMenuItem>
-                      {/* <DropdownMenuItem asChild>
+                      <DropdownMenuItem asChild>
                         <Link 
                           href="/properties"
                           className={cn(
@@ -538,7 +538,7 @@ const Header = () => {
                           <Building className="h-4 w-4" />
                           Properties Dashboard
                         </Link>
-                      </DropdownMenuItem> */}
+                      </DropdownMenuItem>
                     </>
                   )}
                 </DropdownMenuGroup>
@@ -567,20 +567,20 @@ const Header = () => {
 
           {/* User button - show if signed in */}
           
-          {/* {isSignedIn && (
+          {isSignedIn && (
             <div className="ml-4">
               <UserButton afterSignOutUrl="/" />
             </div>
-          )} */}
+          )}
           
           {/* Sign in button - show if not signed in */}
-          {/* {!isSignedIn && (
+          {!isSignedIn && (
             <div className="ml-4">
               <Button asChild size="sm">
                 <Link href="/sign-in">Sign In</Link>
               </Button>
             </div>
-          )} */}
+          )}
         </div>
       </div>
     </header>

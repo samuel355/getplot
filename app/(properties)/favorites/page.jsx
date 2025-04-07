@@ -6,8 +6,8 @@ import Footer from "@/app/_components/Footer";
 import Link from "next/link";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import usePropertyStore from "@/store/usePropertyStore";
-import PropertyCard from "@/app/market-place/_components/property-card";
 import { Button } from "@/components/ui/button";
+import PropertyCard from "@/app/(routes)/market-place/_components/property-card";
 
 export default function FavoritesPage() {
   const favorites = usePropertyStore(state => state.favorites);

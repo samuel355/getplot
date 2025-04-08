@@ -62,7 +62,7 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
     <div className="bg-white shadow-md rounded-lg mb-6">
       {/* Desktop filters */}
       <div className="hidden md:flex items-center justify-between p-4 border-b">
-        <div className="flex space-x-6">
+        <div className="flex space-x-6 z-30">
           {/* Property Type Filter */}
           <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-medium text-gray-700 hover:text-gray-900">

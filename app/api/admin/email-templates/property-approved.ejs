@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background-color: #f8f9fa;
+      text-align: center;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #f8f9fa;
+      font-size: 14px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 style="color: #1f2937; margin: 0;">Good News!</h1>
+    </div>
+    
+    <div class="content">
+      <p>Hello <%= firstName %>,</p>
+      
+      <p>We're pleased to inform you that your property listing has been approved and is now live on our platform!</p>
+      
+      <p>Your listing is now visible to potential buyers and can be viewed by clicking the button below:</p>
+      
+      <div style="text-align: center;">
+        <a href="<%= appUrl %>/property/<%= propertyId %>" class="button">
+          View Your Listing
+        </a>
+      </div>
+      
+      <p>If you need to make any changes to your listing, you can do so from your dashboard.</p>
+      
+      <p>
+        Best regards,<br>
+        The Property Manager Team
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>&copy; <%= year %> Property Manager. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,10 +1,10 @@
 'use client'
 import GoogleMapsProvider from '@/providers/google-map-provider';
-import Header from './components/header';
-import Sidebar from './components/sidebar';
-import { SidebarProvider } from './contexts/sidebar-context';
 import { useUser } from '@clerk/nextjs';
 import { useEffect } from 'react';
+import Header from './properties/components/header';
+import Sidebar from './properties/components/sidebar';
+import { SidebarProvider } from './properties/contexts/sidebar-context';
 
 export default function DashboardLayout({ children }) {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -28,7 +28,7 @@ export default function DashboardLayout({ children }) {
           <Header />
           <div className="flex flex-1">
             <Sidebar />
-            <main className="flex-1 p-4 md:p-6">{children}</main>
+            <main className="flex-1 p-4 md:p-6 mt-16">{children}</main>
           </div>
         </div>
       </SidebarProvider>

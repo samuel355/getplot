@@ -1,0 +1,72 @@
+create table public.activity_logs (
+    id uuid default uuid_generate_v4() primary key,
+    user_id uuid references auth.users(id),
+    type text not null check (type in ('property', 'user', 'settings', 'system')),
+    action text not null,
+    details text,
+    status text not null default 'success' check (status in ('success', 'error', 'pending')),
+    metadata jsonb default '{}',
+    created_at timestamptz default now(),
+    
+    -- Add indexes for better query performance
+    constraint activity_logs_type_idx index (type),
+    constraint activity_logs_created_at_idx index (created_at)
+);
+
+-- Add RLS policies
+alter table public.activity_logs enable row level security;
+
+create policy "Activity logs are viewable by admins only"
+    on public.activity_logs for select
+    using (
+        exists (
+            select 1 from users
+            where users.id = auth.uid()
+            and (users.role = 'admin' or users.role = 'sysadmin')
+        )
+    );
+
+create policy "Activity logs are insertable by authenticated users"
+    on public.activity_logs for insert
+    with check (auth.uid() = user_id);
+```
+
+## Step 6: Example Usage in Other Components
+
+Here's how to use the activity logger in other parts of your application:
+
+```javascript
+// Example usage in property approval
+import { logActivity, LOG_TYPES, LOG_ACTIONS } from '../_utils/activity-logger';
+
+const handleApproveProperty = async (propertyId) => {
+  try {
+    // Approve property logic...
+    
+    // Log the activity
+    await logActivity({
+      type: LOG_TYPES.PROPERTY,
+      action: LOG_ACTIONS.APPROVE,
+      details: `Approved property: ${property.title}`,
+      userId: user.id,
+      metadata: {
+        propertyId,
+        previousStatus: property.status,
+      }
+    });
+
+  } catch (error) {
+    // Log error activity
+    await logActivity({
+      type: LOG_TYPES.PROPERTY,
+      action: LOG_ACTIONS.APPROVE,
+      details: `Failed to approve property: ${property.title}`,
+      userId: user.id,
+      status: 'error',
+      metadata: {
+        propertyId,
+        error: error.message,
+      }
+    });
+  }
+};

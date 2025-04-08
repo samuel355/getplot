@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import PropertyTable from "./property-table";
-import { useToast } from "@/components/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export default function UserProperties({ userId }) {
   const [properties, setProperties] = useState([]);

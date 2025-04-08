@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
-import { useToast } from "@/components/hooks/use-toast";
 import AdminLayout from "../_components/admin-layout";
 import UserStats from "../_components/user-stats";
 import UserTable from "../_components/user-table";
@@ -19,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, ArrowUpDown, UserPlus } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AdminUsersPage() {
   const { user } = useUser();

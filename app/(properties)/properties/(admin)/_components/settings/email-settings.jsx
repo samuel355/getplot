@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useSettingsStore from "../../_store/useSettingsStore";
-import { useToast } from "@/components/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export function EmailSettings() {
   const { settings, updateSettings, updateEmailTemplate } = useSettingsStore();

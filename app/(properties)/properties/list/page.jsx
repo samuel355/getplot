@@ -181,7 +181,7 @@ export default function PropertyListPage() {
           </Select>
 
           <Button asChild>
-            <Link href="/properties/create">
+            <Link href="/properties/add-listing">
               <Plus className="mr-2 h-4 w-4" />
               Add Property
             </Link>
@@ -270,7 +270,7 @@ function renderProperties(viewMode, properties, loading, onDelete) {
           Get started by creating your first property listing.
         </p>
         <Button className="mt-4" asChild>
-          <Link href="/properties/create">
+          <Link href="/properties/add-listing">
             <Plus className="mr-2 h-4 w-4" />
             Add Property
           </Link>
@@ -368,7 +368,7 @@ function renderProperties(viewMode, properties, loading, onDelete) {
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem asChild>
-                        <Link href={`/properties/${property.id}`}>
+                        <Link href={`/properties/property/${property.id}`}>
                           <Eye className="mr-2 h-4 w-4" />
                           View
                         </Link>
@@ -453,7 +453,7 @@ function renderProperties(viewMode, properties, loading, onDelete) {
               </div>
               <div className="flex mt-4 gap-2">
                 <Button variant="outline" size="sm" asChild className="flex-1">
-                  <Link href={`/properties/${property.id}`}>
+                  <Link href={`/properties/property/${property.id}`}>
                     <Eye className="mr-2 h-4 w-4" />
                     View
                   </Link>

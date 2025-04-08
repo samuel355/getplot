@@ -18,8 +18,8 @@ export default function PropertyMap({ property }) {
   // Extract coordinates from property - this is just a placeholder
   // In a real app, you'd get this from your database
   const coordinates = {
-    lat: property.latitude || defaultCoordinates.lat,
-    lng: property.longitude || defaultCoordinates.lng
+    lat: property?.location_coordinates?.coordinates[0] || defaultCoordinates.lat,
+    lng: property?.location_coordinates?.coordinates[1] || defaultCoordinates.lng
   };
 
   // Store map reference once it's loaded

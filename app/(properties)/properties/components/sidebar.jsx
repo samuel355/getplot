@@ -12,7 +12,10 @@ import {
   BarChart4,
   PlusCircle,
   LogOut,
-  X
+  X,
+  Search,
+  FileText,
+  Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useClerk } from '@clerk/nextjs';
@@ -27,18 +30,28 @@ export default function Sidebar() {
   if (!isSignedIn) return null;
   
   const isAdmin = user?.publicMetadata?.role === 'admin' || user?.publicMetadata?.role === 'sysadmin';
+  const isSysAdmin = user?.publicMetadata?.role === 'sysadmin';
   
+  // Regular user navigation
   const navigation = [
-    { name: 'Dashboard', href: '/properties', icon: LayoutDashboard },
     { name: 'My Properties', href: '/properties/list', icon: Home },
     { name: 'Add Property', href: '/properties/add-listing', icon: PlusCircle },
   ];
   
+  // Admin navigation with new routes
   const adminNavigation = [
-    { name: 'All Properties', href: '/properties/admin/properties', icon: Building },
-    { name: 'Users', href: '/properties/admin/users', icon: Users },
-    { name: 'Analytics', href: '/properties/admin/analytics', icon: BarChart4 },
-    { name: 'Settings', href: '/properties/admin/settings', icon: Settings },
+    { name: 'Dashboard', href: '/properties', icon: LayoutDashboard },
+    { name: 'All Properties', href: '/properties/all-properties', icon: Building },
+    { name: 'Advanced Search', href: '/properties/search', icon: Search },
+    { name: 'Users', href: '/properties/users', icon: Users },
+    { name: 'Analytics', href: '/properties/analytics', icon: BarChart4 },
+    { name: 'Activity Logs', href: '/properties/activity', icon: Clock },
+    { name: 'Settings', href: '/properties/settings', icon: Settings },
+  ];
+
+  // System admin only navigation
+  const sysAdminNavigation = [
+    { name: 'System Logs', href: '/properties/system-logs', icon: FileText },
   ];
   
   // The main sidebar content
@@ -49,7 +62,6 @@ export default function Sidebar() {
           <Building className="h-6 w-6" />
           <span>PropManager</span>
         </Link>
-        {/* Close button only for mobile */}
         <Button 
           variant="ghost" 
           size="icon" 
@@ -60,31 +72,34 @@ export default function Sidebar() {
         </Button>
       </div>
       
-      {/* Scrollable navigation area */}
       <div className="flex-1 overflow-y-auto">
         <nav className="grid items-start px-2 lg:px-4 gap-1 py-2">
-          {navigation.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                  isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-                onClick={() => setIsMobileOpen(false)} // Close sidebar on mobile when clicking a link
-              >
-                <item.icon className="h-4 w-4" />
-                {item.name}
-              </Link>
-            );
-          })}
+          {/* Regular navigation */}
+          <div className="my-4">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                  onClick={() => setIsMobileOpen(false)}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </div>
           
+          {/* Admin navigation */}
           {isAdmin && (
-            <>
-              <div className="my-2 px-3">
+            <div className="space-y-4">
+              <div className="px-3">
                 <h2 className="mb-2 px-1 text-xs font-semibold tracking-tight text-muted-foreground">
                   Admin
                 </h2>
@@ -99,7 +114,7 @@ export default function Sidebar() {
                           ? "bg-primary text-primary-foreground"
                           : "text-muted-foreground hover:bg-muted hover:text-foreground"
                       }`}
-                      onClick={() => setIsMobileOpen(false)} // Close sidebar on mobile when clicking a link
+                      onClick={() => setIsMobileOpen(false)}
                     >
                       <item.icon className="h-4 w-4" />
                       {item.name}
@@ -107,12 +122,39 @@ export default function Sidebar() {
                   );
                 })}
               </div>
-            </>
+
+              {/* System Admin Only Section */}
+              {isSysAdmin && (
+                <div className="px-3">
+                  <h2 className="mb-2 px-1 text-xs font-semibold tracking-tight text-muted-foreground">
+                    System
+                  </h2>
+                  {sysAdminNavigation.map((item) => {
+                    const isActive = pathname === item.href;
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                          isActive
+                            ? "bg-primary text-primary-foreground"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        }`}
+                        onClick={() => setIsMobileOpen(false)}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {item.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           )}
         </nav>
       </div>
       
-      {/* User profile and logout - fixed at bottom */}
+      {/* User profile and logout */}
       <div className="p-4 border-t shrink-0">
         <div className="flex items-center gap-3 py-2">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
@@ -127,7 +169,7 @@ export default function Sidebar() {
               {user?.fullName || user?.username}
             </span>
             <span className="text-xs text-muted-foreground">
-              {isAdmin ? "Administrator" : "User"}
+              {isSysAdmin ? "System Admin" : isAdmin ? "Administrator" : "User"}
             </span>
           </div>
         </div>
@@ -145,24 +187,19 @@ export default function Sidebar() {
   
   return (
     <>
-      {/* Desktop sidebar - fixed position */}
       <div className="hidden md:block md:w-64 border-r bg-muted/40 fixed h-screen z-10">
         {sidebarContent}
       </div>
       
-      {/* Spacer div to push content over - same width as sidebar */}
       <div className="hidden md:block md:w-64 flex-shrink-0"></div>
       
-      {/* Mobile sidebar - fixed position when open */}
       {isMobileOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          {/* Backdrop/overlay */}
           <div 
             className="fixed inset-0 bg-black/50" 
             onClick={() => setIsMobileOpen(false)}
           ></div>
           
-          {/* Sidebar */}
           <div className="fixed inset-y-0 left-0 w-64 border-r bg-background">
             {sidebarContent}
           </div>

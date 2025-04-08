@@ -46,7 +46,7 @@ import {
   DialogHeader, 
   DialogTitle 
 } from "@/components/ui/dialog";
-import PropertyMap from '../../components/property-map';
+import PropertyMap from '../components/property-map';
 
 export default function PropertyDetailPage({ params }) {
   const { id } = params;

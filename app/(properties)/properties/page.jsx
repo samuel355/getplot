@@ -218,7 +218,7 @@ export default function PropertiesDashboard() {
             ) : recentProperties.length > 0 ? (
               <div className="space-y-4">
                 {recentProperties.map((property) => (
-                  <Link key={property.id} href={`/properties/${property.id}`} className="flex items-center gap-4 rounded-lg p-2 hover:bg-muted">
+                  <Link key={property.id} href={`/properties/property/${property.id}`} className="flex items-center gap-4 rounded-lg p-2 hover:bg-muted">
                     <div className="h-12 w-12 rounded-md overflow-hidden bg-muted">
                       <img 
                         src={property.images?.[0]?.url || '/placeholder-property.jpg'} 

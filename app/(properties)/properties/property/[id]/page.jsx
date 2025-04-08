@@ -46,7 +46,8 @@ import {
   DialogHeader, 
   DialogTitle 
 } from "@/components/ui/dialog";
-import PropertyMap from '../components/property-map';
+import PropertyMap from '../../components/property-map';
+import { useRouter } from 'next/navigation';
 
 export default function PropertyDetailPage({ params }) {
   const { id } = params;
@@ -55,6 +56,7 @@ export default function PropertyDetailPage({ params }) {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const router = useRouter();
   
   useEffect(() => {
     if (!isSignedIn) return;
@@ -73,6 +75,7 @@ export default function PropertyDetailPage({ params }) {
         
         if (!data) {
           toast.error('Property not found');
+          router.back();
           return;
         }
         

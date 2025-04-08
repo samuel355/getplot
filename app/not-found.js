@@ -15,7 +15,6 @@ export default function NotFound() {
 
   return (
     <>
-      <Header />
       <main className="flex flex-col items-center justify-center min-h-[70vh] px-4 sm:px-6 py-8 mt-24">
         <div className="text-center max-w-md mx-auto">
           <div className="mb-6">
@@ -79,7 +78,6 @@ export default function NotFound() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

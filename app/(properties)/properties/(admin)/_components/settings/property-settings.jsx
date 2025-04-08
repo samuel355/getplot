@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import useSettingsStore from "../../_store/useSettingsStore";
-import { useToast } from "@/components/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export function PropertySettings() {
   const { settings, updateSettings } = useSettingsStore();

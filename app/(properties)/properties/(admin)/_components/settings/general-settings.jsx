@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import useSettingsStore from "../../_store/useSettingsStore";
-import { useToast } from "@/components/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export function GeneralSettings() {
   const { settings, updateSettings } = useSettingsStore();

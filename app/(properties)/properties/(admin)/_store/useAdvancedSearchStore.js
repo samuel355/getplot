@@ -24,14 +24,14 @@ const useAdvancedSearchStore = create(
         features: [],
         userId: null,
       },
-      
+
       // Sort state
       sortBy: 'created_at',
       sortOrder: 'desc',
-      
+
       // Saved presets
       savedPresets: [],
-      
+
       // Results state
       results: [],
       totalResults: 0,
@@ -118,7 +118,7 @@ const useAdvancedSearchStore = create(
 
           let query = supabase
             .from('properties')
-            .select('*, user:user_id(*)', { count: 'exact' });
+            .select('*', { count: 'exact' });
 
           // Apply text search
           if (searchQuery) {
@@ -178,6 +178,7 @@ const useAdvancedSearchStore = create(
           query = query.order(sortBy, { ascending: sortOrder === 'asc' });
 
           const { data, error, count } = await query;
+          
 
           if (error) throw error;
 
@@ -186,6 +187,7 @@ const useAdvancedSearchStore = create(
             totalResults: count,
             loading: false,
           });
+          
 
         } catch (error) {
           console.error('Search error:', error);

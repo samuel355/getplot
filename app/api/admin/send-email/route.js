@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth, clerkClient } from "@clerk/nextjs";
+import { createClerkClient, auth } from '@clerk/clerk-sdk-node'
 import ejs from "ejs";
 import path from "path";
 import { promises as fs } from "fs";
@@ -7,14 +7,16 @@ import nodemailer from "nodemailer";
 
 // Configure nodemailer
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_SERVER_HOST,
-  port: process.env.EMAIL_SERVER_PORT,
-  secure: process.env.EMAIL_SERVER_SECURE === "true",
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT || "587"),
+  secure: true, // true for 465, false for other ports
   auth: {
-    user: process.env.EMAIL_SERVER_USER,
-    pass: process.env.EMAIL_SERVER_PASSWORD,
+    user: process.env.SMTP_USER, // your SMTP username
+    pass: process.env.SMTP_PASS, // your SMTP password
   },
 });
+
+const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 export async function POST(request) {
   try {

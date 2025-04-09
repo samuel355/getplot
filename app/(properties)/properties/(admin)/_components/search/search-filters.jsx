@@ -24,6 +24,7 @@ import {
   X,
 } from "lucide-react";
 import useAdvancedSearchStore from "../../_store/useAdvancedSearchStore";
+import { UserFilter } from "./user-filter"; // Ensure correct import path
 
 export function SearchFilters() {
   const {
@@ -43,8 +44,10 @@ export function SearchFilters() {
     let count = 0;
     if (filters.type !== 'all') count++;
     if (filters.status !== 'all') count++;
-    if (filters.priceRange.min || filters.priceRange.max) count++;
-    if (filters.dateRange.from || filters.dateRange.to) count++;
+    if (filters.priceRange.min ) count++;
+    if (filters.priceRange.max ) count++;
+    if (filters.dateRange.from ) count++;
+    if (filters.dateRange.to) count++;
     if (filters.location !== 'all') count++;
     if (filters.bedrooms !== 'any') count++;
     if (filters.bathrooms !== 'any') count++;
@@ -192,7 +195,10 @@ export function SearchFilters() {
                     from: filters.dateRange.from,
                     to: filters.dateRange.to,
                   }}
-                  onSelect={(range) => setFilter('dateRange', range)}
+                  onSelect={(range) => setFilter('dateRange', {
+                    from: range?.from,
+                    to: range?.to
+                  })}
                   initialFocus
                 />
               </PopoverContent>
@@ -212,6 +218,57 @@ export function SearchFilters() {
               <SelectContent>
                 <SelectItem value="all">All Locations</SelectItem>
                 {/* Add your locations here */}
+                <SelectItem value="Accra">Accra</SelectItem>
+                <SelectItem value="Kumasi">Kumasi</SelectItem>
+                <SelectItem value="East Legon Hills">East Legon Hills</SelectItem>
+                <SelectItem value="East Legon">East Legon</SelectItem>
+                <SelectItem value="Legon">Legon</SelectItem>
+                <SelectItem value="NTHC">NTHC</SelectItem>
+                <SelectItem value="Trabuom">Trabuom</SelectItem>
+                <SelectItem value="Yabi">Yabi</SelectItem>
+                <SelectItem value="Dar Es Salaam">Dar Es Salaam</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Bedrooms */}
+          <div className="space-y-2">
+            <Label>Bedrooms</Label>
+            <Select
+              value={filters.bedrooms}
+              onValueChange={(value) => setFilter('bedrooms', value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select bedrooms" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="any">Any</SelectItem>
+                <SelectItem value="1">1+</SelectItem>
+                <SelectItem value="2">2+</SelectItem>
+                <SelectItem value="3">3+</SelectItem>
+                <SelectItem value="4">4+</SelectItem>
+                <SelectItem value="5">5+</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Bathrooms */}
+          <div className="space-y-2">
+            <Label>Bathrooms</Label>
+            <Select
+              value={filters.bathrooms}
+              onValueChange={(value) => setFilter('bathrooms', value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select bathrooms" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="any">Any</SelectItem>
+                <SelectItem value="1">1+</SelectItem>
+                <SelectItem value="2">2+</SelectItem>
+                <SelectItem value="3">3+</SelectItem>
+                <SelectItem value="4">4+</SelectItem>
+                <SelectItem value="5">5+</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -221,13 +278,18 @@ export function SearchFilters() {
             <Label>Features</Label>
             <Select
               value={filters.features[0] || ''}
-              onValueChange={(value) => setFilter('features', [value])}
+              onValueChange={(value) => setFilter('features', [value ? [value] : []])}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select features" />
               </SelectTrigger>
               <SelectContent>
-                {/* Add your features here */}
+                <SelectItem value="">Any</SelectItem>
+                <SelectItem value="Swimming Pool">Swimming Pool</SelectItem>
+                <SelectItem value="Air Conditioning">Air Conditioning</SelectItem>
+                <SelectItem value="Garage">Garage</SelectItem>
+                <SelectItem value="Fenced">Fenced</SelectItem>
+                {/* Add more features here */}
               </SelectContent>
             </Select>
           </div>

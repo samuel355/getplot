@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { PropertyTable } from "../property-table";
 import useAdvancedSearchStore from "../../_store/useAdvancedSearchStore";
+import PropertyTable from "../property-table";
 
 export function SearchResults() {
   const { results, totalResults, loading, error, executeSearch } = useAdvancedSearchStore();
@@ -8,6 +8,8 @@ export function SearchResults() {
   useEffect(() => {
     executeSearch();
   }, [executeSearch]);
+  
+  console.log(results);
 
   if (loading) {
     return (
@@ -32,6 +34,8 @@ export function SearchResults() {
       </div>
     );
   }
+  
+  console.log(results);
 
   return (
     <div className="space-y-4">

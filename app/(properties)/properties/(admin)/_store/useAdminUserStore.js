@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { clerkClient } from "@clerk/nextjs";
 
 const useAdminUserStore = create((set, get) => ({
   // Users state
@@ -29,7 +28,17 @@ const useAdminUserStore = create((set, get) => ({
       set({ loading: true, error: null });
 
       // Fetch all users from Clerk
-      const users = await clerkClient.users.getUserList();
+      let users = [];
+      const response = await fetch('/api/users');
+      if(!response.ok){
+        throw new Error('Failed to fetch users')
+      }
+      
+      const data = await response.json();
+      if(data){
+        users = data.data
+        
+      }
 
       // Format user data
       const formattedUsers = users.map(user => ({
@@ -135,10 +144,19 @@ const useAdminUserStore = create((set, get) => ({
   // Update user role
   updateUserRole: async (userId, newRole) => {
     try {
-      // Update user role in Clerk
-      await clerkClient.users.updateUser(userId, {
-        publicMetadata: { role: newRole },
+      
+      const response = await fetch(`/api/admin/update-user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, newRole }),
       });
+      
+      if (!response.ok) { 
+        throw new Error('Failed to update user role');
+      }
+      
 
       // Update local state
       const updatedUsers = get().users.map(user =>

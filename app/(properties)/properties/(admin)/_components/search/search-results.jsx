@@ -8,8 +8,6 @@ export function SearchResults() {
   useEffect(() => {
     executeSearch();
   }, [executeSearch]);
-  
-  console.log(results);
 
   if (loading) {
     return (

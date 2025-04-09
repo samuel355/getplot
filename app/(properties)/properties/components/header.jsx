@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSidebar } from "../contexts/sidebar-context";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/utils/supabase/client";
 
 export default function Header() {
   const { user } = useUser();
@@ -21,7 +22,7 @@ export default function Header() {
     if (searchQuery.trim()) {
       if (isAdmin) {
         // Admins go to advanced search
-        router.push(`/properties/admin/search?q=${encodeURIComponent(searchQuery)}`);
+        router.push(`/properties/search?q=${encodeURIComponent(searchQuery)}`);
       } else {
         // Regular users search their properties
         router.push(`/properties/list?search=${encodeURIComponent(searchQuery)}`);

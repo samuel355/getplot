@@ -17,7 +17,7 @@ export default function AdvancedSearchPage() {
             </p>
           </div>
           <SearchPresets />
-        </div>
+        </div> 
 
         <SearchFilters />
         <SearchResults />

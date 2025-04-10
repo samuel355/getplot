@@ -1,0 +1,22 @@
+<%- include('base', {
+  title: 'New Interest in Your Property',
+  body: `
+    <p>We're excited to inform you that someone has shown interest in your property listing!</p>
+    
+    <div class="interest-details" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+      <p><strong>Interested User:</strong> <%= interestedUser.first_name %> <%= interestedUser.last_name %></p>
+      <p><strong>Email:</strong> <%= interestedUser.email %></p>
+      <p><strong>Message:</strong> <%= message %></p>
+    </div>
+    
+    <p>You can view and manage this interest in your dashboard by clicking the button below:</p>
+    
+    <div style="text-align: center;">
+      <a href="<%= appUrl %>/properties/<%= propertyId %>" class="button">
+        View Property Details
+      </a>
+    </div>
+    
+    <p>Please respond to the interested party in a timely manner to maintain good communication and increase your chances of a successful transaction.</p>
+  `
+}) %> 

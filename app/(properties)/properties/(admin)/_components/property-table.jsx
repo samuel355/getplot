@@ -14,6 +14,7 @@ import {
   XCircle,
   AlertTriangle,
   Building,
+  Pencil,
 } from "lucide-react";
 import StatusBadge from "./status-badge";
 import Link from "next/link";
@@ -118,6 +119,12 @@ export default function PropertyTable({
                 <Button asChild variant="ghost" size="icon">
                   <Link href={`/property/${property.id}`}>
                     <Eye className="h-4 w-4" />
+                  </Link>
+                </Button>
+
+                <Button asChild variant="ghost" size="icon">
+                  <Link href={`/properties/edit-property/${property.id}`}>
+                    <Pencil className="h-4 w-4" />
                   </Link>
                 </Button>
 

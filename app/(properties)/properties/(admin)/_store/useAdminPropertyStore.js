@@ -9,6 +9,12 @@ const useAdminPropertyStore = create((set, get) => ({
   loading: true,
   error: null,
   
+  // Pagination state
+  currentPage: 1,
+  totalPages: 1,
+  propertiesPerPage: 10,
+  totalProperties: 0,
+  
   // UI state
   currentTab: "all",
   searchQuery: "",
@@ -25,14 +31,19 @@ const useAdminPropertyStore = create((set, get) => ({
   },
   
   // Initialize and fetch properties
-  fetchProperties: async () => {
+  fetchProperties: async (page = 1) => {
     try {
       set({ loading: true, error: null });
       
-      const { data, error } = await supabase
+      // Calculate pagination
+      const from = (page - 1) * get().propertiesPerPage;
+      const to = from + get().propertiesPerPage - 1;
+      
+      const { data, error, count } = await supabase
         .from("properties")
-        .select("*, user_id")
-        .order("created_at", { ascending: false });
+        .select("*, user_id", { count: "exact" })
+        .order("created_at", { ascending: false })
+        .range(from, to);
       
       if (error) throw error;
       
@@ -42,13 +53,16 @@ const useAdminPropertyStore = create((set, get) => ({
         approved: data.filter(p => p.status === "approved").length,
         rejected: data.filter(p => p.status === "rejected").length,
         sold: data.filter(p => p.status === "sold").length,
-        total: data.length,
+        total: count || 0,
       };
       
       set({ 
         properties: data,
         stats,
-        loading: false
+        loading: false,
+        totalProperties: count || 0,
+        totalPages: Math.ceil((count || 0) / get().propertiesPerPage),
+        currentPage: page
       });
       
       // Apply initial filtering
@@ -126,6 +140,12 @@ const useAdminPropertyStore = create((set, get) => ({
   setSortOrder: (order) => {
     set({ sortOrder: order });
     get().filterProperties();
+  },
+  
+  // Set current page
+  setPage: (page) => {
+    set({ currentPage: page });
+    get().fetchProperties(page);
   },
   
   // Approve a property

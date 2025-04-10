@@ -1,8 +1,20 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/utils/supabase/client";
-import { Resend } from "resend";
+import ejs from "ejs";
+import path from "path";
+import { promises as fs } from "fs";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Configure nodemailer
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT || "587"),
+  secure: true,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 export async function POST(request) {
   try {
@@ -44,20 +56,29 @@ export async function POST(request) {
 
     if (notificationError) throw notificationError;
 
+    // Read template file
+    const templatePath = path.join(
+      process.cwd(),
+      "app/api/admin/email-templates/property-interest.ejs"
+    );
+    const template = await fs.readFile(templatePath, "utf-8");
+
+    // Compile template with data
+    const html = ejs.render(template, {
+      firstName: property.users.first_name || property.users.username,
+      interestedUser,
+      message,
+      propertyId,
+      appUrl: process.env.NEXT_PUBLIC_APP_URL,
+      year: new Date().getFullYear(),
+    });
+
     // Send email notification to property owner
-    await resend.emails.send({
-      from: "notifications@yourdomain.com",
+    await transporter.sendMail({
+      from: `"Get One Plot" <${process.env.EMAIL_FROM}>`,
       to: property.users.email,
       subject: `New Interest in Your Property: ${property.title}`,
-      html: `
-        <h2>New Interest in Your Property</h2>
-        <p>Someone has shown interest in your property "${property.title}".</p>
-        <p><strong>From:</strong> ${interestedUser.first_name} ${interestedUser.last_name}</p>
-        <p><strong>Message:</strong> ${message}</p>
-        <p><strong>Contact Email:</strong> ${interestedUser.email}</p>
-        <p>You can view and manage this interest in your dashboard.</p>
-        <p>Best regards,<br>Your Property Team</p>
-      `
+      html,
     });
 
     return NextResponse.json({ success: true, notification });

@@ -55,6 +55,7 @@ export async function POST(request) {
     // Get template path based on email type
     let templatePath;
     let subject;
+    let title;
 
     switch (emailType) {
       case "property-approved":
@@ -63,6 +64,7 @@ export async function POST(request) {
           "app/api/admin/email-templates/property-approved.ejs"
         );
         subject = "Your Property Listing Has Been Approved!";
+        title = "Good News!";
         break;
       case "property-rejected":
         templatePath = path.join(
@@ -70,6 +72,7 @@ export async function POST(request) {
           "app/api/admin/email-templates/property-rejected.ejs"
         );
         subject = "Update on Your Property Listing";
+        title = "Important Update";
         break;
       case "user-banned":
         templatePath = path.join(
@@ -77,14 +80,15 @@ export async function POST(request) {
           "app/api/admin/email-templates/user-banned.ejs"
         );
         subject = "Important: Your Account Has Been Suspended";
+        title = "Account Suspension Notice";
         break;
-
       case "user-unbanned":
         templatePath = path.join(
           process.cwd(),
           "app/api/admin/email-templates/user-unbanned.ejs"
         );
         subject = "Good News: Your Account Has Been Restored";
+        title = "Account Restored";
         break;
       default:
         return NextResponse.json(
@@ -103,6 +107,7 @@ export async function POST(request) {
       rejectionReason,
       appUrl: process.env.NEXT_PUBLIC_APP_URL,
       year: new Date().getFullYear(),
+      title,
     });
 
     // Send email

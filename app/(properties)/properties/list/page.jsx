@@ -62,6 +62,9 @@ export default function PropertyListPage() {
   const [typeFilter, setTypeFilter] = useState("all");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [propertyToDelete, setPropertyToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     if (!isSignedIn) return;
@@ -69,11 +72,30 @@ export default function PropertyListPage() {
     const fetchProperties = async () => {
       setLoading(true);
       try {
+        // First, get the total count
+        let countQuery = supabase
+          .from("properties")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id);
+
+        if (statusFilter !== "all") {
+          countQuery = countQuery.eq("status", statusFilter);
+        }
+
+        if (typeFilter !== "all") {
+          countQuery = countQuery.eq("type", typeFilter);
+        }
+
+        const { count } = await countQuery;
+        setTotalCount(count || 0);
+
+        // Then fetch the paginated data
         let query = supabase
           .from("properties")
           .select("*")
           .eq("user_id", user.id)
-          .order("created_at", { ascending: false });
+          .order("created_at", { ascending: false })
+          .range((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage - 1);
 
         if (statusFilter !== "all") {
           query = query.eq("status", statusFilter);
@@ -97,7 +119,7 @@ export default function PropertyListPage() {
     };
 
     fetchProperties();
-  }, [isSignedIn, user, statusFilter, typeFilter]);
+  }, [isSignedIn, user, statusFilter, typeFilter, currentPage]);
 
   const handleDeleteConfirm = (property) => {
     setPropertyToDelete(property);
@@ -198,6 +220,7 @@ export default function PropertyListPage() {
         </TabsList>
         <TabsContent value="all">
           {renderProperties(viewMode, properties, loading, handleDeleteConfirm)}
+          {renderPagination(totalCount, currentPage, setCurrentPage, itemsPerPage)}
         </TabsContent>
         <TabsContent value="house">
           {renderProperties(
@@ -206,6 +229,7 @@ export default function PropertyListPage() {
             loading,
             handleDeleteConfirm,
           )}
+          {renderPagination(totalCount, currentPage, setCurrentPage, itemsPerPage)}
         </TabsContent>
         <TabsContent value="land">
           {renderProperties(
@@ -214,6 +238,7 @@ export default function PropertyListPage() {
             loading,
             handleDeleteConfirm,
           )}
+          {renderPagination(totalCount, currentPage, setCurrentPage, itemsPerPage)}
         </TabsContent>
         <TabsContent value="pending">
           {renderProperties(
@@ -222,6 +247,7 @@ export default function PropertyListPage() {
             loading,
             handleDeleteConfirm,
           )}
+          {renderPagination(totalCount, currentPage, setCurrentPage, itemsPerPage)}
         </TabsContent>
       </Tabs>
 
@@ -497,3 +523,48 @@ function StatusBadge({ status }) {
     </span>
   );
 }
+
+const renderPagination = (totalCount, currentPage, setCurrentPage, itemsPerPage) => {
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  if (totalPages <= 1) return null;
+
+  return (
+    <div className="flex items-center justify-center space-x-2 py-4">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setCurrentPage(1)}
+        disabled={currentPage === 1}
+      >
+        First
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setCurrentPage(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        Previous
+      </Button>
+      <span className="text-sm">
+        Page {currentPage} of {totalPages}
+      </span>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setCurrentPage(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        Next
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setCurrentPage(totalPages)}
+        disabled={currentPage === totalPages}
+      >
+        Last
+      </Button>
+    </div>
+  );
+};

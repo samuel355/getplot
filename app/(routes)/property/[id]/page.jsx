@@ -8,6 +8,9 @@ import {
   ShareIcon,
   ArrowLeftIcon,
   MapPinIcon,
+  EnvelopeIcon,
+  PhoneIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import { GoogleMap, Marker, DirectionsService, DirectionsRenderer } from "@react-google-maps/api";
@@ -16,6 +19,17 @@ import { useRouter, useParams } from "next/navigation";
 import GoogleMapsProvider from "@/providers/google-map-provider";
 import usePropertyStore from "@/store/usePropertyStore";
 import { favoriteToasts } from "@/utils/toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+// Form validation schema
+const inquirySchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
 
 export default function PropertyPage() {
   const { selectedProperty, similarProperties, loading, error, fetchPropertyById, fetchSimilarProperties } = usePropertyStore();
@@ -32,6 +46,18 @@ export default function PropertyPage() {
   const searchInputRef = useRef(null);
   const router = useRouter();
   const params = useParams();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(inquirySchema),
+  });
 
   const handleFavoriteToggle = () => {
     if (!selectedProperty) return;
@@ -176,6 +202,36 @@ export default function PropertyPage() {
           console.error("Error getting location:", error);
         }
       );
+    }
+  };
+
+  const onSubmit = async (data) => {
+    try {
+      setIsSubmitting(true);
+      setSubmitError(null);
+
+      const { error } = await usePropertyStore.getState().supabase
+        .from("property_inquiries")
+        .insert([
+          {
+            property_id: selectedProperty.id,
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            message: data.message,
+          },
+        ]);
+
+      if (error) throw error;
+
+      setSubmitSuccess(true);
+      reset();
+      setTimeout(() => setSubmitSuccess(false), 3000);
+    } catch (error) {
+      console.error("Error submitting inquiry:", error);
+      setSubmitError("Failed to submit inquiry. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -558,72 +614,104 @@ export default function PropertyPage() {
           <div className="lg:w-1/3">
             {/* Contact form */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h3 className="text-lg font-semibold mb-4">
-                Interested in this property?
-              </h3>
-              <form className="space-y-4">
+              <h3 className="text-lg font-semibold mb-4">Interested in this property?</h3>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                     Your Name
                   </label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
-                    placeholder="Enter your name"
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <UserIcon className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      {...register("name")}
+                      type="text"
+                      id="name"
+                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                      placeholder="Enter your name"
+                    />
+                  </div>
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                  )}
                 </div>
+
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                     Email Address
                   </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
-                    placeholder="Enter your email"
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <EnvelopeIcon className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      {...register("email")}
+                      type="email"
+                      id="email"
+                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                  )}
                 </div>
+
                 <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
                     Phone Number
                   </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
-                    placeholder="Enter your phone number"
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <PhoneIcon className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      {...register("phone")}
+                      type="tel"
+                      id="phone"
+                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                      placeholder="Enter your phone number"
+                    />
+                  </div>
+                  {errors.phone && (
+                    <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
+                  )}
                 </div>
+
                 <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
                     Message
                   </label>
                   <textarea
+                    {...register("message")}
                     id="message"
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                     placeholder="I'm interested in this property"
                     defaultValue={`I'm interested in this property: ${selectedProperty?.title}`}
                   />
+                  {errors.message && (
+                    <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
+                  )}
                 </div>
+
+                {submitError && (
+                  <div className="text-red-600 text-sm">{submitError}</div>
+                )}
+
+                {submitSuccess && (
+                  <div className="text-green-600 text-sm">
+                    Thank you for your interest! We'll contact you soon.
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition duration-200"
+                  disabled={isSubmitting}
+                  className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </button>
               </form>
             </div>

@@ -78,21 +78,31 @@ export default function Header() {
 }
 
 function NotificationButton({ isAdmin }) {
+  const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const router = useRouter();
 
   // Fetch notifications based on user role
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const { data, error } = await supabase
+        let query = supabase
           .from('notifications')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(10);
 
+        if (!isAdmin) {
+          query = query.eq('user_id', user.id);
+        }
+
+        const { data, error } = await query;
+
         if (error) throw error;
-        setNotifications(data);
+        setNotifications(data || []);
+        setUnreadCount(data?.filter(n => !n.read).length || 0);
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
@@ -100,6 +110,24 @@ function NotificationButton({ isAdmin }) {
 
     fetchNotifications();
   }, [isAdmin]);
+
+  const markAsRead = async (notificationId) => {
+    try {
+      const { error } = await supabase
+        .from('notifications')
+        .update({ read: true })
+        .eq('id', notificationId);
+
+      if (error) throw error;
+      
+      setNotifications(notifications.map(n => 
+        n.id === notificationId ? { ...n, read: true } : n
+      ));
+      setUnreadCount(prev => prev - 1);
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  };
 
   return (
     <div className="relative">
@@ -109,7 +137,7 @@ function NotificationButton({ isAdmin }) {
         onClick={() => setIsOpen(!isOpen)}
       >
         <Bell className="h-5 w-5" />
-        {notifications.length > 0 && (
+        {unreadCount > 0 && (
           <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500"></span>
         )}
         <span className="sr-only">Notifications</span>
@@ -117,39 +145,47 @@ function NotificationButton({ isAdmin }) {
       
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white z-50 border animate-in fade-in-0 zoom-in-95">
-          <div className="p-3 border-b">
+          <div className="p-3 border-b flex justify-between items-center">
             <h3 className="text-sm font-medium">Notifications</h3>
+            <Button 
+              variant="link" 
+              size="sm" 
+              className="text-xs"
+              onClick={() => {
+                setIsOpen(false);
+                router.push('/properties/notifications');
+              }}
+            >
+              View all
+            </Button>
           </div>
           <div className="max-h-64 overflow-y-auto">
             {notifications.length > 0 ? (
               notifications.map(notification => (
-                <div key={notification.id} className="p-3 border-b hover:bg-gray-50">
+                <div 
+                  key={notification.id} 
+                  className={`p-3 border-b hover:bg-gray-50 ${!notification.read ? 'bg-blue-50' : ''}`}
+                >
                   <p className="text-sm font-medium">{notification.message}</p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {new Date(notification.created_at).toRelativeTimeString()}
                   </p>
+                  {!notification.read && (
+                    <Button
+                      variant="link"
+                      size="sm"
+                      className="text-xs mt-2"
+                      onClick={() => markAsRead(notification.id)}
+                    >
+                      Mark as read
+                    </Button>
+                  )}
                 </div>
               ))
             ) : (
               <div className="p-3 text-sm text-gray-500">No notifications</div>
             )}
           </div>
-          {notifications.length > 0 && (
-            <div className="p-2 border-t">
-              <Button 
-                variant="link" 
-                size="sm" 
-                className="w-full text-xs"
-                onClick={() => {
-                  // Mark notifications as read in database
-                  // Then clear local state
-                  setNotifications([]);
-                }}
-              >
-                Mark all as read
-              </Button>
-            </div>
-          )}
         </div>
       )}
     </div>

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
@@ -51,6 +51,9 @@ export default function AdminPropertiesPage() {
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [isRejectionDialogOpen, setIsRejectionDialogOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
+  const {user} = useUser()
+  const userRole = user?.publicMetadata?.role
+  const userId = user?.id
 
   // Fetch properties on mount
   useEffect(() => {
@@ -99,7 +102,7 @@ export default function AdminPropertiesPage() {
         description: "Property has been rejected",
       });
 
-      // Send notification email (we'll implement this next)
+      // Send notification email
       sendNotificationEmail(result.property, "rejected", rejectionReason);
     } else {
       toast({
@@ -110,7 +113,7 @@ export default function AdminPropertiesPage() {
     }
   };
 
-  // Placeholder for notification email sending (we'll implement this next)
+  // Placeholder for notification email sending 
   const sendNotificationEmail = async (property, status, reason = null) => {
     try {
       const response = await fetch("/api/admin/send-email", {
@@ -119,8 +122,12 @@ export default function AdminPropertiesPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          property: property,
           propertyId: property.id,
           propertyOwnerId: property.user_id,
+          userId: userId,
+          userRole: userRole,
+
           emailType:
             status === "approved" ? "property-approved" : "property-rejected",
           rejectionReason: reason,
@@ -236,6 +243,12 @@ export default function AdminPropertiesPage() {
         {/* Tabs and Table */}
         <Tabs defaultValue="pending" value={currentTab} onValueChange={setTab}>
           <TabsList>
+            <TabsTrigger value="all" className="flex gap-2 items-center">
+              All{" "}
+              <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
+                {stats.total}
+              </span>
+            </TabsTrigger>
             <TabsTrigger value="pending" className="flex gap-2 items-center">
               <Clock className="h-4 w-4" />
               Pending{" "}
@@ -255,12 +268,6 @@ export default function AdminPropertiesPage() {
               Rejected{" "}
               <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
                 {stats.rejected}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="all" className="flex gap-2 items-center">
-              All{" "}
-              <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
-                {stats.total}
               </span>
             </TabsTrigger>
           </TabsList>

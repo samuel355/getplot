@@ -35,7 +35,6 @@ const PropertyMap = ({ properties, loading }) => {
   const [selectedPropertyType, setSelectedPropertyType] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProperties, setFilteredProperties] = useState([]);
-  const [showPropertyList, setShowPropertyList] = useState(false);
   const [hoveredProperty, setHoveredProperty] = useState(null);
   const [manuallyPannedTo, setManuallyPannedTo] = useState(null);
 
@@ -366,16 +365,6 @@ const PropertyMap = ({ properties, loading }) => {
           </div>
 
           <div className="flex items-center ml-2 space-x-2">
-            {/* List view toggle */}
-            <button
-              onClick={() => setShowPropertyList(!showPropertyList)}
-              className={`p-2 rounded ${showPropertyList ? "bg-gray-100" : "hover:bg-gray-100"}`}
-              title={
-                showPropertyList ? "Hide property list" : "Show property list"
-              }
-            >
-              <List size={20} className="text-gray-600" />
-            </button>
             {/* Filter button */}
             <div className="relative">
               <button
@@ -460,70 +449,62 @@ const PropertyMap = ({ properties, loading }) => {
           {filteredProperties.length === 1 ? "property" : "properties"} found
         </div>
 
-        {/* Main content area - map and optional sidebar */}
+        {/* Main content area - map and property list */}
         <div className="flex-grow flex relative">
-          {/* Property list sidebar - with fixed height and scrollable content */}
-          {showPropertyList && (
-            <div className="w-80 flex flex-col h-full bg-white border-r z-20 transition-all duration-300 ease-in-out">
-              <div className="bg-white p-2 border-b flex justify-between items-center">
-                <h3 className="font-medium">Property List</h3>
-                <button
-                  onClick={() => setShowPropertyList(false)}
-                  className="p-1 hover:bg-gray-100 rounded-full"
-                >
-                  <X size={18} />
-                </button>
-              </div>
+          {/* Property list sidebar - always visible */}
+          <div className="w-80 flex flex-col h-full bg-white border-r z-20">
+            <div className="bg-white p-2 border-b flex justify-between items-center">
+              <h3 className="font-medium">Property List</h3>
+            </div>
 
-              {/* Scrollable property list container */}
-              <div className="flex-grow overflow-y-auto">
-                {filteredProperties.length === 0 ? (
-                  <div className="p-4 text-center text-gray-500">
-                    No properties match your search criteria
-                  </div>
-                ) : (
-                  <div className="divide-y">
-                    {filteredProperties.map((property) => (
-                      <div
-                        key={property.id}
-                        className={`p-3 hover:bg-gray-50 cursor-pointer transition-colors ${
-                          selectedProperty?.id === property.id
-                            ? "bg-blue-50 border-l-4 border-primary"
-                            : ""
-                        }`}
-                        onClick={() => panToProperty(property)}
-                        onMouseEnter={() => setHoveredProperty(property)}
-                        onMouseLeave={() => setHoveredProperty(null)}
-                      >
-                        <div className="flex">
-                          <div className="w-20 h-16 bg-gray-200 rounded overflow-hidden mr-3 flex-shrink-0">
-                            {property.images && property.images[0] && (
-                              <img
-                                src={property.images[0]}
-                                alt={property.title}
-                                className="w-full h-full object-cover"
-                              />
-                            )}
-                          </div>
-                          <div className="flex-grow min-w-0">
-                            <h4 className="font-medium text-sm truncate">
-                              {property.title}
-                            </h4>
-                            <p className="text-xs text-gray-500 truncate">
-                              {property.location}
-                            </p>
-                            <p className="text-primary font-semibold text-sm mt-1">
-                              ${property.price?.toLocaleString()}
-                            </p>
-                          </div>
+            {/* Scrollable property list container */}
+            <div className="flex-grow overflow-y-auto">
+              {filteredProperties.length === 0 ? (
+                <div className="p-4 text-center text-gray-500">
+                  No properties match your search criteria
+                </div>
+              ) : (
+                <div className="divide-y">
+                  {filteredProperties.map((property) => (
+                    <div
+                      key={property.id}
+                      className={`p-3 hover:bg-gray-50 cursor-pointer transition-colors ${
+                        selectedProperty?.id === property.id
+                          ? "bg-blue-50 border-l-4 border-primary"
+                          : ""
+                      }`}
+                      onClick={() => panToProperty(property)}
+                      onMouseEnter={() => setHoveredProperty(property)}
+                      onMouseLeave={() => setHoveredProperty(null)}
+                    >
+                      <div className="flex">
+                        <div className="w-20 h-16 bg-gray-200 rounded overflow-hidden mr-3 flex-shrink-0">
+                          {property.images && property.images[0] && (
+                            <img
+                              src={property.images[0]}
+                              alt={property.title}
+                              className="w-full h-full object-cover"
+                            />
+                          )}
+                        </div>
+                        <div className="flex-grow min-w-0">
+                          <h4 className="font-medium text-sm truncate">
+                            {property.title}
+                          </h4>
+                          <p className="text-xs text-gray-500 truncate">
+                            {property.location}
+                          </p>
+                          <p className="text-primary font-semibold text-sm mt-1">
+                            ${property.price?.toLocaleString()}
+                          </p>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
+          </div>
 
           {/* Main map area */}
           <div className="flex-grow">

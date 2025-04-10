@@ -24,7 +24,7 @@ export default function MarketPlace() {
     setPage,
   } = usePropertyStore();
   
-  const [viewMode, setViewMode] = useState("grid"); // grid, map, split
+  const [viewMode, setViewMode] = useState("grid"); // grid, map
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -106,22 +106,6 @@ export default function MarketPlace() {
 
         {viewMode === "map" && (
           <PropertyMap properties={properties} loading={loading} />
-        )}
-
-        {viewMode === "split" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div>
-              <PropertyGrid properties={properties} loading={loading} />
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
-            </div>
-            <div className="sticky top-24 h-[calc(100vh-120px)]">
-              <PropertyMap properties={properties} loading={loading} />
-            </div>
-          </div>
         )}
       </main>
       <Footer />

@@ -104,21 +104,12 @@ const PropertyListHeader = ({ propertyCount, viewMode, setViewMode, filters, onF
           </button>
           <button
             onClick={() => setViewMode('map')}
-            className={`px-3 py-2 ${
+            className={`px-3 py-2 rounded-r-md ${
               viewMode === 'map' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-50'
             }`}
             title="Map View"
           >
             <MapIcon className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => setViewMode('split')}
-            className={`px-3 py-2 rounded-r-md ${
-              viewMode === 'split' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-50'
-            }`}
-            title="Split View"
-          >
-            <ViewColumnsIcon className="h-5 w-5" />
           </button>
         </div>
       </div>

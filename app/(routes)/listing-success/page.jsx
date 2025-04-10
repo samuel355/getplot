@@ -24,13 +24,13 @@ export default function ListingSuccessPage() {
         </div>
         <div className="mt-8 flex flex-col space-y-3">
           <Link 
-            href={`/properties/${id}`} 
+            href={`/properties/property/${id}`} 
             className="bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition duration-300"
           >
             View Your Listing
           </Link>
           <Link 
-            href="/dashboard" 
+            href="/properties" 
             className="border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50 transition duration-300"
           >
             Go to Dashboard

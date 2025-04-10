@@ -102,12 +102,24 @@ export default function ReviewSubmit({ formData, prevStep }) {
         <h3 className="font-medium text-lg mb-4">Location</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
+            <p className="text-sm text-gray-500">Region</p>
+            <p>{formData.region}</p>
+          </div>
+          <div>
             <p className="text-sm text-gray-500">Location/Area</p>
             <p>{formData.location}</p>
           </div>
           <div className="md:col-span-2">
             <p className="text-sm text-gray-500">Address</p>
             <p>{formData.address}</p>
+          </div>
+        </div>
+        
+        <h3 className="font-medium text-lg mb-4">Contact Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div>
+            <p className="text-sm text-gray-500">Contact Email</p>
+            <p>{formData.user_email}</p>
           </div>
         </div>
         

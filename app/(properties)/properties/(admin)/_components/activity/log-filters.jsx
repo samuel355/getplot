@@ -15,7 +15,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { CalendarIcon, Filter } from "lucide-react";
 import useActivityLogStore from "../../_store/useActivityLogStore";
 
@@ -24,14 +24,18 @@ export function LogFilters() {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const handleDateRangeSelect = (date) => {
+    if (!date) return;
+    
     if (!filters.dateRange.from || (filters.dateRange.from && filters.dateRange.to)) {
       // Start new range
       setFilters({
+        ...filters,
         dateRange: { from: date, to: null }
       });
     } else {
       // Complete the range
       setFilters({
+        ...filters,
         dateRange: { 
           from: filters.dateRange.from,
           to: date 
@@ -41,13 +45,26 @@ export function LogFilters() {
     }
   };
 
+  const formatDateDisplay = () => {
+    if (!filters.dateRange.from) return "Pick a date range";
+    
+    const fromDate = filters.dateRange.from;
+    const toDate = filters.dateRange.to;
+    
+    if (!isValid(fromDate)) return "Pick a date range";
+    if (!toDate) return format(fromDate, 'PP');
+    if (!isValid(toDate)) return format(fromDate, 'PP');
+    
+    return `${format(fromDate, 'PP')} - ${format(toDate, 'PP')}`;
+  };
+
   return (
     <div className="flex flex-wrap gap-4 mb-6">
       <div className="w-[200px]">
         <Label>Action Type</Label>
         <Select
           value={filters.type}
-          onValueChange={(value) => setFilters({ type: value })}
+          onValueChange={(value) => setFilters({ ...filters, type: value })}
         >
           <SelectTrigger>
             <SelectValue placeholder="Filter by type" />
@@ -71,15 +88,7 @@ export function LogFilters() {
               className="w-full justify-start text-left font-normal"
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {filters.dateRange.from ? (
-                filters.dateRange.to ? (
-                  `${format(filters.dateRange.from, 'PP')} - ${format(filters.dateRange.to, 'PP')}`
-                ) : (
-                  format(filters.dateRange.from, 'PP')
-                )
-              ) : (
-                "Pick a date range"
-              )}
+              {formatDateDisplay()}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
@@ -102,7 +111,7 @@ export function LogFilters() {
           <Input
             placeholder="Search logs..."
             value={filters.search}
-            onChange={(e) => setFilters({ search: e.target.value })}
+            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
             className="pl-8"
           />
           <Filter className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />

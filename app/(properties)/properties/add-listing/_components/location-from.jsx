@@ -9,9 +9,30 @@ import { MapPinIcon, ArrowsPointingOutIcon, MapIcon } from '@heroicons/react/24/
 const schema = yup.object().shape({
   location: yup.string().required("Location is required"),
   address: yup.string().required("Address is required"),
+  region: yup.string().required("Region is required"),
 });
 
 const libraries = ["places"];
+
+// List of all 16 regions in Ghana
+const ghanaRegions = [
+  "Ahafo",
+  "Ashanti",
+  "Bono",
+  "Bono East",
+  "Central",
+  "Eastern",
+  "Greater Accra",
+  "North East",
+  "Northern",
+  "Oti",
+  "Savannah",
+  "Upper East",
+  "Upper West",
+  "Volta",
+  "Western",
+  "Western North"
+];
 
 export default function LocationForm({ formData, updateFormData, nextStep, prevStep }) {
   const [mapCenter, setMapCenter] = useState({ lat: 5.6037, lng: -0.1870 }); // Accra, Ghana
@@ -189,6 +210,23 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
           <p className="text-sm text-gray-500 mt-1">
             Type to search for a location or use the map below to pinpoint the exact property location
           </p>
+        </div>
+        
+        <div className="mb-6">
+          <label htmlFor="region" className="block text-gray-700 mb-2 font-medium">
+            Region
+          </label>
+          <select
+            id="region"
+            {...register("region")}
+            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select a region</option>
+            {ghanaRegions.map(region => (
+              <option key={region} value={region}>{region}</option>
+            ))}
+          </select>
+          {errors.region && <p className="text-red-500 text-sm mt-1">{errors.region.message}</p>}
         </div>
         
         <div className="mb-6">

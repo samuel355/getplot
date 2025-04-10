@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "@/app/_components/Header";
 import Footer from "@/app/_components/Footer";
 import {
   HeartIcon,
   ShareIcon,
   ArrowLeftIcon,
+  MapPinIcon,
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
-import { GoogleMap, Marker } from "@react-google-maps/api";
+import { GoogleMap, Marker, DirectionsService, DirectionsRenderer } from "@react-google-maps/api";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import GoogleMapsProvider from "@/providers/google-map-provider";
@@ -25,6 +26,10 @@ export default function PropertyPage() {
   
   const [selectedImage, setSelectedImage] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [directions, setDirections] = useState(null);
+  const [startLocation, setStartLocation] = useState("");
+  const [autocomplete, setAutocomplete] = useState(null);
+  const searchInputRef = useRef(null);
   const router = useRouter();
   const params = useParams();
 
@@ -74,6 +79,105 @@ export default function PropertyPage() {
     };
   }, [params.id, router, fetchPropertyById, fetchSimilarProperties]);
  
+
+  const handleDirectionsRequest = (result, status) => {
+    if (status === 'OK') {
+      setDirections(result);
+    } else {
+      console.error('Directions request failed due to ' + status);
+    }
+  };
+
+  const calculateRoute = (origin) => {
+    if (!selectedProperty?.location_coordinates) return;
+
+    const destination = {
+      lat: selectedProperty.location_coordinates.coordinates[0],
+      lng: selectedProperty.location_coordinates.coordinates[1]
+    };
+
+    const directionsService = new window.google.maps.DirectionsService();
+    directionsService.route(
+      {
+        origin: origin,
+        destination: destination,
+        travelMode: window.google.maps.TravelMode.DRIVING
+      },
+      handleDirectionsRequest
+    );
+  };
+
+  const handlePlaceSelect = () => {
+    if (!autocomplete) return;
+    
+    const place = autocomplete.getPlace();
+    if (!place.geometry) {
+      console.warn("No details available for input: '" + place.name + "'");
+      return;
+    }
+
+    const origin = {
+      lat: place.geometry.location.lat(),
+      lng: place.geometry.location.lng()
+    };
+
+    // Update the input value with the selected place's formatted address
+    setStartLocation(place.formatted_address);
+    
+    // Calculate route
+    calculateRoute(origin);
+  };
+
+  useEffect(() => {
+    if (!searchInputRef.current || !window.google) return;
+
+    const options = {
+      types: ['geocode', 'establishment'],
+      componentRestrictions: { country: 'gh' }
+    };
+
+    const autocompleteInstance = new window.google.maps.places.Autocomplete(
+      searchInputRef.current,
+      options
+    );
+
+    autocompleteInstance.addListener('place_changed', handlePlaceSelect);
+    setAutocomplete(autocompleteInstance);
+
+    // Cleanup
+    return () => {
+      if (autocompleteInstance) {
+        window.google.maps.event.clearInstanceListeners(autocompleteInstance);
+      }
+    };
+  }, [searchInputRef.current, window.google]);
+
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const origin = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+
+          // Update the search input with current location
+          const geocoder = new window.google.maps.Geocoder();
+          geocoder.geocode({ location: origin }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+              setStartLocation(results[0].formatted_address);
+            }
+          });
+
+          // Calculate route
+          calculateRoute(origin);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    }
+  };
 
   if (loading) {
     return (
@@ -306,29 +410,51 @@ export default function PropertyPage() {
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <h3 className="text-lg font-semibold mb-4">Location</h3>
               {selectedProperty?.location_coordinates && (
-                <div className="h-80 rounded-lg overflow-hidden">
-                  <GoogleMap
-                    mapContainerStyle={{ height: "100%", width: "100%" }}
-                    center={{
-                      lat: selectedProperty?.location_coordinates.coordinates[0], // Latitude is the second element
-                      lng: selectedProperty?.location_coordinates.coordinates[1]  // Longitude is the first element
-                    }}
-                    zoom={15}
-                    options={{
-                      fullscreenControl: false,
-                      streetViewControl: true,
-                      mapTypeControl: false,
-                      zoomControl: true,
-                    }}
-                  >
-                    <Marker
-                      position={{
-                        lat: selectedProperty?.location_coordinates.coordinates[0], // Latitude is the second element
-                        lng: selectedProperty?.location_coordinates.coordinates[1]  // Longitude is the first element
+                <>
+                  <div className="mb-4 flex gap-2">
+                    <div className="flex-1 relative">
+                      <input
+                        ref={searchInputRef}
+                        type="text"
+                        placeholder="Enter your starting location"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                        value={startLocation}
+                        onChange={(e) => setStartLocation(e.target.value)}
+                      />
+                    </div>
+                    <button
+                      onClick={getCurrentLocation}
+                      className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
+                    >
+                      <MapPinIcon className="h-5 w-5" />
+                      <span>Use Current Location</span>
+                    </button>
+                  </div>
+                  <div className="h-80 rounded-lg overflow-hidden">
+                    <GoogleMap
+                      mapContainerStyle={{ height: "100%", width: "100%" }}
+                      center={{
+                        lat: selectedProperty?.location_coordinates.coordinates[0],
+                        lng: selectedProperty?.location_coordinates.coordinates[1]
                       }}
-                    />
-                  </GoogleMap>
-                </div>
+                      zoom={15}
+                      options={{
+                        fullscreenControl: false,
+                        streetViewControl: true,
+                        mapTypeControl: false,
+                        zoomControl: true,
+                      }}
+                    >
+                      <Marker
+                        position={{
+                          lat: selectedProperty?.location_coordinates.coordinates[0],
+                          lng: selectedProperty?.location_coordinates.coordinates[1]
+                        }}
+                      />
+                      {directions && <DirectionsRenderer directions={directions} />}
+                    </GoogleMap>
+                  </div>
+                </>
               )}
             </div>
 

@@ -12,29 +12,36 @@ import { Label } from "@/components/ui/label";
 import { User, Check } from "lucide-react";
 import useAdvancedSearchStore from "../../_store/useAdvancedSearchStore";
 import { useClerk } from "@clerk/nextjs";
+import useAdminUserStore from "../../_store/useAdminUserStore";
 
 export function UserFilter() {
   const { setFilter, filters } = useAdvancedSearchStore();
+  const {users} = useAdminUserStore()
   const { clerkClient } = useClerk();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
+  console.log(users)
 
   // Fetch users from Clerk
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const users = await clerkClient.users.getUserList();
-        setUsers(users);
-        setFilteredUsers(users);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchUsers = async () => {
+  //     try {
+  //       if(!response.ok){
+  //         throw new Error('Failed to fetch users')
+  //       }
+  //       const data = await response.json();
+  //       if(data){
+  //         setUsers(data.data);
+  //         setFilteredUsers(data.data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching users:", error);
+  //     }
+  //   };
 
-    fetchUsers();
-  }, [clerkClient]);
+  //   fetchUsers();
+  // }, [clerkClient]);
 
   // Update search results
   useEffect(() => {

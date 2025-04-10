@@ -24,7 +24,7 @@ import {
   X,
 } from "lucide-react";
 import useAdvancedSearchStore from "../../_store/useAdvancedSearchStore";
-import { UserFilter } from "./user-filter"; // Ensure correct import path
+import { UserFilter } from "./user-filter";
 
 export function SearchFilters() {
   const {
@@ -44,9 +44,9 @@ export function SearchFilters() {
     let count = 0;
     if (filters.type !== 'all') count++;
     if (filters.status !== 'all') count++;
-    if (filters.priceRange.min ) count++;
-    if (filters.priceRange.max ) count++;
-    if (filters.dateRange.from ) count++;
+    if (filters.priceRange.min) count++;
+    if (filters.priceRange.max) count++;
+    if (filters.dateRange.from) count++;
     if (filters.dateRange.to) count++;
     if (filters.location !== 'all') count++;
     if (filters.bedrooms !== 'any') count++;
@@ -217,7 +217,6 @@ export function SearchFilters() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Locations</SelectItem>
-                {/* Add your locations here */}
                 <SelectItem value="Accra">Accra</SelectItem>
                 <SelectItem value="Kumasi">Kumasi</SelectItem>
                 <SelectItem value="East Legon Hills">East Legon Hills</SelectItem>
@@ -277,21 +276,26 @@ export function SearchFilters() {
           <div className="space-y-2">
             <Label>Features</Label>
             <Select
-              value={filters.features[0] || ''}
-              onValueChange={(value) => setFilter('features', [value ? [value] : []])}
+              value={filters.features[0] || 'any'}
+              onValueChange={(value) => setFilter('features', value === 'any' ? [] : [value])}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select features" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Any</SelectItem>
+                <SelectItem value="any">Any</SelectItem>
                 <SelectItem value="Swimming Pool">Swimming Pool</SelectItem>
                 <SelectItem value="Air Conditioning">Air Conditioning</SelectItem>
                 <SelectItem value="Garage">Garage</SelectItem>
                 <SelectItem value="Fenced">Fenced</SelectItem>
-                {/* Add more features here */}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* User Filter */}
+          <div className="space-y-2">
+            <Label>User</Label>
+            <UserFilter />
           </div>
         </div>
       )}

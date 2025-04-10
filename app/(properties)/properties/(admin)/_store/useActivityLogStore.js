@@ -1,6 +1,18 @@
 import { create } from 'zustand';
 import { supabase } from "@/utils/supabase/client";
 
+const formatDateForSupabase = (date) => {
+  if (!date) return null;
+  try {
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return null;
+    return d.toISOString().split('.')[0];
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return null;
+  }
+};
+
 const useActivityLogStore = create((set, get) => ({
   logs: [],
   filteredLogs: [],
@@ -8,7 +20,7 @@ const useActivityLogStore = create((set, get) => ({
   error: null,
   filters: {
     type: 'all',
-    user: '',
+    status: 'all',
     dateRange: {
       from: null,
       to: null
@@ -28,23 +40,25 @@ const useActivityLogStore = create((set, get) => ({
       
       let query = supabase
         .from('activity_logs')
-        .select('*, user:user_id(*)', { count: 'exact' });
+        .select('*', { count: 'exact' });
 
       // Apply filters
       if (filters.type !== 'all') {
         query = query.eq('type', filters.type);
       }
 
-      if (filters.user) {
-        query = query.eq('user_id', filters.user);
+      if (filters.status !== 'all') {
+        query = query.eq('status', filters.status);
       }
 
-      if (filters.dateRange.from) {
-        query = query.gte('created_at', filters.dateRange.from);
+      const fromDate = formatDateForSupabase(filters.dateRange.from);
+      if (fromDate) {
+        query = query.gte('created_at', fromDate);
       }
 
-      if (filters.dateRange.to) {
-        query = query.lte('created_at', filters.dateRange.to);
+      const toDate = formatDateForSupabase(filters.dateRange.to);
+      if (toDate) {
+        query = query.lte('created_at', toDate);
       }
 
       // Apply pagination
@@ -95,7 +109,7 @@ const useActivityLogStore = create((set, get) => ({
         .from('activity_logs')
         .insert({
           ...logData,
-          created_at: new Date(),
+          created_at: formatDateForSupabase(new Date()),
         });
 
       if (error) throw error;

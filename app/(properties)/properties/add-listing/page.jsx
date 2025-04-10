@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import Header from "@/app/_components/Header";
 import Footer from "@/app/_components/Footer";
 import { Stepper } from "./_components/stepper";
@@ -11,6 +12,7 @@ import FeaturesForm from "./_components/features-form";
 import ReviewSubmit from "./_components/review-submit";
 
 export default function AddListingPage() {
+  const { user } = useUser();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     type: "house", // default to house
@@ -25,7 +27,9 @@ export default function AddListingPage() {
     coordinates: null,
     images: [],
     features: [],
-    status: "Available"
+    status: "Available",
+    user_email: user?.emailAddresses[0]?.emailAddress || "", // Add user email
+    region: "" // Add region field
   });
   
   const totalSteps = 6;

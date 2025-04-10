@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClerkClient, auth } from '@clerk/clerk-sdk-node'
+import { createClerkClient } from "@clerk/clerk-sdk-node";
 import ejs from "ejs";
 import path from "path";
 import { promises as fs } from "fs";
@@ -11,37 +11,34 @@ const transporter = nodemailer.createTransport({
   port: parseInt(process.env.SMTP_PORT || "587"),
   secure: true, // true for 465, false for other ports
   auth: {
-    user: process.env.SMTP_USER, // your SMTP username
-    pass: process.env.SMTP_PASS, // your SMTP password
+    user: process.env.SMTP_USER, 
+    pass: process.env.SMTP_PASS, 
   },
 });
 
-const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+const clerkClient = createClerkClient({
+  secretKey: process.env.CLERK_SECRET_KEY,
+});
 
 export async function POST(request) {
   try {
-    // Verify that the user is an admin
-    const { userId } = auth();
+    // Get data from request
+    const { property, userId, userRole, propertyId, propertyOwnerId, emailType, rejectionReason } =
+      await request.json();
 
+    // Verify that the user is an admin/sysadmin
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    const user = await clerkClient.users.getUser(userId);
-    const userRole = user?.publicMetadata?.role;
 
     if (userRole !== "admin" && userRole !== "sysadmin") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    // Get data from request
-    const { propertyId, propertyOwnerId, emailType, rejectionReason } =
-      await request.json();
-
     if (!propertyId || !propertyOwnerId || !emailType) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -51,7 +48,7 @@ export async function POST(request) {
     if (!propertyOwner) {
       return NextResponse.json(
         { error: "Property owner not found" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -63,21 +60,21 @@ export async function POST(request) {
       case "property-approved":
         templatePath = path.join(
           process.cwd(),
-          "app/api/admin/email-templates/property-approved.ejs",
+          "app/api/admin/email-templates/property-approved.ejs"
         );
         subject = "Your Property Listing Has Been Approved!";
         break;
       case "property-rejected":
         templatePath = path.join(
           process.cwd(),
-          "app/api/admin/email-templates/property-rejected.ejs",
+          "app/api/admin/email-templates/property-rejected.ejs"
         );
         subject = "Update on Your Property Listing";
         break;
       case "user-banned":
         templatePath = path.join(
           process.cwd(),
-          "app/api/admin/email-templates/user-banned.ejs",
+          "app/api/admin/email-templates/user-banned.ejs"
         );
         subject = "Important: Your Account Has Been Suspended";
         break;
@@ -85,14 +82,14 @@ export async function POST(request) {
       case "user-unbanned":
         templatePath = path.join(
           process.cwd(),
-          "app/api/admin/email-templates/user-unbanned.ejs",
+          "app/api/admin/email-templates/user-unbanned.ejs"
         );
         subject = "Good News: Your Account Has Been Restored";
         break;
       default:
         return NextResponse.json(
           { error: "Invalid email type" },
-          { status: 400 },
+          { status: 400 }
         );
     }
 
@@ -110,8 +107,8 @@ export async function POST(request) {
 
     // Send email
     await transporter.sendMail({
-      from: `"Property Manager" <${process.env.EMAIL_FROM}>`,
-      to: propertyOwner.emailAddresses[0].emailAddress,
+      from: `"Get One Plot" <${process.env.EMAIL_FROM}>`,
+      to: propertyOwner?.emailAddresses[0]?.emailAddress,
       subject,
       html,
     });
@@ -121,7 +118,7 @@ export async function POST(request) {
     console.error("Error sending email:", error);
     return NextResponse.json(
       { error: "Failed to send email" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

@@ -10,7 +10,7 @@ const useAdminPropertyStore = create((set, get) => ({
   error: null,
   
   // UI state
-  currentTab: "pending",
+  currentTab: "all",
   searchQuery: "",
   filterType: "all",
   sortOrder: "newest",

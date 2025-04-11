@@ -174,7 +174,7 @@ const Header = () => {
 
             {/* User dropdown */}
             <div className="hidden md:block">
-              <UserButton afterSignOutUrl="/" />
+              <UserButton />
             </div>
           </div>
         </div>
@@ -569,7 +569,7 @@ const Header = () => {
           
           {isSignedIn && (
             <div className="ml-4">
-              <UserButton afterSignOutUrl="/" />
+              <UserButton />
             </div>
           )}
           

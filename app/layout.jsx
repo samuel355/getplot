@@ -17,7 +17,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <PrimeReactProvider>
-      <ClerkProvider>
+      <ClerkProvider signOutUrl="/" signInUrl="/sign-in" afterSignInUrl="/properties/list" afterSignOutUrl="/">
         <html lang="en">
           <body>
             <ToastMessage />

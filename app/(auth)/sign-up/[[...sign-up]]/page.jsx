@@ -56,7 +56,7 @@ export default function Page() {
                 </p>
               </div>
 
-              <SignUp path="/sign-up" />
+              <SignUp />
             </div>
           </main>
         </div>

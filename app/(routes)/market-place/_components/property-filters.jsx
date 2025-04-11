@@ -10,16 +10,23 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
   const router = useRouter();
   
   const locations = [
-    "All Locations",
-    "Accra",
-    "Kumasi",
-    "East Legon Hills",
-    "East Legon",
-    "Legon",
-    "NTHC",
-    "Trabuom",
-    "Yabi",
-    "Dar Es Salaam"
+    "All Regions",
+    "Ahafo",
+    "Ashanti",
+    "Bono",
+    "Bono East",
+    "Central",
+    "Eastern",
+    "Greater Accra",
+    "North East",
+    "Northern",
+    "Oti",
+    "Savannah",
+    "Upper East",
+    "Upper West",
+    "Volta",
+    "Western",
+    "Western North"
   ];
   
   const handlePriceChange = (range) => {
@@ -31,7 +38,7 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
   };
   
   const handleLocationChange = (location) => {
-    onFilterChange({ location: location === "All Locations" ? "all" : location });
+    onFilterChange({ location: location === "All Regions" ? "all" : location });
   };
   
   const handleBedroomsChange = (bedrooms) => {
@@ -179,7 +186,7 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                     <button
                       key={location}
                       className={`block px-4 py-2 text-sm w-full text-left ${
-                        (location === "All Locations" && filters.location === "all") || 
+                        (location === "All Regions" && filters.location === "all") || 
                         filters.location === location 
                           ? 'bg-gray-100 text-primary' 
                           : 'text-gray-700'
@@ -484,7 +491,7 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                                   name="location"
                                   type="radio"
                                   checked={
-                                    (location === "All Locations" && filters.location === "all") || 
+                                    (location === "All Regions" && filters.location === "all") || 
                                     filters.location === location
                                   }
                                   onChange={() => handleLocationChange(location)}

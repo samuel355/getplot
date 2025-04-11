@@ -22,6 +22,9 @@ import { favoriteToasts } from "@/utils/toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tag, Ruler, Bed, Bath, Calendar, CheckCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 // Form validation schema
 const inquirySchema = z.object({
@@ -49,6 +52,7 @@ export default function PropertyPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const { toast } = useToast();
 
   const {
     register,
@@ -59,28 +63,74 @@ export default function PropertyPage() {
     resolver: zodResolver(inquirySchema),
   });
 
-  const handleFavoriteToggle = () => {
-    if (!selectedProperty) return;
+  const handleFavoriteClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     
     // Trigger animation
     setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 1000);
+    setTimeout(() => setIsAnimating(false), 800);
     
     const result = toggleFavorite(selectedProperty.id);
     
     if (result.success) {
       if (result.isFavorite) {
-        favoriteToasts.addedToFavorites({
-          title: selectedProperty.title,
-          image: selectedProperty.images[0]
+        // Property was added to favorites
+        toast({
+          title: "Added to Favorites",
+          description: selectedProperty.title,
+          variant: "default",
         });
       } else {
-        favoriteToasts.removedFromFavorites({
-          title: selectedProperty.title
+        // Property was removed from favorites
+        toast({
+          title: "Removed from Favorites",
+          description: selectedProperty.title,
+          variant: "default",
         });
       }
     } else {
-      favoriteToasts.error(result.message || 'Could not update favorites');
+      // Handle error case
+      toast({
+        title: "Error",
+        description: result.message || "Could not update favorites",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleShareClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (navigator.share) {
+      navigator.share({
+        title: selectedProperty.title,
+        text: `Check out this ${selectedProperty.type} in ${selectedProperty.location} for $${selectedProperty.price.toLocaleString()}`,
+        url: window.location.href,
+      }).catch((error) => {
+        console.error('Error sharing:', error);
+        toast({
+          title: "Error",
+          description: "Could not share property",
+          variant: "destructive",
+        });
+      });
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        toast({
+          title: "Link Copied",
+          description: "Property link copied to clipboard",
+          variant: "default",
+        });
+      }).catch(() => {
+        toast({
+          title: "Error",
+          description: "Could not copy link",
+          variant: "destructive",
+        });
+      });
     }
   };
   
@@ -376,117 +426,151 @@ export default function PropertyPage() {
                 </h2>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => setIsFavorite(!isFavorite)}
-                    className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md"
+                    onClick={handleFavoriteClick}
+                    className={`flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md ${
+                      isAnimating ? "scale-125" : ""
+                    }`}
                   >
                     {isFavorite ? (
-                      <HeartSolidIcon className="h-5 w-5 text-red-500" />
+                      <HeartSolidIcon className={`h-5 w-5 text-red-500 ${isAnimating ? "animate-pulse" : ""}`} />
                     ) : (
                       <HeartIcon className="h-5 w-5" />
                     )}
                     <span>Save</span>
                   </button>
-                  <button className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md">
+                  <button 
+                    onClick={handleShareClick}
+                    className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md"
+                  >
                     <ShareIcon className="h-5 w-5" />
                     <span>Share</span>
                   </button>
                 </div>
               </div>
 
-              <div className="border-b pb-4 mb-4">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-2">
+              <Tabs defaultValue="overview" className="w-full">
+                <TabsList className="grid w-full grid-cols-4">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="details">Details</TabsTrigger>
+                  <TabsTrigger value="features">Features</TabsTrigger>
+                  <TabsTrigger value="location">Location</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="overview" className="pt-4">
                   <div>
-                    <p className="text-gray-500 text-sm">Property Type</p>
-                    <p className="font-semibold capitalize">{selectedProperty?.type}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500 text-sm">Property Size</p>
-                    <p className="font-semibold">{selectedProperty?.size}</p>
-                  </div>
-                  {selectedProperty?.type === "house" && (
-                    <>
-                      <div>
-                        <p className="text-gray-500 text-sm">Bedrooms</p>
-                        <p className="font-semibold">{selectedProperty?.bedrooms}</p>
+                    <h3 className="text-lg font-semibold mb-2">Description</h3>
+                    <p className="text-gray-700 mb-4">{selectedProperty?.description}</p>
+                    
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
+                      <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                        <Tag className="h-5 w-5 mb-2 text-gray-500" />
+                        <span className="font-medium">${Number(selectedProperty?.price).toLocaleString()}</span>
                       </div>
-                      <div>
-                        <p className="text-gray-500 text-sm">Bathrooms</p>
-                        <p className="font-semibold">{selectedProperty?.bathrooms}</p>
+                      
+                      <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                        <Ruler className="h-5 w-5 mb-2 text-gray-500" />
+                        <span className="font-medium">{selectedProperty?.size}</span>
                       </div>
-                    </>
-                  )}
-                  <div>
-                    <p className="text-gray-500 text-sm">Listed</p>
-                    <p className="font-semibold">
-                      {new Date(selectedProperty?.created_at || selectedProperty?.createdAt).toLocaleDateString(
-                        "en-US",
-                        {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        },
+                      
+                      {selectedProperty?.type === "house" && (
+                        <>
+                          <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                            <Bed className="h-5 w-5 mb-2 text-gray-500" />
+                            <span className="font-medium">{selectedProperty?.bedrooms} Bedrooms</span>
+                          </div>
+                          <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                            <Bath className="h-5 w-5 mb-2 text-gray-500" />
+                            <span className="font-medium">{selectedProperty?.bathrooms} Bathrooms</span>
+                          </div>
+                        </>
                       )}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Description</h3>
-                <p className="text-gray-700 mb-4">{selectedProperty?.description}</p>
-
-                {selectedProperty?.features && selectedProperty?.features.length > 0 && (
-                  <>
-                    <h3 className="text-lg font-semibold mb-2">Features</h3>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {selectedProperty?.features.map((feature, index) => (
-                        <li key={index} className="flex items-center">
-                          <svg
-                            className="h-5 w-5 text-primary mr-2"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Location map - GOOGLE MAPS */}
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h3 className="text-lg font-semibold mb-4">Location</h3>
-              {selectedProperty?.location_coordinates && (
-                <>
-                  <div className="mb-4 flex gap-2">
-                    <div className="flex-1 relative">
-                      <input
-                        ref={searchInputRef}
-                        type="text"
-                        placeholder="Enter your starting location"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                        value={startLocation}
-                        onChange={(e) => setStartLocation(e.target.value)}
-                      />
+                      
+                      <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
+                        <Calendar className="h-5 w-5 mb-2 text-gray-500" />
+                        <span className="font-medium">
+                          Listed on {new Date(selectedProperty?.created_at).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
                     </div>
-                    <button
-                      onClick={getCurrentLocation}
-                      className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
-                    >
-                      <MapPinIcon className="h-5 w-5" />
-                      <span>Use Current Location</span>
-                    </button>
                   </div>
-                  <div className="h-80 rounded-lg overflow-hidden">
+                </TabsContent>
+                
+                <TabsContent value="details" className="pt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="text-lg font-semibold mb-3">Property Details</h3>
+                      <dl className="space-y-2">
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-gray-500">Property Type</dt>
+                          <dd className="font-medium capitalize">{selectedProperty?.type}</dd>
+                        </div>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-gray-500">Size</dt>
+                          <dd className="font-medium">{selectedProperty?.size}</dd>
+                        </div>
+                        {selectedProperty?.type === "house" && (
+                          <>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Bedrooms</dt>
+                              <dd className="font-medium">{selectedProperty?.bedrooms}</dd>
+                            </div>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Bathrooms</dt>
+                              <dd className="font-medium">{selectedProperty?.bathrooms}</dd>
+                            </div>
+                          </>
+                        )}
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-gray-500">Created</dt>
+                          <dd className="font-medium">
+                            {new Date(selectedProperty?.created_at).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-lg font-semibold mb-3">Price Information</h3>
+                      <dl className="space-y-2">
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-gray-500">Price</dt>
+                          <dd className="font-medium">${Number(selectedProperty?.price).toLocaleString()}</dd>
+                        </div>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-gray-500">Negotiable</dt>
+                          <dd className="font-medium">{selectedProperty?.negotiable ? 'Yes' : 'No'}</dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="features" className="pt-4">
+                  <h3 className="text-lg font-semibold mb-3">Property Features</h3>
+                  {selectedProperty?.features && selectedProperty?.features.length > 0 ? (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {selectedProperty?.features.map((feature, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <span>{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500">No features listed for this property.</p>
+                  )}
+                </TabsContent>
+                
+                <TabsContent value="location" className="pt-4">
+                  <div className="aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden mb-4 h-80">
                     <GoogleMap
                       mapContainerStyle={{ height: "100%", width: "100%" }}
                       center={{
@@ -510,103 +594,38 @@ export default function PropertyPage() {
                       {directions && <DirectionsRenderer directions={directions} />}
                     </GoogleMap>
                   </div>
-                </>
-              )}
-            </div>
-
-            {/* Below the location map section */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-4">Nearby Amenities</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="flex items-start">
-                  <div className="bg-blue-100 p-2 rounded-full mr-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-primary"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                  
+                  <div className="mb-4 flex gap-2">
+                    <div className="flex-1 relative">
+                      <input
+                        ref={searchInputRef}
+                        type="text"
+                        placeholder="Enter your starting location"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                        value={startLocation}
+                        onChange={(e) => setStartLocation(e.target.value)}
                       />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Shopping</h4>
-                    <p className="text-sm text-gray-600">Within 2km</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="bg-blue-100 p-2 rounded-full mr-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-primary"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                    </div>
+                    <button
+                      onClick={getCurrentLocation}
+                      className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
-                      />
-                    </svg>
+                      <MapPinIcon className="h-5 w-5" />
+                      <span>Use Current Location</span>
+                    </button>
                   </div>
-                  <div>
-                    <h4 className="font-medium">Schools</h4>
-                    <p className="text-sm text-gray-600">Within 3km</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="bg-blue-100 p-2 rounded-full mr-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-primary"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Power Supply</h4>
-                    <p className="text-sm text-gray-600">Available</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="bg-blue-100 p-2 rounded-full mr-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-primary"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Road Access</h4>
-                    <p className="text-sm text-gray-600">Good Condition</p>
-                  </div>
-                </div>
-              </div>
+                  
+                  <h3 className="text-lg font-semibold mb-2">Location</h3>
+                  <p className="text-gray-600 mb-2">
+                    {selectedProperty?.location}
+                  </p>
+                  
+                  <h3 className="text-lg font-semibold mt-4 mb-2">Address</h3>
+                  <p className="text-gray-600">
+                    {selectedProperty?.address}
+                  </p>
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
 

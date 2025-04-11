@@ -488,12 +488,13 @@ const PropertyMap = ({ properties, loading }) => {
                           )}
                         </div>
                         <div className="flex-grow min-w-0">
-                          <h4 className="font-medium text-sm truncate">
-                            {property.title}
-                          </h4>
-                          <p className="text-xs text-gray-500 truncate">
-                            {property.location}
-                          </p>
+                          <div className="flex flex-col">
+                            <h3 className="text-sm font-medium text-gray-900">{property.title}</h3>
+                            <p className="text-sm text-gray-500">{property.location}</p>
+                            {property.region && (
+                              <p className="text-xs text-gray-400">{property.region}</p>
+                            )}
+                          </div>
                           <p className="text-primary font-semibold text-sm mt-1">
                             ${property.price?.toLocaleString()}
                           </p>

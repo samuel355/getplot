@@ -61,7 +61,7 @@ export default function Page() {
                 </di>
               </div>
 
-              <SignIn path="/sign-in" />
+              <SignIn />
             </div>
           </main>
         </div>

@@ -149,6 +149,9 @@ const usePropertyStore = create(
             { count: "exact" }, // Get total count for pagination
           );
 
+          // Only fetch approved properties
+          query = query.eq("status", "approved");
+
           // Apply filters
           if (filters.propertyType !== "all") {
             query = query.eq("type", filters.propertyType);

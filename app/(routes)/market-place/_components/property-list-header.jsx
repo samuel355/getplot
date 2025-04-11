@@ -18,6 +18,7 @@ const PropertyListHeader = ({ propertyCount, viewMode, setViewMode, filters, onF
         <p className="text-sm text-gray-500">
           Showing results for {filters.propertyType === 'all' ? 'all properties' : filters.propertyType + 's'} 
           {filters.location !== 'all' && ` in ${filters.location}`}
+          {filters.location === 'all' && ' in All Regions'}
         </p>
       </div>
 

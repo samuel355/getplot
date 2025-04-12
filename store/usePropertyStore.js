@@ -228,7 +228,7 @@ const usePropertyStore = create(
           const to = from + propertiesPerPage - 1;
 
           let query = supabase.from("properties").select(
-            "id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, location_coordinates, description, features",
+            "id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, location_coordinates, description, features, region",
             { count: "exact" } // Get total count for pagination
           );
 
@@ -240,13 +240,15 @@ const usePropertyStore = create(
             query = query.eq("type", filters.propertyType);
           }
 
+          if (filters.location !== "all") {
+            console.log('Filtering by region:', filters.location);
+            // Filter by region instead of location
+            query = query.eq("region", filters.location);
+          }
+
           query = query
             .gte("price", filters.priceRange[0])
             .lte("price", filters.priceRange[1]);
-
-          if (filters.location !== "all") {
-            query = query.eq("location", filters.location);
-          }
 
           if (filters.bedrooms !== "any" && filters.propertyType !== "land") {
             query = query.gte("bedrooms", filters.bedrooms);

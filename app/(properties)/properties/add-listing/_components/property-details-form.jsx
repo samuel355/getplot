@@ -105,7 +105,11 @@ export default function PropertyDetailsForm({
             id="title"
             {...register("title")}
             className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="e.g., Modern 3-Bedroom House in East Legon"
+            placeholder={
+              propertyType === "house" 
+                ? "e.g., Modern 3-Bedroom House in East Legon"
+                : "e.g., Prime Residential Plot in Airport Residential Area"
+            }
           />
           {errors.title && (
             <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>
@@ -124,7 +128,11 @@ export default function PropertyDetailsForm({
             {...register("description")}
             rows="4"
             className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Describe the property, its location, special features, etc."
+            placeholder={
+              propertyType === "house"
+                ? "Describe the property, its location, special features, etc."
+                : "Describe the land, its location, topography, accessibility, utilities, etc."
+            }
           ></textarea>
           {errors.description && (
             <p className="text-red-500 text-sm mt-1">
@@ -144,7 +152,11 @@ export default function PropertyDetailsForm({
             id="size"
             {...register("size")}
             className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="e.g., 1500 sq ft, 2 acres, etc."
+            placeholder={
+              propertyType === "house"
+                ? "e.g., 1500 sq ft"
+                : "e.g., 2 acres, 100ft x 50ft"
+            }
           />
           {errors.size && (
             <p className="text-red-500 text-sm mt-1">{errors.size.message}</p>

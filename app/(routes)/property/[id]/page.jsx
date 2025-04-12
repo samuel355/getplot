@@ -25,7 +25,7 @@ import * as z from "zod";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Tag, Ruler, Bed, Bath, Calendar, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useUser } from "@/hooks/use-user";
+import { useUser } from "@clerk/nextjs";
 
 // Form validation schema
 const inquirySchema = z.object({

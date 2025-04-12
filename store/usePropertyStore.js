@@ -42,62 +42,145 @@ const usePropertyStore = create(
 
       setPage: (page) => set({ currentPage: page }),
 
-      toggleFavorite: (propertyId) => {
+      // Fetch favorites from database
+      fetchFavorites: async (userId) => {
+        try {
+          const { data, error } = await supabase
+            .from('favorites')
+            .select(`
+              property_id,
+              properties (
+                id,
+                title,
+                price,
+                location,
+                type,
+                images,
+                bedrooms,
+                bathrooms,
+                size,
+                location_coordinates,
+                description,
+                features,
+                created_at
+              )
+            `)
+            .eq('user_id', userId);
+
+          if (error) throw error;
+
+          const formattedFavorites = data.map(item => ({
+            id: item.properties.id,
+            title: item.properties.title,
+            price: item.properties.price,
+            location: item.properties.location,
+            type: item.properties.type,
+            images: item.properties.images || [],
+            bedrooms: item.properties.bedrooms,
+            bathrooms: item.properties.bathrooms,
+            size: item.properties.size,
+            coordinates: item.properties.location_coordinates,
+            description: item.properties.description?.substring(0, 100) + "...",
+            createdAt: item.properties.created_at,
+            features: item.properties.features || [],
+          }));
+
+          set({ favorites: formattedFavorites });
+          return formattedFavorites;
+        } catch (error) {
+          console.error('Error fetching favorites:', error);
+          return [];
+        }
+      },
+
+      toggleFavorite: async (propertyId) => {
         const state = get();
         const isFavorite = state.favorites.some((fav) => fav.id === propertyId);
-        let newFavorites;
+        const userId = state.user?.id;
 
-        // Find the property from various possible sources
-        const property =
-          state.properties.find((p) => p.id === propertyId) ||
-          state.filteredProperties.find((p) => p.id === propertyId) ||
-          (state.selectedProperty?.id === propertyId
-            ? state.selectedProperty
-            : null);
-
-        if (!property) {
+        if (!userId) {
           return {
             success: false,
             isFavorite,
-            message: "Property not found",
+            message: "User not authenticated",
           };
         }
 
-        if (isFavorite) {
-          // Remove from favorites
-          newFavorites = state.favorites.filter((fav) => fav.id !== propertyId);
-        } else {
-          // Add to favorites
-          newFavorites = [
-            ...state.favorites,
-            {
-              id: property.id,
-              title: property.title,
-              price: property.price,
-              location: property.location,
-              type: property.type,
-              images: property.images || [],
-              bedrooms: property.bedrooms,
-              bathrooms: property.bathrooms,
-              size: property.size,
-              coordinates: property.coordinates,
-              description: property.description?.substring(0, 100) + "...",
-              createdAt: property.created_at || property.createdAt,
-              features: property.features || [],
-            },
-          ];
+        try {
+          if (isFavorite) {
+            // Remove from favorites
+            const { error } = await supabase
+              .from('favorites')
+              .delete()
+              .eq('user_id', userId)
+              .eq('property_id', propertyId);
+
+            if (error) throw error;
+
+            set((state) => ({
+              favorites: state.favorites.filter((fav) => fav.id !== propertyId),
+            }));
+          } else {
+            // Add to favorites
+            const { error } = await supabase
+              .from('favorites')
+              .insert([
+                { user_id: userId, property_id: propertyId }
+              ]);
+
+            if (error) throw error;
+
+            // Find the property from various possible sources
+            const property =
+              state.properties.find((p) => p.id === propertyId) ||
+              state.filteredProperties.find((p) => p.id === propertyId) ||
+              (state.selectedProperty?.id === propertyId
+                ? state.selectedProperty
+                : null);
+
+            if (!property) {
+              return {
+                success: false,
+                isFavorite,
+                message: "Property not found",
+              };
+            }
+
+            set((state) => ({
+              favorites: [
+                ...state.favorites,
+                {
+                  id: property.id,
+                  title: property.title,
+                  price: property.price,
+                  location: property.location,
+                  type: property.type,
+                  images: property.images || [],
+                  bedrooms: property.bedrooms,
+                  bathrooms: property.bathrooms,
+                  size: property.size,
+                  coordinates: property.coordinates,
+                  description: property.description?.substring(0, 100) + "...",
+                  createdAt: property.created_at || property.createdAt,
+                  features: property.features || [],
+                },
+              ],
+            }));
+          }
+
+          return {
+            success: true,
+            isFavorite: !isFavorite,
+            propertyId,
+          };
+        } catch (error) {
+          console.error('Error toggling favorite:', error);
+          return {
+            success: false,
+            isFavorite,
+            message: error.message,
+          };
         }
-
-        set({ favorites: newFavorites });
-
-        // Return values useful for toast notifications
-        return {
-          success: true,
-          isFavorite: !isFavorite, // The new status - true if added, false if removed
-          propertyId,
-          propertyTitle: property.title,
-          propertyImage: property.images?.[0],
-        };
       },
 
       isFavorite: (propertyId) => {

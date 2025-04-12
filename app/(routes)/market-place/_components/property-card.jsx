@@ -6,15 +6,17 @@ import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
 import usePropertyStore from "@/store/usePropertyStore";
 import { favoriteToasts } from "@/utils/toast";
 import { useToast } from "@/hooks/use-toast";
+import { useUser } from "@clerk/nextjs";
 
 const PropertyCard = ({ property, isCompact = false }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const toggleFavorite = usePropertyStore((state) => state.toggleFavorite);
   const isFavorite = usePropertyStore((state) => state.isFavorite(property.id));
-  const { toast } = useToast(); 
+  const { toast } = useToast();
+  const { user } = useUser();
 
-  const handleFavoriteClick = (e) => {
+  const handleFavoriteClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     
@@ -22,29 +24,39 @@ const PropertyCard = ({ property, isCompact = false }) => {
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 800);
     
-    const result = toggleFavorite(property.id);
-    
-    if (result.success) {
-      if (result.isFavorite) {
-        // Property was added to favorites
-        toast({
-          title: "Added to Favorites",
-          description: property.title,
-          variant: "default",
-        });
+    try {
+      const result = await toggleFavorite(property.id, user?.id);
+      console.log('result', result);
+      
+      if (result.success) {
+        if (result.isFavorite) {
+          // Property was added to favorites
+          toast({
+            title: "Added to Favorites",
+            description: property.title,
+            variant: "default",
+          });
+        } else {
+          // Property was removed from favorites
+          toast({
+            title: "Removed from Favorites",
+            description: property.title,
+            variant: "default",
+          });
+        }
       } else {
-        // Property was removed from favorites
+        // Handle error case
         toast({
-          title: "Removed from Favorites",
-          description: property.title,
-          variant: "default",
+          title: "Error",
+          description: result.message || "Could not update favorites",
+          variant: "destructive",
         });
       }
-    } else {
-      // Handle error case
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
       toast({
         title: "Error",
-        description: result.message || "Could not update favorites",
+        description: "Could not update favorites",
         variant: "destructive",
       });
     }

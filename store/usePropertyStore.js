@@ -46,8 +46,9 @@ const usePropertyStore = create(
       fetchFavorites: async (userId) => {
         try {
           const { data, error } = await supabase
-            .from('favorites')
-            .select(`
+            .from("favorites")
+            .select(
+              `
               property_id,
               properties (
                 id,
@@ -64,12 +65,13 @@ const usePropertyStore = create(
                 features,
                 created_at
               )
-            `)
-            .eq('user_id', userId);
+            `
+            )
+            .eq("user_id", userId);
 
           if (error) throw error;
 
-          const formattedFavorites = data.map(item => ({
+          const formattedFavorites = data.map((item) => ({
             id: item.properties.id,
             title: item.properties.title,
             price: item.properties.price,
@@ -88,15 +90,14 @@ const usePropertyStore = create(
           set({ favorites: formattedFavorites });
           return formattedFavorites;
         } catch (error) {
-          console.error('Error fetching favorites:', error);
+          console.error("Error fetching favorites:", error);
           return [];
         }
       },
 
-      toggleFavorite: async (propertyId) => {
+      toggleFavorite: async (propertyId, userId) => {
         const state = get();
         const isFavorite = state.favorites.some((fav) => fav.id === propertyId);
-        const userId = state.user?.id;
 
         if (!userId) {
           return {
@@ -110,11 +111,12 @@ const usePropertyStore = create(
           if (isFavorite) {
             // Remove from favorites
             const { error } = await supabase
-              .from('favorites')
+              .from("favorites")
               .delete()
-              .eq('user_id', userId)
-              .eq('property_id', propertyId);
+              .eq("user_id", userId)
+              .eq("property_id", propertyId);
 
+            console.log('error', error);
             if (error) throw error;
 
             set((state) => ({
@@ -123,11 +125,9 @@ const usePropertyStore = create(
           } else {
             // Add to favorites
             const { error } = await supabase
-              .from('favorites')
-              .insert([
-                { user_id: userId, property_id: propertyId }
-              ]);
-
+              .from("favorites")
+              .insert([{ user_id: userId, property_id: propertyId }]);
+            console.log('error', error);
             if (error) throw error;
 
             // Find the property from various possible sources
@@ -174,7 +174,7 @@ const usePropertyStore = create(
             propertyId,
           };
         } catch (error) {
-          console.error('Error toggling favorite:', error);
+          console.error("Error toggling favorite:", error);
           return {
             success: false,
             isFavorite,
@@ -194,7 +194,7 @@ const usePropertyStore = create(
         set((state) => {
           // Remove if already exists (to move to top)
           const filtered = state.recentlyViewed.filter(
-            (p) => p.id !== property.id,
+            (p) => p.id !== property.id
           );
 
           // Add to the beginning, keep only the last 10
@@ -229,7 +229,7 @@ const usePropertyStore = create(
 
           let query = supabase.from("properties").select(
             "id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, location_coordinates, description, features",
-            { count: "exact" }, // Get total count for pagination
+            { count: "exact" } // Get total count for pagination
           );
 
           // Only fetch approved properties
@@ -307,7 +307,7 @@ const usePropertyStore = create(
                 console.error(
                   "Error parsing coordinates for property:",
                   property.id,
-                  e,
+                  e
                 );
               }
             }
@@ -349,7 +349,7 @@ const usePropertyStore = create(
             (property) =>
               property.title?.toLowerCase().includes(lowerQuery) ||
               property.location?.toLowerCase().includes(lowerQuery) ||
-              property.description?.toLowerCase().includes(lowerQuery),
+              property.description?.toLowerCase().includes(lowerQuery)
           );
 
           return { filteredProperties: filtered };
@@ -401,7 +401,7 @@ const usePropertyStore = create(
               console.error(
                 "Error parsing coordinates for property:",
                 data.id,
-                e,
+                e
               );
             }
           }
@@ -518,8 +518,8 @@ const usePropertyStore = create(
         favorites: state.favorites,
         recentlyViewed: state.recentlyViewed,
       }),
-    },
-  ),
+    }
+  )
 );
 
 export default usePropertyStore;

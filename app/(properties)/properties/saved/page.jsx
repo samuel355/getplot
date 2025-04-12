@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Bookmark, MapPin, Bed, Bath, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import usePropertyStore from '@/store/usePropertyStore';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 export default function SavedProperties() {
   const { user } = useUser();
@@ -37,7 +37,7 @@ export default function SavedProperties() {
   }, [user?.id, fetchFavorites, toast]);
 
   const handleRemoveFavorite = async (propertyId) => {
-    const result = await toggleFavorite(propertyId);
+    const result = await toggleFavorite(propertyId, user?.id);
     if (result.success) {
       toast({
         title: "Property Removed",

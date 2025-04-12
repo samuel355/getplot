@@ -25,6 +25,7 @@ import * as z from "zod";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Tag, Ruler, Bed, Bath, Calendar, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useUser } from "@/hooks/use-user";
 
 // Form validation schema
 const inquirySchema = z.object({
@@ -40,6 +41,7 @@ export default function PropertyPage() {
   const isFavorite = usePropertyStore(state => 
     selectedProperty ? state.isFavorite(selectedProperty.id) : false
   );
+  const { user } = useUser();
   
   const [selectedImage, setSelectedImage] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -63,7 +65,7 @@ export default function PropertyPage() {
     resolver: zodResolver(inquirySchema),
   });
 
-  const handleFavoriteClick = (e) => {
+  const handleFavoriteClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     
@@ -71,29 +73,38 @@ export default function PropertyPage() {
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 800);
     
-    const result = toggleFavorite(selectedProperty.id);
-    
-    if (result.success) {
-      if (result.isFavorite) {
-        // Property was added to favorites
-        toast({
-          title: "Added to Favorites",
-          description: selectedProperty.title,
-          variant: "default",
-        });
+    try {
+      const result = await toggleFavorite(selectedProperty.id, user?.id);
+      
+      if (result.success) {
+        if (result.isFavorite) {
+          // Property was added to favorites
+          toast({
+            title: "Added to Favorites",
+            description: selectedProperty.title,
+            variant: "default",
+          });
+        } else {
+          // Property was removed from favorites
+          toast({
+            title: "Removed from Favorites",
+            description: selectedProperty.title,
+            variant: "default",
+          });
+        }
       } else {
-        // Property was removed from favorites
+        // Handle error case
         toast({
-          title: "Removed from Favorites",
-          description: selectedProperty.title,
-          variant: "default",
+          title: "Error",
+          description: result.message || "Could not update favorites",
+          variant: "destructive",
         });
       }
-    } else {
-      // Handle error case
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
       toast({
         title: "Error",
-        description: result.message || "Could not update favorites",
+        description: "Could not update favorites",
         variant: "destructive",
       });
     }

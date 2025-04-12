@@ -7,16 +7,37 @@ import { Button } from '@/components/ui/button';
 import { Bookmark, MapPin, Bed, Bath, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import usePropertyStore from '@/store/usePropertyStore';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function SavedProperties() {
   const { user } = useUser();
-  const { favorites, toggleFavorite } = usePropertyStore();
-  const [loading, setLoading] = useState(false);
+  const { favorites, toggleFavorite, fetchFavorites } = usePropertyStore();
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const handleRemoveFavorite = (propertyId) => {
-    const result = toggleFavorite(propertyId);
+  useEffect(() => {
+    const loadFavorites = async () => {
+      if (user?.id) {
+        try {
+          await fetchFavorites(user.id);
+        } catch (error) {
+          console.error('Error loading favorites:', error);
+          toast({
+            title: "Error",
+            description: "Failed to load saved properties. Please try again.",
+            variant: "destructive",
+          });
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadFavorites();
+  }, [user?.id, fetchFavorites, toast]);
+
+  const handleRemoveFavorite = async (propertyId) => {
+    const result = await toggleFavorite(propertyId);
     if (result.success) {
       toast({
         title: "Property Removed",
@@ -26,11 +47,29 @@ export default function SavedProperties() {
     } else {
       toast({
         title: "Error",
-        description: "Failed to remove the property. Please try again.",
+        description: result.message || "Failed to remove the property. Please try again.",
         variant: "destructive",
       });
     }
   };
+
+  if (loading) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-6">Saved Properties</h1>
+        <div className="grid gap-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="animate-pulse">
+              <CardContent className="p-6">
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">

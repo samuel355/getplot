@@ -159,7 +159,7 @@ export default function FeaturesForm({ formData, updateFormData, nextStep, prevS
           type="submit"
           className="bg-primary text-white py-2 px-6 rounded-md hover:bg-primary-dark transition duration-300"
         >
-          Next: Review
+          Next: Documents
         </button>
       </div>
     </form>

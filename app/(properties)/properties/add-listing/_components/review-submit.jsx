@@ -157,6 +157,31 @@ export default function ReviewSubmit({ formData, prevStep }) {
             ))}
           </div>
         </div>
+
+        {formData.documents && formData.documents.length > 0 && (
+          <>
+            <h3 className="font-medium text-lg mb-4">Documents</h3>
+            <div className="mb-6">
+              <div className="space-y-2">
+                {formData.documents.map((doc, index) => (
+                  <div key={index} className="flex items-center p-3 bg-gray-50 rounded-md">
+                    <svg className="w-6 h-6 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    <a 
+                      href={doc.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:text-primary-dark"
+                    >
+                      {doc.name}
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </div>
       
       <div className="flex justify-between mt-8">

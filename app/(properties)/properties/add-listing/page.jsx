@@ -9,6 +9,7 @@ import LocationForm from "./_components/location-from";
 import ImagesForm from "./_components/images-form";
 import PricingForm from "./_components/pricing-form";
 import FeaturesForm from "./_components/features-form";
+import DocumentsForm from "./_components/documents-form";
 import ReviewSubmit from "./_components/review-submit";
 
 export default function AddListingPage() {
@@ -27,12 +28,13 @@ export default function AddListingPage() {
     coordinates: null,
     images: [],
     features: [],
+    documents: [], // Add documents field
     status: "Available",
     user_email: user?.emailAddresses[0]?.emailAddress || "", // Add user email
     region: "" // Add region field
   });
   
-  const totalSteps = 6;
+  const totalSteps = 7;
   
   const updateFormData = (data) => {
     setFormData(prev => ({ ...prev, ...data }));
@@ -60,7 +62,8 @@ export default function AddListingPage() {
               "Location", 
               "Images", 
               "Pricing", 
-              "Features", 
+              "Features",
+              "Documents",
               "Review"
             ]} 
             currentStep={step} 
@@ -109,6 +112,14 @@ export default function AddListingPage() {
               />
             )}
             {step === 6 && (
+              <DocumentsForm 
+                formData={formData} 
+                updateFormData={updateFormData} 
+                nextStep={nextStep} 
+                prevStep={prevStep} 
+              />
+            )}
+            {step === 7 && (
               <ReviewSubmit 
                 formData={formData} 
                 prevStep={prevStep} 

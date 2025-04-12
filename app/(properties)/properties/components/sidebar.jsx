@@ -16,7 +16,8 @@ import {
   Search,
   FileText,
   Clock,
-  Store
+  Store,
+  Bookmark
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useClerk } from '@clerk/nextjs';
@@ -37,6 +38,7 @@ export default function Sidebar() {
   const navigation = [
     { name: 'Dashboard', href: '/properties', icon: LayoutDashboard },
     { name: 'My Properties', href: '/properties/list', icon: Home },
+    { name: 'Saved Properties', href: '/properties/saved', icon: Bookmark },
     { name: 'Market Place', href: '/market-place', icon: Store },
     { name: 'Add Property', href: '/properties/add-listing', icon: PlusCircle },
   ];

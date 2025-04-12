@@ -55,6 +55,7 @@ export default function MarketPlace() {
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
+  console.log('properties', properties);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);

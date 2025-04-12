@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Header from "@/app/_components/Header";
 import Hero from "./_components/Hero-section";
+import PropertyCarousel from "@/app/_components/PropertyCarousel";
 
 const Home = () => {
   const router = useRouter();
@@ -26,6 +27,10 @@ const Home = () => {
         {/* Optional: Uncomment if you want to use these components */}
         {/* <Speciality /> */}
         {/* <Invests /> */}
+        <div className="container mx-auto px-4 py-12">
+          <h2 className="text-3xl font-bold mb-8 text-center">Featured Properties</h2>
+          <PropertyCarousel />
+        </div>
       </main>
       <Footer />
     </div>

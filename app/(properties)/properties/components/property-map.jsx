@@ -96,7 +96,7 @@ export default function PropertyMap({ property }) {
                 <p className="text-xs text-gray-500 mt-1">{property.address}</p>
                 {property.price && (
                   <p className="text-primary font-medium text-sm mt-1">
-                    ${Number(property.price).toLocaleString()}
+                    ₵{Number(property.price).toLocaleString()}
                   </p>
                 )}
               </div>

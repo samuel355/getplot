@@ -9,7 +9,7 @@ const PropertyCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const itemsPerPage = 3; // Show 3 properties at a time
+  const itemsPerPage = 3;
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -20,7 +20,7 @@ const PropertyCarousel = () => {
           .select("id, title, type, price, location, size, bedrooms, bathrooms, images, status")
           .eq("status", "approved")
           .order("created_at", { ascending: false })
-          .limit(9); // Fetch 9 properties to have 3 slides
+          .limit(9);
 
         if (error) throw error;
         setProperties(data || []);
@@ -48,7 +48,7 @@ const PropertyCarousel = () => {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
         {[1, 2, 3].map((i) => (
           <div key={i} className="animate-pulse">
             <div className="bg-gray-200 h-48 rounded-t-lg"></div>
@@ -118,7 +118,7 @@ const PropertyCarousel = () => {
 
               <div className="flex justify-between items-center mt-2">
                 <div className="font-medium">
-                  ${Number(property.price).toLocaleString()}
+                  GHS {Number(property.price).toLocaleString()}
                 </div>
                 <div className="text-sm text-gray-600">{property.size}</div>
               </div>

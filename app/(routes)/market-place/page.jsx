@@ -53,9 +53,7 @@ export default function MarketPlace() {
     // Fetch properties with the current filters and page
     fetchProperties(page);
     
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
-  console.log('properties', properties);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);

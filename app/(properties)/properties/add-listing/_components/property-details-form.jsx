@@ -33,6 +33,10 @@ const schema = yup.object().shape({
     otherwise: () => yup.number().notRequired(),
   }),
   size: yup.string().required("Property size is required"),
+  contact: yup
+    .string()
+    .required("Contact number is required")
+    .matches(/^[0-9]{10}$/, "Please enter a valid 10-digit phone number"),
 });
 
 export default function PropertyDetailsForm({
@@ -138,6 +142,24 @@ export default function PropertyDetailsForm({
             <p className="text-red-500 text-sm mt-1">
               {errors.description.message}
             </p>
+          )}
+        </div>
+
+        <div className="mb-8">
+          <label
+            htmlFor="contact"
+            className="block text-gray-700 mb-2 font-medium"
+          >
+            Contact Number
+          </label>
+          <input
+            id="contact"
+            {...register("contact")}
+            className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder="e.g., 0241234567"
+          />
+          {errors.contact && (
+            <p className="text-red-500 text-sm mt-1">{errors.contact.message}</p>
           )}
         </div>
 

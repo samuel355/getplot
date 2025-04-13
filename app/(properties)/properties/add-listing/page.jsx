@@ -31,7 +31,8 @@ export default function AddListingPage() {
     documents: [], // Add documents field
     status: "Available",
     user_email: user?.emailAddresses[0]?.emailAddress || "", // Add user email
-    region: "" // Add region field
+    region: "", // Add region field
+    contact: "", // Add contact field
   });
   
   const totalSteps = 7;

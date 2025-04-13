@@ -7,6 +7,7 @@ import usePropertyStore from "@/store/usePropertyStore";
 import { favoriteToasts } from "@/utils/toast";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 const PropertyCard = ({ property, isCompact = false }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -112,7 +113,9 @@ const PropertyCard = ({ property, isCompact = false }) => {
         </div>
 
         <div className="p-2">
+          <Link href={`/property/${property.id}`}>
           <h3 className="font-medium text-sm truncate">{property.title}</h3>
+          </Link>
           <div className="flex items-center text-xs text-gray-600 mt-0.5">
             <MapPinIcon className="h-3 w-3 mr-1 flex-shrink-0" />
             <span className="truncate">{property.location}</span>
@@ -241,7 +244,7 @@ const PropertyCard = ({ property, isCompact = false }) => {
 
         <div className="mt-4 flex items-center justify-between">
           <span className="text-primary font-bold">
-            ${property.price.toLocaleString()}
+            GHS {property.price.toLocaleString()}
           </span>
           <span className="text-gray-600 text-sm">{property.size}</span>
         </div>

@@ -106,7 +106,7 @@ export default function PropertyTable({
               </span>
             </TableCell>
             <TableCell>
-              ${parseFloat(property.price).toLocaleString()}
+            ₵{parseFloat(property.price).toLocaleString()}
             </TableCell>
             <TableCell>
               <StatusBadge status={property.status} />

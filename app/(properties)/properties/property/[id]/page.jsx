@@ -244,7 +244,7 @@ export default function PropertyDetailPage({ params }) {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
                   <div className="flex flex-col items-center p-4 bg-muted/40 rounded-lg">
                     <Tag className="h-5 w-5 mb-2 text-muted-foreground" />
-                    <span className="font-medium">${Number(property.price).toLocaleString()}</span>
+                    <span className="font-medium">₵{Number(property.price).toLocaleString()}</span>
                     {property.negotiable && (
                       <span className="text-xs text-muted-foreground mt-1">Negotiable</span>
                     )}
@@ -326,7 +326,7 @@ export default function PropertyDetailPage({ params }) {
                   <dl className="space-y-2">
                     <div className="flex justify-between py-1 border-b">
                       <dt className="text-muted-foreground">Price</dt>
-                      <dd className="font-medium">${Number(property.price).toLocaleString()}</dd>
+                      <dd className="font-medium">₵{Number(property.price).toLocaleString()}</dd>
                     </div>
                     <div className="flex justify-between py-1 border-b">
                       <dt className="text-muted-foreground">Negotiable</dt>
@@ -422,7 +422,7 @@ export default function PropertyDetailPage({ params }) {
                 
                 <div>
                   <h3 className="text-sm font-medium text-muted-foreground mb-1">Price</h3>
-                  <p className="text-2xl font-bold">${Number(property.price).toLocaleString()}</p>
+                  <p className="text-2xl font-bold">₵{Number(property.price).toLocaleString()}</p>
                   {property.negotiable && (
                     <p className="text-sm text-muted-foreground">Price is negotiable</p>
                   )}

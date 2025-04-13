@@ -36,7 +36,7 @@ export default function Sidebar() {
   
   // Regular user navigation
   const navigation = [
-    { name: 'Dashboard', href: '/properties', icon: LayoutDashboard },
+    { name: 'My Dashboard', href: '/properties/my-dashboard', icon: LayoutDashboard },
     { name: 'My Properties', href: '/properties/list', icon: Home },
     { name: 'Saved Properties', href: '/properties/saved', icon: Bookmark },
     { name: 'Market Place', href: '/market-place', icon: Store },
@@ -45,6 +45,7 @@ export default function Sidebar() {
   
   // Admin navigation with new routes
   const adminNavigation = [
+    { name: 'Dashboard', href: '/properties', icon: LayoutDashboard },
     { name: 'All Properties', href: '/properties/all-properties', icon: Building },
     { name: 'Advanced Search', href: '/properties/search', icon: Search },
     { name: 'Users', href: '/properties/users', icon: Users },

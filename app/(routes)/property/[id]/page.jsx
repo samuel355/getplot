@@ -13,8 +13,16 @@ import {
   UserIcon,
   EnvelopeOpenIcon,
 } from "@heroicons/react/24/outline";
-import { HeartIcon as HeartSolidIcon, EnvelopeIcon as EnvelopeSolidIcon } from "@heroicons/react/24/solid";
-import { GoogleMap, Marker, DirectionsService, DirectionsRenderer } from "@react-google-maps/api";
+import {
+  HeartIcon as HeartSolidIcon,
+  EnvelopeIcon as EnvelopeSolidIcon,
+} from "@heroicons/react/24/solid";
+import {
+  GoogleMap,
+  Marker,
+  DirectionsService,
+  DirectionsRenderer,
+} from "@react-google-maps/api";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import GoogleMapsProvider from "@/providers/google-map-provider";
@@ -37,13 +45,20 @@ const inquirySchema = z.object({
 });
 
 export default function PropertyPage() {
-  const { selectedProperty, similarProperties, loading, error, fetchPropertyById, fetchSimilarProperties } = usePropertyStore();
-  const toggleFavorite = usePropertyStore(state => state.toggleFavorite);
-  const isFavorite = usePropertyStore(state => 
+  const {
+    selectedProperty,
+    similarProperties,
+    loading,
+    error,
+    fetchPropertyById,
+    fetchSimilarProperties,
+  } = usePropertyStore();
+  const toggleFavorite = usePropertyStore((state) => state.toggleFavorite);
+  const isFavorite = usePropertyStore((state) =>
     selectedProperty ? state.isFavorite(selectedProperty.id) : false
   );
   const { user } = useUser();
-  
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [directions, setDirections] = useState(null);
@@ -69,14 +84,14 @@ export default function PropertyPage() {
   const handleFavoriteClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // Trigger animation
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 800);
-    
+
     try {
       const result = await toggleFavorite(selectedProperty.id, user?.id);
-      
+
       if (result.success) {
         if (result.isFavorite) {
           // Property was added to favorites
@@ -102,7 +117,7 @@ export default function PropertyPage() {
         });
       }
     } catch (error) {
-      console.error('Error toggling favorite:', error);
+      console.error("Error toggling favorite:", error);
       toast({
         title: "Error",
         description: "Could not update favorites",
@@ -114,39 +129,45 @@ export default function PropertyPage() {
   const handleShareClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (navigator.share) {
-      navigator.share({
-        title: selectedProperty.title,
-        text: `Check out this ${selectedProperty.type} in ${selectedProperty.location} for GHS ${selectedProperty.price.toLocaleString()}`,
-        url: window.location.href,
-      }).catch((error) => {
-        console.error('Error sharing:', error);
-        toast({
-          title: "Error",
-          description: "Could not share property",
-          variant: "destructive",
+      navigator
+        .share({
+          title: selectedProperty.title,
+          text: `Check out this ${selectedProperty.type} in ${
+            selectedProperty.location
+          } for GHS ${selectedProperty.price.toLocaleString()}`,
+          url: window.location.href,
+        })
+        .catch((error) => {
+          console.error("Error sharing:", error);
+          toast({
+            title: "Error",
+            description: "Could not share property",
+            variant: "destructive",
+          });
         });
-      });
     } else {
       // Fallback for browsers that don't support Web Share API
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        toast({
-          title: "Link Copied",
-          description: "Property link copied to clipboard",
-          variant: "default",
+      navigator.clipboard
+        .writeText(window.location.href)
+        .then(() => {
+          toast({
+            title: "Link Copied",
+            description: "Property link copied to clipboard",
+            variant: "default",
+          });
+        })
+        .catch(() => {
+          toast({
+            title: "Error",
+            description: "Could not copy link",
+            variant: "destructive",
+          });
         });
-      }).catch(() => {
-        toast({
-          title: "Error",
-          description: "Could not copy link",
-          variant: "destructive",
-        });
-      });
     }
   };
-  
-  
+
   useEffect(() => {
     const loadProperty = async () => {
       const property = await fetchPropertyById(params.id);
@@ -159,20 +180,19 @@ export default function PropertyPage() {
     };
 
     loadProperty();
-    
+
     // Cleanup function
     return () => {
       // Reset selected property when unmounting
       usePropertyStore.getState().selectedProperty = null;
     };
   }, [params.id, router, fetchPropertyById, fetchSimilarProperties]);
- 
 
   const handleDirectionsRequest = (result, status) => {
-    if (status === 'OK') {
+    if (status === "OK") {
       setDirections(result);
     } else {
-      console.error('Directions request failed due to ' + status);
+      console.error("Directions request failed due to " + status);
     }
   };
 
@@ -181,7 +201,7 @@ export default function PropertyPage() {
 
     const destination = {
       lat: selectedProperty.location_coordinates.coordinates[0],
-      lng: selectedProperty.location_coordinates.coordinates[1]
+      lng: selectedProperty.location_coordinates.coordinates[1],
     };
 
     const directionsService = new window.google.maps.DirectionsService();
@@ -189,7 +209,7 @@ export default function PropertyPage() {
       {
         origin: origin,
         destination: destination,
-        travelMode: window.google.maps.TravelMode.DRIVING
+        travelMode: window.google.maps.TravelMode.DRIVING,
       },
       handleDirectionsRequest
     );
@@ -197,7 +217,7 @@ export default function PropertyPage() {
 
   const handlePlaceSelect = () => {
     if (!autocomplete) return;
-    
+
     const place = autocomplete.getPlace();
     if (!place.geometry) {
       console.warn("No details available for input: '" + place.name + "'");
@@ -206,12 +226,12 @@ export default function PropertyPage() {
 
     const origin = {
       lat: place.geometry.location.lat(),
-      lng: place.geometry.location.lng()
+      lng: place.geometry.location.lng(),
     };
 
     // Update the input value with the selected place's formatted address
     setStartLocation(place.formatted_address);
-    
+
     // Calculate route
     calculateRoute(origin);
   };
@@ -220,8 +240,8 @@ export default function PropertyPage() {
     if (!searchInputRef.current || !window.google) return;
 
     const options = {
-      types: ['geocode', 'establishment'],
-      componentRestrictions: { country: 'gh' }
+      types: ["geocode", "establishment"],
+      componentRestrictions: { country: "gh" },
     };
 
     const autocompleteInstance = new window.google.maps.places.Autocomplete(
@@ -229,7 +249,7 @@ export default function PropertyPage() {
       options
     );
 
-    autocompleteInstance.addListener('place_changed', handlePlaceSelect);
+    autocompleteInstance.addListener("place_changed", handlePlaceSelect);
     setAutocomplete(autocompleteInstance);
 
     // Cleanup
@@ -246,13 +266,13 @@ export default function PropertyPage() {
         (position) => {
           const origin = {
             lat: position.coords.latitude,
-            lng: position.coords.longitude
+            lng: position.coords.longitude,
           };
 
           // Update the search input with current location
           const geocoder = new window.google.maps.Geocoder();
           geocoder.geocode({ location: origin }, (results, status) => {
-            if (status === 'OK' && results[0]) {
+            if (status === "OK" && results[0]) {
               setStartLocation(results[0].formatted_address);
             }
           });
@@ -272,8 +292,9 @@ export default function PropertyPage() {
       setIsSubmitting(true);
       setSubmitError(null);
 
-      const { error } = await usePropertyStore.getState().supabase
-        .from("property_inquiries")
+      const { error } = await usePropertyStore
+        .getState()
+        .supabase.from("property_inquiries")
         .insert([
           {
             property_id: selectedProperty.id,
@@ -335,7 +356,9 @@ export default function PropertyPage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {selectedProperty?.title}
             </h1>
-            <p className="text-lg text-gray-600 mb-6">{selectedProperty?.location}</p>
+            <p className="text-lg text-gray-600 mb-6">
+              {selectedProperty?.location}
+            </p>
 
             {/* Property image gallery */}
             <div className="mb-6">
@@ -347,97 +370,121 @@ export default function PropertyPage() {
                 />
 
                 {/* Image navigation buttons (only if more than one image) */}
-                {selectedProperty?.images && selectedProperty.images.length > 1 && (
-                  <>
-                    <button
-                      onClick={() =>
-                        setSelectedImage((prev) =>
-                          prev === 0 ? selectedProperty.images.length - 1 : prev - 1,
-                        )
-                      }
-                      className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70"
-                      aria-label="Previous image"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="w-5 h-5"
+                {selectedProperty?.images &&
+                  selectedProperty.images.length > 1 && (
+                    <>
+                      <button
+                        onClick={() =>
+                          setSelectedImage((prev) =>
+                            prev === 0
+                              ? selectedProperty.images.length - 1
+                              : prev - 1
+                          )
+                        }
+                        className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70"
+                        aria-label="Previous image"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M15.75 19.5L8.25 12l7.5-7.5"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() =>
-                        setSelectedImage((prev) =>
-                          prev === selectedProperty.images.length - 1 ? 0 : prev + 1,
-                        )
-                      }
-                      className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70"
-                      aria-label="Next image"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="w-5 h-5"
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="w-5 h-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15.75 19.5L8.25 12l7.5-7.5"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() =>
+                          setSelectedImage((prev) =>
+                            prev === selectedProperty.images.length - 1
+                              ? 0
+                              : prev + 1
+                          )
+                        }
+                        className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70"
+                        aria-label="Next image"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                        />
-                      </svg>
-                    </button>
-                  </>
-                )}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="w-5 h-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                          />
+                        </svg>
+                      </button>
+                    </>
+                  )}
 
                 {/* Type badge */}
                 <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-md font-medium">
-                  {selectedProperty?.type === "house" ? "House" : "Land"}
+                  {selectedProperty?.listing_type === "airbnb"
+                    ? "Airbnb for short stay"
+                    : selectedProperty?.type === "house"
+                    ? `House for ${
+                        selectedProperty.listing_type === "rent" ? "Rent" : "Sale"
+                      }`
+                    : `Land for ${
+                        selectedProperty?.listing_type === "rent" ? "Rent" : "Sale"
+                      }`}
                 </div>
               </div>
 
               {/* Thumbnail images */}
-              {selectedProperty?.images && selectedProperty?.images.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto">
-                  {selectedProperty?.images.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`flex-shrink-0 w-24 h-16 rounded-md overflow-hidden ${
-                        selectedImage === index
-                          ? "ring-2 ring-primary"
-                          : "opacity-70 hover:opacity-100"
-                      }`}
-                    >
-                      <img
-                        src={image}
-                        alt={`${selectedProperty?.title} - image ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
+              {selectedProperty?.images &&
+                selectedProperty?.images.length > 1 && (
+                  <div className="flex gap-2 overflow-x-auto">
+                    {selectedProperty?.images.map((image, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImage(index)}
+                        className={`flex-shrink-0 w-24 h-16 rounded-md overflow-hidden ${
+                          selectedImage === index
+                            ? "ring-2 ring-primary"
+                            : "opacity-70 hover:opacity-100"
+                        }`}
+                      >
+                        <img
+                          src={image}
+                          alt={`${selectedProperty?.title} - image ${
+                            index + 1
+                          }`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
             </div>
 
             {/* Property details */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-primary">
-                  {selectedProperty?.listing_type === 'rent' ? (
-                    <>GHS {Number(selectedProperty?.rental_price).toLocaleString()}<span className="text-sm text-gray-500">/month</span></>
-                  ) : selectedProperty?.listing_type === 'airbnb' ? (
-                    <>GHS {Number(selectedProperty?.rental_price).toLocaleString()}<span className="text-sm text-gray-500">/day</span></>
+                  {selectedProperty?.listing_type === "rent" ? (
+                    <>
+                      GHS{" "}
+                      {Number(selectedProperty?.rental_price).toLocaleString()}
+                      <span className="text-sm text-gray-500">/month</span>
+                    </>
+                  ) : selectedProperty?.listing_type === "airbnb" ? (
+                    <>
+                      GHS{" "}
+                      {Number(selectedProperty?.rental_price).toLocaleString()}
+                      <span className="text-sm text-gray-500">/day</span>
+                    </>
                   ) : (
                     <>GHS {Number(selectedProperty?.price).toLocaleString()}</>
                   )}
@@ -450,13 +497,17 @@ export default function PropertyPage() {
                     }`}
                   >
                     {isFavorite ? (
-                      <HeartSolidIcon className={`h-5 w-5 text-red-500 ${isAnimating ? "animate-pulse" : ""}`} />
+                      <HeartSolidIcon
+                        className={`h-5 w-5 text-red-500 ${
+                          isAnimating ? "animate-pulse" : ""
+                        }`}
+                      />
                     ) : (
                       <HeartIcon className="h-5 w-5" />
                     )}
                     <span>Save</span>
                   </button>
-                  <button 
+                  <button
                     onClick={handleShareClick}
                     className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md"
                   >
@@ -473,48 +524,78 @@ export default function PropertyPage() {
                   <TabsTrigger value="features">Features</TabsTrigger>
                   <TabsTrigger value="location">Location</TabsTrigger>
                 </TabsList>
-                
+
                 <TabsContent value="overview" className="pt-4">
                   <div>
                     <h3 className="text-lg font-semibold mb-2">Description</h3>
-                    <p className="text-gray-700 mb-4">{selectedProperty?.description}</p>
-                    
+                    <p className="text-gray-700 mb-4">
+                      {selectedProperty?.description}
+                    </p>
+
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
                       <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
                         <Tag className="h-5 w-5 mb-2 text-gray-500" />
                         <span className="font-medium">
-                          {selectedProperty?.listing_type === 'rent' ? (
-                            <>GHS{Number(selectedProperty?.rental_price).toLocaleString()}<span className="text-xs text-gray-500 block">per month</span></>
-                          ) : selectedProperty?.listing_type === 'airbnb' ? (
-                            <>GHS{Number(selectedProperty?.rental_price).toLocaleString()}<span className="text-xs text-gray-500 block">per day</span></>
+                          {selectedProperty?.listing_type === "rent" ? (
+                            <>
+                              GHS
+                              {Number(
+                                selectedProperty?.rental_price
+                              ).toLocaleString()}
+                              <span className="text-xs text-gray-500 block">
+                                per month
+                              </span>
+                            </>
+                          ) : selectedProperty?.listing_type === "airbnb" ? (
+                            <>
+                              GHS
+                              {Number(
+                                selectedProperty?.rental_price
+                              ).toLocaleString()}
+                              <span className="text-xs text-gray-500 block">
+                                per day
+                              </span>
+                            </>
                           ) : (
-                            <>GHS{Number(selectedProperty?.price).toLocaleString()}</>
+                            <>
+                              GHS
+                              {Number(selectedProperty?.price).toLocaleString()}
+                            </>
                           )}
                         </span>
                       </div>
-                      
+
                       <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
                         <Ruler className="h-5 w-5 mb-2 text-gray-500" />
-                        <span className="font-medium">{selectedProperty?.size}</span>
+                        <span className="font-medium">
+                          {selectedProperty?.size}
+                        </span>
                       </div>
-                      
+
                       {selectedProperty?.type === "house" && (
                         <>
                           <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
                             <Bed className="h-5 w-5 mb-2 text-gray-500" />
-                            <span className="font-medium">{selectedProperty?.bedrooms} Bedrooms</span>
+                            <span className="font-medium">
+                              {selectedProperty?.bedrooms} Bedrooms
+                            </span>
                           </div>
                           <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
                             <Bath className="h-5 w-5 mb-2 text-gray-500" />
-                            <span className="font-medium">{selectedProperty?.bathrooms} Bathrooms</span>
+                            <span className="font-medium">
+                              {selectedProperty?.bathrooms} Bathrooms
+                            </span>
                           </div>
                         </>
                       )}
-                      
+
                       <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
                         <Calendar className="h-5 w-5 mb-2 text-gray-500" />
                         <span className="font-medium">
-                          Listed on {new Date(selectedProperty?.created_at).toLocaleDateString("en-US", {
+                          Listed on{" "}
+                          {new Date(
+                            selectedProperty?.created_at
+                          ).toLocaleDateString("en-US", {
                             month: "short",
                             day: "numeric",
                             year: "numeric",
@@ -524,36 +605,48 @@ export default function PropertyPage() {
                     </div>
                   </div>
                 </TabsContent>
-                
+
                 <TabsContent value="details" className="pt-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <h3 className="text-lg font-semibold mb-3">Property Details</h3>
+                      <h3 className="text-lg font-semibold mb-3">
+                        Property Details
+                      </h3>
                       <dl className="space-y-2">
                         <div className="flex justify-between py-1 border-b">
                           <dt className="text-gray-500">Property Type</dt>
-                          <dd className="font-medium capitalize">{selectedProperty?.type}</dd>
+                          <dd className="font-medium capitalize">
+                            {selectedProperty?.type}
+                          </dd>
                         </div>
                         <div className="flex justify-between py-1 border-b">
                           <dt className="text-gray-500">Size</dt>
-                          <dd className="font-medium">{selectedProperty?.size}</dd>
+                          <dd className="font-medium">
+                            {selectedProperty?.size}
+                          </dd>
                         </div>
                         {selectedProperty?.type === "house" && (
                           <>
                             <div className="flex justify-between py-1 border-b">
                               <dt className="text-gray-500">Bedrooms</dt>
-                              <dd className="font-medium">{selectedProperty?.bedrooms}</dd>
+                              <dd className="font-medium">
+                                {selectedProperty?.bedrooms}
+                              </dd>
                             </div>
                             <div className="flex justify-between py-1 border-b">
                               <dt className="text-gray-500">Bathrooms</dt>
-                              <dd className="font-medium">{selectedProperty?.bathrooms}</dd>
+                              <dd className="font-medium">
+                                {selectedProperty?.bathrooms}
+                              </dd>
                             </div>
                           </>
                         )}
                         <div className="flex justify-between py-1 border-b">
                           <dt className="text-gray-500">Created</dt>
                           <dd className="font-medium">
-                            {new Date(selectedProperty?.created_at).toLocaleDateString("en-US", {
+                            {new Date(
+                              selectedProperty?.created_at
+                            ).toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
                               year: "numeric",
@@ -562,57 +655,99 @@ export default function PropertyPage() {
                         </div>
                       </dl>
                     </div>
-                    
+
                     <div>
-                      <h3 className="text-lg font-semibold mb-3">Price Information</h3>
+                      <h3 className="text-lg font-semibold mb-3">
+                        Price Information
+                      </h3>
                       <dl className="space-y-2">
-                        {selectedProperty?.listing_type === 'rent' ? (
+                        {selectedProperty?.listing_type === "rent" ? (
                           <>
                             <div className="flex justify-between py-1 border-b">
                               <dt className="text-gray-500">Monthly Rent</dt>
-                              <dd className="font-medium">GHS{Number(selectedProperty?.rental_price).toLocaleString()}</dd>
+                              <dd className="font-medium">
+                                GHS
+                                {Number(
+                                  selectedProperty?.rental_price
+                                ).toLocaleString()}
+                              </dd>
                             </div>
                             <div className="flex justify-between py-1 border-b">
                               <dt className="text-gray-500">Rental Duration</dt>
-                              <dd className="font-medium capitalize">{selectedProperty?.rental_duration?.replace('_', ' ')}</dd>
+                              <dd className="font-medium capitalize">
+                                {selectedProperty?.rental_duration?.replace(
+                                  "_",
+                                  " "
+                                )}
+                              </dd>
                             </div>
                             <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Security Deposit</dt>
-                              <dd className="font-medium">GHS{Number(selectedProperty?.rental_deposit).toLocaleString()}</dd>
+                              <dt className="text-gray-500">
+                                Security Deposit
+                              </dt>
+                              <dd className="font-medium">
+                                GHS
+                                {Number(
+                                  selectedProperty?.rental_deposit
+                                ).toLocaleString()}
+                              </dd>
                             </div>
                             <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Utilities Included</dt>
-                              <dd className="font-medium">{selectedProperty?.rental_utilities_included ? 'Yes' : 'No'}</dd>
+                              <dt className="text-gray-500">
+                                Utilities Included
+                              </dt>
+                              <dd className="font-medium">
+                                {selectedProperty?.rental_utilities_included
+                                  ? "Yes"
+                                  : "No"}
+                              </dd>
                             </div>
                             <div className="flex justify-between py-1 border-b">
                               <dt className="text-gray-500">Furnished</dt>
-                              <dd className="font-medium">{selectedProperty?.rental_furnished ? 'Yes' : 'No'}</dd>
+                              <dd className="font-medium">
+                                {selectedProperty?.rental_furnished
+                                  ? "Yes"
+                                  : "No"}
+                              </dd>
                             </div>
                           </>
-                        ) : selectedProperty?.listing_type === 'airbnb' ? (
+                        ) : selectedProperty?.listing_type === "airbnb" ? (
                           <>
                             <div className="flex justify-between py-1 border-b">
                               <dt className="text-gray-500">Price per Day</dt>
-                              <dd className="font-medium">GHS{Number(selectedProperty?.rental_price).toLocaleString()}</dd>
+                              <dd className="font-medium">
+                                GHS
+                                {Number(
+                                  selectedProperty?.rental_price
+                                ).toLocaleString()}
+                              </dd>
                             </div>
                             <div className="flex justify-between py-1 border-b">
                               <dt className="text-gray-500">Available From</dt>
                               <dd className="font-medium">
-                                {selectedProperty?.rental_available_from ? new Date(selectedProperty?.rental_available_from).toLocaleDateString("en-US", {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                }) : 'N/A'}
+                                {selectedProperty?.rental_available_from
+                                  ? new Date(
+                                      selectedProperty?.rental_available_from
+                                    ).toLocaleDateString("en-US", {
+                                      month: "short",
+                                      day: "numeric",
+                                      year: "numeric",
+                                    })
+                                  : "N/A"}
                               </dd>
                             </div>
                             <div className="flex justify-between py-1 border-b">
                               <dt className="text-gray-500">Available To</dt>
                               <dd className="font-medium">
-                                {selectedProperty?.rental_available_to ? new Date(selectedProperty?.rental_available_to).toLocaleDateString("en-US", {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                }) : 'N/A'}
+                                {selectedProperty?.rental_available_to
+                                  ? new Date(
+                                      selectedProperty?.rental_available_to
+                                    ).toLocaleDateString("en-US", {
+                                      month: "short",
+                                      day: "numeric",
+                                      year: "numeric",
+                                    })
+                                  : "N/A"}
                               </dd>
                             </div>
                           </>
@@ -620,11 +755,18 @@ export default function PropertyPage() {
                           <>
                             <div className="flex justify-between py-1 border-b">
                               <dt className="text-gray-500">Price</dt>
-                              <dd className="font-medium">GHS{Number(selectedProperty?.price).toLocaleString()}</dd>
+                              <dd className="font-medium">
+                                GHS
+                                {Number(
+                                  selectedProperty?.price
+                                ).toLocaleString()}
+                              </dd>
                             </div>
                             <div className="flex justify-between py-1 border-b">
                               <dt className="text-gray-500">Negotiable</dt>
-                              <dd className="font-medium">{selectedProperty?.negotiable ? 'Yes' : 'No'}</dd>
+                              <dd className="font-medium">
+                                {selectedProperty?.negotiable ? "Yes" : "No"}
+                              </dd>
                             </div>
                           </>
                         )}
@@ -632,10 +774,13 @@ export default function PropertyPage() {
                     </div>
                   </div>
                 </TabsContent>
-                
+
                 <TabsContent value="features" className="pt-4">
-                  <h3 className="text-lg font-semibold mb-3">Property Features</h3>
-                  {selectedProperty?.features && selectedProperty?.features.length > 0 ? (
+                  <h3 className="text-lg font-semibold mb-3">
+                    Property Features
+                  </h3>
+                  {selectedProperty?.features &&
+                  selectedProperty?.features.length > 0 ? (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                       {selectedProperty?.features.map((feature, index) => (
                         <div key={index} className="flex items-center gap-2">
@@ -645,17 +790,21 @@ export default function PropertyPage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-500">No features listed for this property.</p>
+                    <p className="text-gray-500">
+                      No features listed for this property.
+                    </p>
                   )}
                 </TabsContent>
-                
+
                 <TabsContent value="location" className="pt-4">
                   <div className="aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden mb-4 h-80">
                     <GoogleMap
                       mapContainerStyle={{ height: "100%", width: "100%" }}
                       center={{
-                        lat: selectedProperty?.location_coordinates.coordinates[0],
-                        lng: selectedProperty?.location_coordinates.coordinates[1]
+                        lat: selectedProperty?.location_coordinates
+                          .coordinates[0],
+                        lng: selectedProperty?.location_coordinates
+                          .coordinates[1],
                       }}
                       zoom={15}
                       options={{
@@ -667,14 +816,18 @@ export default function PropertyPage() {
                     >
                       <Marker
                         position={{
-                          lat: selectedProperty?.location_coordinates.coordinates[0],
-                          lng: selectedProperty?.location_coordinates.coordinates[1]
+                          lat: selectedProperty?.location_coordinates
+                            .coordinates[0],
+                          lng: selectedProperty?.location_coordinates
+                            .coordinates[1],
                         }}
                       />
-                      {directions && <DirectionsRenderer directions={directions} />}
+                      {directions && (
+                        <DirectionsRenderer directions={directions} />
+                      )}
                     </GoogleMap>
                   </div>
-                  
+
                   <div className="mb-4 flex gap-2">
                     <div className="flex-1 relative">
                       <input
@@ -694,16 +847,14 @@ export default function PropertyPage() {
                       <span>Use Current Location</span>
                     </button>
                   </div>
-                  
+
                   <h3 className="text-lg font-semibold mb-2">Location</h3>
                   <p className="text-gray-600 mb-2">
                     {selectedProperty?.location}
                   </p>
-                  
+
                   <h3 className="text-lg font-semibold mt-4 mb-2">Address</h3>
-                  <p className="text-gray-600">
-                    {selectedProperty?.address}
-                  </p>
+                  <p className="text-gray-600">{selectedProperty?.address}</p>
                 </TabsContent>
               </Tabs>
             </div>
@@ -713,10 +864,15 @@ export default function PropertyPage() {
           <div className="lg:w-1/3">
             {/* Contact form */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h3 className="text-lg font-semibold mb-4">Interested in this property?</h3>
+              <h3 className="text-lg font-semibold mb-4">
+                Interested in this property?
+              </h3>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Your Name
                   </label>
                   <div className="relative">
@@ -732,12 +888,17 @@ export default function PropertyPage() {
                     />
                   </div>
                   {errors.name && (
-                    <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.name.message}
+                    </p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Email Address
                   </label>
                   <div className="relative">
@@ -753,12 +914,17 @@ export default function PropertyPage() {
                     />
                   </div>
                   {errors.email && (
-                    <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.email.message}
+                    </p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Phone Number
                   </label>
                   <div className="relative">
@@ -774,12 +940,17 @@ export default function PropertyPage() {
                     />
                   </div>
                   {errors.phone && (
-                    <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.phone.message}
+                    </p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Message
                   </label>
                   <textarea
@@ -791,7 +962,9 @@ export default function PropertyPage() {
                     defaultValue={`I'm interested in this property: ${selectedProperty?.title}`}
                   />
                   {errors.message && (
-                    <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.message.message}
+                    </p>
                   )}
                 </div>
 
@@ -827,7 +1000,9 @@ export default function PropertyPage() {
                   />
                 </div>
                 <div>
-                  <h4 className="font-medium">{selectedProperty?.user_email}</h4>
+                  <h4 className="font-medium">
+                    {selectedProperty?.user_email}
+                  </h4>
                   <p className="text-sm text-gray-600">
                     Premium Land & Property
                   </p>
@@ -903,12 +1078,22 @@ export default function PropertyPage() {
                           {similarProperty.location}
                         </p>
                         <p className="text-primary font-semibold text-sm">
-                          {similarProperty.listing_type === 'rent' ? (
-                            <>GHS{similarProperty.rental_price.toLocaleString()}<span className="text-xs text-gray-500">/month</span></>
-                          ) : similarProperty.listing_type === 'airbnb' ? (
-                            <>GHS{similarProperty.rental_price.toLocaleString()}<span className="text-xs text-gray-500">/day</span></>
+                          {similarProperty.listing_type === "rent" ? (
+                            <>
+                              GHS{similarProperty.rental_price.toLocaleString()}
+                              <span className="text-xs text-gray-500">
+                                /month
+                              </span>
+                            </>
+                          ) : similarProperty.listing_type === "airbnb" ? (
+                            <>
+                              GHS{similarProperty.rental_price.toLocaleString()}
+                              <span className="text-xs text-gray-500">
+                                /day
+                              </span>
+                            </>
                           ) : (
-                            <>GHS{similarProperty.price.toLocaleString()}</>
+                            <>GHS{similarProperty?.price?.toLocaleString()}</>
                           )}
                         </p>
                       </div>

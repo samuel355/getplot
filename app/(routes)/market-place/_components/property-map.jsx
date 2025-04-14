@@ -38,7 +38,6 @@ const PropertyMap = ({ properties, loading }) => {
   const [hoveredProperty, setHoveredProperty] = useState(null);
   const [manuallyPannedTo, setManuallyPannedTo] = useState(null);
 
-  console.log(properties)
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
 
@@ -489,14 +488,26 @@ const PropertyMap = ({ properties, loading }) => {
                         </div>
                         <div className="flex-grow min-w-0">
                           <div className="flex flex-col">
-                            <h3 className="text-sm font-medium text-gray-900">{property.title}</h3>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-sm font-medium text-gray-900">{property.title}</h3>
+                              <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                                {property.type === 'house' 
+                                  ? `House for ${property.listing_type === 'rent' ? 'Rent' : 'Sale'}`
+                                  : `Land for ${property.listing_type === 'rent' ? 'Rent' : 'Sale'}`}
+                              </span>
+                            </div>
                             <p className="text-sm text-gray-500">{property.location}</p>
                             {property.region && (
                               <p className="text-xs text-gray-400">{property.region}</p>
                             )}
                           </div>
                           <p className="text-primary font-semibold text-sm mt-1">
-                            ${property.price?.toLocaleString()}
+                            GHS {(property.listing_type === 'rent' || property.listing_type === 'airbnb' 
+                              ? property.rental_price 
+                              : property.price)?.toLocaleString()}
+                            {property.listing_type === 'rent' && ' / month'}
+                            {property.listing_type === 'airbnb' && ' / day'}
+                            {property.listing_type === 'sale' && property.negotiable && ' (Negotiable)'}
                           </p>
                         </div>
                       </div>

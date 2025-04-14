@@ -20,15 +20,15 @@ const PropertyCard = ({ property, isCompact = false }) => {
   const handleFavoriteClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // Trigger animation
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 800);
-    
+
     try {
       const result = await toggleFavorite(property.id, user?.id);
-      console.log('result', result);
-      
+      console.log("result", result);
+
       if (result.success) {
         if (result.isFavorite) {
           // Property was added to favorites
@@ -54,7 +54,7 @@ const PropertyCard = ({ property, isCompact = false }) => {
         });
       }
     } catch (error) {
-      console.error('Error toggling favorite:', error);
+      console.error("Error toggling favorite:", error);
       toast({
         title: "Error",
         description: "Could not update favorites",
@@ -66,7 +66,7 @@ const PropertyCard = ({ property, isCompact = false }) => {
     e.preventDefault();
     e.stopPropagation();
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === property.images.length - 1 ? 0 : prevIndex + 1,
+      prevIndex === property.images.length - 1 ? 0 : prevIndex + 1
     );
   };
 
@@ -74,7 +74,7 @@ const PropertyCard = ({ property, isCompact = false }) => {
     e.preventDefault();
     e.stopPropagation();
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? property.images.length - 1 : prevIndex - 1,
+      prevIndex === 0 ? property.images.length - 1 : prevIndex - 1
     );
   };
 
@@ -103,7 +103,9 @@ const PropertyCard = ({ property, isCompact = false }) => {
             >
               {isFavorite ? (
                 <HeartSolidIcon
-                  className={`h-5 w-5 text-red-500 ${isAnimating ? "animate-pulse" : ""}`}
+                  className={`h-5 w-5 text-red-500 ${
+                    isAnimating ? "animate-pulse" : ""
+                  }`}
                 />
               ) : (
                 <HeartIcon className="h-5 w-5 text-gray-600" />
@@ -114,7 +116,7 @@ const PropertyCard = ({ property, isCompact = false }) => {
 
         <div className="p-2">
           <Link href={`/property/${property.id}`}>
-          <h3 className="font-medium text-sm truncate">{property.title}</h3>
+            <h3 className="font-medium text-sm truncate">{property.title}</h3>
           </Link>
           <div className="flex items-center text-xs text-gray-600 mt-0.5">
             <MapPinIcon className="h-3 w-3 mr-1 flex-shrink-0" />
@@ -122,12 +124,23 @@ const PropertyCard = ({ property, isCompact = false }) => {
           </div>
           <div className="mt-1 flex items-center justify-between">
             <span className="text-primary font-bold text-sm">
-              {property.listing_type === 'rent' ? (
-                <>GHS {property.rental_price?.toLocaleString()} <span className="text-sm text-gray-600">/month</span></>
-              ) : property.listing_type === 'airbnb' ? (
-                <>GHS {property.rental_price?.toLocaleString()} <span className="text-sm text-gray-600">/day</span></>
+              {property.listing_type === "rent" ? (
+                <>
+                  GHS {property.rental_price?.toLocaleString()}{" "}
+                  <span className="text-sm text-gray-600">/month</span>
+                </>
+              ) : property.listing_type === "airbnb" ? (
+                <>
+                  GHS {property.rental_price?.toLocaleString()}{" "}
+                  <span className="text-sm text-gray-600">/day</span>
+                </>
               ) : (
-                <>GHS {property.price?.toLocaleString()} {property.negotiable && <span className="text-sm text-gray-600">(Negotiable)</span>}</>
+                <>
+                  GHS {property.price?.toLocaleString()}{" "}
+                  {property.negotiable && (
+                    <span className="text-sm text-gray-600">(Negotiable)</span>
+                  )}
+                </>
               )}
             </span>
             <span className="text-gray-600 text-xs">{property.type}</span>
@@ -151,6 +164,19 @@ const PropertyCard = ({ property, isCompact = false }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl group">
       <div className="relative">
+        <div className="absolute top-2 left-2 z-10">
+          <span className="px-2 py-1 text-xs font-medium text-white bg-primary rounded-full">
+            {property.listing_type === "airbnb"
+              ? "Airbnb for short stay"
+              : property.type === "house"
+              ? `House for ${
+                  property.listing_type === "rent" ? "Rent" : "Sale"
+                }`
+              : `Land for ${
+                  property.listing_type === "rent" ? "Rent" : "Sale"
+                }`}
+          </span>
+        </div>
         {/* Property image */}
         <div className="h-48 overflow-hidden">
           <img
@@ -206,11 +232,6 @@ const PropertyCard = ({ property, isCompact = false }) => {
           </>
         )}
 
-        {/* Type badge */}
-        <div className="absolute top-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded">
-          {property.type === "house" ? "House" : "Land"}
-        </div>
-
         {/* Favorite button */}
         <button
           onClick={handleFavoriteClick}
@@ -250,12 +271,23 @@ const PropertyCard = ({ property, isCompact = false }) => {
 
         <div className="mt-4 flex items-center justify-between">
           <span className="text-primary font-bold">
-            {property.listing_type === 'rent' ? (
-              <>GHS {property.rental_price?.toLocaleString()} <span className="text-sm text-gray-600">/month</span></>
-            ) : property.listing_type === 'airbnb' ? (
-              <>GHS {property.rental_price?.toLocaleString()} <span className="text-sm text-gray-600">/day</span></>
+            {property.listing_type === "rent" ? (
+              <>
+                GHS {property.rental_price?.toLocaleString()}{" "}
+                <span className="text-sm text-gray-600">/month</span>
+              </>
+            ) : property.listing_type === "airbnb" ? (
+              <>
+                GHS {property.rental_price?.toLocaleString()}{" "}
+                <span className="text-sm text-gray-600">/day</span>
+              </>
             ) : (
-              <>GHS {property.price?.toLocaleString()} {property.negotiable && <span className="text-sm text-gray-600">(Negotiable)</span>}</>
+              <>
+                GHS {property.price?.toLocaleString()}{" "}
+                {property.negotiable && (
+                  <span className="text-sm text-gray-600">(Negotiable)</span>
+                )}
+              </>
             )}
           </span>
           <span className="text-gray-600 text-sm">{property.size}</span>

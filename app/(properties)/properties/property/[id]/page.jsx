@@ -244,10 +244,26 @@ export default function PropertyDetailPage({ params }) {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
                   <div className="flex flex-col items-center p-4 bg-muted/40 rounded-lg">
                     <Tag className="h-5 w-5 mb-2 text-muted-foreground" />
-                    <span className="font-medium">₵{Number(property.price).toLocaleString()}</span>
-                    {property.negotiable && (
-                      <span className="text-xs text-muted-foreground mt-1">Negotiable</span>
-                    )}
+                    <span className="font-medium">
+                      {property.listing_type === 'rent' ? (
+                        <>
+                          ₵{Number(property.rental_price).toLocaleString()}
+                          <span className="text-xs text-muted-foreground block">per month</span>
+                        </>
+                      ) : property.listing_type === 'airbnb' ? (
+                        <>
+                          ₵{Number(property.rental_price).toLocaleString()}
+                          <span className="text-xs text-muted-foreground block">per day</span>
+                        </>
+                      ) : (
+                        <>
+                          ₵{Number(property.price).toLocaleString()}
+                          {property.negotiable && (
+                            <span className="text-xs text-muted-foreground block">Negotiable</span>
+                          )}
+                        </>
+                      )}
+                    </span>
                   </div>
                   
                   <div className="flex flex-col items-center p-4 bg-muted/40 rounded-lg">
@@ -324,14 +340,60 @@ export default function PropertyDetailPage({ params }) {
                 <div>
                   <h3 className="text-lg font-semibold mb-3">Price Information</h3>
                   <dl className="space-y-2">
-                    <div className="flex justify-between py-1 border-b">
-                      <dt className="text-muted-foreground">Price</dt>
-                      <dd className="font-medium">₵{Number(property.price).toLocaleString()}</dd>
-                    </div>
-                    <div className="flex justify-between py-1 border-b">
-                      <dt className="text-muted-foreground">Negotiable</dt>
-                      <dd className="font-medium">{property.negotiable ? 'Yes' : 'No'}</dd>
-                    </div>
+                    {property.listing_type === 'rent' ? (
+                      <>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-muted-foreground">Monthly Rent</dt>
+                          <dd className="font-medium">₵{Number(property.rental_price).toLocaleString()}</dd>
+                        </div>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-muted-foreground">Rental Duration</dt>
+                          <dd className="font-medium capitalize">{property.rental_duration?.replace('_', ' ')}</dd>
+                        </div>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-muted-foreground">Security Deposit</dt>
+                          <dd className="font-medium">₵{Number(property.rental_deposit).toLocaleString()}</dd>
+                        </div>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-muted-foreground">Utilities Included</dt>
+                          <dd className="font-medium">{property.rental_utilities_included ? 'Yes' : 'No'}</dd>
+                        </div>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-muted-foreground">Furnished</dt>
+                          <dd className="font-medium">{property.rental_furnished ? 'Yes' : 'No'}</dd>
+                        </div>
+                      </>
+                    ) : property.listing_type === 'airbnb' ? (
+                      <>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-muted-foreground">Price per Day</dt>
+                          <dd className="font-medium">₵{Number(property.rental_price).toLocaleString()}</dd>
+                        </div>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-muted-foreground">Available From</dt>
+                          <dd className="font-medium">
+                            {property.rental_available_from ? format(new Date(property.rental_available_from), 'MMM d, yyyy') : 'N/A'}
+                          </dd>
+                        </div>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-muted-foreground">Available To</dt>
+                          <dd className="font-medium">
+                            {property.rental_available_to ? format(new Date(property.rental_available_to), 'MMM d, yyyy') : 'N/A'}
+                          </dd>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-muted-foreground">Price</dt>
+                          <dd className="font-medium">₵{Number(property.price).toLocaleString()}</dd>
+                        </div>
+                        <div className="flex justify-between py-1 border-b">
+                          <dt className="text-muted-foreground">Negotiable</dt>
+                          <dd className="font-medium">{property.negotiable ? 'Yes' : 'No'}</dd>
+                        </div>
+                      </>
+                    )}
                   </dl>
                 </div>
               </div>
@@ -421,10 +483,18 @@ export default function PropertyDetailPage({ params }) {
                 </div>
                 
                 <div>
-                  <h3 className="text-sm font-medium text-muted-foreground mb-1">Price</h3>
-                  <p className="text-2xl font-bold">₵{Number(property.price).toLocaleString()}</p>
-                  {property.negotiable && (
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                    {property.listing_type === 'rent' ? 'Monthly Rent' : 
+                     property.listing_type === 'airbnb' ? 'Price per Day' : 'Price'}
+                  </h3>
+                  <p className="text-2xl font-bold">
+                    ₵{Number(property.listing_type === 'sale' ? property.price : property.rental_price).toLocaleString()}
+                  </p>
+                  {property.listing_type === 'sale' && property.negotiable && (
                     <p className="text-sm text-muted-foreground">Price is negotiable</p>
+                  )}
+                  {property.listing_type === 'rent' && property.rental_duration && (
+                    <p className="text-sm text-muted-foreground">Duration: {property.rental_duration.replace('_', ' ')}</p>
                   )}
                 </div>
                 

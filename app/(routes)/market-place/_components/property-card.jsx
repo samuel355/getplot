@@ -122,7 +122,13 @@ const PropertyCard = ({ property, isCompact = false }) => {
           </div>
           <div className="mt-1 flex items-center justify-between">
             <span className="text-primary font-bold text-sm">
-              ${property.price.toLocaleString()}
+              {property.listing_type === 'rent' ? (
+                <>GHS {property.rental_price?.toLocaleString()} <span className="text-sm text-gray-600">/month</span></>
+              ) : property.listing_type === 'airbnb' ? (
+                <>GHS {property.rental_price?.toLocaleString()} <span className="text-sm text-gray-600">/day</span></>
+              ) : (
+                <>GHS {property.price?.toLocaleString()} {property.negotiable && <span className="text-sm text-gray-600">(Negotiable)</span>}</>
+              )}
             </span>
             <span className="text-gray-600 text-xs">{property.type}</span>
           </div>
@@ -244,7 +250,13 @@ const PropertyCard = ({ property, isCompact = false }) => {
 
         <div className="mt-4 flex items-center justify-between">
           <span className="text-primary font-bold">
-            GHS {property.price.toLocaleString()}
+            {property.listing_type === 'rent' ? (
+              <>GHS {property.rental_price?.toLocaleString()} <span className="text-sm text-gray-600">/month</span></>
+            ) : property.listing_type === 'airbnb' ? (
+              <>GHS {property.rental_price?.toLocaleString()} <span className="text-sm text-gray-600">/day</span></>
+            ) : (
+              <>GHS {property.price?.toLocaleString()} {property.negotiable && <span className="text-sm text-gray-600">(Negotiable)</span>}</>
+            )}
           </span>
           <span className="text-gray-600 text-sm">{property.size}</span>
         </div>

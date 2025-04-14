@@ -434,7 +434,13 @@ export default function PropertyPage() {
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-primary">
-                  GHS {selectedProperty?.price.toLocaleString()}
+                  {selectedProperty?.listing_type === 'rent' ? (
+                    <>GHS {Number(selectedProperty?.rental_price).toLocaleString()}<span className="text-sm text-gray-500">/month</span></>
+                  ) : selectedProperty?.listing_type === 'airbnb' ? (
+                    <>GHS {Number(selectedProperty?.rental_price).toLocaleString()}<span className="text-sm text-gray-500">/day</span></>
+                  ) : (
+                    <>GHS {Number(selectedProperty?.price).toLocaleString()}</>
+                  )}
                 </h2>
                 <div className="flex gap-2">
                   <button
@@ -476,7 +482,15 @@ export default function PropertyPage() {
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
                       <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
                         <Tag className="h-5 w-5 mb-2 text-gray-500" />
-                        <span className="font-medium">GHS{Number(selectedProperty?.price).toLocaleString()}</span>
+                        <span className="font-medium">
+                          {selectedProperty?.listing_type === 'rent' ? (
+                            <>GHS{Number(selectedProperty?.rental_price).toLocaleString()}<span className="text-xs text-gray-500 block">per month</span></>
+                          ) : selectedProperty?.listing_type === 'airbnb' ? (
+                            <>GHS{Number(selectedProperty?.rental_price).toLocaleString()}<span className="text-xs text-gray-500 block">per day</span></>
+                          ) : (
+                            <>GHS{Number(selectedProperty?.price).toLocaleString()}</>
+                          )}
+                        </span>
                       </div>
                       
                       <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
@@ -552,14 +566,68 @@ export default function PropertyPage() {
                     <div>
                       <h3 className="text-lg font-semibold mb-3">Price Information</h3>
                       <dl className="space-y-2">
-                        <div className="flex justify-between py-1 border-b">
-                          <dt className="text-gray-500">Price</dt>
-                          <dd className="font-medium">GHS{Number(selectedProperty?.price).toLocaleString()}</dd>
-                        </div>
-                        <div className="flex justify-between py-1 border-b">
-                          <dt className="text-gray-500">Negotiable</dt>
-                          <dd className="font-medium">{selectedProperty?.negotiable ? 'Yes' : 'No'}</dd>
-                        </div>
+                        {selectedProperty?.listing_type === 'rent' ? (
+                          <>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Monthly Rent</dt>
+                              <dd className="font-medium">GHS{Number(selectedProperty?.rental_price).toLocaleString()}</dd>
+                            </div>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Rental Duration</dt>
+                              <dd className="font-medium capitalize">{selectedProperty?.rental_duration?.replace('_', ' ')}</dd>
+                            </div>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Security Deposit</dt>
+                              <dd className="font-medium">GHS{Number(selectedProperty?.rental_deposit).toLocaleString()}</dd>
+                            </div>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Utilities Included</dt>
+                              <dd className="font-medium">{selectedProperty?.rental_utilities_included ? 'Yes' : 'No'}</dd>
+                            </div>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Furnished</dt>
+                              <dd className="font-medium">{selectedProperty?.rental_furnished ? 'Yes' : 'No'}</dd>
+                            </div>
+                          </>
+                        ) : selectedProperty?.listing_type === 'airbnb' ? (
+                          <>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Price per Day</dt>
+                              <dd className="font-medium">GHS{Number(selectedProperty?.rental_price).toLocaleString()}</dd>
+                            </div>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Available From</dt>
+                              <dd className="font-medium">
+                                {selectedProperty?.rental_available_from ? new Date(selectedProperty?.rental_available_from).toLocaleDateString("en-US", {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                }) : 'N/A'}
+                              </dd>
+                            </div>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Available To</dt>
+                              <dd className="font-medium">
+                                {selectedProperty?.rental_available_to ? new Date(selectedProperty?.rental_available_to).toLocaleDateString("en-US", {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                }) : 'N/A'}
+                              </dd>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Price</dt>
+                              <dd className="font-medium">GHS{Number(selectedProperty?.price).toLocaleString()}</dd>
+                            </div>
+                            <div className="flex justify-between py-1 border-b">
+                              <dt className="text-gray-500">Negotiable</dt>
+                              <dd className="font-medium">{selectedProperty?.negotiable ? 'Yes' : 'No'}</dd>
+                            </div>
+                          </>
+                        )}
                       </dl>
                     </div>
                   </div>
@@ -835,7 +903,13 @@ export default function PropertyPage() {
                           {similarProperty.location}
                         </p>
                         <p className="text-primary font-semibold text-sm">
-                          GHS{similarProperty.price.toLocaleString()}
+                          {similarProperty.listing_type === 'rent' ? (
+                            <>GHS{similarProperty.rental_price.toLocaleString()}<span className="text-xs text-gray-500">/month</span></>
+                          ) : similarProperty.listing_type === 'airbnb' ? (
+                            <>GHS{similarProperty.rental_price.toLocaleString()}<span className="text-xs text-gray-500">/day</span></>
+                          ) : (
+                            <>GHS{similarProperty.price.toLocaleString()}</>
+                          )}
                         </p>
                       </div>
                     </Link>

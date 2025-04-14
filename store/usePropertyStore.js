@@ -28,6 +28,7 @@ const usePropertyStore = create(
         bedrooms: "any",
         bathrooms: "any",
         sortBy: "newest",
+        property_type: "all",
       },
 
       // Recently viewed properties
@@ -227,44 +228,39 @@ const usePropertyStore = create(
           const from = (page - 1) * propertiesPerPage;
           const to = from + propertiesPerPage - 1;
 
+          // Start with basic query - just approved properties
           let query = supabase.from("properties").select(
-            "id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, location_coordinates, description, features, region",
-            { count: "exact" } // Get total count for pagination
+            "id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, location_coordinates, description, features, region, property_type, rental_type, rental_duration, rental_price, rental_available_from, rental_available_to, rental_deposit, rental_utilities_included, rental_furnished, airbnb_min_stay, listing_type, negotiable",
+            { count: "exact" }
           );
 
           // Only fetch approved properties
           query = query.eq("status", "approved");
 
-          // Apply filters
+          // Add property type filter
           if (filters.propertyType !== "all") {
             query = query.eq("type", filters.propertyType);
           }
 
+          // Add listing type filter
+          if (filters.property_type !== "all") {
+            query = query.eq("listing_type", filters.property_type);
+          }
+
+          // Add region/location filter
           if (filters.location !== "all") {
-            console.log('Filtering by region:', filters.location);
-            // Filter by region instead of location
             query = query.eq("region", filters.location);
           }
 
-          query = query
-            .gte("price", filters.priceRange[0])
-            .lte("price", filters.priceRange[1]);
-
+          // Add bedrooms filter
           if (filters.bedrooms !== "any" && filters.propertyType !== "land") {
             query = query.gte("bedrooms", filters.bedrooms);
           }
 
+          // Add bathrooms filter
           if (filters.bathrooms !== "any" && filters.propertyType !== "land") {
+            console.log('Applying bathrooms filter:', filters.bathrooms);
             query = query.gte("bathrooms", filters.bathrooms);
-          }
-
-          // Apply sorting
-          if (filters.sortBy === "newest") {
-            query = query.order("created_at", { ascending: false });
-          } else if (filters.sortBy === "price-asc") {
-            query = query.order("price", { ascending: true });
-          } else if (filters.sortBy === "price-desc") {
-            query = query.order("price", { ascending: false });
           }
 
           // Apply pagination
@@ -272,7 +268,10 @@ const usePropertyStore = create(
 
           const { data, error, count } = await query;
 
-          if (error) throw error;
+          if (error) {
+            console.error('Query error:', error);
+            throw error;
+          }
 
           // Format property data
           const formattedData = data.map((property) => {
@@ -314,13 +313,24 @@ const usePropertyStore = create(
               }
             }
 
-            return {
+            const formattedProperty = {
               ...property,
               images: property.images?.length
                 ? property.images.map((img) => img.url || img)
                 : [],
               coordinates,
+              // Add listing type specific fields
+              listing_type: property.listing_type || 'sale',
+              rental_price: property.rental_price || null,
+              rental_duration: property.rental_duration || null,
+              rental_deposit: property.rental_deposit || null,
+              rental_utilities_included: property.rental_utilities_included || false,
+              rental_furnished: property.rental_furnished || false,
+              rental_available_from: property.rental_available_from || null,
+              rental_available_to: property.rental_available_to || null,
             };
+
+            return formattedProperty;
           });
 
           // Update state with the fetched properties and pagination info
@@ -414,6 +424,15 @@ const usePropertyStore = create(
               ? data.images.map((img) => img.url || img)
               : [],
             coordinates,
+            // Add listing type specific fields
+            listing_type: data.property_type || 'sale',
+            rental_price: data.rental_price || null,
+            rental_duration: data.rental_duration || null,
+            rental_deposit: data.rental_deposit || null,
+            rental_utilities_included: data.rental_utilities_included || false,
+            rental_furnished: data.rental_furnished || false,
+            rental_available_from: data.rental_available_from || null,
+            rental_available_to: data.rental_available_to || null,
           };
 
           // Add to recently viewed
@@ -480,6 +499,15 @@ const usePropertyStore = create(
                 ? property.images.map((img) => img.url || img)
                 : [],
               coordinates,
+              // Add listing type specific fields
+              listing_type: property.property_type || 'sale',
+              rental_price: property.rental_price || null,
+              rental_duration: property.rental_duration || null,
+              rental_deposit: property.rental_deposit || null,
+              rental_utilities_included: property.rental_utilities_included || false,
+              rental_furnished: property.rental_furnished || false,
+              rental_available_from: property.rental_available_from || null,
+              rental_available_to: property.rental_available_to || null,
             };
           });
 
@@ -509,6 +537,7 @@ const usePropertyStore = create(
             bedrooms: "any",
             bathrooms: "any",
             sortBy: "newest",
+            property_type: "all",
           },
           // We don't reset favorites or recently viewed
         }),

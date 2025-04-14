@@ -425,7 +425,7 @@ const usePropertyStore = create(
               : [],
             coordinates,
             // Add listing type specific fields
-            listing_type: data.property_type || 'sale',
+            listing_type: data.listing_type || 'sale',
             rental_price: data.rental_price || null,
             rental_duration: data.rental_duration || null,
             rental_deposit: data.rental_deposit || null,

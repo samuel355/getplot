@@ -157,11 +157,8 @@ export default function PricingForm({
       : null;
 
     updateFormData(cleanedData);
-    console.log(formData)
     nextStep();
   };
-
-  console.log("watching listingType:", listingType);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

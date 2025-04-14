@@ -6,6 +6,16 @@ import { useEffect } from "react";
 
 const schema = yup.object().shape({
   type: yup.string().required("Property type is required"),
+  property_type: yup.string().when("type", {
+    is: "house",
+    then: () => yup.string().required("Property type is required"),
+    otherwise: () => yup.string().notRequired(),
+  }),
+  listing_type: yup.string().when("type", {
+    is: "house",
+    then: () => yup.string().required("Listing type is required"),
+    otherwise: () => yup.string().notRequired(),
+  }),
   title: yup
     .string()
     .required("Title is required")
@@ -36,7 +46,49 @@ const schema = yup.object().shape({
   contact: yup
     .string()
     .required("Contact number is required")
-    .matches(/^[0-9]{10}$/, "Please enter a valid 10-digit phone number"),
+    .matches(/^[0-9]+$/, "Please enter numbers only")
+    .min(10, "Contact number must be at least 10 digits")
+    .max(15, "Contact number cannot exceed 15 digits"),
+  rental_type: yup.string().when("property_type", {
+    is: "rent",
+    then: () => yup.string().required("Rental type is required"),
+    otherwise: () => yup.string().notRequired(),
+  }),
+  rental_duration: yup.string().when("property_type", {
+    is: "rent",
+    then: () => yup.string().required("Rental duration is required"),
+    otherwise: () => yup.string().notRequired(),
+  }),
+  rental_price: yup.number().when("property_type", {
+    is: "rent",
+    then: () => yup.number().required("Rental price is required").min(0),
+    otherwise: () => yup.number().notRequired(),
+  }),
+  rental_available_from: yup.date().when("property_type", {
+    is: "rent",
+    then: () => yup.date().required("Available from date is required"),
+    otherwise: () => yup.date().notRequired(),
+  }),
+  rental_available_to: yup.date().when("property_type", {
+    is: "rent",
+    then: () => yup.date().required("Available to date is required"),
+    otherwise: () => yup.date().notRequired(),
+  }),
+  rental_deposit: yup.number().when("property_type", {
+    is: "rent",
+    then: () => yup.number().required("Security deposit is required").min(0),
+    otherwise: () => yup.number().notRequired(),
+  }),
+  rental_utilities_included: yup.boolean().when("property_type", {
+    is: "rent",
+    then: () => yup.boolean().required(),
+    otherwise: () => yup.boolean().notRequired(),
+  }),
+  rental_furnished: yup.boolean().when("property_type", {
+    is: "rent",
+    then: () => yup.boolean().required(),
+    otherwise: () => yup.boolean().notRequired(),
+  }),
 });
 
 export default function PropertyDetailsForm({
@@ -52,12 +104,32 @@ export default function PropertyDetailsForm({
     setValue,
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: formData,
+    defaultValues: {
+      ...formData,
+      property_type: formData.type === 'land' ? 'sale' : formData.property_type,
+      listing_type: formData.type === 'land' ? 'sale' : formData.listing_type
+    },
   });
 
   const propertyType = watch("type");
 
+  // Set default values when land is selected
+  useEffect(() => {
+    if (propertyType === 'land') {
+      setValue('property_type', 'sale');
+      setValue('listing_type', 'sale');
+    } else if (propertyType === 'house' && !formData.property_type) {
+      setValue('property_type', 'chamber_and_hall');
+      setValue('listing_type', 'sale');
+    }
+  }, [propertyType, setValue, formData.property_type, formData.listing_type]);
+
   const onSubmit = (data) => {
+    // Ensure land properties are always set to sale
+    if (data.type === 'land') {
+      data.property_type = 'sale';
+      data.listing_type = 'sale';
+    }
     updateFormData(data);
     nextStep();
   };
@@ -97,6 +169,122 @@ export default function PropertyDetailsForm({
             <p className="text-red-500 text-sm mt-1">{errors.type.message}</p>
           )}
         </div>
+
+        {propertyType === 'house' && (
+          <>
+            <div className="mb-8">
+              <label className="block text-gray-700 mb-3 font-medium">
+                Property Type
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    {...register("property_type")}
+                    value="chamber_and_hall"
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-2">Chamber & Hall</span>
+                </label>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    {...register("property_type")}
+                    value="single_room"
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-2">Single Room</span>
+                </label>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    {...register("property_type")}
+                    value="single_room_porch"
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-2">Single Room with Porch</span>
+                </label>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    {...register("property_type")}
+                    value="self_contained"
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-2">Self Contained</span>
+                </label>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    {...register("property_type")}
+                    value="apartment"
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-2">Apartment</span>
+                </label>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    {...register("property_type")}
+                    value="duplex"
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-2">Duplex</span>
+                </label>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    {...register("property_type")}
+                    value="mansion"
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-2">Mansion</span>
+                </label>
+              </div>
+              {errors.property_type && (
+                <p className="text-red-500 text-sm mt-1">{errors.property_type.message}</p>
+              )}
+            </div>
+
+            <div className="mb-8">
+              <label className="block text-gray-700 mb-3 font-medium">
+                Property For
+              </label>
+              <div className="flex space-x-6">
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    {...register("listing_type")}
+                    value="sale"
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-2 text-lg">For Sale</span>
+                </label>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    {...register("listing_type")}
+                    value="rent"
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-2 text-lg">For Rent</span>
+                </label>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    {...register("listing_type")}
+                    value="airbnb"
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-2 text-lg">Airbnb</span>
+                </label>
+              </div>
+              {errors.listing_type && (
+                <p className="text-red-500 text-sm mt-1">{errors.listing_type.message}</p>
+              )}
+            </div>
+          </>
+        )}
 
         <div className="mb-8">
           <label
@@ -154,6 +342,9 @@ export default function PropertyDetailsForm({
           </label>
           <input
             id="contact"
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]*"
             {...register("contact")}
             className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder="e.g., 0241234567"
@@ -239,6 +430,202 @@ export default function PropertyDetailsForm({
             // </div>
           )}
         </div>
+
+        {watch("property_type") === "rent" && (
+          <div className="mb-8">
+            <label className="block text-gray-700 mb-3 font-medium">
+              Rental Type
+            </label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("rental_type")}
+                  value="chamber_and_hall"
+                  className="form-radio h-5 w-5 text-blue-600"
+                />
+                <span className="ml-2">Chamber & Hall</span>
+              </label>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("rental_type")}
+                  value="single_room"
+                  className="form-radio h-5 w-5 text-blue-600"
+                />
+                <span className="ml-2">Single Room</span>
+              </label>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("rental_type")}
+                  value="single_room_porch"
+                  className="form-radio h-5 w-5 text-blue-600"
+                />
+                <span className="ml-2">Single Room with Porch</span>
+              </label>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("rental_type")}
+                  value="self_contained"
+                  className="form-radio h-5 w-5 text-blue-600"
+                />
+                <span className="ml-2">Self Contained</span>
+              </label>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("rental_type")}
+                  value="apartment"
+                  className="form-radio h-5 w-5 text-blue-600"
+                />
+                <span className="ml-2">Apartment</span>
+              </label>
+            </div>
+            {errors.rental_type && (
+              <p className="text-red-500 text-sm mt-1">{errors.rental_type.message}</p>
+            )}
+          </div>
+        )}
+
+        {watch("property_type") === "rent" && (
+          <div className="mb-8">
+            <label className="block text-gray-700 mb-3 font-medium">
+              Rental Duration
+            </label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("rental_duration")}
+                  value="short_term"
+                  className="form-radio h-5 w-5 text-blue-600"
+                />
+                <span className="ml-2">Short Term</span>
+              </label>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("rental_duration")}
+                  value="1_year"
+                  className="form-radio h-5 w-5 text-blue-600"
+                />
+                <span className="ml-2">1 Year</span>
+              </label>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("rental_duration")}
+                  value="2_years"
+                  className="form-radio h-5 w-5 text-blue-600"
+                />
+                <span className="ml-2">2 Years</span>
+              </label>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("rental_duration")}
+                  value="5_years"
+                  className="form-radio h-5 w-5 text-blue-600"
+                />
+                <span className="ml-2">5 Years</span>
+              </label>
+            </div>
+            {errors.rental_duration && (
+              <p className="text-red-500 text-sm mt-1">{errors.rental_duration.message}</p>
+            )}
+          </div>
+        )}
+
+        {watch("property_type") === "rent" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Monthly Rent (₵)
+              </label>
+              <input
+                type="number"
+                {...register("rental_price")}
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="e.g., 1000"
+              />
+              {errors.rental_price && (
+                <p className="text-red-500 text-sm mt-1">{errors.rental_price.message}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Security Deposit (₵)
+              </label>
+              <input
+                type="number"
+                {...register("rental_deposit")}
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="e.g., 2000"
+              />
+              {errors.rental_deposit && (
+                <p className="text-red-500 text-sm mt-1">{errors.rental_deposit.message}</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {watch("property_type") === "rent" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Available From
+              </label>
+              <input
+                type="date"
+                {...register("rental_available_from")}
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+              {errors.rental_available_from && (
+                <p className="text-red-500 text-sm mt-1">{errors.rental_available_from.message}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-gray-700 mb-2 font-medium">
+                Available To
+              </label>
+              <input
+                type="date"
+                {...register("rental_available_to")}
+                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+              {errors.rental_available_to && (
+                <p className="text-red-500 text-sm mt-1">{errors.rental_available_to.message}</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {watch("property_type") === "rent" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  {...register("rental_utilities_included")}
+                  className="form-checkbox h-5 w-5 text-blue-600"
+                />
+                <span className="ml-2 text-gray-700">Utilities Included</span>
+              </label>
+            </div>
+            <div>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  {...register("rental_furnished")}
+                  className="form-checkbox h-5 w-5 text-blue-600"
+                />
+                <span className="ml-2 text-gray-700">Furnished</span>
+              </label>
+            </div>
+          </div>
+        )}
 
         <div
           className={`flex justify-end ${

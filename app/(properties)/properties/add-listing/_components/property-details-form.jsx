@@ -8,13 +8,13 @@ const schema = yup.object().shape({
   type: yup.string().required("Property type is required"),
   property_type: yup.string().when("type", {
     is: "house",
-    then: () => yup.string().required("Property type is required"),
-    otherwise: () => yup.string().notRequired(),
+    then: () => yup.string().required("Please select a property type"),
+    otherwise: () => yup.string().nullable().notRequired(),
   }),
   listing_type: yup.string().when("type", {
     is: "house",
-    then: () => yup.string().required("Listing type is required"),
-    otherwise: () => yup.string().notRequired(),
+    then: () => yup.string().required("Please select a listing type"),
+    otherwise: () => yup.string().nullable().notRequired(),
   }),
   title: yup
     .string()
@@ -30,8 +30,9 @@ const schema = yup.object().shape({
       yup
         .number()
         .required("Number of bedrooms is required")
-        .min(0, "Cannot be negative"),
-    otherwise: () => yup.number().notRequired(),
+        .min(1, "Number of bedrooms must be at least 1")
+        .typeError("Please enter a valid number"),
+    otherwise: () => yup.number().nullable().notRequired(),
   }),
   bathrooms: yup.number().when("type", {
     is: "house",
@@ -96,18 +97,21 @@ export default function PropertyDetailsForm({
   updateFormData,
   nextStep,
 }) {
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
     setValue,
+    trigger,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       ...formData,
-      property_type: formData.type === 'land' ? 'sale' : formData.property_type,
-      listing_type: formData.type === 'land' ? 'sale' : formData.listing_type
+      type: formData.type || 'house',
+      property_type: formData.type === 'land' ? 'sale' : (formData.property_type || ''),
+      listing_type: formData.type === 'land' ? 'sale' : (formData.listing_type || '')
     },
   });
 
@@ -118,11 +122,15 @@ export default function PropertyDetailsForm({
     if (propertyType === 'land') {
       setValue('property_type', 'sale');
       setValue('listing_type', 'sale');
-    } else if (propertyType === 'house' && !formData.property_type) {
-      setValue('property_type', 'chamber_and_hall');
-      setValue('listing_type', 'sale');
+      trigger('property_type');
+      trigger('listing_type');
+    } else if (propertyType === 'house') {
+      setValue('property_type', '');
+      setValue('listing_type', '');
+      trigger('property_type');
+      trigger('listing_type');
     }
-  }, [propertyType, setValue, formData.property_type, formData.listing_type]);
+  }, [propertyType, setValue, trigger]);
 
   const onSubmit = (data) => {
     // Ensure land properties are always set to sale
@@ -130,6 +138,7 @@ export default function PropertyDetailsForm({
       data.property_type = 'sale';
       data.listing_type = 'sale';
     }
+    
     updateFormData(data);
     nextStep();
   };

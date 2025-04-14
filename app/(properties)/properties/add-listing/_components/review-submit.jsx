@@ -30,21 +30,20 @@ export default function ReviewSubmit({ formData, prevStep }) {
           `POINT(${formData.coordinates.lat} ${formData.coordinates.lng})` : null,
       };
 
+      //Remove the coordinates object as we've transformed it
+      delete listingData.coordinates;
       
-      // Remove the coordinates object as we've transformed it
-      // delete listingData.coordinates;
-      
-      // // Insert into database
-      // const { data, error: insertError } = await supabase
-      //   .from('properties')
-      //   .insert(listingData)
-      //   .select('*');
+      // Insert into database
+      const { data, error: insertError } = await supabase
+        .from('properties')
+        .insert(listingData)
+        .select('*');
         
-      // if (insertError) throw insertError;
+      if (insertError) throw insertError;
       
-      // // Redirect to success page or listing detail
-      // router.push(`/listing-success?id=${data[0].id}`);
-      console.log(listingData)
+      // Redirect to success page or listing detail
+      router.push(`/listing-success?id=${data[0].id}`);
+
     } catch (err) {
       console.error("Error submitting listing:", err);
       setError("Failed to submit your listing. Please try again.");

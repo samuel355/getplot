@@ -16,23 +16,33 @@ export default function AddListingPage() {
   const { user } = useUser();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    type: "house", // default to house
+    type: "house",
     title: "",
     description: "",
     bedrooms: 0,
     bathrooms: 0,
     size: "",
-    price: "",
+    price: 0,
+    negotiable: false,
     location: "",
     address: "",
-    coordinates: null,
+    location_coordinates: null,
     images: [],
     features: [],
-    documents: [], // Add documents field
-    status: "Available",
-    user_email: user?.emailAddresses[0]?.emailAddress || "", // Add user email
-    region: "", // Add region field
-    contact: "", // Add contact field
+    status: "pending",
+    user_email: user?.emailAddresses[0]?.emailAddress || "",
+    region: "",
+    contact: null,
+    documents: [],
+    property_type: "sale",
+    rental_type: null,
+    rental_duration: null,
+    rental_price: null,
+    rental_available_from: null,
+    rental_available_to: null,
+    rental_deposit: null,
+    rental_utilities_included: false,
+    rental_furnished: false
   });
   
   const totalSteps = 7;

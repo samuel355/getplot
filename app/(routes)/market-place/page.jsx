@@ -36,6 +36,7 @@ export default function MarketPlace() {
     const bedrooms = searchParams.get("bedrooms") || "any";
     const bathrooms = searchParams.get("bathrooms") || "any";
     const sortBy = searchParams.get("sortBy") || "newest";
+    const property_type = searchParams.get("property_type") || "all";
     const page = parseInt(searchParams.get("page") || "1");
     
     // Update store with URL params
@@ -46,6 +47,7 @@ export default function MarketPlace() {
       bedrooms,
       bathrooms,
       sortBy,
+      property_type,
     });
     
     setPage(page);

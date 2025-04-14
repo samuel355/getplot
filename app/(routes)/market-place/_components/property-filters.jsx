@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import { Dialog, Disclosure, Popover, Transition } from '@headlessui/react';
 import { ChevronDownIcon, XMarkIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
@@ -29,29 +29,50 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
     "Western North"
   ];
   
+  const [priceRange, setPriceRange] = useState([0, 10000000]);
+  const [rentalPriceRange, setRentalPriceRange] = useState([0, 10000]);
+  const [bedrooms, setBedrooms] = useState("any");
+  const [bathrooms, setBathrooms] = useState("any");
+  const [sortBy, setSortBy] = useState("newest");
+  const [propertyType, setPropertyType] = useState("all");
+  const [location, setLocation] = useState("all");
+  const [listingType, setListingType] = useState("all");
+
   const handlePriceChange = (range) => {
-    onFilterChange({ priceRange: range });
+    if (listingType === 'sale') {
+      setPriceRange(range);
+      onFilterChange({ priceRange: range });
+    } else {
+      setRentalPriceRange(range);
+      onFilterChange({ priceRange: range });
+    }
   };
-  
+
   const handlePropertyTypeChange = (type) => {
     onFilterChange({ propertyType: type });
   };
-  
+
   const handleLocationChange = (location) => {
     onFilterChange({ location: location === "All Regions" ? "all" : location });
   };
-  
+
   const handleBedroomsChange = (bedrooms) => {
     onFilterChange({ bedrooms });
   };
-  
+
   const handleBathroomsChange = (bathrooms) => {
     onFilterChange({ bathrooms });
   };
-  
+
+  const handleListingTypeChange = (property_type) => {
+    console.log('Listing type changed to:', property_type);
+    onFilterChange({ property_type });
+  };
+
   const applyFilters = () => {
-    // This would typically update URL parameters or make an API call
     setOpen(false);
+    
+    console.log('Applying filters:', filters);
     
     // Update URL with filter parameters
     const queryParams = new URLSearchParams();
@@ -61,6 +82,9 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
     queryParams.set('location', filters.location);
     if (filters.bedrooms !== 'any') queryParams.set('bedrooms', filters.bedrooms);
     if (filters.bathrooms !== 'any') queryParams.set('bathrooms', filters.bathrooms);
+    if (filters.property_type !== 'all') queryParams.set('property_type', filters.property_type);
+    
+    console.log('Updated URL params:', queryParams.toString());
     
     router.push(`/market-place?${queryParams.toString()}`, { scroll: false });
   };
@@ -117,10 +141,67 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
             </Transition>
           </Popover>
 
+          {/* Listing Type Filter */}
+          <Popover className="relative">
+            <Popover.Button className="flex items-center gap-x-1 text-sm font-medium text-gray-700 hover:text-gray-900">
+              Listing Type
+              <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+            </Popover.Button>
+
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-200"
+              enterFrom="opacity-0 translate-y-1"
+              enterTo="opacity-100 translate-y-0"
+              leave="transition ease-in duration-150"
+              leaveFrom="opacity-100 translate-y-0"
+              leaveTo="opacity-0 translate-y-1"
+            >
+              <Popover.Panel className="absolute left-0 z-10 mt-2 w-48 origin-top-left rounded-md bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="py-1">
+                  <button
+                    className={`block px-4 py-2 text-sm w-full text-left ${
+                      filters.property_type === 'all' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                    }`}
+                    onClick={() => handleListingTypeChange('all')}
+                  >
+                    All Listings
+                  </button>
+                  <button
+                    className={`block px-4 py-2 text-sm w-full text-left ${
+                      filters.property_type === 'sale' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                    }`}
+                    onClick={() => handleListingTypeChange('sale')}
+                  >
+                    For Sale
+                  </button>
+                  <button
+                    className={`block px-4 py-2 text-sm w-full text-left ${
+                      filters.property_type === 'rent' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                    }`}
+                    onClick={() => handleListingTypeChange('rent')}
+                  >
+                    For Rent
+                  </button>
+                  <button
+                    className={`block px-4 py-2 text-sm w-full text-left ${
+                      filters.property_type === 'airbnb' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                    }`}
+                    onClick={() => handleListingTypeChange('airbnb')}
+                  >
+                    Airbnb
+                  </button>
+                </div>
+              </Popover.Panel>
+            </Transition>
+          </Popover>
+
           {/* Price Range Filter */}
           <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-medium text-gray-700 hover:text-gray-900">
-              Price Range
+              {listingType === 'rent' ? 'Monthly Rent Range (GHS)' : 
+               listingType === 'airbnb' ? 'Daily Price Range (GHS)' : 
+               'Price Range (GHS)'}
               <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
             </Popover.Button>
 
@@ -137,25 +218,25 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                 <div className="space-y-4">
                   <div>
                     <label htmlFor="min-price" className="block text-sm font-medium text-gray-700">
-                      Minimum Price ($)
+                      Minimum Price (GHS)
                     </label>
                     <input
                       type="number"
                       id="min-price"
-                      value={filters.priceRange[0]}
-                      onChange={(e) => handlePriceChange([parseInt(e.target.value), filters.priceRange[1]])}
+                      value={listingType === 'sale' ? priceRange[0] : rentalPriceRange[0]}
+                      onChange={(e) => handlePriceChange([parseInt(e.target.value), listingType === 'sale' ? priceRange[1] : rentalPriceRange[1]])}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
                     />
                   </div>
                   <div>
                     <label htmlFor="max-price" className="block text-sm font-medium text-gray-700">
-                      Maximum Price ($)
+                      Maximum Price (GHS)
                     </label>
                     <input
                       type="number"
                       id="max-price"
-                      value={filters.priceRange[1]}
-                      onChange={(e) => handlePriceChange([filters.priceRange[0], parseInt(e.target.value)])}
+                      value={listingType === 'sale' ? priceRange[1] : rentalPriceRange[1]}
+                      onChange={(e) => handlePriceChange([listingType === 'sale' ? priceRange[0] : rentalPriceRange[0], parseInt(e.target.value)])}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
                     />
                   </div>
@@ -420,13 +501,104 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                     )}
                   </Disclosure>
 
+                  {/* Listing Type */}
+                  <Disclosure as="div" className="py-6 border-t border-gray-200">
+                    {({ open }) => (
+                      <>
+                        <h3 className="flow-root">
+                          <Disclosure.Button className="flex w-full items-center justify-between py-2 text-sm text-gray-400 hover:text-gray-500">
+                            <span className="font-medium text-gray-900">Listing Type</span>
+                            <span className="ml-6 flex items-center">
+                              <ChevronDownIcon
+                                className={`${open ? '-rotate-180' : 'rotate-0'} h-5 w-5 transform`}
+                                aria-hidden="true"
+                              />
+                            </span>
+                          </Disclosure.Button>
+                        </h3>
+                        <Disclosure.Panel className="pt-2">
+                          <div className="space-y-4">
+                            <div className="flex items-center">
+                              <input
+                                id="filter-mobile-listing-all"
+                                name="listing-type"
+                                type="radio"
+                                checked={filters.property_type === 'all'}
+                                onChange={() => handleListingTypeChange('all')}
+                                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                              />
+                              <label
+                                htmlFor="filter-mobile-listing-all"
+                                className="ml-3 text-sm text-gray-700"
+                              >
+                                All Listings
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                id="filter-mobile-listing-sale"
+                                name="listing-type"
+                                type="radio"
+                                checked={filters.property_type === 'sale'}
+                                onChange={() => handleListingTypeChange('sale')}
+                                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                              />
+                              <label
+                                htmlFor="filter-mobile-listing-sale"
+                                className="ml-3 text-sm text-gray-700"
+                              >
+                                For Sale
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                id="filter-mobile-listing-rent"
+                                name="listing-type"
+                                type="radio"
+                                checked={filters.property_type === 'rent'}
+                                onChange={() => handleListingTypeChange('rent')}
+                                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                              />
+                              <label
+                                htmlFor="filter-mobile-listing-rent"
+                                className="ml-3 text-sm text-gray-700"
+                              >
+                                For Rent
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                id="filter-mobile-listing-airbnb"
+                                name="listing-type"
+                                type="radio"
+                                checked={filters.property_type === 'airbnb'}
+                                onChange={() => handleListingTypeChange('airbnb')}
+                                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                              />
+                              <label
+                                htmlFor="filter-mobile-listing-airbnb"
+                                className="ml-3 text-sm text-gray-700"
+                              >
+                                Airbnb
+                              </label>
+                            </div>
+                          </div>
+                        </Disclosure.Panel>
+                      </>
+                    )}
+                  </Disclosure>
+
                   {/* Price Range */}
                   <Disclosure as="div" className="py-6 border-t border-gray-200">
                     {({ open }) => (
                       <>
                         <h3 className="flow-root">
                           <Disclosure.Button className="flex w-full items-center justify-between py-2 text-sm text-gray-400 hover:text-gray-500">
-                            <span className="font-medium text-gray-900">Price Range</span>
+                            <span className="font-medium text-gray-900">
+                              {filters.property_type === 'rent' ? 'Monthly Rent Range' : 
+                               filters.property_type === 'airbnb' ? 'Daily Price Range' : 
+                               'Price Range'}
+                            </span>
                             <span className="ml-6 flex items-center">
                               <ChevronDownIcon
                                 className={`${open ? '-rotate-180' : 'rotate-0'} h-5 w-5 transform`}
@@ -439,7 +611,7 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                           <div className="space-y-4">
                             <div>
                               <label htmlFor="min-price-mobile" className="block text-sm font-medium text-gray-700">
-                                Minimum Price ($)
+                                Minimum Price (GHS)
                               </label>
                               <input
                                 type="number"
@@ -451,7 +623,7 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                             </div>
                             <div>
                               <label htmlFor="max-price-mobile" className="block text-sm font-medium text-gray-700">
-                                Maximum Price ($)
+                                Maximum Price (GHS)
                               </label>
                               <input
                                 type="number"

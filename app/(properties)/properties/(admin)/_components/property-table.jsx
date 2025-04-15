@@ -106,7 +106,13 @@ export default function PropertyTable({
               </span>
             </TableCell>
             <TableCell>
-            ₵{parseFloat(property.price).toLocaleString()}
+              {property.listing_type === "rent" ? (
+                <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-gray-500">/month</span></>
+              ) : property.listing_type === "airbnb" ? (
+                <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-gray-500">/day</span></>
+              ) : (
+                <>GHS {Number(property.price).toLocaleString()}</>
+              )}
             </TableCell>
             <TableCell>
               <StatusBadge status={property.status} />
@@ -117,7 +123,7 @@ export default function PropertyTable({
             <TableCell className="text-right">
               <div className="flex justify-end gap-2">
                 <Button asChild variant="ghost" size="icon">
-                  <Link href={`/property/${property.id}`}>
+                  <Link href={`/properties/property/${property.id}`}>
                     <Eye className="h-4 w-4" />
                   </Link>
                 </Button>

@@ -351,7 +351,15 @@ function renderProperties(viewMode, properties, loading, onDelete) {
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span>${Number(property.price).toLocaleString()}</span>
+                    <span>
+                      {property.listing_type === "rent" ? (
+                        <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/month</span></>
+                      ) : property.listing_type === "airbnb" ? (
+                        <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/day</span></>
+                      ) : (
+                        <>GHS {Number(property.price).toLocaleString()}</>
+                      )}
+                    </span>
                     {property.negotiable && (
                       <span className="text-xs text-muted-foreground">
                         Negotiable
@@ -455,7 +463,13 @@ function renderProperties(viewMode, properties, loading, onDelete) {
               </p>
               <div className="flex justify-between items-center mt-2">
                 <div className="font-medium">
-                  ${Number(property.price).toLocaleString()}
+                  {property.listing_type === "rent" ? (
+                    <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/month</span></>
+                  ) : property.listing_type === "airbnb" ? (
+                    <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/day</span></>
+                  ) : (
+                    <>GHS {Number(property.price).toLocaleString()}</>
+                  )}
                 </div>
                 {property.negotiable && (
                   <div className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">

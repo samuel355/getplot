@@ -119,8 +119,15 @@ export default function SavedProperties() {
                     <span>{property.bathrooms} baths</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <DollarSign className="h-4 w-4" />
-                    <span>{property.price}</span>
+                    <span>
+                      {property.listing_type === "rent" ? (
+                        <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/month</span></>
+                      ) : property.listing_type === "airbnb" ? (
+                        <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/day</span></>
+                      ) : (
+                        <>GHS {Number(property.price).toLocaleString()}</>
+                      )}
+                    </span>
                   </div>
                 </div>
                 <div className="flex gap-2">

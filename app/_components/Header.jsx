@@ -401,7 +401,7 @@ const Header = () => {
                   </NavigationMenuItem>
                 ): (
                   <NavigationMenuItem>
-                    <Link href="/properties" className="flex items-center gap-2">Dashboard</Link>
+                    <Link href="/properties/my-dashboard" className="flex items-center gap-2">Dashboard</Link>
                   </NavigationMenuItem>
                 )}
               </NavigationMenuList>

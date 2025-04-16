@@ -27,7 +27,6 @@ const PropertyCard = ({ property, isCompact = false }) => {
 
     try {
       const result = await toggleFavorite(property.id, user?.id);
-      console.log("result", result);
 
       if (result.success) {
         if (result.isFavorite) {

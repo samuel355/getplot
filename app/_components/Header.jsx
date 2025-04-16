@@ -371,7 +371,7 @@ const Header = () => {
                   </Link>
                 </NavigationMenuItem>
 
-                {isSignedIn && (user?.publicMetadata?.role === "sysadmin" || user?.publicMetadata?.role === "admin") && (
+                {isSignedIn && (user?.publicMetadata?.role === "sysadmin" || user?.publicMetadata?.role === "admin") ? (
                   <NavigationMenuItem>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -398,6 +398,10 @@ const Header = () => {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
+                  </NavigationMenuItem>
+                ): (
+                  <NavigationMenuItem>
+                    <Link href="/properties" className="flex items-center gap-2">Dashboard</Link>
                   </NavigationMenuItem>
                 )}
               </NavigationMenuList>

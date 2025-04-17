@@ -8,6 +8,7 @@ import { PropertySettings } from "../_components/settings/property-settings";
 import { EmailSettings } from "../_components/settings/email-settings";
 import { FeaturedProperties } from "../_components/settings/featured-properties";
 import useSettingsStore from "../_store/useSettingsStore";
+import AuthCheck from "@/app/_components/AuthCheck";
 
 export default function SettingsPage() {
   const { fetchSettings, loading } = useSettingsStore();
@@ -27,35 +28,37 @@ export default function SettingsPage() {
   }
 
   return (
-    <AdminLayout>
-      <div className="p-8">
-        <h1 className="text-3xl font-bold mb-8">Settings</h1>
+    <AuthCheck>
+      <AdminLayout>
+        <div className="p-8">
+          <h1 className="text-3xl font-bold mb-8">Settings</h1>
 
-        <Tabs defaultValue="general" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="property">Property</TabsTrigger>
-            <TabsTrigger value="email">Email</TabsTrigger>
-            <TabsTrigger value="featured">Featured</TabsTrigger>
-          </TabsList>
+          <Tabs defaultValue="general" className="space-y-6">
+            <TabsList>
+              <TabsTrigger value="general">General</TabsTrigger>
+              <TabsTrigger value="property">Property</TabsTrigger>
+              <TabsTrigger value="email">Email</TabsTrigger>
+              <TabsTrigger value="featured">Featured</TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="general">
-            <GeneralSettings />
-          </TabsContent>
+            <TabsContent value="general">
+              <GeneralSettings />
+            </TabsContent>
 
-          <TabsContent value="property">
-            <PropertySettings />
-          </TabsContent>
+            <TabsContent value="property">
+              <PropertySettings />
+            </TabsContent>
 
-          <TabsContent value="email">
-            <EmailSettings />
-          </TabsContent>
+            <TabsContent value="email">
+              <EmailSettings />
+            </TabsContent>
 
-          <TabsContent value="featured">
-            <FeaturedProperties />
-          </TabsContent>
-        </Tabs>
-      </div>
-    </AdminLayout>
+            <TabsContent value="featured">
+              <FeaturedProperties />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </AdminLayout>
+    </AuthCheck>
   );
 }

@@ -6,6 +6,7 @@ import { LogFilters } from "../_components/activity/log-filters";
 import { LogTable } from "../_components/activity/log-table";
 import { LogPagination } from "../_components/activity/log-pagination";
 import useActivityLogStore from "../_store/useActivityLogStore";
+import AuthCheck from "@/app/_components/AuthCheck";
 
 export default function ActivityLogsPage() {
   const { logs, loading, error, fetchLogs } = useActivityLogStore();
@@ -37,7 +38,8 @@ export default function ActivityLogsPage() {
   }
 
   return (
-    <AdminLayout>
+    <AuthCheck>
+      <AdminLayout>
       <div className="p-8">
         <h1 className="text-3xl font-bold mb-8">Activity Logs</h1>
 
@@ -52,5 +54,6 @@ export default function ActivityLogsPage() {
         </div>
       </div>
     </AdminLayout>
+    </AuthCheck>
   );
 }

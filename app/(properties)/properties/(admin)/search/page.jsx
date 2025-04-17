@@ -1,5 +1,6 @@
 "use client";
 
+import AuthCheck from "@/app/_components/AuthCheck";
 import AdminLayout from "../_components/admin-layout";
 import { SearchFilters } from "../_components/search/search-filters";
 import { SearchPresets } from "../_components/search/search-presets";
@@ -7,7 +8,8 @@ import { SearchResults } from "../_components/search/search-results";
 
 export default function AdvancedSearchPage() {
   return (
-    <AdminLayout>
+    <AuthCheck>
+      <AdminLayout>
       <div className="p-8 space-y-6">
         <div className="flex justify-between items-start">
           <div>
@@ -23,5 +25,6 @@ export default function AdvancedSearchPage() {
         <SearchResults />
       </div>
     </AdminLayout>
+    </AuthCheck>
   );
 }

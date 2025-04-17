@@ -7,6 +7,7 @@ import { LocationChart } from "../_components/analytics/location-chart";
 import { PropertyTypeChart } from "../_components/analytics/property-type-chart";
 import { StatsCards } from "../_components/analytics/stats-cards";
 import useAnalyticsStore from "../_store/useAnalyticsStore";
+import AuthCheck from "@/app/_components/AuthCheck";
 
 export default function AnalyticsPage() {
   const {
@@ -36,39 +37,39 @@ export default function AnalyticsPage() {
   if (error) {
     return (
       <AdminLayout>
-        <div className="p-4 text-red-500">
-          Error loading analytics: {error}
-        </div>
+        <div className="p-4 text-red-500">Error loading analytics: {error}</div>
       </AdminLayout>
     );
   }
 
   return (
-    <AdminLayout>
-      <div className="p-8 space-y-8">
-        <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
+    <AuthCheck>
+      <AdminLayout>
+        <div className="p-8 space-y-8">
+          <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
 
-        {/* Stats Cards */}
-        <StatsCards approvalStats={approvalStats} />
+          {/* Stats Cards */}
+          <StatsCards approvalStats={approvalStats} />
 
-        {/* Charts Grid */}
-        <div className="grid gap-8 md:grid-cols-2">
-          {/* Property Trends */}
-          <div className="col-span-2">
-            <TrendChart data={propertyTrends} />
-          </div>
+          {/* Charts Grid */}
+          <div className="grid gap-8 md:grid-cols-2">
+            {/* Property Trends */}
+            <div className="col-span-2">
+              <TrendChart data={propertyTrends} />
+            </div>
 
-          {/* Location Distribution */}
-          <div>
-            <LocationChart data={locationStats} />
-          </div>
+            {/* Location Distribution */}
+            <div>
+              <LocationChart data={locationStats} />
+            </div>
 
-          {/* Property Types */}
-          <div>
-            <PropertyTypeChart data={propertyTypeStats} />
+            {/* Property Types */}
+            <div>
+              <PropertyTypeChart data={propertyTypeStats} />
+            </div>
           </div>
         </div>
-      </div>
-    </AdminLayout>
+      </AdminLayout>
+    </AuthCheck>
   );
 }

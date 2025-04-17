@@ -11,24 +11,28 @@ import { ArrowLeft } from "lucide-react";
 export default function UserPropertiesPage() {
   const params = useParams();
   const router = useRouter();
-  const { getUser } = useUser();
+  const { user } = useUser();
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const user = await getUser(params.id);
-        setUserData(user);
+        const response = await fetch(`/api/get-user/`, {
+          method: "POST",
+          body: JSON.stringify({ userId: params.id }),
+        });
+        const data = await response.json();
+        setUserData(data);
       } catch (error) {
         console.error("Error fetching user:", error);
-        router.push("/properties/admin/users");
+        router.push("/properties/users");
       }
     };
 
     if (params.id) {
       fetchUserData();
     }
-  }, [params.id, getUser, router]);
+  }, [params.id, router]);
 
   return (
     <AdminLayout>

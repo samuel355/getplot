@@ -20,6 +20,7 @@ import StatusBadge from "./status-badge";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import useBulkActionStore from "../_store/useBulkActionStore";
+import { useState, useEffect } from "react";
 
 export default function PropertyTable({
   properties,
@@ -29,6 +30,34 @@ export default function PropertyTable({
   emptyMessage = "No properties found",
 }) {
   const { selectedItems, toggleItem, toggleAll } = useBulkActionStore();
+  const [userInfo, setUserInfo] = useState({});
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const uniqueUserIds = [...new Set(properties.map(p => p.user_id))];
+      const userInfoMap = {};
+
+      for (const userId of uniqueUserIds) {
+        try {
+          const response = await fetch('/api/get-user/', {
+            method: 'POST',
+            body: JSON.stringify({ userId }),
+          });
+          const data = await response.json();
+          userInfoMap[userId] = data;
+        } catch (error) {
+          console.error('Error fetching user info:', error);
+        }
+      }
+
+      setUserInfo(userInfoMap);
+    };
+
+    if (properties.length > 0) {
+      fetchUserInfo();
+    }
+  }, [properties]);
+
   if (properties.length === 0) {
     return (
       <div className="flex h-[400px] items-center justify-center rounded-lg border border-dashed p-8">
@@ -64,101 +93,104 @@ export default function PropertyTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {properties.map((property) => (
-          <TableRow key={property.id}>
-            <TableCell>
-              <Checkbox
-                checked={selectedItems.includes(property.id)}
-                onCheckedChange={() => toggleItem(property.id)}
-              />
-            </TableCell>
-            <TableCell>
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 overflow-hidden rounded-md bg-muted">
-                  {property.images && property.images[0] ? (
-                    <img
-                      src={property.images[0].url || property.images[0]}
-                      alt={property.title}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-muted">
-                      <Building className="h-6 w-6 text-muted-foreground" />
+        {properties.map((property) => {
+          const user = userInfo[property.user_id];
+          return (
+            <TableRow key={property.id}>
+              <TableCell>
+                <Checkbox
+                  checked={selectedItems.includes(property.id)}
+                  onCheckedChange={() => toggleItem(property.id)}
+                />
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 overflow-hidden rounded-md bg-muted">
+                    {property.images && property.images[0] ? (
+                      <img
+                        src={property.images[0].url || property.images[0]}
+                        alt={property.title}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-muted">
+                        <Building className="h-6 w-6 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <div className="font-medium">{property.title}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {property.location}
                     </div>
-                  )}
-                </div>
-                <div>
-                  <div className="font-medium">{property.title}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {property.location}
                   </div>
                 </div>
-              </div>
-            </TableCell>
-            <TableCell>
-              <div className="text-sm">
-                {property.owner?.email || property.user_id}
-              </div>
-            </TableCell>
-            <TableCell>
-              <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold capitalize">
-                {property.type}
-              </span>
-            </TableCell>
-            <TableCell>
-              {property.listing_type === "rent" ? (
-                <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-gray-500">/month</span></>
-              ) : property.listing_type === "airbnb" ? (
-                <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-gray-500">/day</span></>
-              ) : (
-                <>GHS {Number(property.price).toLocaleString()}</>
-              )}
-            </TableCell>
-            <TableCell>
-              <StatusBadge status={property.status} />
-            </TableCell>
-            <TableCell>
-              {new Date(property.created_at).toLocaleDateString()}
-            </TableCell>
-            <TableCell className="text-right">
-              <div className="flex justify-end gap-2">
-                <Button asChild variant="ghost" size="icon">
-                  <Link href={`/properties/property/${property.id}`}>
-                    <Eye className="h-4 w-4" />
-                  </Link>
-                </Button>
-
-                <Button asChild variant="ghost" size="icon">
-                  <Link href={`/properties/edit-property/${property.id}`}>
-                    <Pencil className="h-4 w-4" />
-                  </Link>
-                </Button>
-
-                {!hideActions && property.status !== "approved" && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-green-500 hover:text-green-700 hover:bg-green-50"
-                    onClick={() => approveProperty(property.id)}
-                  >
-                    <CheckCircle className="h-4 w-4" />
-                  </Button>
+              </TableCell>
+              <TableCell>
+                <div className="text-sm">
+                  {user ? `${user.firstName} ${user.lastName}` : property.user_id}
+                </div>
+              </TableCell>
+              <TableCell>
+                <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold capitalize">
+                  {property.type}
+                </span>
+              </TableCell>
+              <TableCell>
+                {property.listing_type === "rent" ? (
+                  <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-gray-500">/month</span></>
+                ) : property.listing_type === "airbnb" ? (
+                  <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-gray-500">/day</span></>
+                ) : (
+                  <>GHS {Number(property.price).toLocaleString()}</>
                 )}
-
-                {!hideActions && property.status !== "rejected" && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                    onClick={() => openRejectDialog(property)}
-                  >
-                    <XCircle className="h-4 w-4" />
+              </TableCell>
+              <TableCell>
+                <StatusBadge status={property.status} />
+              </TableCell>
+              <TableCell>
+                {new Date(property.created_at).toLocaleDateString()}
+              </TableCell>
+              <TableCell className="text-right">
+                <div className="flex justify-end gap-2">
+                  <Button asChild variant="ghost" size="icon">
+                    <Link href={`/properties/property/${property.id}`}>
+                      <Eye className="h-4 w-4" />
+                    </Link>
                   </Button>
-                )}
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
+
+                  <Button asChild variant="ghost" size="icon">
+                    <Link href={`/properties/edit-property/${property.id}`}>
+                      <Pencil className="h-4 w-4" />
+                    </Link>
+                  </Button>
+
+                  {!hideActions && property.status !== "approved" && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-green-500 hover:text-green-700 hover:bg-green-50"
+                      onClick={() => approveProperty(property.id)}
+                    >
+                      <CheckCircle className="h-4 w-4" />
+                    </Button>
+                  )}
+
+                  {!hideActions && property.status !== "rejected" && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => openRejectDialog(property)}
+                    >
+                      <XCircle className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );

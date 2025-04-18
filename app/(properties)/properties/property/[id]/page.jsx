@@ -43,7 +43,7 @@ import {
   Dialog, 
   DialogContent, 
   DialogDescription, 
-  DialogFooter, 
+  DialogFooter , 
   DialogHeader, 
   DialogTitle 
 } from "@/components/ui/dialog";
@@ -66,11 +66,11 @@ export default function PropertyDetailPage({ params }) {
       setLoading(true);
       try {
         const { data, error } = await supabase
-          .from('properties')
+          .from('properties') 
           .select('*')
           .eq('id', id)
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
         
         if (error) throw error;
         
@@ -84,6 +84,7 @@ export default function PropertyDetailPage({ params }) {
       } catch (error) {
         console.error('Error fetching property:', error);
         toast.error('Failed to load property details');
+        router.push('/properties/list');
       } finally {
         setLoading(false);
       }

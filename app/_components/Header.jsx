@@ -55,7 +55,7 @@ const Header = () => {
   // If we're in a dashboard, show the dashboard header instead
   if (isInDashboard) {
     return (
-      <header className="fixed top-0 w-full bg-white shadow-sm z-20">
+      <header className="fixed top-0 w-full bg-white shadow-sm z-40">
         <div className="flex items-center justify-between h-16 px-4 md:px-6">
           {/* Left section: Logo and dashboard name */}
           <div className="flex items-center space-x-4">
@@ -371,7 +371,7 @@ const Header = () => {
                   </Link>
                 </NavigationMenuItem>
 
-                {isSignedIn && (user?.publicMetadata?.role === "sysadmin" || user?.publicMetadata?.role === "admin") ? (
+                {isSignedIn && (user?.publicMetadata?.role === "sysadmin" || user?.publicMetadata?.role === "admin") && (
                   <NavigationMenuItem>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -398,10 +398,6 @@ const Header = () => {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  </NavigationMenuItem>
-                ): (
-                  <NavigationMenuItem>
-                    <Link href="/properties/my-dashboard" className="flex items-center gap-2">Dashboard</Link>
                   </NavigationMenuItem>
                 )}
               </NavigationMenuList>

@@ -90,7 +90,7 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
   };
   
   return (
-    <div className="bg-white shadow-md rounded-lg mb-6">
+    <div className="bg-white shadow-md rounded-lg mb-6 relative z-10">
       {/* Desktop filters */}
       <div className="hidden md:flex items-center justify-between p-4 border-b">
         <div className="flex space-x-6 z-30">

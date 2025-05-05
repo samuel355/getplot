@@ -162,8 +162,8 @@ const PropertyCard = ({ property, isCompact = false }) => {
   // Regular card view
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl group">
-      <div className="relative">
-        <div className="absolute top-2 left-2 z-10">
+      <div className="relative ">
+        <div className="absolute top-2 left-2 z-[8]">
           <span className="px-2 py-1 text-xs font-medium text-white bg-primary rounded-full">
             {property.listing_type === "airbnb"
               ? "Airbnb for short stay"

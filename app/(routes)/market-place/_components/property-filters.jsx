@@ -38,6 +38,25 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
   const [location, setLocation] = useState("all");
   const [listingType, setListingType] = useState("all");
 
+  const resetFilters = () => {
+    setPriceRange([0, 10000000]);
+    setRentalPriceRange([0, 10000]);
+    setBedrooms("any");
+    setBathrooms("any");
+    setSortBy("newest");
+    setPropertyType("all");
+    setLocation("all");
+    setListingType("all");
+    onFilterChange({
+      priceRange: [0, 10000000],
+      bedrooms: "any",
+      bathrooms: "any",
+      propertyType: "all",
+      location: "all",
+      property_type: "all"
+    });
+  };
+
   const handlePriceChange = (range) => {
     if (listingType === 'sale') {
       setPriceRange(range);
@@ -371,12 +390,20 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
           )}
         </div>
 
-        <button
-          onClick={applyFilters}
-          className="bg-primary text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-primary-dark"
-        >
-          Apply Filters
-        </button>
+        <div className="flex space-x-4">
+          <button
+            onClick={resetFilters}
+            className="bg-gray-100 text-gray-700 py-2 px-4 rounded-md text-sm font-medium hover:bg-gray-200"
+          >
+            Reset Filters
+          </button>
+          <button
+            onClick={applyFilters}
+            className="bg-primary text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-primary-dark"
+          >
+            Apply Filters
+          </button>
+        </div>
       </div>
 
       {/* Mobile filters */}
@@ -802,14 +829,21 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                   )}
                 </div>
 
-                {/* Apply button */}
-                <div className="px-4 py-4 border-t border-gray-200">
+                {/* Apply and Reset buttons */}
+                <div className="px-4 py-4 border-t border-gray-200 space-y-3">
                   <button
                     type="button"
                     className="w-full bg-primary text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-primary-dark"
                     onClick={applyFilters}
                   >
                     Apply Filters
+                  </button>
+                  <button
+                    type="button"
+                    className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-md text-sm font-medium hover:bg-gray-200"
+                    onClick={resetFilters}
+                  >
+                    Reset Filters
                   </button>
                 </div>
               </Dialog.Panel>

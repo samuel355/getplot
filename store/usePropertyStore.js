@@ -236,6 +236,7 @@ const usePropertyStore = create(
 
           // Only fetch approved properties
           query = query.eq("status", "approved");
+          console.log('filters->', filters);
 
           // Add property type filter
           if (filters.propertyType !== "all") {
@@ -259,8 +260,28 @@ const usePropertyStore = create(
 
           // Add bathrooms filter
           if (filters.bathrooms !== "any" && filters.propertyType !== "land") {
-            console.log('Applying bathrooms filter:', filters.bathrooms);
             query = query.gte("bathrooms", filters.bathrooms);
+          }
+
+          // Add price range filter based on listing type
+          if (filters.priceRange && Array.isArray(filters.priceRange) && filters.priceRange.length === 2) {
+            const [minPrice, maxPrice] = filters.priceRange;
+            
+            if (minPrice > 0 || maxPrice < 10000000) {
+              if (filters.property_type === 'sale') {
+                // For sale properties, filter by price
+                query = query
+                  .gte('price', minPrice)
+                  .lte('price', maxPrice);
+                console.log('Applying sale price filter:', { minPrice, maxPrice });
+              } else if (filters.property_type === 'rent' || filters.property_type === 'airbnb') {
+                // For rental properties, filter by rental_price
+                query = query
+                  .gte('rental_price', minPrice)
+                  .lte('rental_price', maxPrice);
+                console.log('Applying rental price filter:', { minPrice, maxPrice });
+              }
+            }
           }
 
           // Apply pagination

@@ -58,13 +58,12 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
   };
 
   const handlePriceChange = (range) => {
-    if (listingType === 'sale') {
-      setPriceRange(range);
-      onFilterChange({ priceRange: range });
-    } else {
-      setRentalPriceRange(range);
-      onFilterChange({ priceRange: range });
+    if (!filters.property_type || filters.property_type === 'all') {
+      // Don't allow price selection if no listing type is selected
+      return;
     }
+    console.log('Setting price range:', range);
+    onFilterChange({ priceRange: range });
   };
 
   const handlePropertyTypeChange = (type) => {
@@ -84,8 +83,12 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
   };
 
   const handleListingTypeChange = (property_type) => {
-    console.log('Listing type changed to:', property_type);
-    onFilterChange({ property_type });
+    console.log('Changing listing type to:', property_type);
+    // Reset price range when listing type changes
+    onFilterChange({ 
+      property_type,
+      priceRange: [0, 10000000] // Reset to default range
+    });
   };
 
   const applyFilters = () => {
@@ -218,8 +221,9 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
           {/* Price Range Filter */}
           <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-medium text-gray-700 hover:text-gray-900">
-              {listingType === 'rent' ? 'Monthly Rent Range (GHS)' : 
-               listingType === 'airbnb' ? 'Daily Price Range (GHS)' : 
+              {!filters.property_type || filters.property_type === 'all' ? 'Price Range' :
+               filters.property_type === 'rent' ? 'Monthly Rent Range (GHS)' : 
+               filters.property_type === 'airbnb' ? 'Daily Price Range (GHS)' : 
                'Price Range (GHS)'}
               <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
             </Popover.Button>
@@ -234,32 +238,46 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
               leaveTo="opacity-0 translate-y-1"
             >
               <Popover.Panel className="absolute left-0 z-10 mt-2 w-64 origin-top-left rounded-md bg-white p-4 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="min-price" className="block text-sm font-medium text-gray-700">
-                      Minimum Price (GHS)
-                    </label>
-                    <input
-                      type="number"
-                      id="min-price"
-                      value={listingType === 'sale' ? priceRange[0] : rentalPriceRange[0]}
-                      onChange={(e) => handlePriceChange([parseInt(e.target.value), listingType === 'sale' ? priceRange[1] : rentalPriceRange[1]])}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-                    />
+                {(!filters.property_type || filters.property_type === 'all') ? (
+                  <div className="text-sm text-gray-500">
+                    Please select a listing type first to filter by price
                   </div>
-                  <div>
-                    <label htmlFor="max-price" className="block text-sm font-medium text-gray-700">
-                      Maximum Price (GHS)
-                    </label>
-                    <input
-                      type="number"
-                      id="max-price"
-                      value={listingType === 'sale' ? priceRange[1] : rentalPriceRange[1]}
-                      onChange={(e) => handlePriceChange([listingType === 'sale' ? priceRange[0] : rentalPriceRange[0], parseInt(e.target.value)])}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-                    />
+                ) : (
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="min-price" className="block text-sm font-medium text-gray-700">
+                        Minimum Price (GHS)
+                      </label>
+                      <input
+                        type="number"
+                        id="min-price"
+                        min="0"
+                        value={filters.priceRange[0]}
+                        onChange={(e) => {
+                          const minValue = parseInt(e.target.value) || 0;
+                          handlePriceChange([minValue, filters.priceRange[1]]);
+                        }}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="max-price" className="block text-sm font-medium text-gray-700">
+                        Maximum Price (GHS)
+                      </label>
+                      <input
+                        type="number"
+                        id="max-price"
+                        min="0"
+                        value={filters.priceRange[1]}
+                        onChange={(e) => {
+                          const maxValue = parseInt(e.target.value) || 0;
+                          handlePriceChange([filters.priceRange[0], maxValue]);
+                        }}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
               </Popover.Panel>
             </Transition>
           </Popover>

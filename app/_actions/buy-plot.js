@@ -114,7 +114,7 @@ export const buyPlot = async (
     );
 
     const finalText =
-      "For us to reserve the chosen plot for you, kindly make the minimum payment to the account above, either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 24 883 8005";
+      "For us to reserve the chosen plot for you, kindly make the minimum payment to the account above, either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 54 855 4216";
     const finalTextY = doc.autoTable.previous.finalY + 15;
     doc.setFontSize(10);
     // Use doc.textWithMeasurement to handle text wrapping
@@ -206,7 +206,7 @@ export const buyPlot = async (
 
     setLoader3(false);
     const plot_info_to_send = `${allDetails.properties.Plot_No}, ${allDetails.properties.Street_Nam} at ${plotArea}`
-    const message1 = `To claim ownership of the chosen plot (Plot No. ${plot_info_to_send} ), kindly make the payment to either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 24 883 8005 or check your email for more info`
+    const message1 = `To claim ownership of the chosen plot (Plot No. ${plot_info_to_send} ), kindly make the payment to either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 54 855 4216 or check your email for more info`
     //send SMS
     sendSMS(phone, message1);
     

@@ -116,7 +116,7 @@ export const BuyPlotCheckout = async (
     });
 
     const finalText =
-      "To claim ownership of the chosen plots, kindly make payment to the account provided above, either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 24 883 8005";
+      "To claim ownership of the chosen plots, kindly make payment to the account provided above, either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 54 855 4216";
     const finalTextY = doc.autoTable.previous.finalY + 15;
     doc.setFontSize(10);
     // Use doc.textWithMeasurement to handle text wrapping
@@ -194,7 +194,7 @@ export const BuyPlotCheckout = async (
 
     router.push(`/message?redirect=${'trabuom'}`);
 
-    const message1 = `To claim ownership of the chosen plot, kindly make the payment to either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 24 883 8005 or check your email for more info`
+    const message1 = `To claim ownership of the chosen plot, kindly make the payment to either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 54 855 4216 or check your email for more info`
     //send SMS
     sendSMS(phone, message1);
 

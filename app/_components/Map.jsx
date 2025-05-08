@@ -374,7 +374,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
     google.maps.event.addListener(infoWindow, "domready", () => {
       const callInfo = document.getElementById("call-for-info");
       callInfo.addEventListener("click", () => {
-        alert("Call For Info \n 0322008282 or +233 24 883 8005");
+        alert("Call For Info \n 0322008282 or +233 54 855 4216");
       });
 
       const Btn = document.getElementById("changePlotID");

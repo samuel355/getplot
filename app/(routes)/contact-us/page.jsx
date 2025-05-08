@@ -154,7 +154,7 @@ export default function Contact() {
                     href="tel:233248838005"
                     class="text-primary text-sm ml-3"
                   >
-                    <strong>+233 32 200 8282/+233 24 883 8005</strong>
+                    <strong>+233 32 200 8282/+233 54 855 4216</strong>
                   </a>
                 </li>
                 <li class="flex items-center">

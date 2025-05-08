@@ -347,7 +347,7 @@ const Header = () => {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                {/* <NavigationMenuItem>
+                <NavigationMenuItem>
                   <Link
                     href="/market-place"
                     className={cn(
@@ -357,7 +357,7 @@ const Header = () => {
                   >
                     Market Place
                   </Link>
-                </NavigationMenuItem> */}
+                </NavigationMenuItem>
                 
                 <NavigationMenuItem>
                   <Link
@@ -487,7 +487,7 @@ const Header = () => {
 
                   <DropdownMenuSeparator />
                   
-                  {/* <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild>
                     <Link
                       href="/market-place"
                       className={cn(
@@ -497,7 +497,7 @@ const Header = () => {
                     >
                       Market Place
                     </Link>
-                  </DropdownMenuItem> */}
+                  </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>
                     <Link
@@ -574,13 +574,13 @@ const Header = () => {
           )}
           
           {/* Sign in button - show if not signed in */}
-          {/* {!isSignedIn && (
+          {!isSignedIn && (
             <div className="ml-4">
               <Button asChild size="sm">
                 <Link href="/sign-in">Sign In</Link>
               </Button>
             </div>
-          )} */}
+          )}
         </div>
       </div>
     </header>

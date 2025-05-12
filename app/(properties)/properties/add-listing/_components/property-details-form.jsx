@@ -110,8 +110,8 @@ export default function PropertyDetailsForm({
     defaultValues: {
       ...formData,
       type: formData.type || 'house',
-      property_type: formData.type === 'land' ? 'sale' : (formData.property_type || ''),
-      listing_type: formData.type === 'land' ? 'sale' : (formData.listing_type || '')
+      property_type: formData.property_type || (formData.type === 'land' ? 'sale' : ''),
+      listing_type: formData.listing_type || (formData.type === 'land' ? 'sale' : '')
     },
   });
 
@@ -122,11 +122,6 @@ export default function PropertyDetailsForm({
     if (propertyType === 'land') {
       setValue('property_type', 'sale');
       setValue('listing_type', 'sale');
-      trigger('property_type');
-      trigger('listing_type');
-    } else if (propertyType === 'house') {
-      setValue('property_type', '');
-      setValue('listing_type', '');
       trigger('property_type');
       trigger('listing_type');
     }

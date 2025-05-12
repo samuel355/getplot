@@ -208,10 +208,6 @@ export default function AdminUsersPage() {
                 Manage users and their permissions
               </p>
             </div>
-            <Button>
-              <UserPlus className="mr-2 h-4 w-4" />
-              Invite User
-            </Button>
           </div>
 
           {/* Stats */}

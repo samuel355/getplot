@@ -84,7 +84,9 @@ const PropertyCarousel = () => {
               />
               <div className="absolute top-2 right-2">
                 <span className="bg-black/70 text-white text-xs px-2 py-1 rounded-md capitalize">
-                  {property.type}
+                  {property.listing_type === 'rent' ? 'For Rent' : 
+                   property.listing_type === 'airbnb' ? 'Airbnb' : 
+                   property.type}
                 </span>
               </div>
             </div>

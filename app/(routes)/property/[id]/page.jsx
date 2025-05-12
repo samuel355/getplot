@@ -202,7 +202,11 @@ export default function PropertyPage() {
   };
 
   const calculateRoute = (origin) => {
-    if (!selectedProperty?.location_coordinates) return;
+
+    if (!selectedProperty?.location_coordinates) {
+      console.warn("No property coordinates available");
+      return;
+    }
 
     const destination = {
       lat: selectedProperty.location_coordinates.coordinates[0],
@@ -210,13 +214,21 @@ export default function PropertyPage() {
     };
 
     const directionsService = new window.google.maps.DirectionsService();
+
     directionsService.route(
       {
         origin: origin,
         destination: destination,
         travelMode: window.google.maps.TravelMode.DRIVING,
       },
-      handleDirectionsRequest
+      (result, status) => {
+        console.log("Directions service response:", { result, status });
+        if (status === "OK") {
+          setDirections(result);
+        } else {
+          console.error("Directions request failed due to " + status);
+        }
+      }
     );
   };
 
@@ -550,6 +562,7 @@ export default function PropertyPage() {
                     setStartLocation={setStartLocation}
                     searchInputRef={searchInputRef}
                     getCurrentLocation={getCurrentLocation}
+                    calculateRoute={calculateRoute}
                   />
                 </TabsContent>
               </Tabs>

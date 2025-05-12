@@ -1,5 +1,6 @@
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api";
+import { useEffect } from "react";
 
 export default function LocationTab({ 
   property, 
@@ -7,8 +8,62 @@ export default function LocationTab({
   startLocation, 
   setStartLocation, 
   searchInputRef, 
-  getCurrentLocation 
+  getCurrentLocation,
+  calculateRoute 
 }) {
+  useEffect(() => {
+    if (!searchInputRef.current || !window.google) {
+      console.log("Search input ref or Google not available:", {
+        hasSearchInput: !!searchInputRef.current,
+        hasGoogle: !!window.google
+      });
+      return;
+    }
+
+    const options = {
+      types: ["geocode", "establishment"],
+      componentRestrictions: { country: "gh" },
+    };
+
+    const autocomplete = new window.google.maps.places.Autocomplete(
+      searchInputRef.current,
+      options
+    );
+
+    autocomplete.addListener("place_changed", () => {
+      console.log("Place changed event triggered");
+      const place = autocomplete.getPlace();
+      console.log("Selected place:", place);
+
+      if (!place.geometry) {
+        console.warn("No geometry available for place:", place);
+        return;
+      }
+
+      const origin = {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+      };
+      console.log("Origin coordinates:", origin);
+
+      // Update the input value with the selected place's formatted address
+      setStartLocation(place.formatted_address);
+      console.log("Updated start location:", place.formatted_address);
+
+      // Calculate route
+      console.log("Calculating route from:", origin);
+      calculateRoute(origin);
+    });
+
+    // Cleanup
+    return () => {
+      if (autocomplete) {
+        console.log("Cleaning up autocomplete listeners");
+        window.google.maps.event.clearInstanceListeners(autocomplete);
+      }
+    };
+  }, [searchInputRef.current, window.google, setStartLocation, calculateRoute]);
+
   return (
     <div>
       <div className="aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden mb-4 h-80">
@@ -35,7 +90,7 @@ export default function LocationTab({
           {directions && <DirectionsRenderer directions={directions} />}
         </GoogleMap>
       </div>
-
+      <h4 className="text-xl text-primary my-3 font-medium">Get directions to the property location</h4>
       <div className="mb-4 flex gap-2">
         <div className="flex-1 relative">
           <input

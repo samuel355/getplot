@@ -9,7 +9,8 @@ export default function LocationTab({
   setStartLocation, 
   searchInputRef, 
   getCurrentLocation,
-  calculateRoute 
+  calculateRoute,
+  isCalculatingRoute
 }) {
   useEffect(() => {
     if (!searchInputRef.current || !window.google) {
@@ -31,9 +32,7 @@ export default function LocationTab({
     );
 
     autocomplete.addListener("place_changed", () => {
-      console.log("Place changed event triggered");
       const place = autocomplete.getPlace();
-      console.log("Selected place:", place);
 
       if (!place.geometry) {
         console.warn("No geometry available for place:", place);
@@ -44,21 +43,17 @@ export default function LocationTab({
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       };
-      console.log("Origin coordinates:", origin);
 
       // Update the input value with the selected place's formatted address
       setStartLocation(place.formatted_address);
-      console.log("Updated start location:", place.formatted_address);
 
       // Calculate route
-      console.log("Calculating route from:", origin);
       calculateRoute(origin);
     });
 
     // Cleanup
     return () => {
       if (autocomplete) {
-        console.log("Cleaning up autocomplete listeners");
         window.google.maps.event.clearInstanceListeners(autocomplete);
       }
     };
@@ -66,8 +61,9 @@ export default function LocationTab({
 
   return (
     <div>
-      <div className="aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden mb-4 h-80">
+      <div className="aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden mb-4 h-80 relative  w-full">
         <GoogleMap
+          className="shadow-sm"
           mapContainerStyle={{ height: "100%", width: "100%" }}
           center={{
             lat: property?.location_coordinates.coordinates[0],
@@ -89,7 +85,16 @@ export default function LocationTab({
           />
           {directions && <DirectionsRenderer directions={directions} />}
         </GoogleMap>
+        {isCalculatingRoute && (
+          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+            <div className="bg-white p-4 rounded-lg shadow-lg flex items-center gap-3">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+              <span className="text-gray-700">Calculating route...</span>
+            </div>
+          </div>
+        )}
       </div>
+
       <h4 className="text-xl text-primary my-3 font-medium">Get directions to the property location</h4>
       <div className="mb-4 flex gap-2">
         <div className="flex-1 relative">
@@ -100,11 +105,13 @@ export default function LocationTab({
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
             value={startLocation}
             onChange={(e) => setStartLocation(e.target.value)}
+            disabled={isCalculatingRoute}
           />
         </div>
         <button
           onClick={getCurrentLocation}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isCalculatingRoute}
         >
           <MapPinIcon className="h-5 w-5" />
           <span>Use Current Location</span>

@@ -67,6 +67,7 @@ export default function PropertyPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [directions, setDirections] = useState(null);
+  const [isCalculatingRoute, setIsCalculatingRoute] = useState(false);
   const [startLocation, setStartLocation] = useState("");
   const [autocomplete, setAutocomplete] = useState(null);
   const searchInputRef = useRef(null);
@@ -202,12 +203,12 @@ export default function PropertyPage() {
   };
 
   const calculateRoute = (origin) => {
-
     if (!selectedProperty?.location_coordinates) {
       console.warn("No property coordinates available");
       return;
     }
 
+    setIsCalculatingRoute(true);
     const destination = {
       lat: selectedProperty.location_coordinates.coordinates[0],
       lng: selectedProperty.location_coordinates.coordinates[1],
@@ -222,7 +223,7 @@ export default function PropertyPage() {
         travelMode: window.google.maps.TravelMode.DRIVING,
       },
       (result, status) => {
-        console.log("Directions service response:", { result, status });
+        setIsCalculatingRoute(false);
         if (status === "OK") {
           setDirections(result);
         } else {
@@ -563,6 +564,7 @@ export default function PropertyPage() {
                     searchInputRef={searchInputRef}
                     getCurrentLocation={getCurrentLocation}
                     calculateRoute={calculateRoute}
+                    isCalculatingRoute={isCalculatingRoute}
                   />
                 </TabsContent>
               </Tabs>

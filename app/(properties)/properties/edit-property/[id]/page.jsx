@@ -11,6 +11,7 @@ import ImagesForm from "../../add-listing/_components/images-form";
 import PricingForm from "../../add-listing/_components/pricing-form";
 import FeaturesForm from "../../add-listing/_components/features-form";
 import EditReviewSubmit from "./_components/edit-review-submit";
+import DocumentsForm from "../../add-listing/_components/documents-form";
 
 export default function EditPropertyPage() {
   const [step, setStep] = useState(1);
@@ -31,6 +32,16 @@ export default function EditPropertyPage() {
     features: [],
     status: "Available",
     negotiable: false,
+    property_type: "sale",
+    listing_type: "sale",
+    rental_type: null,
+    rental_duration: null,
+    rental_price: null,
+    rental_available_from: null,
+    rental_available_to: null,
+    rental_deposit: null,
+    rental_utilities_included: false,
+    rental_furnished: false
   });
 
   const router = useRouter();
@@ -105,6 +116,9 @@ export default function EditPropertyPage() {
           ...data,
           coordinates,
           negotiable: data.negotiable || false,
+          property_type: data.property_type || 'sale',
+          listing_type: data.listing_type || 'sale',
+          type: data.type || 'house'
         });
       } catch (err) {
         console.error("Error fetching property:", err);
@@ -230,6 +244,14 @@ export default function EditPropertyPage() {
               />
             )}
             {step === 6 && (
+              <DocumentsForm 
+                formData={formData} 
+                updateFormData={updateFormData} 
+                nextStep={nextStep} 
+                prevStep={prevStep} 
+              />
+            )}
+            {step === 7 && (
               <EditReviewSubmit
                 formData={formData}
                 propertyId={propertyId}

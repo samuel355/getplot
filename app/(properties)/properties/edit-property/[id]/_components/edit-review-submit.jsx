@@ -19,8 +19,8 @@ export default function EditReviewSubmit({ formData, propertyId, prevStep }) {
       const updateData = {
         ...formData,
         updated_at: new Date(),
-        // If the status was approved, set it to 'pending-review' to indicate it needs approval again
-        status: formData.status === 'approved' ? 'pending-review' : formData.status,
+        // If the status was approved, set it to 'pending' to indicate it needs approval again
+        status: formData.status === 'approved' ? 'pending' : formData.status,
         location_coordinates: formData.coordinates ? 
           `POINT(${formData.coordinates.lat} ${formData.coordinates.lng})` : null,
       };
@@ -45,7 +45,7 @@ export default function EditReviewSubmit({ formData, propertyId, prevStep }) {
       });
       
       // Redirect to the property detail page
-      router.push(`/property/${propertyId}`);
+      router.push(`/properties/property/${propertyId}`);
       
     } catch (err) {
       console.error("Error updating property:", err);

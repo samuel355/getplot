@@ -69,7 +69,6 @@ export default function PropertyDetailPage({ params }) {
           .from('properties') 
           .select('*')
           .eq('id', id)
-          .eq('user_id', user.id)
           .maybeSingle();
         
         if (error) throw error;

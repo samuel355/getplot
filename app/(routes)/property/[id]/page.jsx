@@ -35,6 +35,11 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Tag, Ruler, Bed, Bath, Calendar, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@clerk/nextjs";
+import OverviewTab from "@/app/_components/property/OverviewTab";
+import DetailsTab from "@/app/_components/property/DetailsTab";
+import FeaturesTab from "@/app/_components/property/FeaturesTab";
+import LocationTab from "@/app/_components/property/LocationTab";
+import SimilarProperties from "@/app/_components/property/SimilarProperties";
 
 // Form validation schema
 const inquirySchema = z.object({
@@ -526,335 +531,26 @@ export default function PropertyPage() {
                 </TabsList>
 
                 <TabsContent value="overview" className="pt-4">
-                  <div>
-                    <h3 className="text-lg font-semibold mb-2">Description</h3>
-                    <p className="text-gray-700 mb-4">
-                      {selectedProperty?.description}
-                    </p>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
-                      <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                        <Tag className="h-5 w-5 mb-2 text-gray-500" />
-                        <span className="font-medium">
-                          {selectedProperty?.listing_type === "rent" ? (
-                            <>
-                              GHS
-                              {Number(
-                                selectedProperty?.rental_price
-                              ).toLocaleString()}
-                              <span className="text-xs text-gray-500 block">
-                                per month
-                              </span>
-                            </>
-                          ) : selectedProperty?.listing_type === "airbnb" ? (
-                            <>
-                              GHS
-                              {Number(
-                                selectedProperty?.rental_price
-                              ).toLocaleString()}
-                              <span className="text-xs text-gray-500 block">
-                                per day
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              GHS
-                              {Number(selectedProperty?.price).toLocaleString()}
-                            </>
-                          )}
-                        </span>
-                      </div>
-
-                      <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                        <Ruler className="h-5 w-5 mb-2 text-gray-500" />
-                        <span className="font-medium">
-                          {selectedProperty?.size}
-                        </span>
-                      </div>
-
-                      {selectedProperty?.type === "house" && (
-                        <>
-                          <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                            <Bed className="h-5 w-5 mb-2 text-gray-500" />
-                            <span className="font-medium">
-                              {selectedProperty?.bedrooms} Bedrooms
-                            </span>
-                          </div>
-                          <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                            <Bath className="h-5 w-5 mb-2 text-gray-500" />
-                            <span className="font-medium">
-                              {selectedProperty?.bathrooms} Bathrooms
-                            </span>
-                          </div>
-                        </>
-                      )}
-
-                      <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                        <Calendar className="h-5 w-5 mb-2 text-gray-500" />
-                        <span className="font-medium">
-                          Listed on{" "}
-                          {new Date(
-                            selectedProperty?.created_at
-                          ).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+                  <OverviewTab property={selectedProperty} />
                 </TabsContent>
 
                 <TabsContent value="details" className="pt-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">
-                        Property Details
-                      </h3>
-                      <dl className="space-y-2">
-                        <div className="flex justify-between py-1 border-b">
-                          <dt className="text-gray-500">Property Type</dt>
-                          <dd className="font-medium capitalize">
-                            {selectedProperty?.type}
-                          </dd>
-                        </div>
-                        <div className="flex justify-between py-1 border-b">
-                          <dt className="text-gray-500">Size</dt>
-                          <dd className="font-medium">
-                            {selectedProperty?.size}
-                          </dd>
-                        </div>
-                        {selectedProperty?.type === "house" && (
-                          <>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Bedrooms</dt>
-                              <dd className="font-medium">
-                                {selectedProperty?.bedrooms}
-                              </dd>
-                            </div>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Bathrooms</dt>
-                              <dd className="font-medium">
-                                {selectedProperty?.bathrooms}
-                              </dd>
-                            </div>
-                          </>
-                        )}
-                        <div className="flex justify-between py-1 border-b">
-                          <dt className="text-gray-500">Created</dt>
-                          <dd className="font-medium">
-                            {new Date(
-                              selectedProperty?.created_at
-                            ).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                          </dd>
-                        </div>
-                      </dl>
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">
-                        Price Information
-                      </h3>
-                      <dl className="space-y-2">
-                        {selectedProperty?.listing_type === "rent" ? (
-                          <>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Monthly Rent</dt>
-                              <dd className="font-medium">
-                                GHS
-                                {Number(
-                                  selectedProperty?.rental_price
-                                ).toLocaleString()}
-                              </dd>
-                            </div>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Rental Duration</dt>
-                              <dd className="font-medium capitalize">
-                                {selectedProperty?.rental_duration?.replace(
-                                  "_",
-                                  " "
-                                )}
-                              </dd>
-                            </div>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">
-                                Security Deposit
-                              </dt>
-                              <dd className="font-medium">
-                                GHS
-                                {Number(
-                                  selectedProperty?.rental_deposit
-                                ).toLocaleString()}
-                              </dd>
-                            </div>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">
-                                Utilities Included
-                              </dt>
-                              <dd className="font-medium">
-                                {selectedProperty?.rental_utilities_included
-                                  ? "Yes"
-                                  : "No"}
-                              </dd>
-                            </div>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Furnished</dt>
-                              <dd className="font-medium">
-                                {selectedProperty?.rental_furnished
-                                  ? "Yes"
-                                  : "No"}
-                              </dd>
-                            </div>
-                          </>
-                        ) : selectedProperty?.listing_type === "airbnb" ? (
-                          <>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Price per Day</dt>
-                              <dd className="font-medium">
-                                GHS
-                                {Number(
-                                  selectedProperty?.rental_price
-                                ).toLocaleString()}
-                              </dd>
-                            </div>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Available From</dt>
-                              <dd className="font-medium">
-                                {selectedProperty?.rental_available_from
-                                  ? new Date(
-                                      selectedProperty?.rental_available_from
-                                    ).toLocaleDateString("en-US", {
-                                      month: "short",
-                                      day: "numeric",
-                                      year: "numeric",
-                                    })
-                                  : "N/A"}
-                              </dd>
-                            </div>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Available To</dt>
-                              <dd className="font-medium">
-                                {selectedProperty?.rental_available_to
-                                  ? new Date(
-                                      selectedProperty?.rental_available_to
-                                    ).toLocaleDateString("en-US", {
-                                      month: "short",
-                                      day: "numeric",
-                                      year: "numeric",
-                                    })
-                                  : "N/A"}
-                              </dd>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Price</dt>
-                              <dd className="font-medium">
-                                GHS
-                                {Number(
-                                  selectedProperty?.price
-                                ).toLocaleString()}
-                              </dd>
-                            </div>
-                            <div className="flex justify-between py-1 border-b">
-                              <dt className="text-gray-500">Negotiable</dt>
-                              <dd className="font-medium">
-                                {selectedProperty?.negotiable ? "Yes" : "No"}
-                              </dd>
-                            </div>
-                          </>
-                        )}
-                      </dl>
-                    </div>
-                  </div>
+                  <DetailsTab property={selectedProperty} />
                 </TabsContent>
 
                 <TabsContent value="features" className="pt-4">
-                  <h3 className="text-lg font-semibold mb-3">
-                    Property Features
-                  </h3>
-                  {selectedProperty?.features &&
-                  selectedProperty?.features.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                      {selectedProperty?.features.map((feature, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <CheckCircle className="h-4 w-4 text-green-500" />
-                          <span>{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-500">
-                      No features listed for this property.
-                    </p>
-                  )}
+                  <FeaturesTab property={selectedProperty} />
                 </TabsContent>
 
                 <TabsContent value="location" className="pt-4">
-                  <div className="aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden mb-4 h-80">
-                    <GoogleMap
-                      mapContainerStyle={{ height: "100%", width: "100%" }}
-                      center={{
-                        lat: selectedProperty?.location_coordinates
-                          .coordinates[0],
-                        lng: selectedProperty?.location_coordinates
-                          .coordinates[1],
-                      }}
-                      zoom={15}
-                      options={{
-                        fullscreenControl: false,
-                        streetViewControl: true,
-                        mapTypeControl: false,
-                        zoomControl: true,
-                      }}
-                    >
-                      <Marker
-                        position={{
-                          lat: selectedProperty?.location_coordinates
-                            .coordinates[0],
-                          lng: selectedProperty?.location_coordinates
-                            .coordinates[1],
-                        }}
-                      />
-                      {directions && (
-                        <DirectionsRenderer directions={directions} />
-                      )}
-                    </GoogleMap>
-                  </div>
-
-                  <div className="mb-4 flex gap-2">
-                    <div className="flex-1 relative">
-                      <input
-                        ref={searchInputRef}
-                        type="text"
-                        placeholder="Enter your starting location"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                        value={startLocation}
-                        onChange={(e) => setStartLocation(e.target.value)}
-                      />
-                    </div>
-                    <button
-                      onClick={getCurrentLocation}
-                      className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
-                    >
-                      <MapPinIcon className="h-5 w-5" />
-                      <span>Use Current Location</span>
-                    </button>
-                  </div>
-
-                  <h3 className="text-lg font-semibold mb-2">Location</h3>
-                  <p className="text-gray-600 mb-2">
-                    {selectedProperty?.location}
-                  </p>
-
-                  <h3 className="text-lg font-semibold mt-4 mb-2">Address</h3>
-                  <p className="text-gray-600">{selectedProperty?.address}</p>
+                  <LocationTab 
+                    property={selectedProperty}
+                    directions={directions}
+                    startLocation={startLocation}
+                    setStartLocation={setStartLocation}
+                    searchInputRef={searchInputRef}
+                    getCurrentLocation={getCurrentLocation}
+                  />
                 </TabsContent>
               </Tabs>
             </div>
@@ -1052,58 +748,8 @@ export default function PropertyPage() {
               </div>
             </div>
 
-            {/* Similar properties - UPDATED TO USE DATA FROM SUPABASE */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-4">Similar Properties</h3>
-              <div className="space-y-4">
-                {similarProperties.length > 0 ? (
-                  similarProperties.map((similarProperty) => (
-                    <Link
-                      key={similarProperty.id}
-                      href={`/property/${similarProperty.id}`}
-                      className="flex gap-3 group"
-                    >
-                      <div className="h-16 w-20 rounded-md overflow-hidden flex-shrink-0">
-                        <img
-                          src={similarProperty?.images[0]}
-                          alt={similarProperty.title}
-                          className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-200"
-                        />
-                      </div>
-                      <div className="overflow-hidden">
-                        <h4 className="font-medium text-gray-900 truncate group-hover:text-primary">
-                          {similarProperty.title}
-                        </h4>
-                        <p className="text-sm text-gray-500 truncate">
-                          {similarProperty.location}
-                        </p>
-                        <p className="text-primary font-semibold text-sm">
-                          {similarProperty.listing_type === "rent" ? (
-                            <>
-                              GHS{similarProperty.rental_price.toLocaleString()}
-                              <span className="text-xs text-gray-500">
-                                /month
-                              </span>
-                            </>
-                          ) : similarProperty.listing_type === "airbnb" ? (
-                            <>
-                              GHS{similarProperty.rental_price.toLocaleString()}
-                              <span className="text-xs text-gray-500">
-                                /day
-                              </span>
-                            </>
-                          ) : (
-                            <>GHS{similarProperty?.price?.toLocaleString()}</>
-                          )}
-                        </p>
-                      </div>
-                    </Link>
-                  ))
-                ) : (
-                  <p className="text-gray-500">No similar properties found</p>
-                )}
-              </div>
-            </div>
+            {/* Similar properties */}
+            <SimilarProperties similarProperties={similarProperties} />
           </div>
         </div>
       </main>

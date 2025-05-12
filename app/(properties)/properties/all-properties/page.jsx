@@ -2,11 +2,11 @@
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import AdminLayout from "../_components/admin-layout";
-import PropertyTable from "../_components/property-table";
-import StatCards from "../_components/stat-cards";
-import RejectionDialog from "../_components/rejection-dialog";
-import useAdminPropertyStore from "../_store/useAdminPropertyStore";
+import AdminLayout from "../(admin)/_components/admin-layout";
+import PropertyTable from "../(admin)/_components/property-table";
+import StatCards from "../(admin)/_components/stat-cards";
+import RejectionDialog from "../(admin)/_components/rejection-dialog";
+import useAdminPropertyStore from "../(admin)/_store/useAdminPropertyStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -28,7 +28,7 @@ import {
   Badge,
   PlusCircle,
 } from "lucide-react";
-import { BulkActionBar } from "../_components/bulk-actions/bulk-action-bar";
+import { BulkActionBar } from "../(admin)/_components/bulk-actions/bulk-action-bar";
 import { useToast } from "@/hooks/use-toast";
 import AuthCheck from "@/app/_components/AuthCheck";
 
@@ -114,7 +114,7 @@ export default function AdminPropertiesPage() {
     }
   };
 
-  // Placeholder for notification email sending
+  // Notification email sending
   const sendNotificationEmail = async (property, status, reason = null) => {
     try {
       const response = await fetch("/api/admin/send-email", {

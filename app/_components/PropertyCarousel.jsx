@@ -17,7 +17,7 @@ const PropertyCarousel = () => {
         setLoading(true);
         const { data, error } = await supabase
           .from("properties")
-          .select("id, title, type, price, location, size, bedrooms, bathrooms, images, status")
+          .select("id, title, type, price, location, size, bedrooms, bathrooms, images, status, listing_type, rental_price")
           .eq("status", "approved")
           .order("created_at", { ascending: false })
           .limit(9);
@@ -118,7 +118,13 @@ const PropertyCarousel = () => {
 
               <div className="flex justify-between items-center mt-2">
                 <div className="font-medium">
-                  GHS {Number(property.price).toLocaleString()}
+                  {property.listing_type === 'rent' ? (
+                    <>GHS {Number(property.rental_price).toLocaleString()}/month</>
+                  ) : property.listing_type === 'airbnb' ? (
+                    <>GHS {Number(property.rental_price).toLocaleString()}/night</>
+                  ) : (
+                    <>GHS {Number(property.price).toLocaleString()}</>
+                  )}
                 </div>
                 <div className="text-sm text-gray-600">{property.size}</div>
               </div>

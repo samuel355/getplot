@@ -194,8 +194,8 @@ export default function LocationTab({
         )}
       </div>
 
-      <h4 className="text-xl text-primary my-3 font-medium">Get directions to the property location</h4>
-      <div className="mb-4 flex gap-2">
+      {/* <h4 className="text-xl text-primary my-3 font-medium">Get directions to the property location</h4> */}
+      {/* <div className="mb-4 flex gap-2">
         <div className="flex-1 relative">
           <input
             ref={searchInputRef}
@@ -215,7 +215,7 @@ export default function LocationTab({
           <MapPinIcon className="h-5 w-5" />
           <span>Use Current Location</span>
         </button>
-      </div>
+      </div> */}
 
       <h3 className="text-lg font-semibold mb-2">Location</h3>
       <p className="text-gray-600 mb-2">{property?.location}</p>

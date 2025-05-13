@@ -222,7 +222,7 @@ export default function NotificationsPage() {
   );
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container max-w-full px-4 mx-auto py-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Notifications</h1>
@@ -246,7 +246,7 @@ export default function NotificationsPage() {
       <StatCards stats={statsData} />
 
       {/* Filters */}
-      <div className="flex flex-col gap-4 sm:flex-row mb-4">
+      <div className="flex flex-col gap-4 sm:flex-row my-4">
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input

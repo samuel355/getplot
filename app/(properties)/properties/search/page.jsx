@@ -1,10 +1,10 @@
 "use client";
 
 import AuthCheck from "@/app/_components/AuthCheck";
-import AdminLayout from "../_components/admin-layout";
-import { SearchFilters } from "../_components/search/search-filters";
-import { SearchPresets } from "../_components/search/search-presets";
-import { SearchResults } from "../_components/search/search-results";
+import AdminLayout from "../(admin)/_components/admin-layout";
+import { SearchFilters } from "../(admin)/_components/search/search-filters";
+import { SearchPresets } from "../(admin)/_components/search/search-presets";
+import { SearchResults } from "../(admin)/_components/search/search-results";
 
 export default function AdvancedSearchPage() {
   return (

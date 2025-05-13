@@ -1,6 +1,7 @@
 import { MapPinIcon } from "@heroicons/react/24/outline";
 import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api";
-import { useEffect } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
+import { ZoomIn, ZoomOut, Layers } from "lucide-react";
 
 export default function LocationTab({ 
   property, 
@@ -12,6 +13,29 @@ export default function LocationTab({
   calculateRoute,
   isCalculatingRoute
 }) {
+  const [mapType, setMapType] = useState("roadmap");
+  const [isMapTypeMenuOpen, setIsMapTypeMenuOpen] = useState(false);
+  const mapRef = useRef(null);
+
+  // Store map reference once it's loaded
+  const onLoad = useCallback((map) => {
+    mapRef.current = map;
+  }, []);
+
+  // Clear reference when map unmounts
+  const onUnmount = useCallback(() => {
+    mapRef.current = null;
+  }, []);
+
+  // Function to handle map type change
+  const changeMapType = (type) => {
+    setMapType(type);
+    if (mapRef.current) {
+      mapRef.current.setMapTypeId(type);
+    }
+    setIsMapTypeMenuOpen(false);
+  };
+
   useEffect(() => {
     if (!searchInputRef.current || !window.google) {
       console.log("Search input ref or Google not available:", {
@@ -61,7 +85,7 @@ export default function LocationTab({
 
   return (
     <div>
-      <div className="aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden mb-4 h-80 relative  w-full">
+      <div className="aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden mb-4 h-96 relative w-full">
         <GoogleMap
           className="shadow-sm"
           mapContainerStyle={{ height: "100%", width: "100%" }}
@@ -70,11 +94,26 @@ export default function LocationTab({
             lng: property?.location_coordinates.coordinates[1],
           }}
           zoom={15}
+          onLoad={onLoad}
+          onUnmount={onUnmount}
           options={{
             fullscreenControl: false,
             streetViewControl: true,
             mapTypeControl: false,
-            zoomControl: true,
+            zoomControl: false,
+            mapTypeId: mapType,
+            controlSize: 32,
+            gestureHandling: "cooperative",
+            clickableIcons: false,
+            disableDefaultUI: false,
+            scrollwheel: true,
+            styles: [
+              {
+                featureType: "poi",
+                elementType: "labels",
+                stylers: [{ visibility: "off" }],
+              },
+            ],
           }}
         >
           <Marker
@@ -85,6 +124,66 @@ export default function LocationTab({
           />
           {directions && <DirectionsRenderer directions={directions} />}
         </GoogleMap>
+
+        {/* Map controls */}
+        <div className="absolute top-3 right-3 bg-white shadow-md rounded-lg p-2 flex flex-col gap-2 z-10">
+          {/* Zoom controls */}
+          <button
+            onClick={() => mapRef.current?.setZoom((mapRef.current.getZoom() || 15) + 1)}
+            className="p-1.5 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
+            title="Zoom in"
+          >
+            <ZoomIn size={18} />
+          </button>
+          <button
+            onClick={() => mapRef.current?.setZoom((mapRef.current.getZoom() || 15) - 1)}
+            className="p-1.5 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
+            title="Zoom out"
+          >
+            <ZoomOut size={18} />
+          </button>
+
+          {/* Map type control */}
+          <div className="relative">
+            <button
+              onClick={() => setIsMapTypeMenuOpen(!isMapTypeMenuOpen)}
+              className="p-1.5 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
+              title="Change map type"
+            >
+              <Layers size={18} />
+            </button>
+
+            {isMapTypeMenuOpen && (
+              <div className="absolute right-full mr-2 top-0 bg-white shadow-lg rounded-lg overflow-hidden w-28">
+                <button
+                  onClick={() => changeMapType("roadmap")}
+                  className={`px-2 py-1.5 w-full text-left text-sm hover:bg-gray-100 ${
+                    mapType === "roadmap" ? "bg-blue-50 text-blue-600" : ""
+                  }`}
+                >
+                  Road Map
+                </button>
+                <button
+                  onClick={() => changeMapType("satellite")}
+                  className={`px-2 py-1.5 w-full text-left text-sm hover:bg-gray-100 ${
+                    mapType === "satellite" ? "bg-blue-50 text-blue-600" : ""
+                  }`}
+                >
+                  Satellite
+                </button>
+                <button
+                  onClick={() => changeMapType("hybrid")}
+                  className={`px-2 py-1.5 w-full text-left text-sm hover:bg-gray-100 ${
+                    mapType === "hybrid" ? "bg-blue-50 text-blue-600" : ""
+                  }`}
+                >
+                  Hybrid
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
         {isCalculatingRoute && (
           <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
             <div className="bg-white p-4 rounded-lg shadow-lg flex items-center gap-3">

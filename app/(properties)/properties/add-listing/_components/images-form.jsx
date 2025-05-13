@@ -10,6 +10,53 @@ export default function ImagesForm({ formData, updateFormData, nextStep, prevSte
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   
+  const addLogoToImage = async (file) => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Create image from file
+      const img = new Image();
+      img.onload = () => {
+        // Set canvas size to match image
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        // Draw the main image
+        ctx.drawImage(img, 0, 0);
+        
+        // Load and draw the logo
+        const logo = new Image();
+        logo.onload = () => {
+          // Calculate logo size (20% of the smaller dimension)
+          const logoSize = Math.min(img.width, img.height) * 0.2;
+          
+          // Position logo in top right corner with padding
+          const padding = logoSize * 0.2;
+          const logoX = canvas.width - logoSize - padding;
+          const logoY = padding;
+          
+          // Draw logo
+          ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+          
+          // Convert canvas to blob
+          canvas.toBlob((blob) => {
+            // Create a new file from the blob
+            const newFile = new File([blob], file.name, {
+              type: file.type,
+              lastModified: file.lastModified,
+            });
+            resolve(newFile);
+          }, file.type);
+        };
+        logo.onerror = reject;
+        logo.src = '/logo-lateral.svg';
+      };
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
+    });
+  };
+  
   const onDrop = useCallback(async (acceptedFiles) => {
     if (acceptedFiles.length + uploadedImages.length > 10) {
       setError("Maximum 10 images allowed");
@@ -23,6 +70,9 @@ export default function ImagesForm({ formData, updateFormData, nextStep, prevSte
       const newImages = [];
       
       for (const file of acceptedFiles) {
+        // Add logo to the image
+        const fileWithLogo = await addLogoToImage(file);
+        
         // Create a unique file name
         const fileExt = file.name.split('.').pop();
         const fileName = `${uuidv4()}.${fileExt}`;
@@ -31,7 +81,7 @@ export default function ImagesForm({ formData, updateFormData, nextStep, prevSte
         // Upload to Supabase Storage
         const { data, error } = await supabase.storage
           .from('properties')
-          .upload(filePath, file);
+          .upload(filePath, fileWithLogo);
           
         if (error) throw error;
         
@@ -44,8 +94,8 @@ export default function ImagesForm({ formData, updateFormData, nextStep, prevSte
           path: filePath,
           url: publicUrlData.publicUrl,
           name: file.name,
-          size: file.size,
-          type: file.type
+          size: fileWithLogo.size,
+          type: fileWithLogo.type
         });
       }
       
@@ -170,7 +220,7 @@ export default function ImagesForm({ formData, updateFormData, nextStep, prevSte
               ))}
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              The first image will be used as the cover. Drag images to reorder.
+              The first image will be used as the cover. All images will have the logo in the top right corner.
             </p>
           </div>
         )}

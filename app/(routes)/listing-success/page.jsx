@@ -30,7 +30,7 @@ export default function ListingSuccessPage() {
             View Your Listing
           </Link>
           <Link 
-            href="/properties" 
+            href="/properties/my-dashboard" 
             className="border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50 transition duration-300"
           >
             Go to Dashboard

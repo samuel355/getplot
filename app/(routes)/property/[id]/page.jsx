@@ -32,7 +32,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Tag, Ruler, Bed, Bath, Calendar, CheckCircle } from "lucide-react";
+import { Tag, Ruler, Bed, Bath, Calendar, CheckCircle, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@clerk/nextjs";
 import OverviewTab from "@/app/_components/property/OverviewTab";
@@ -40,6 +40,7 @@ import DetailsTab from "@/app/_components/property/DetailsTab";
 import FeaturesTab from "@/app/_components/property/FeaturesTab";
 import LocationTab from "@/app/_components/property/LocationTab";
 import SimilarProperties from "@/app/_components/property/SimilarProperties";
+import DocumentsTab from "@/app/_components/property/DocumentsTab";
 
 // Form validation schema
 const inquirySchema = z.object({
@@ -536,11 +537,12 @@ export default function PropertyPage() {
               </div>
 
               <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
+                <TabsList className="grid w-full grid-cols-5">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="details">Details</TabsTrigger>
                   <TabsTrigger value="features">Features</TabsTrigger>
                   <TabsTrigger value="location">Location</TabsTrigger>
+                  <TabsTrigger value="documents">Documents</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview" className="pt-4">
@@ -566,6 +568,10 @@ export default function PropertyPage() {
                     calculateRoute={calculateRoute}
                     isCalculatingRoute={isCalculatingRoute}
                   />
+                </TabsContent>
+
+                <TabsContent value="documents" className="pt-4">
+                  <DocumentsTab property={selectedProperty} />
                 </TabsContent>
               </Tabs>
             </div>

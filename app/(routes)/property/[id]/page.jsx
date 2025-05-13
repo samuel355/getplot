@@ -720,8 +720,8 @@ export default function PropertyPage() {
                   <h4 className="font-medium">
                     {selectedProperty?.user_email}
                   </h4>
-                  <p className="text-sm text-gray-600">
-                    Premium Land & Property
+                  <p className="text-sm text-gray-600 font-medium">
+                    Admin (Get One Plot)
                   </p>
                 </div>
               </div>
@@ -744,7 +744,7 @@ export default function PropertyPage() {
                       d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                     />
                   </svg>
-                  {selectedProperty?.contact}
+                  {`0${selectedProperty?.contact}`}
                 </a>
                 <a
                   href={`mailto:${selectedProperty?.user_email}`}

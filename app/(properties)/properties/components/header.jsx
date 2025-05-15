@@ -1,13 +1,14 @@
 "use client";
 
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Search, Bell, Menu } from "lucide-react";
+import { Search, Bell, Menu, CheckCircle, XCircle, Eye, Mail, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSidebar } from "../contexts/sidebar-context";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
+import { formatDistanceToNow } from "date-fns";
 
 export default function Header() {
   const { user } = useUser();
@@ -84,6 +85,40 @@ function NotificationButton({ isAdmin }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const router = useRouter();
 
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case 'property_approved':
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case 'property_rejected':
+        return <XCircle className="h-4 w-4 text-red-500" />;
+      case 'property_interest':
+        return <Eye className="h-4 w-4 text-blue-500" />;
+      case 'user_banned':
+        return <XCircle className="h-4 w-4 text-red-500" />;
+      case 'user_unbanned':
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      default:
+        return <Bell className="h-4 w-4 text-muted-foreground" />;
+    }
+  };
+
+  const getNotificationTitle = (type) => {
+    switch (type) {
+      case 'property_approved':
+        return 'Property Approved';
+      case 'property_rejected':
+        return 'Property Rejected';
+      case 'property_interest':
+        return 'New Property Interest';
+      case 'user_banned':
+        return 'Account Banned';
+      case 'user_unbanned':
+        return 'Account Unbanned';
+      default:
+        return type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+  };
+
   // Fetch notifications based on user role
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -91,6 +126,7 @@ function NotificationButton({ isAdmin }) {
         let query = supabase
           .from('notifications')
           .select('*')
+          .eq('status', 'pending')
           .order('created_at', { ascending: false })
           .limit(10);
 
@@ -102,30 +138,32 @@ function NotificationButton({ isAdmin }) {
 
         if (error) throw error;
         setNotifications(data || []);
-        setUnreadCount(data?.filter(n => !n.read).length || 0);
+        setUnreadCount(data?.length || 0);
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
     };
 
     fetchNotifications();
-  }, [isAdmin]);
+  }, [isAdmin, user?.id]);
 
   const markAsRead = async (notificationId) => {
     try {
       const { error } = await supabase
         .from('notifications')
-        .update({ read: true })
+        .update({ 
+          status: 'sent',
+          sent_at: new Date().toISOString()
+        })
         .eq('id', notificationId);
 
       if (error) throw error;
       
-      setNotifications(notifications.map(n => 
-        n.id === notificationId ? { ...n, read: true } : n
-      ));
+      // Remove the notification from the local state since it's no longer pending
+      setNotifications(notifications.filter(n => n.id !== notificationId));
       setUnreadCount(prev => prev - 1);
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      console.error('Error marking notification as sent:', error);
     }
   };
 
@@ -144,7 +182,7 @@ function NotificationButton({ isAdmin }) {
       </Button>
       
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white z-50 border animate-in fade-in-0 zoom-in-95">
+        <div className="absolute right-0 mt-2 w-96 rounded-md shadow-lg bg-white z-50 border animate-in fade-in-0 zoom-in-95">
           <div className="p-3 border-b flex justify-between items-center">
             <h3 className="text-sm font-medium">Notifications</h3>
             <Button 
@@ -159,31 +197,71 @@ function NotificationButton({ isAdmin }) {
               View all
             </Button>
           </div>
-          <div className="max-h-64 overflow-y-auto">
+          <div className="max-h-[480px] overflow-y-auto">
             {notifications.length > 0 ? (
               notifications.map(notification => (
                 <div 
                   key={notification.id} 
-                  className={`p-3 border-b hover:bg-gray-50 ${!notification.read ? 'bg-blue-50' : ''}`}
+                  className={`p-4 border-b hover:bg-gray-50 ${notification.status === 'pending' ? 'bg-blue-50' : ''}`}
                 >
-                  <p className="text-sm font-medium">{notification.message}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {new Date(notification.created_at).toRelativeTimeString()}
-                  </p>
-                  {!notification.read && (
-                    <Button
-                      variant="link"
-                      size="sm"
-                      className="text-xs mt-2"
-                      onClick={() => markAsRead(notification.id)}
-                    >
-                      Mark as read
-                    </Button>
-                  )}
+                  <div className="flex items-start gap-3">
+                    <div className="mt-1">
+                      {getNotificationIcon(notification.type)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-semibold text-gray-900">
+                          {getNotificationTitle(notification.type)}
+                        </p>
+                        <span className="text-xs text-gray-500">
+                          {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {notification.details || notification.message}
+                      </p>
+                      {notification.data?.inquirer_name && (
+                        <div className="mt-2 text-xs text-gray-500">
+                          <p>From: {notification.data.inquirer_name}</p>
+                          <p>Contact: {notification.data.inquirer_phone}</p>
+                        </div>
+                      )}
+                      <div className="mt-2 flex items-center gap-2">
+                        {notification.status === 'pending' && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-xs h-7"
+                            onClick={() => markAsRead(notification.id)}
+                          >
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Mark as Read
+                          </Button>
+                        )}
+                        {notification.property_id && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-xs h-7"
+                            onClick={() => {
+                              setIsOpen(false);
+                              router.push(`/properties/property/${notification.property_id}`);
+                            }}
+                          >
+                            <Eye className="h-3 w-3 mr-1" />
+                            View Property
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))
             ) : (
-              <div className="p-3 text-sm text-gray-500">No notifications</div>
+              <div className="p-4 text-center">
+                <Bell className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                <p className="text-sm text-gray-500">No notifications</p>
+              </div>
             )}
           </div>
         </div>

@@ -41,6 +41,7 @@ import FeaturesTab from "@/app/_components/property/FeaturesTab";
 import LocationTab from "@/app/_components/property/LocationTab";
 import SimilarProperties from "@/app/_components/property/SimilarProperties";
 import DocumentsTab from "@/app/_components/property/DocumentsTab";
+import { supabase } from "@/utils/supabase/client";
 
 // Form validation schema
 const inquirySchema = z.object({
@@ -311,9 +312,9 @@ export default function PropertyPage() {
       setIsSubmitting(true);
       setSubmitError(null);
 
-      const { error } = await usePropertyStore
-        .getState()
-        .supabase.from("property_inquiries")
+      // First insert the inquiry
+      const { data: inquiry, error: inquiryError } = await supabase
+        .from("property_inquiries")
         .insert([
           {
             property_id: selectedProperty.id,
@@ -322,9 +323,31 @@ export default function PropertyPage() {
             phone: data.phone,
             message: data.message,
           },
-        ]);
+        ])
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (inquiryError) throw inquiryError;
+
+      // Then create a notification for the property owner
+      const { error: notificationError } = await supabase
+        .from("notifications")
+        .insert({
+          type: "property_interest",
+          user_id: selectedProperty.user_id,
+          property_id: selectedProperty.id,
+          details: `New inquiry from ${data.name} for your property "${selectedProperty.title}"`,
+          status: "pending",
+          data: {
+            inquiry_id: inquiry.id,
+            inquirer_name: data.name,
+            inquirer_email: data.email,
+            inquirer_phone: data.phone,
+            message: data.message
+          }
+        });
+
+      if (notificationError) throw notificationError;
 
       setSubmitSuccess(true);
       reset();

@@ -7,7 +7,7 @@ const useNotificationsStore = create((set, get) => ({
   error: null,
   filters: {
     type: null,
-    read: null,
+    status: null,
     dateRange: null,
   },
   sort: {
@@ -56,8 +56,8 @@ const useNotificationsStore = create((set, get) => ({
       if (filters.type) {
         query = query.eq('type', filters.type);
       }
-      if (filters.read !== null) {
-        query = query.eq('read', filters.read);
+      if (filters.status) {
+        query = query.eq('status', filters.status);
       }
       if (filters.dateRange) {
         query = query.gte('created_at', filters.dateRange.start)
@@ -86,29 +86,32 @@ const useNotificationsStore = create((set, get) => ({
     set({ sort: { field, order } });
   },
 
-  // Mark notification as read
-  markAsRead: async (notificationId) => {
+  // Mark notification as sent
+  markAsSent: async (notificationId) => {
     try {
       const { error } = await supabase
         .from('notifications')
-        .update({ read: true })
+        .update({ 
+          status: 'sent',
+          sent_at: new Date().toISOString()
+        })
         .eq('id', notificationId);
 
       if (error) throw error;
 
       set((state) => ({
         notifications: state.notifications.map(n =>
-          n.id === notificationId ? { ...n, read: true } : n
+          n.id === notificationId ? { ...n, status: 'sent', sent_at: new Date().toISOString() } : n
         )
       }));
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      console.error('Error marking notification as sent:', error);
       throw error;
     }
   },
 
-  // Mark all notifications as read
-  markAllAsRead: async (userId) => {
+  // Mark all notifications as sent
+  markAllAsSent: async (userId) => {
     try {
       // Get the user's properties to get the correct user_id
       const { data: userProperties, error: propertiesError } = await supabase
@@ -124,16 +127,23 @@ const useNotificationsStore = create((set, get) => ({
 
       const { error } = await supabase
         .from('notifications')
-        .update({ read: true })
+        .update({ 
+          status: 'sent',
+          sent_at: new Date().toISOString()
+        })
         .or(`user_id.eq.${userIdentifier},properties.user_id.eq.${userIdentifier}`);
 
       if (error) throw error;
 
       set((state) => ({
-        notifications: state.notifications.map(n => ({ ...n, read: true }))
+        notifications: state.notifications.map(n => ({ 
+          ...n, 
+          status: 'sent',
+          sent_at: new Date().toISOString()
+        }))
       }));
     } catch (error) {
-      console.error('Error marking all notifications as read:', error);
+      console.error('Error marking all notifications as sent:', error);
       throw error;
     }
   },
@@ -162,7 +172,7 @@ const useNotificationsStore = create((set, get) => ({
     set({
       filters: {
         type: null,
-        read: null,
+        status: null,
         dateRange: null,
       }
     });

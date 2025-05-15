@@ -38,6 +38,7 @@ import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import useNotificationsStore from "../(admin)/_store/useNotificationsStore";
 import StatCards from "../(admin)/_components/stat-cards";
+import { useRouter } from "next/navigation";
 
 export default function NotificationsPage() {
   const { user } = useUser();
@@ -48,15 +49,16 @@ export default function NotificationsPage() {
     filters,
     fetchNotifications,
     setFilters,
-    markAllAsRead,
+    markAllAsSent,
     clearFilters,
     setSort,
-    markAsRead,
+    markAsSent,
     deleteNotification,
   } = useNotificationsStore();
 
   const { toast } = useToast();
   const isAdmin = user?.publicMetadata?.role === 'admin' || user?.publicMetadata?.role === 'sysadmin';
+  const router = useRouter();
 
   useEffect(() => {
     if (user) {
@@ -71,7 +73,7 @@ export default function NotificationsPage() {
   // Calculate stats
   const stats = {
     total: notifications.length,
-    unread: notifications.filter(n => !n.read).length,
+    pending: notifications.filter(n => n.status === 'pending').length,
     property: notifications.filter(n => n.type.startsWith('property_')).length,
     user: notifications.filter(n => n.type.startsWith('user_')).length,
   };
@@ -84,8 +86,8 @@ export default function NotificationsPage() {
       icon: <Bell className="h-4 w-4 text-muted-foreground" />,
     },
     {
-      title: "Unread",
-      value: stats.unread,
+      title: "Pending",
+      value: stats.pending,
       icon: <Clock className="h-4 w-4 text-amber-500" />,
     },
     {
@@ -141,6 +143,7 @@ export default function NotificationsPage() {
         <TableRow>
           <TableHead>Type</TableHead>
           <TableHead>Message</TableHead>
+          <TableHead>Details</TableHead>
           <TableHead>Date</TableHead>
           <TableHead>Status</TableHead>
           <TableHead className="text-right">Actions</TableHead>
@@ -149,25 +152,25 @@ export default function NotificationsPage() {
       <TableBody>
         {loading ? (
           <TableRow>
-            <TableCell colSpan={5} className="text-center">
+            <TableCell colSpan={6} className="text-center">
               Loading...
             </TableCell>
           </TableRow>
         ) : error ? (
           <TableRow>
-            <TableCell colSpan={5} className="text-center text-red-500">
+            <TableCell colSpan={6} className="text-center text-red-500">
               {error}
             </TableCell>
           </TableRow>
         ) : filteredNotifications.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={5} className="text-center">
+            <TableCell colSpan={6} className="text-center">
               No notifications found
             </TableCell>
           </TableRow>
         ) : (
           filteredNotifications.map((notification) => (
-            <TableRow key={notification.id} className={!notification.read ? 'bg-blue-50' : ''}>
+            <TableRow key={notification.id} className={notification.status === 'pending' ? 'bg-blue-50' : ''}>
               <TableCell>
                 <div className="flex items-center gap-2">
                   {getNotificationIcon(notification.type)}
@@ -177,30 +180,46 @@ export default function NotificationsPage() {
                 </div>
               </TableCell>
               <TableCell>
-                {notification.property ? (
-                  <Link 
-                    href={`/properties/${notification.property.id}`}
-                    className="hover:underline"
-                  >
-                    {getNotificationMessage(notification)}
-                  </Link>
-                ) : (
-                  getNotificationMessage(notification)
+                {notification.details || getNotificationMessage(notification)}
+              </TableCell>
+              <TableCell>
+                {notification.type === 'property_interest' && notification.data && (
+                  <div className="space-y-1">
+                    <p className="text-sm">
+                      <span className="font-medium">From:</span> {notification.data.inquirer_name}
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-medium">Contact:</span> {notification.data.inquirer_phone}
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-medium">Message:</span> {notification.data.message}
+                    </p>
+                  </div>
                 )}
               </TableCell>
               <TableCell>
                 {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
               </TableCell>
               <TableCell>
-                {notification.read ? 'Read' : 'Unread'}
+                <span className="capitalize">{notification.status}</span>
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  {!notification.read && (
+                  {notification.property_id && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => router.push(`/properties/property/${notification.property_id}`)}
+                    >
+                      <Eye className="h-4 w-4 mr-1" />
+                      View Property
+                    </Button>
+                  )}
+                  {notification.status === 'pending' && (
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => markAsRead(notification.id)}
+                      onClick={() => markAsSent(notification.id)}
                     >
                       <CheckCircle className="h-4 w-4" />
                     </Button>
@@ -233,11 +252,11 @@ export default function NotificationsPage() {
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            onClick={() => markAllAsRead(user.id)}
+            onClick={() => markAllAsSent(user.id)}
             className="flex items-center gap-2"
           >
             <CheckCircle className="h-4 w-4" />
-            Mark all as read
+            Mark all as sent
           </Button>
         </div>
       </div>
@@ -275,9 +294,9 @@ export default function NotificationsPage() {
             </SelectContent>
           </Select>
           <Select
-            value={filters.read === null ? "all" : filters.read.toString()}
+            value={filters.status || "all"}
             onValueChange={(value) => 
-              handleFilterChange("read", value === "all" ? null : value === "true")
+              handleFilterChange("status", value === "all" ? null : value)
             }
           >
             <SelectTrigger className="w-[160px]">
@@ -286,15 +305,16 @@ export default function NotificationsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="false">Unread</SelectItem>
-              <SelectItem value="true">Read</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="sent">Sent</SelectItem>
+              <SelectItem value="failed">Failed</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
       {/* Tabs and Table */}
-      <Tabs defaultValue="unread">
+      <Tabs defaultValue="pending">
         <TabsList>
           <TabsTrigger value="all" className="flex gap-2 items-center">
             All{" "}
@@ -302,11 +322,11 @@ export default function NotificationsPage() {
               {stats.total}
             </span>
           </TabsTrigger>
-          <TabsTrigger value="unread" className="flex gap-2 items-center">
+          <TabsTrigger value="pending" className="flex gap-2 items-center">
             <Clock className="h-4 w-4" />
-            Unread{" "}
+            Pending{" "}
             <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
-              {stats.unread}
+              {stats.pending}
             </span>
           </TabsTrigger>
           <TabsTrigger value="property" className="flex gap-2 items-center">
@@ -329,8 +349,8 @@ export default function NotificationsPage() {
           {renderTable(notifications)}
         </TabsContent>
 
-        <TabsContent value="unread" className="mt-6">
-          {renderTable(notifications.filter(n => !n.read))}
+        <TabsContent value="pending" className="mt-6">
+          {renderTable(notifications.filter(n => n.status === 'pending'))}
         </TabsContent>
 
         <TabsContent value="property" className="mt-6">

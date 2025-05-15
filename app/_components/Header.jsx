@@ -322,12 +322,12 @@ const Header = () => {
                       (path === "/nthc" || path === "/dar-es-salaam" || path === "/trabuom" || path === "/legon-hills" || path === "/yabi") 
                         ? "text-primary font-bold" 
                         : "text-gray-700"
-                    )}
+                    )}  
                   >
                     Our Sites
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4  md:grid-cols-2">
+                    <ul className="grid w-[400px] gap-2 p-4  md:grid-cols-2">
                       <ListItem href="/nthc" title="NTHC" isActive={path === "/nthc"}>
                         NTHC (Kwadaso)
                       </ListItem>
@@ -337,7 +337,7 @@ const Header = () => {
                       <ListItem href="/trabuom" title="Trabuom" isActive={path === "/trabuom"}>
                         Trabuom
                       </ListItem>
-                      <ListItem href="/legon-hills" title="Legon Hills" isActive={path === "/legon-hills"}>
+                      <ListItem href="/legon-hills" title="Lego n Hills" isActive={path === "/legon-hills"}>
                         East Legon Hills
                       </ListItem>
                       <ListItem href="/yabi" title="Yabi" isActive={path === "/yabi"}>

@@ -18,7 +18,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectTrigger,
+  SelectTrigger,  
   SelectValue,
 } from "@/components/ui/select";
 import {
@@ -35,7 +35,6 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
-import Link from "next/link";
 import useNotificationsStore from "../(admin)/_store/useNotificationsStore";
 import StatCards from "../(admin)/_components/stat-cards";
 import { useRouter } from "next/navigation";
@@ -50,8 +49,6 @@ export default function NotificationsPage() {
     fetchNotifications,
     setFilters,
     markAllAsSent,
-    clearFilters,
-    setSort,
     markAsSent,
     deleteNotification,
   } = useNotificationsStore();

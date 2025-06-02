@@ -1,28 +1,29 @@
 import { useRef, useEffect } from "react";
 import { supabase } from "@/utils/supabase/client";
 
-export async function insertFeatures(features) {
+export async function insertFeatures(data) {
+  console.log('Data ->', data);
   try {
-    const transformedFeatures = features.map((feature) => ({
-      type: feature.geometry.type,
+    const transformedFeatures = data.features.map((feature) => ({
+      type: "Feature Collection",
       geometry: feature.geometry,
       properties: feature.properties,
-      status: 'Available',
-      plotTotalAmount: 100000
-      //status: renderStatus(feature.properties.STATUS),
-      //owner_info: renderOwner(feature.properties.STATUS),
+      //status: 'Available',
+      plotTotalAmount: 100000,
+      status: renderStatus(feature.properties.Status),
+      //owner_info: renderOwner(feature.properties.Status)
     }));
 
-    const { data, error } = await supabase
-      .from("yabi")
+    const { data: result, error } = await supabase
+      .from("berekuso")
       .insert(transformedFeatures)
       .select("*");
 
-    console.log(data);
+    console.log(result);
     if (error) {
       console.error("Error inserting features:", error);
     } else {
-      console.log("Inserted features:", data);
+      console.log("Inserted features:", result);
     }
   } catch (err) {
     console.error("Error:", err);

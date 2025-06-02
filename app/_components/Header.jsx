@@ -343,6 +343,9 @@ const Header = () => {
                       <ListItem href="/yabi" title="Yabi" isActive={path === "/yabi"}>
                         Yabi
                       </ListItem>
+                      <ListItem href="/berekuso" title="Berekuso" isActive={path === "/berekuso"}>
+                        Berekuso
+                      </ListItem>
                     </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>

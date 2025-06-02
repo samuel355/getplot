@@ -82,7 +82,7 @@ const BuyPlot = () => {
     if (id) {
       fechPlotData();
     } else {
-      router.push("/legon-hills");
+      router.push("/berekuso");
     }
   }, []);
 
@@ -210,12 +210,12 @@ const BuyPlot = () => {
       });
     } else {
       toast("Something went wrong fetching plot data");
-      router.replace("/legon-hills");
+      router.replace("/berekuso");
     }
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.push("/legon-hills");
+      router.push("/berekuso");
     }
   };
 
@@ -266,7 +266,7 @@ const BuyPlot = () => {
       if (response.status === "success") {
         setVerifyLoading(true);
         toast.success("Thank you! your payment was made");
-        router.push("/legon-hills/payment/success");
+        router.push("/berekuso/payment/success");
         verifyTransaction(response.reference);
       }
     },
@@ -306,7 +306,7 @@ const BuyPlot = () => {
             savePaymentDetails(paymentData, amount, data);
           } else {
             toast.error("Your Transaction verification was not successfull");
-            router.push("/legon-hills/payment/error");
+            router.push("/berekuso/payment/error");
           }
         })
         .catch((error) => {

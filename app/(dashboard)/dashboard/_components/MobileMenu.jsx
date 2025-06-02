@@ -49,6 +49,12 @@ const MobileMenu = () => {
       title: "Dar Es Salaam",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
+    {
+      id: 6,
+      href: "/dashboard/berekuso",
+      title: "Berekuso",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
+    },
   ];
   const sites = [
     {
@@ -158,7 +164,8 @@ const MobileMenu = () => {
                     <hr className="my-2" />
                     <li
                       className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-5 ${
-                        path === "/dashboard/trabuom-interested-clients" && "bg-gray-100"
+                        path === "/dashboard/trabuom-interested-clients" &&
+                        "bg-gray-100"
                       }`}
                     >
                       <Link
@@ -170,7 +177,8 @@ const MobileMenu = () => {
                     </li>
                     <li
                       className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                        path === "/dashboard/kwadaso-interested-clients" && "bg-gray-100"
+                        path === "/dashboard/kwadaso-interested-clients" &&
+                        "bg-gray-100"
                       }`}
                     >
                       <Link
@@ -182,7 +190,8 @@ const MobileMenu = () => {
                     </li>
                     <li
                       className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                        path === "/dashboard/legon-hills-interested-clients" && "bg-gray-100"
+                        path === "/dashboard/legon-hills-interested-clients" &&
+                        "bg-gray-100"
                       }`}
                     >
                       <Link
@@ -194,7 +203,8 @@ const MobileMenu = () => {
                     </li>
                     <li
                       className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                        path === "/dashboard/adense-interested-clients" && "bg-gray-100"
+                        path === "/dashboard/adense-interested-clients" &&
+                        "bg-gray-100"
                       }`}
                     >
                       <Link
@@ -202,6 +212,19 @@ const MobileMenu = () => {
                         className="flex gap-2 items-center"
                       >
                         Adense Interested clients
+                      </Link>
+                    </li>
+                    <li
+                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
+                        path === "/dashboard/berekuso-interested-clients" &&
+                        "bg-gray-100"
+                      }`}
+                    >
+                      <Link
+                        href={"/dashboard/berekuso-interested-clients"}
+                        className="flex gap-2 items-center"
+                      >
+                        Berekuso Interested clients
                       </Link>
                     </li>
                   </ul>

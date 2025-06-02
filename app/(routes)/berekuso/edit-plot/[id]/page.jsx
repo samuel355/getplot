@@ -93,12 +93,12 @@ const EditPlot = () => {
       });
     } else {
       toast("Something went wrong fetching plot data");
-      router.replace("/legon-hills");
+      router.replace("/berekuso");
     }
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.push("/legon-hills");
+      router.push("/berekuso");
     }
   };
 
@@ -106,17 +106,17 @@ const EditPlot = () => {
     if (id) {
       fechPlotData();
     } else {
-      router.push("/legon-hills");
+      router.push("/berekuso");
     }
 
     if (isLoaded) {
       if (!isSignedIn) {
-        router.push("/legon-hills");
+        router.push("/berekuso");
       } else if (
         user?.publicMetadata?.role !== "sysadmin" &&
         user?.publicMetadata?.role !== "admin"
       ) {
-        router.push("/legon-hills");
+        router.push("/berekuso");
       } else {
         setLoading(false);
       }
@@ -259,7 +259,7 @@ const EditPlot = () => {
       toast.success("Plot details updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        router.replace('/legon-hills');
+        router.replace('/berekuso');
       }, 1500);
     }
     if (error) {
@@ -323,7 +323,7 @@ const EditPlot = () => {
       toast.success("Plot  updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        router.push('/legon-hills');
+        router.push('/berekuso');
       }, 1100);
     }
     if (error) {

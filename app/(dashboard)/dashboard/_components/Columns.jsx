@@ -263,6 +263,7 @@ export const columns = [
       else if (pathname === "/dashboard/legon-hills") table = "legon-hills";
       else if (pathname === "/dashboard/dar-es-salaam") table = "dar-es-salaam";
       else if (pathname === "/dashboard/yabi") table = "yabi";
+      else if (pathname === "/dashboard/berekuso") table = "berekuso";
 
       let databaseName;
       if (table && table === "nthc") {
@@ -280,7 +281,9 @@ export const columns = [
       if (table && table === "yabi") {
         databaseName = "yabi";
       }
-
+      if (table && table === "berekuso") {
+        databaseName = "berekuso";
+      }
       const handleDeleteDialog = async (event) => {
         event.preventDefault();
         if (plotId !== null) {
@@ -425,7 +428,9 @@ const ViewPlotDialog = ({
   if (table && table === "yabi") {
     databaseName = "yabi";
   }
-
+  if (table && table === "berekuso") {
+    databaseName = "berekuso";
+  } 
 
   useEffect(() => {
     if (plotId && databaseName) {
@@ -594,6 +599,8 @@ const ViewPlotDialog = ({
                             : pathname === "/dashboard/dar-es-salaam"
                             ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
                             : pathname === "/dashboard/yabi"
+                            ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
+                            : pathname === "/dashboard/berekuso" || pathname === "/dashboard/berekuso-interested-clients "
                             ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
                             : ""
                         }
@@ -818,6 +825,9 @@ const DeletePlotDialog = ({
   if (table && table === "yabi") {
     databaseName = "yabi";
   }
+  if (table && table === "berekuso") {
+    databaseName = "berekuso";
+  }
 
   const handleDeletePlot = async () => {
     console.log("Delete----->: ", plotId, "from database -> ", databaseName);
@@ -936,7 +946,9 @@ const EditPlotDialog = ({
   if (table && table === "yabi") {
     databaseName = "yabi";
   }
-
+  if (table && table === "berekuso") {
+    databaseName = "berekuso";
+  }
   useEffect(() => {
     if (plotId && databaseName) {
       setPlotDataLoading(true);

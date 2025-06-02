@@ -109,6 +109,11 @@ const Footer = () => {
                   East Legon Hills Land
                 </a>
               </li>
+              <li className="my-2 text-muted">
+                <a href="/berekuso" className="text-sm hover:underline">
+                  Berekuso Lands
+                </a>
+              </li>
             </ul>
           </div>
 

@@ -82,7 +82,7 @@ const ReservePlot = () => {
     if (id) {
       fechPlotData();
     } else {
-      router.push("/legon-hills");
+      router.push("/berekuso");
     }
   }, []);
 
@@ -239,12 +239,12 @@ const ReservePlot = () => {
       setCalcAmount(data[0].plotTotalAmount);
     } else {
       toast("Something went wrong fetching plot data");
-      router.push("/legon-hills");
+      router.push("/berekuso");
     }
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.push("/legon-hills");
+      router.push("/berekuso");
     }
   };
 
@@ -293,7 +293,7 @@ const ReservePlot = () => {
     onSuccess: (response) => {
       if (response.status === "success") {
         setVerifyLoading(true);
-        router.push("/legon-hills/payment/success");
+        router.push("/berekuso/payment/success");
         toast.success("Thank you! your payment was made");
         verifyTransaction(response.reference);
       }
@@ -335,7 +335,7 @@ const ReservePlot = () => {
             savePaymentDetails(paymentData, amount, data);
           } else {
             toast.error("Your Transaction verification was not successfull");
-            router.push("/legon-hills/payment/error");
+            router.push("/berekuso/payment/error");
           }
         })
         .catch((error) => {

@@ -138,6 +138,8 @@ export const columns = [
       else if (pathname.includes("nthc")) table = "nthc";
       else if (pathname.includes("legon-hills")) table = "legon-hills";
       else if (pathname.includes("dar-es-salaam")) table = "dar-es-salaam";
+      else if (pathname.includes("berekuso")) table = "berekuso";
+      else if (pathname.includes("yabi")) table = "yabi";
 
       let databaseName;
       if (table && table === "nthc") {
@@ -152,7 +154,12 @@ export const columns = [
       if (table && table === "legon-hills") {
         databaseName = "legon_hills";
       }
-
+      if (table && table === "berekuso") {
+        databaseName = "berekuso";
+      }
+      if (table && table === "yabi") {
+        databaseName = "yabi";
+      }
       const handleDeleteDialog = async (event) => {
         event.preventDefault();
         if (plotId !== null) {

@@ -10,7 +10,7 @@ export async function insertFeatures(data) {
       properties: feature.properties,
       //status: 'Available',
       plotTotalAmount: 100000,
-      status: renderStatus(feature.properties.Status),
+      status: renderStatus(feature.properties.STATUS),
       //owner_info: renderOwner(feature.properties.Status)
     }));
 

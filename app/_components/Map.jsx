@@ -88,6 +88,11 @@ const Map = ({ parcels, center, setCartOpen }) => {
     location = "Yabi Kumasi";
     table_name = "yabi";
   }
+  if (pathname.includes("berekuso")) {
+    table = "berekuso";
+    location = "Berekuso Eastern Region";
+    table_name = "berekuso";
+  }
 
   const mapContainerStyle = {
     height: "90vh",
@@ -275,6 +280,8 @@ const Map = ({ parcels, center, setCartOpen }) => {
     } else if (pathname === "/dar-es-salaam") {
       plot_size = feature?.properties?.Area.toFixed(2);
     } else if (pathname === "/yabi") {
+      plot_size = feature?.properties?.Area.toFixed(2);
+    }else if (pathname === "/berekuso") {
       plot_size = feature?.properties?.Area.toFixed(2);
     }
 

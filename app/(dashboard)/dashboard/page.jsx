@@ -19,6 +19,7 @@ const Dashboard = () => {
   const [nthcPlots, setNTHCPlots] = useState();
   const [legonHillsPlots, setLegonHillsPlots] = useState();
   const [adensePlots, setAdensePlots] = useState();
+  const [berekusoPlots, setBerekusoPlots] = useState();
   const [usersList, setUsersList] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,6 +29,7 @@ const Dashboard = () => {
     fetchPlots("dar_es_salaam");
     fetchPlots("nthc");
     fetchPlots("legon_hills");
+    fetchPlots("berekuso");
     fetchUsers();
   }, []);
   
@@ -55,6 +57,10 @@ const Dashboard = () => {
       }
       if (databaseName === "nthc") {
         setNTHCPlots(count);
+        setLoading(false);
+      }
+      if (databaseName === "berekuso") {
+        setBerekusoPlots(count);
         setLoading(false);
       }
     } catch (error) {
@@ -110,12 +116,18 @@ const Dashboard = () => {
           >
             NTHC(Santeo)
           </Link>
-          <Link
-            href="/dashboard/dar-es-salaam"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Dar Es Salaam
-          </Link>
+            <Link
+              href="/dashboard/dar-es-salaam"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Dar Es Salaam
+            </Link>
+            <Link
+              href="/dashboard/berekuso"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Berekuso
+            </Link>
         </nav>
       </header>
       <main className="flex flex-1 flex-col gap-3 mt-5">
@@ -212,7 +224,30 @@ const Dashboard = () => {
               </Link>
             </CardContent>
           </Card>
-        </div>
+          <Card x-chunk="dashboard-01-chunk-3">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Plots at Berekuso
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {loading && (
+                <div className="flex flex-col justify-center items-center">
+                  <Loader size={12} className="animate-spin" />
+                </div>
+              )}
+              <div className="text-2xl font-bold">
+                {berekusoPlots?.toLocaleString()}
+              </div>
+              <Link
+                className="text-primary text-xs mt-2 font-medium"
+                href={"/dashboard/berekuso"}
+              >
+                View Plots
+              </Link>
+            </CardContent>
+          </Card>   
+          </div>
         <div className="grid gap-4 md:gap-8 grid-cols-1 mt-3">
           <Card x-chunk="dashboard-01-chunk-5">
             <CardHeader>

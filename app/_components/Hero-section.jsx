@@ -106,6 +106,12 @@ const Hero = () => {
           >
             Yabi (Kumasi)
           </Link>
+          <Link 
+            className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-lg" 
+            href="/berekuso"
+          >
+            Berekuso (Eastern Region Tophill)
+          </Link>
         </div>
         
         {/* Stats section with enhanced styling */}

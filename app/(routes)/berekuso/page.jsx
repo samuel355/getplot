@@ -2,19 +2,19 @@
 import Footer from "@/app/_components/Footer";
 import Map from "@/app/_components/Map";
 import { supabase } from "@/utils/supabase/client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Header from "@/app/_components/Header";
 
 const page = () => {
   const [plots, setPlots] = useState([]);
   const [center, setCenter] = useState({
-    lng: -0.21723152299995263,
-    lat: 5.7614082710000503,
+    lng: -0.21607824999995273,
+    lat: 5.7649314260000324,
   });
-
 
   useEffect(() => {
     getPlost();
+
   }, []);
 
   //Fetch Plots from supabase

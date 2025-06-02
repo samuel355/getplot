@@ -73,6 +73,10 @@ export function ExpressInterestDialog({
     databaseName = "yabi";
     databaseInterest = "yabi_interests";
   }
+  if (table && table === "berekuso") {
+    databaseName = "berekuso";
+    databaseInterest = "berekuso_interests";
+  }
 
   useEffect(() => {
     if (plotId && databaseName) {

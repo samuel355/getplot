@@ -41,7 +41,7 @@ const SuccessPage = () => {
                 />
               </svg>
               <Link
-                href="/legon-hills"
+                href="/berekuso"
                 class="text-sm font-medium text-white mt-3"
               >
                 {" "}

@@ -174,7 +174,7 @@ export default function NotificationsPage() {
                   <span className="capitalize">
                     {notification.type.replace('_', ' ')}
                   </span>
-                </div>
+                </div> 
               </TableCell>
               <TableCell>
                 {notification.details || getNotificationMessage(notification)}

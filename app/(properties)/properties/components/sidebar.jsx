@@ -45,7 +45,8 @@ export default function Sidebar() {
   
   // Admin navigation with new routes
   const adminNavigation = [
-    { name: 'Dashboard', href: '/properties', icon: LayoutDashboard },
+    { name: 'Properties Dashboard', href: '/properties', icon: LayoutDashboard },
+    { name: 'Lands Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'All Properties', href: '/properties/all-properties', icon: Building },
     { name: 'Advanced Search', href: '/properties/search', icon: Search },
     { name: 'Users', href: '/properties/users', icon: Users },

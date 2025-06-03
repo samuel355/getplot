@@ -74,7 +74,7 @@ const Sidebar = () => {
           <Link href={"/"} className="flex items-center gap-2">
             <Globe className="w-4 h-4 ml-2" size={16} /> <span>Website</span>
           </Link>
-          <Link href={"properties/all-properties"} className="flex items-center gap-2">
+          <Link href={"/properties/all-properties"} className="flex items-center gap-2">
             <LayoutDashboard className="w-4 h-4 ml-2" size={16} /> <span>Properties Dashboard</span>
           </Link>
 

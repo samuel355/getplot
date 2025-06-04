@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { supabase } from "@/utils/supabase/client";
 import { Building2 } from "lucide-react";
 import Link from "next/link";
@@ -88,6 +88,12 @@ const Footer = () => {
             <h2 className="text-xl font-semibold">Quick Links</h2>
             <ul>
               <li className="my-2 text-muted">
+                <Link href="/market-place" className="text-sm hover:underline">
+                  {" "}
+                  Market Place
+                </Link>
+              </li>
+              <li className="my-2 text-muted">
                 <Link href="/contact-us" className="text-sm hover:underline">
                   {" "}
                   Contact Us
@@ -149,7 +155,12 @@ const Footer = () => {
         className="py-2 mt-3 text-center text-muted border-dark"
         style={{ borderTop: "1px solid grey" }}
       >
-        <p className="text-sm mt-6">Get One Plot | Powered by <a href="www.landandhomesconsult.com" target="_blanl">Land and Homes Consult</a></p>
+        <p className="text-sm mt-6">
+          Get One Plot | Powered by{" "}
+          <a href="www.landandhomesconsult.com" target="_blanl">
+            Land and Homes Consult
+          </a>
+        </p>
       </div>
     </div>
   );

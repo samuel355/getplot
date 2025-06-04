@@ -104,7 +104,7 @@ const usePropertyStore = create(
           return {
             success: false,
             isFavorite,
-            message: "User not authenticated",
+            message: "Sign in to save this property",
           };
         }
 

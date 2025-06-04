@@ -27,6 +27,7 @@ const PropertyCard = ({ property, isCompact = false }) => {
 
     try {
       const result = await toggleFavorite(property.id, user?.id);
+      console.log(user)
 
       if (result.success) {
         if (result.isFavorite) {
@@ -91,25 +92,27 @@ const PropertyCard = ({ property, isCompact = false }) => {
             />
           </div>
           <div className="absolute top-2 right-2">
-            <button
-              onClick={handleFavoriteClick}
-              className={`absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md hover:scale-110 transition-all duration-300 ${
-                isAnimating ? "scale-125" : ""
-              }`}
-              aria-label={
-                isFavorite ? "Remove from favorites" : "Add to favorites"
-              }
-            >
-              {isFavorite ? (
-                <HeartSolidIcon
-                  className={`h-5 w-5 text-red-500 ${
-                    isAnimating ? "animate-pulse" : ""
-                  }`}
-                />
-              ) : (
-                <HeartIcon className="h-5 w-5 text-gray-600" />
-              )}
-            </button>
+            {user && (
+              <button
+                onClick={handleFavoriteClick}
+                className={`absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md hover:scale-110 transition-all duration-300 ${
+                  isAnimating ? "scale-125" : ""
+                }`}
+                aria-label={
+                  isFavorite ? "Remove from favorites" : "Add to favorites"
+                }
+              >
+                {isFavorite ? (
+                  <HeartSolidIcon
+                    className={`h-5 w-5 text-red-500 ${
+                      isAnimating ? "animate-pulse" : ""
+                    }`}
+                  />
+                ) : (
+                  <HeartIcon className="h-5 w-5 text-gray-600" />
+                )}
+              </button>
+            )}
           </div>
         </div>
 
@@ -232,17 +235,19 @@ const PropertyCard = ({ property, isCompact = false }) => {
         )}
 
         {/* Favorite button */}
-        <button
-          onClick={handleFavoriteClick}
-          className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md hover:scale-110 transition-transform"
-          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-        >
-          {isFavorite ? (
-            <HeartSolidIcon className="h-5 w-5 text-red-500" />
-          ) : (
-            <HeartIcon className="h-5 w-5 text-gray-600" />
-          )}
-        </button>
+        {user && (
+          <button
+            onClick={handleFavoriteClick}
+            className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md hover:scale-110 transition-transform"
+            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          >
+            {isFavorite ? (
+              <HeartSolidIcon className="h-5 w-5 text-red-500" />
+            ) : (
+              <HeartIcon className="h-5 w-5 text-gray-600" />
+            )}
+          </button>
+        )}
 
         {/* Featured badge */}
         {property.featured && (

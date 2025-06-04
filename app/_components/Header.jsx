@@ -350,7 +350,7 @@ const Header = () => {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                {/* <NavigationMenuItem>
+                <NavigationMenuItem>
                   <Link
                     href="/market-place"
                     className={cn(
@@ -360,7 +360,7 @@ const Header = () => {
                   >
                     Market Place
                   </Link>
-                </NavigationMenuItem> */}
+                </NavigationMenuItem>
                 
                 <NavigationMenuItem>
                   <Link
@@ -490,7 +490,7 @@ const Header = () => {
 
                   <DropdownMenuSeparator />
                   
-                  {/* <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild>
                     <Link
                       href="/market-place"
                       className={cn(
@@ -500,7 +500,7 @@ const Header = () => {
                     >
                       Market Place
                     </Link>
-                  </DropdownMenuItem> */}
+                  </DropdownMenuItem>
 
                   <DropdownMenuItem asChild>
                     <Link

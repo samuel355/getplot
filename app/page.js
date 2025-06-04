@@ -24,10 +24,10 @@ const Home = () => {
       <Header />
       <main className="flex-grow pt-8 md:pt-20 lg:pt-24">
         <Hero />
-        {/* <div className="w-full px-4 py-12">
+        <div className="w-full px-4 py-12">
           <h2 className="text-3xl font-bold mb-8 text-center">Featured Properties</h2>
           <PropertyCarousel />
-        </div> */}
+        </div>
       </main>
       <Footer />
     </div>

@@ -48,14 +48,14 @@ const Sidebar = () => {
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
-      id: 5,
+      id: 6,
       href: "/dashboard/yabi",
       title: "Yabi",
       query: "yabi",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
-      id: 6,
+      id: 7,
       href: "/dashboard/berekuso",
       title: "Berekuso",
       query: "berekuso",

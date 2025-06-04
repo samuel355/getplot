@@ -99,7 +99,6 @@ export default function PropertyDetailPage({ params }) {
         .from('properties')
         .delete()
         .eq('id', id)
-        .eq('user_id', user.id);
       
       if (error) throw error;
       
@@ -409,7 +408,7 @@ function StatusDetail({ status }) {
       title: "Sold",
       description: "This property has been marked as sold."
     }
-  };
+  };  
   
   const info = statusInfo[status] || statusInfo.pending;
   

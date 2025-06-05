@@ -1,6 +1,6 @@
+
 import { ClerkProvider } from "@clerk/nextjs";
 import { PrimeReactProvider } from "primereact/api";
-
 import "./globals.css";
 import Provider from "./Provider";
 import { Toaster } from "@/components/ui/sonner";

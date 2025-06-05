@@ -1,0 +1,19 @@
+{
+  "extends": "next/core-web-vitals",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "globals": {
+    "process": "readonly",
+    "FormData": "readonly",
+    "fetch": "readonly",
+    "console":"readonly"
+  },
+  "rules": {
+    "no-unused-vars": ["error", {
+      "varsIgnorePattern": "^[A-Z]",
+      "argsIgnorePattern": "^_"
+    }]
+  }
+}

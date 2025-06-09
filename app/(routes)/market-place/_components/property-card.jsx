@@ -27,7 +27,7 @@ const PropertyCard = ({ property, isCompact = false }) => {
 
     try {
       const result = await toggleFavorite(property.id, user?.id);
-      console.log(user)
+      console.log(user);
 
       if (result.success) {
         if (result.isFavorite) {
@@ -145,7 +145,17 @@ const PropertyCard = ({ property, isCompact = false }) => {
                 </>
               )}
             </span>
-            <span className="text-gray-600 text-xs">{property.type}</span>
+            <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+              {property.type === "house"
+                ? property.listing_type === "airbnb"
+                  ? "Airbnb"
+                  : `House for ${
+                      property.listing_type === "rent" ? "Rent" : "Sale"
+                    }`
+                : `Land for ${
+                    property.listing_type === "rent" ? "Rent" : "Sale"
+                  }`}
+            </span>
           </div>
           <button
             onClick={(e) => {
@@ -239,7 +249,9 @@ const PropertyCard = ({ property, isCompact = false }) => {
           <button
             onClick={handleFavoriteClick}
             className="absolute top-2 right-2 bg-white rounded-full p-1.5 shadow-md hover:scale-110 transition-transform"
-            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            aria-label={
+              isFavorite ? "Remove from favorites" : "Add to favorites"
+            }
           >
             {isFavorite ? (
               <HeartSolidIcon className="h-5 w-5 text-red-500" />

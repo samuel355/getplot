@@ -492,7 +492,9 @@ const PropertyMap = ({ properties, loading }) => {
                               <h3 className="text-sm font-medium text-gray-900">{property.title}</h3>
                               <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
                                 {property.type === 'house' 
-                                  ? `House for ${property.listing_type === 'rent' ? 'Rent' : 'Sale'}`
+                                  ? (property.listing_type === 'airbnb'
+                                    ? 'Airbnb'
+                                    : `House for ${property.listing_type === 'rent' ? 'Rent' : 'Sale'}`)
                                   : `Land for ${property.listing_type === 'rent' ? 'Rent' : 'Sale'}`}
                               </span>
                             </div>

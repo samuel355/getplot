@@ -1,12 +1,13 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Globe, LandPlot, LayoutDashboard, Users2 } from "lucide-react";
+import { Globe, LandPlot, LayoutDashboard, Users2, LogOut, X } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { UserButton, useUser, useClerk } from "@clerk/nextjs";
 
 const Sidebar = () => {
   const { user } = useUser();
+  const { signOut } = useClerk();
   const path = usePathname();
   const searchParams = useSearchParams();
   const search = searchParams.get("table");
@@ -63,150 +64,200 @@ const Sidebar = () => {
     },
   ];
 
-  return (
-    <div className="fixed top-0 border-r bg-white">
-      <div className="h-screen flex flex-col justify-between p-4 w-full ">
-        <div>
-          <div className="border-b pb-3">
-            <h2 className="text-primary text-xl font-semibold">SITES DASHBOARD</h2>
+  const Button = ({ children, onClick, className }) => (
+    <button onClick={onClick} className={className}>
+      {children}
+    </button>
+  );
+
+  const sidebarContent = (
+    <div className="flex flex-col h-screen">
+      <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 shrink-0">
+        <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
+          <LayoutDashboard className="h-6 w-6" />
+          <span>SITES DASHBOARD</span>
+        </Link>
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        <nav className="grid items-start px-2 lg:px-4 gap-1 py-2">
+          <div className="my-4">
+            <Link
+              href={"/"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              <Globe className="h-4 w-4" /> <span>Website</span>
+            </Link>
+            <Link
+              href={"/properties/all-properties"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/properties/all-properties"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              <LayoutDashboard className="h-4 w-4" />{" "}
+              <span>Properties Dashboard</span>
+            </Link>
           </div>
 
-          <Link href={"/"} className="flex items-center gap-2">
-            <Globe className="w-4 h-4 ml-2" size={16} /> <span>Website</span>
-          </Link>
-          <Link href={"/properties/all-properties"} className="flex items-center gap-2">
-            <LayoutDashboard className="w-4 h-4 ml-2" size={16} /> <span>Properties Dashboard</span>
-          </Link>
+          <hr className="my-2" />
 
-          <hr />
-
-          <nav className="pt-2">
-            <ul className="flex flex-col gap-1">
-              {menuLinks.map((link) => (
-                <li
+          <div className="my-4">
+            {menuLinks.map((link) => {
+              const isActive = path === link.href || search?.includes(link?.query);
+              return (
+                <Link
                   key={link.id}
-                  className={`p-1 hover:bg-gray-100 rounded-sm text-sm ${
-                    path === link.href && "bg-gray-100"
+                  href={link.href}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
-                  <Link
-                    href={link.href}
-                    className={`relative flex items-center ${
-                      path === link.href ||
-                      (search?.includes(link?.query) && "font-semibold")
-                    }`}
-                  >
-                    {link.icon}
-                    {path === link.href && (
-                      <span className="absolute w-[3px] h-4 bg-primary left-0 top-[4px]"></span>
-                    )}
-                    <span className="ml-2">{link.title}</span>
-                  </Link>
-                </li>
-              ))}
-
-              <li
-                className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-5 ${
-                  path === "/dashboard/users" && "bg-gray-100"
-                }`}
-              >
-                <Link
-                  href={"/dashboard/users"}
-                  className="flex gap-2 items-center"
-                >
-                  <Users2 className="w-4 h-4" /> <span>Users</span>
+                  {link.icon}
+                  {link.title}
                 </Link>
-              </li>
-              <hr className="my-2" />
-              <li
-                className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-5 ${
-                  path === "/dashboard/trabuom-interested-clients" &&
-                  "bg-gray-100"
-                }`}
-              >
-                <Link
-                  href={"/dashboard/trabuom-interested-clients"}
-                  className="flex gap-2 items-center"
-                >
-                  Trabuom Interested clients
-                </Link>
-              </li>
-              <li
-                className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                  path === "/dashboard/kwadaso-interested-clients" &&
-                  "bg-gray-100"
-                }`}
-              >
-                <Link
-                  href={"/dashboard/kwadaso-interested-clients"}
-                  className="flex gap-2 items-center"
-                >
-                  Kwadaso Interested clients
-                </Link>
-              </li>
-              <li
-                className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                  path === "/dashboard/legon-hills-interested-clients" &&
-                  "bg-gray-100"
-                }`}
-              >
-                <Link
-                  href={"/dashboard/legon-hills-interested-clients"}
-                  className="flex gap-2 items-center"
-                >
-                  Legon Hills Interested clients
-                </Link>
-              </li>
-              <li
-                className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                  path === "/dashboard/adense-interested-clients" &&
-                  "bg-gray-100"
-                }`}
-              >
-                <Link
-                  href={"/dashboard/adense-interested-clients"}
-                  className="flex gap-2 items-center"
-                >
-                  Adense Interested clients
-                </Link>
-              </li>
-              <li
-                className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                  path === "/dashboard/yabi-interested-clients" && "bg-gray-100"
-                }`}
-              >
-                <Link
-                  href={"/dashboard/yabi-interested-clients"}
-                  className="flex gap-2 items-center"
-                >
-                  Yabi Interested clients
-                </Link>
-              </li>
-              <li
-                className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                  path === "/dashboard/berekuso-interested-clients" && "bg-gray-100"
-                }`}
-              >
-                <Link
-                  href={"/dashboard/berekuso-interested-clients"}
-                  className="flex gap-2 items-center"
-                >
-                  Berekuso Interested clients
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-        <div className="flex flex-col gap-2 hover:bg-gray-100 p-2 rounded-md w-full">
-          <div className="flex items-center gap-2">
-            <UserButton />
-            <p className="text-left">{user?.fullName}</p>
+              );
+            })}
           </div>
-          <p className=" text-xs">{user?.emailAddresses[0]?.emailAddress}</p>
+
+          <hr className="my-2" />
+
+          <div className="my-4">
+            <Link
+              href={"/dashboard/users"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/dashboard/users"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              <Users2 className="h-4 w-4" /> <span>Users</span>
+            </Link>
+            <h2 className="mb-2 mt-4 px-1 text-xs font-semibold tracking-tight text-muted-foreground">
+              Interested Clients
+            </h2>
+            <Link
+              href={"/dashboard/trabuom-interested-clients"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/dashboard/trabuom-interested-clients"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Trabuom Interested clients
+            </Link>
+            <Link
+              href={"/dashboard/kwadaso-interested-clients"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/dashboard/kwadaso-interested-clients"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Kwadaso Interested clients
+            </Link>
+            <Link
+              href={"/dashboard/legon-hills-interested-clients"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/dashboard/legon-hills-interested-clients"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Legon Hills Interested clients
+            </Link>
+            <Link
+              href={"/dashboard/adense-interested-clients"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/dashboard/adense-interested-clients"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Adense Interested clients
+            </Link>
+            <Link
+              href={"/dashboard/yabi-interested-clients"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/dashboard/yabi-interested-clients"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Yabi Interested clients
+            </Link>
+            <Link
+              href={"/dashboard/berekuso-interested-clients"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/dashboard/berekuso-interested-clients"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Berekuso Interested clients
+            </Link>
+          </div>
+        </nav>
+      </div>
+
+      <div className="p-4 border-t shrink-0">
+        <div className="flex items-center gap-3 py-2">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
+            <img
+              src={user?.imageUrl}
+              alt={user?.fullName || "User"}
+              className="rounded-full h-8 w-8"
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium leading-none">
+              {user?.fullName || user?.username}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {user?.emailAddresses[0]?.emailAddress}
+            </span>
+          </div>
         </div>
+        <Button
+          className="mt-2 w-full justify-start flex gap-2 p-2 rounded-md hover:bg-gray-100"
+          onClick={() => signOut()}
+        >
+          <LogOut className="h-4 w-4" />
+          Log out
+        </Button>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      <div className="hidden md:block md:w-64 border-r bg-muted/40 fixed h-screen z-10">
+        {sidebarContent}
+      </div>
+
+      <div className="hidden md:block md:w-64 flex-shrink-0"></div>
+
+      {/* Mobile sidebar overlay - will be implemented when useSidebar context is available */}
+      {/* {isMobileOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div
+            className="fixed inset-0 bg-black/50"
+            onClick={() => setIsMobileOpen(false)}
+          ></div>
+
+          <div className="fixed inset-y-0 left-0 w-64 border-r bg-background">
+            {sidebarContent}
+          </div>
+        </div>
+      )} */}
+    </>
   );
 };
 

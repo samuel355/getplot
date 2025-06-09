@@ -105,7 +105,7 @@ const PropertyListHeader = ({ propertyCount, viewMode, setViewMode, filters, onF
           </button>
           <button
             onClick={() => setViewMode('map')}
-            className={`px-3 py-2 rounded-r-md ${
+            className={`hidden sm:block px-3 py-2 rounded-r-md ${
               viewMode === 'map' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-50'
             }`}
             title="Map View"

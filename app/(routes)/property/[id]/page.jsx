@@ -51,6 +51,8 @@ import SimilarProperties from "@/app/_components/property/SimilarProperties";
 import DocumentsTab from "@/app/_components/property/DocumentsTab";
 import { supabase } from "@/utils/supabase/client";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import ImageViewerModal from "@/app/_components/property/ImageViewerModal";
 
 // Form validation schema
 const inquirySchema = z.object({
@@ -88,6 +90,7 @@ export default function PropertyPage() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const { toast } = useToast();
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
 
   const {
     register,
@@ -316,6 +319,26 @@ export default function PropertyPage() {
     }
   };
 
+  const handleOpenImageViewer = () => {
+    setIsImageViewerOpen(true);
+  };
+
+  const handleCloseImageViewer = () => {
+    setIsImageViewerOpen(false);
+  };
+
+  const handleNavigateImages = (newIndex) => {
+    if (selectedProperty?.images) {
+      let nextIndex = newIndex;
+      if (newIndex < 0) {
+        nextIndex = selectedProperty.images.length - 1;
+      } else if (newIndex >= selectedProperty.images.length) {
+        nextIndex = 0;
+      }
+      setSelectedImage(nextIndex);
+    }
+  };
+
   const onSubmit = async (data) => {
     try {
       setIsSubmitting(true);
@@ -526,6 +549,7 @@ export default function PropertyPage() {
                     ))}
                   </div>
                 )}
+                <Button size="sm" variant="outline" className="mt-4" onClick={handleOpenImageViewer}>View Full Image</Button>
             </div>
 
             {/* Property details */}
@@ -575,7 +599,7 @@ export default function PropertyPage() {
                   </button>
                 </div>
               </div>
-
+              
               <Tabs defaultValue="overview" className="w-full">
                 <TabsList className="grid w-full grid-cols-5">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -820,6 +844,15 @@ export default function PropertyPage() {
         </div>
       </main>
       <Footer />
+      {selectedProperty?.images && ( selectedProperty.images.length > 0) && (
+        <ImageViewerModal
+          images={selectedProperty.images}
+          currentIndex={selectedImage}
+          isOpen={isImageViewerOpen}
+          onClose={handleCloseImageViewer}
+          onNavigate={handleNavigateImages}
+        />
+      )}
     </GoogleMapsProvider>
   );
 }

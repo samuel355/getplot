@@ -511,17 +511,18 @@ export default function PropertyPage() {
                   {selectedProperty?.listing_type === "airbnb"
                     ? "Airbnb for short stay"
                     : selectedProperty?.type === "house"
-                    ? `House for ${
-                        selectedProperty.listing_type === "rent"
-                          ? "Rent"
-                          : "Sale"
-                      }`
-                    : `Land for ${
-                        selectedProperty?.listing_type === "rent"
-                          ? "Rent"
-                          : "Sale"
-                      }`}
+                    ? `House for ${selectedProperty.listing_type === "rent" ? "Rent" : "Sale"}`
+                    : `Land for ${selectedProperty?.listing_type === "rent" ? "Rent" : "Sale"}`}
                 </div>
+
+                {/* View Full Image Button */}
+                <Button
+                  size="sm"
+                  className="absolute bottom-4 right-4 bg-primary text-white hover:bg-primary/70"
+                  onClick={handleOpenImageViewer}
+                >
+                  View Full Image
+                </Button>
               </div>
 
               {/* Thumbnail images */}
@@ -532,25 +533,21 @@ export default function PropertyPage() {
                       <button
                         key={index}
                         onClick={() => setSelectedImage(index)}
-                        className={`flex-shrink-0 w-24 h-16 rounded-md overflow-hidden ${
-                          selectedImage === index
+                        className={`flex-shrink-0 w-24 h-16 rounded-md overflow-hidden ${selectedImage === index
                             ? "ring-2 ring-primary"
                             : "opacity-70 hover:opacity-100"
-                        }`}
+                          }`}
                       >
                         <img
                           src={image}
-                          alt={`${selectedProperty?.title} - image ${
-                            index + 1
-                          }`}
+                          alt={`${selectedProperty?.title} - image ${index + 1}`}
                           className="w-full h-full object-cover"
                         />
                       </button>
                     ))}
                   </div>
                 )}
-                <Button size="sm" variant="outline" className="mt-4" onClick={handleOpenImageViewer}>View Full Image</Button>
-            </div>
+              </div>
 
             {/* Property details */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">

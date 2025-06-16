@@ -32,7 +32,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Tag, Ruler, Bed, Bath, Calendar, CheckCircle, FileText } from "lucide-react";
+import {
+  Tag,
+  Ruler,
+  Bed,
+  Bath,
+  Calendar,
+  CheckCircle,
+  FileText,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@clerk/nextjs";
 import OverviewTab from "@/app/_components/property/OverviewTab";
@@ -42,6 +50,7 @@ import LocationTab from "@/app/_components/property/LocationTab";
 import SimilarProperties from "@/app/_components/property/SimilarProperties";
 import DocumentsTab from "@/app/_components/property/DocumentsTab";
 import { supabase } from "@/utils/supabase/client";
+import Image from "next/image";
 
 // Form validation schema
 const inquirySchema = z.object({
@@ -343,8 +352,8 @@ export default function PropertyPage() {
             inquirer_name: data.name,
             inquirer_email: data.email,
             inquirer_phone: data.phone,
-            message: data.message
-          }
+            message: data.message,
+          },
         });
 
       if (notificationError) throw notificationError;
@@ -404,12 +413,16 @@ export default function PropertyPage() {
 
             {/* Property image gallery */}
             <div className="mb-6">
-              <div className="relative h-96 rounded-lg overflow-hidden mb-2">
-                <img
-                  src={selectedProperty?.images[selectedImage]}
-                  alt={selectedProperty?.title}
-                  className="w-full h-full object-cover"
-                />
+              <div className="relative h-[30rem] rounded-lg overflow-hidden mb-2">
+                <div className="w-full h-full bg-gray-100 rounded">
+                  <Image
+                    src={selectedProperty?.images[selectedImage] || "/placeholder-property.jpg"}
+                    alt={selectedProperty?.title}
+                    width={500}
+                    height={500}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
                 {/* Image navigation buttons (only if more than one image) */}
                 {selectedProperty?.images &&
@@ -476,10 +489,14 @@ export default function PropertyPage() {
                     ? "Airbnb for short stay"
                     : selectedProperty?.type === "house"
                     ? `House for ${
-                        selectedProperty.listing_type === "rent" ? "Rent" : "Sale"
+                        selectedProperty.listing_type === "rent"
+                          ? "Rent"
+                          : "Sale"
                       }`
                     : `Land for ${
-                        selectedProperty?.listing_type === "rent" ? "Rent" : "Sale"
+                        selectedProperty?.listing_type === "rent"
+                          ? "Rent"
+                          : "Sale"
                       }`}
                 </div>
               </div>
@@ -581,7 +598,7 @@ export default function PropertyPage() {
                 </TabsContent>
 
                 <TabsContent value="location" className="pt-4">
-                  <LocationTab 
+                  <LocationTab
                     property={selectedProperty}
                     directions={directions}
                     startLocation={startLocation}
@@ -743,7 +760,6 @@ export default function PropertyPage() {
                   <h4 className="font-medium">
                     {/* {selectedProperty?.user_email} */}
                     CTO (Get One Plot)
-                    
                   </h4>
                   <p className="text-sm text-gray-600 font-medium">
                     landandhomesconsult@gmail.com

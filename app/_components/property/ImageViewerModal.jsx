@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import { XMarkIcon, ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { Loader2 } from "lucide-react";
 
 const ImageViewerModal = ({ images, currentIndex, isOpen, onClose, onNavigate }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const handleKeyDown = useCallback(
     (event) => {
       if (!isOpen) return;
@@ -33,6 +35,11 @@ const ImageViewerModal = ({ images, currentIndex, isOpen, onClose, onNavigate })
     };
   }, [handleKeyDown]);
 
+  // Reset loading state when current image changes
+  useEffect(() => {
+    setIsLoading(true);
+  }, [currentIndex]);
+
   if (!isOpen || !images || images.length === 0) {
     return null;
   }
@@ -51,13 +58,19 @@ const ImageViewerModal = ({ images, currentIndex, isOpen, onClose, onNavigate })
 
         <DialogDescription className="sr-only">Image viewer modal, use arrow keys to navigate images.</DialogDescription>
 
-        <div className="relative w-full h-full flex items-center justify-center">
+        <div className="relative w-full h-full flex items-center justify-center bg-gray-700">
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70 text-white text-lg z-20">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          )}
           <Image
             src={currentImage}
             alt={`Property image ${currentIndex + 1}`}
             layout="fill"
             objectFit="contain"
-            className="rounded-lg"
+            className={`rounded-lg transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+            onLoadingComplete={() => setIsLoading(false)}
           />
 
           {images.length > 1 && (

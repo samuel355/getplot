@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/utils/supabase/client";
+import Image from "next/image";
 
 const PropertyCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -17,7 +18,9 @@ const PropertyCarousel = () => {
         setLoading(true);
         const { data, error } = await supabase
           .from("properties")
-          .select("id, title, type, price, location, size, bedrooms, bathrooms, images, status, listing_type, rental_price")
+          .select(
+            "id, title, type, price, location, size, bedrooms, bathrooms, images, status, listing_type, rental_price"
+          )
           .eq("status", "approved")
           .order("created_at", { ascending: false })
           .limit(9);
@@ -35,14 +38,18 @@ const PropertyCarousel = () => {
   }, []);
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex + itemsPerPage >= properties.length ? 0 : prevIndex + itemsPerPage
+    setCurrentIndex((prevIndex) =>
+      prevIndex + itemsPerPage >= properties.length
+        ? 0
+        : prevIndex + itemsPerPage
     );
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex - itemsPerPage < 0 ? properties.length - itemsPerPage : prevIndex - itemsPerPage
+    setCurrentIndex((prevIndex) =>
+      prevIndex - itemsPerPage < 0
+        ? properties.length - itemsPerPage
+        : prevIndex - itemsPerPage
     );
   };
 
@@ -68,32 +75,45 @@ const PropertyCarousel = () => {
     return null;
   }
 
-  const visibleProperties = properties.slice(currentIndex, currentIndex + itemsPerPage);
+  const visibleProperties = properties.slice(
+    currentIndex,
+    currentIndex + itemsPerPage
+  );
 
   return (
     <div className="relative">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {visibleProperties.map((property) => (
-          <div key={property.id} className="border rounded-lg overflow-hidden bg-white shadow-lg">
+          <div
+            key={property.id}
+            className="border rounded-lg overflow-hidden bg-white shadow-lg"
+          >
             {/* Property Image */}
-            <div className="relative h-48">
-              <img
-                src={property.images?.[0]?.url || "/placeholder-property.jpg"}
-                alt={property.title}
-                className="w-full h-full object-cover"
-              />
+            <div className="relative">
+              <div className="w-full aspect-[4/3] bg-gray-100 rounded overflow-hidden">
+                <Image
+                  src={property.images?.[0]?.url || "/placeholder-property.jpg"}
+                  alt={property.title}
+                  fill
+                  className="object-cover w-full h-full"
+                />
+              </div>
               <div className="absolute top-2 right-2">
                 <span className="bg-black/70 text-white text-xs px-2 py-1 rounded-md capitalize">
-                  {property.listing_type === 'rent' ? 'For Rent' : 
-                   property.listing_type === 'airbnb' ? 'Airbnb' : 
-                   property.type}
+                  {property.listing_type === "rent"
+                    ? "For Rent"
+                    : property.listing_type === "airbnb"
+                    ? "Airbnb"
+                    : property.type}
                 </span>
               </div>
             </div>
 
             {/* Property Details */}
             <div className="p-4">
-              <h3 className="font-semibold text-lg truncate">{property.title}</h3>
+              <h3 className="font-semibold text-lg truncate">
+                {property.title}
+              </h3>
               <p className="text-sm text-gray-600 truncate flex items-center mt-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -120,10 +140,14 @@ const PropertyCarousel = () => {
 
               <div className="flex justify-between items-center mt-2">
                 <div className="font-medium">
-                  {property.listing_type === 'rent' ? (
-                    <>GHS {Number(property.rental_price).toLocaleString()}/month</>
-                  ) : property.listing_type === 'airbnb' ? (
-                    <>GHS {Number(property.rental_price).toLocaleString()}/night</>
+                  {property.listing_type === "rent" ? (
+                    <>
+                      GHS {Number(property.rental_price).toLocaleString()}/month
+                    </>
+                  ) : property.listing_type === "airbnb" ? (
+                    <>
+                      GHS {Number(property.rental_price).toLocaleString()}/night
+                    </>
                   ) : (
                     <>GHS {Number(property.price).toLocaleString()}</>
                   )}
@@ -202,12 +226,16 @@ const PropertyCarousel = () => {
       {/* Dots */}
       {properties.length > itemsPerPage && (
         <div className="flex justify-center gap-2 mt-6">
-          {Array.from({ length: Math.ceil(properties.length / itemsPerPage) }).map((_, index) => (
+          {Array.from({
+            length: Math.ceil(properties.length / itemsPerPage),
+          }).map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index * itemsPerPage)}
               className={`w-2 h-2 rounded-full transition-colors ${
-                index === Math.floor(currentIndex / itemsPerPage) ? "bg-primary" : "bg-gray-300"
+                index === Math.floor(currentIndex / itemsPerPage)
+                  ? "bg-primary"
+                  : "bg-gray-300"
               }`}
             />
           ))}
@@ -217,4 +245,4 @@ const PropertyCarousel = () => {
   );
 };
 
-export default PropertyCarousel; 
+export default PropertyCarousel;

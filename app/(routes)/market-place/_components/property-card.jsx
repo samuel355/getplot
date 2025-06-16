@@ -8,6 +8,7 @@ import { favoriteToasts } from "@/utils/toast";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import Image from "next/image";
 
 const PropertyCard = ({ property, isCompact = false }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -84,10 +85,11 @@ const PropertyCard = ({ property, isCompact = false }) => {
       <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl group">
         <div className="relative">
           {/* Property image */}
-          <div className="h-48 overflow-hidden">
-            <img
-              src={property.images[currentImageIndex]}
+          <div className="w-full aspect-[6/9] bg-gray-100 rounded">
+            <Image
+              src={property.images[currentImageIndex] || "/placeholder-property.jpg"}
               alt={property.title}
+              fill
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
@@ -190,10 +192,11 @@ const PropertyCard = ({ property, isCompact = false }) => {
           </span>
         </div>
         {/* Property image */}
-        <div className="h-48 overflow-hidden">
-          <img
+        <div className="w-full aspect-[4/3] bg-gray-100 rounded overflow-hidden">
+          <Image
             src={property.images[currentImageIndex]}
             alt={property.title}
+            fill
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>

@@ -57,6 +57,21 @@ export default function MarketPlace() {
     
   }, [searchParams]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) { // Tailwind's 'md' breakpoint is 768px
+        setViewMode("grid");
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Call once on mount to set initial view mode
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
     // Fetch properties will be called after state update

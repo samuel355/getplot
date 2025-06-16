@@ -236,7 +236,7 @@ const usePropertyStore = create(
 
           // Only fetch approved properties
           query = query.eq("status", "approved");
-          console.log('filters->', filters);
+          //console.log('filters->', filters);
 
           // Add property type filter
           if (filters.propertyType !== "all") {

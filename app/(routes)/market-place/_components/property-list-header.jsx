@@ -96,7 +96,7 @@ const PropertyListHeader = ({ propertyCount, viewMode, setViewMode, filters, onF
         <div className="bg-white rounded-md shadow-sm ring-1 ring-inset ring-gray-300 flex">
           <button
             onClick={() => setViewMode('grid')}
-            className={`px-3 py-2 rounded-l-md ${
+            className={`hidden sm:block px-3 py-2 rounded-l-md ${
               viewMode === 'grid' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-50'
             }`}
             title="Grid View"

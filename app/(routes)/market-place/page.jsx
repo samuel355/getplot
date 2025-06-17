@@ -10,13 +10,14 @@ import PropertyGrid from "./_components/property-grid";
 import PropertyMap from "./_components/property-map";
 import Pagination from "./_components/pagination";
 import usePropertyStore from "@/store/usePropertyStore";
+import ListYourPropertyCallout from "@/app/_components/ListYourPropertyCallout";
 
 export default function MarketPlace() {
   const {
     properties,
     loading,
     filters,
-    currentPage,
+    currentPage, 
     totalPages,
     totalProperties,
     setFilters,
@@ -108,6 +109,8 @@ export default function MarketPlace() {
           filters={filters}
           onFilterChange={handleFilterChange}
         />
+
+        <ListYourPropertyCallout />
 
         {viewMode === "grid" && (
           <>

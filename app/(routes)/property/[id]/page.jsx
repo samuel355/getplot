@@ -53,6 +53,7 @@ import { supabase } from "@/utils/supabase/client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import ImageViewerModal from "@/app/_components/property/ImageViewerModal";
+import ListYourPropertyCallout from "@/app/_components/ListYourPropertyCallout";
 
 // Form validation schema
 const inquirySchema = z.object({
@@ -420,9 +421,11 @@ export default function PropertyPage() {
             className="flex items-center text-gray-600 hover:text-primary"
           >
             <ArrowLeftIcon className="h-5 w-5 mr-2" />
-            Back to search results
+            Back to Market Place
           </button>
         </div>
+        
+        <ListYourPropertyCallout />
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left column - property images and details */}

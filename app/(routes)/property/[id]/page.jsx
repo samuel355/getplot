@@ -424,7 +424,7 @@ export default function PropertyPage() {
             Back to Market Place
           </button>
         </div>
-        
+
         <ListYourPropertyCallout />
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -793,8 +793,9 @@ export default function PropertyPage() {
               <div className="flex flex-col space-y-2">
                 {/* ${selectedProperty?.contact} */}
                 <a
-                  href={`tel:0548554216`}
+                  href={`https://wa.me/233548554216`}
                   className="flex items-center text-gray-700 hover:text-primary"
+                  target="_blank"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

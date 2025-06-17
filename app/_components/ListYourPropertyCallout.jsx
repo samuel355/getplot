@@ -8,7 +8,7 @@ export default function ListYourPropertyCallout() {
         </p>
       </div>
       <a
-        href="/contact"
+        href="/contact-us"
         className="ml-4 px-4 py-2 text-center text-xs md:text-md bg-primary text-white rounded hover:bg-primary/90 transition"
       >
         Contact Us

@@ -151,13 +151,20 @@ export default function PropertyPage() {
     e.preventDefault();
     e.stopPropagation();
 
+    let priceText = "";
+    if (selectedProperty.listing_type === "rent") {
+      priceText = `GHS ${Number(selectedProperty.rental_price).toLocaleString()}/month`;
+    } else if (selectedProperty.listing_type === "airbnb") {
+      priceText = `GHS ${Number(selectedProperty.rental_price).toLocaleString()}/day`;
+    } else {
+      priceText = `GHS ${Number(selectedProperty.price).toLocaleString()}`;
+    }
+
     if (navigator.share) {
       navigator
         .share({
           title: selectedProperty.title,
-          text: `Check out this ${selectedProperty.type} in ${
-            selectedProperty.location
-          } for GHS ${selectedProperty.price.toLocaleString()}`,
+          text: `Check out this ${selectedProperty.type} in ${selectedProperty.location} for ${priceText}`,
           url: window.location.href,
         })
         .catch((error) => {

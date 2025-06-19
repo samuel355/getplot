@@ -1,7 +1,14 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Globe, LandPlot, LayoutDashboard, Users2, LogOut, X } from "lucide-react";
+import {
+  Globe,
+  LandPlot,
+  LayoutDashboard,
+  Users2,
+  LogOut,
+  X,
+} from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { UserButton, useUser, useClerk } from "@clerk/nextjs";
 
@@ -73,7 +80,10 @@ const Sidebar = () => {
   const sidebarContent = (
     <div className="flex flex-col h-screen">
       <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 shrink-0">
-        <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 font-semibold"
+        >
           <LayoutDashboard className="h-6 w-6" />
           <span>SITES DASHBOARD</span>
         </Link>
@@ -109,7 +119,8 @@ const Sidebar = () => {
 
           <div className="my-4">
             {menuLinks.map((link) => {
-              const isActive = path === link.href || search?.includes(link?.query);
+              const isActive =
+                path === link.href || search?.includes(link?.query);
               return (
                 <Link
                   key={link.id}

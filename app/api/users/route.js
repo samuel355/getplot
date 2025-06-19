@@ -1,6 +1,8 @@
-import { createClerkClient } from '@clerk/clerk-sdk-node'
+import { createClerkClient } from "@clerk/clerk-sdk-node";
 
-const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+const clerkClient = createClerkClient({
+  secretKey: process.env.CLERK_SECRET_KEY,
+});
 
 export async function GET(req) {
   try {
@@ -8,15 +10,15 @@ export async function GET(req) {
     return new Response(JSON.stringify(clientList), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     });
   }
 }

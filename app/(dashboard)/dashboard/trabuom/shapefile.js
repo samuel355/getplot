@@ -18531,8 +18531,6 @@ export const trabuomFeatures = [
       Plot_No: "187",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.16035068265,
     },
   },
@@ -18557,8 +18555,6 @@ export const trabuomFeatures = [
       Plot_No: "185",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.18185275942,
     },
   },
@@ -18580,8 +18576,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "183",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.16404206122,
     },
@@ -18608,8 +18602,6 @@ export const trabuomFeatures = [
       Plot_No: "189",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.32374203035,
     },
   },
@@ -18632,8 +18624,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "179",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.15315145976,
     },
@@ -18658,8 +18648,6 @@ export const trabuomFeatures = [
       Plot_No: "191",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.17175812652,
     },
   },
@@ -18682,8 +18670,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "KONKONSA LANE",
-
-      
 
       Area: 0.26439447512,
     },
@@ -18708,8 +18694,6 @@ export const trabuomFeatures = [
       Plot_No: "181",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.27730358503,
     },
   },
@@ -18730,8 +18714,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "EMMANUEL FRIMPONG STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -18755,8 +18737,6 @@ export const trabuomFeatures = [
       Plot_No: "33",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
 
-      
-
       Area: 0.26080343145,
     },
   },
@@ -18777,8 +18757,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "19",
       Street_Nam: "FATHER TAWIAH STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -18801,8 +18779,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "KONKONSA LANE",
 
-      
-
       Area: 0.27548156978,
     },
   },
@@ -18824,8 +18800,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "KONKONSA LANE",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -18846,8 +18820,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "EMMANUEL FRIMPONG STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -18873,8 +18845,6 @@ export const trabuomFeatures = [
       Plot_No: "195",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.23875407623,
     },
   },
@@ -18898,8 +18868,6 @@ export const trabuomFeatures = [
       Plot_No: "03",
       Street_Nam: "FATHER TAWIAH STREET",
 
-      
-
       Area: 0.2295729749,
     },
   },
@@ -18920,8 +18888,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "199",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.08723974691,
     },
@@ -18947,8 +18913,6 @@ export const trabuomFeatures = [
       Plot_No: "197",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.19793140932,
     },
   },
@@ -18971,8 +18935,6 @@ export const trabuomFeatures = [
       Plot_No: "17",
       Street_Nam: "FATHER TAWIAH STREET",
 
-      
-
       Area: 0.18155950154,
     },
   },
@@ -18993,8 +18955,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "PIOUS ANTWI AGYEI STREET",
-
-      
 
       Area: 0.27548156978,
     },
@@ -19017,8 +18977,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "KONKONSA STREET",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -19039,8 +18997,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "KONKONSA LANE",
-
-      
 
       Area: 0.22956797481,
     },
@@ -19063,8 +19019,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "31",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
-
-      
 
       Area: 0.14574037318,
     },
@@ -19093,8 +19047,6 @@ export const trabuomFeatures = [
       Plot_No: "175",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.97232080994,
     },
   },
@@ -19116,8 +19068,6 @@ export const trabuomFeatures = [
       Plot_No: "201",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.15335589333,
     },
   },
@@ -19138,8 +19088,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "KONKONSA STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -19164,8 +19112,6 @@ export const trabuomFeatures = [
       Plot_No: "203",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.26145685759,
     },
   },
@@ -19187,8 +19133,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "PIOUS ANTWI AGYEI STREET",
-
-      
 
       Area: 0.22834770993,
     },
@@ -19213,8 +19157,6 @@ export const trabuomFeatures = [
       Plot_No: "171",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.81917816635,
     },
   },
@@ -19236,8 +19178,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "93",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -19262,8 +19202,6 @@ export const trabuomFeatures = [
       Plot_No: "29",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
 
-      
-
       Area: 0.24088470822,
     },
   },
@@ -19285,8 +19223,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "PIOUS ANTWI AGYEI STREET",
-
-      
 
       Area: 0.22823000502,
     },
@@ -19310,8 +19246,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "205",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.16185459833,
     },
@@ -19337,8 +19271,6 @@ export const trabuomFeatures = [
       Plot_No: "173",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 1.40739109309,
     },
   },
@@ -19360,8 +19292,6 @@ export const trabuomFeatures = [
       Plot_No: "207",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.13844371212,
     },
   },
@@ -19382,8 +19312,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "91",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.20661117733,
     },
@@ -19407,8 +19335,6 @@ export const trabuomFeatures = [
       Plot_No: "209",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.14119382875,
     },
   },
@@ -19429,8 +19355,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "ABENA MENSAH STREET",
-
-      
 
       Area: 0.12877111957,
     },
@@ -19454,8 +19378,6 @@ export const trabuomFeatures = [
       Plot_No: "16",
       Street_Nam: "FATHER TAWIAH STREET",
 
-      
-
       Area: 0.18170219854,
     },
   },
@@ -19477,8 +19399,6 @@ export const trabuomFeatures = [
       Plot_No: "89",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.20661117733,
     },
   },
@@ -19499,8 +19419,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "FATHER TAWIAH STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -19524,8 +19442,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "PIOUS ANTWI AGYEI STREET",
 
-      
-
       Area: 0.22792075589,
     },
   },
@@ -19548,8 +19464,6 @@ export const trabuomFeatures = [
       Plot_No: "167",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.89313143764,
     },
   },
@@ -19570,8 +19484,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "211",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.18733572777,
     },
@@ -19594,8 +19506,6 @@ export const trabuomFeatures = [
       Plot_No: "213",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.1046919689,
     },
   },
@@ -19616,8 +19526,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "BOATEMAA ADWOA STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -19642,8 +19550,6 @@ export const trabuomFeatures = [
       Plot_No: "27",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
 
-      
-
       Area: 0.27766822784,
     },
   },
@@ -19666,8 +19572,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "FATHER TAWIAH STREET",
 
-      
-
       Area: 0.17997618173,
     },
   },
@@ -19688,8 +19592,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "87",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -19713,8 +19615,6 @@ export const trabuomFeatures = [
       Plot_No: "215",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.13538172807,
     },
   },
@@ -19736,8 +19636,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "APPIAH EMMANUEL LANE",
 
-      
-
       Area: 0.16528894187,
     },
   },
@@ -19758,8 +19656,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "14",
       Street_Nam: "ABENA MENSAH STREET",
-
-      
 
       Area: 0.1977751026,
     },
@@ -19784,8 +19680,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "RAZARK FRIMPONG STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -19806,8 +19700,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "BOATEMAA ADWOA STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -19839,8 +19731,6 @@ export const trabuomFeatures = [
       Plot_No: "165",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 1.01718556036,
     },
   },
@@ -19863,8 +19753,6 @@ export const trabuomFeatures = [
       Plot_No: "85",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.20392142934,
     },
   },
@@ -19885,8 +19773,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "SARPONG OWUSU ANDREWS STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -19909,8 +19795,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "25",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
-
-      
 
       Area: 0.18915818302,
     },
@@ -19940,8 +19824,6 @@ export const trabuomFeatures = [
       Plot_No: "163",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.59059030028,
     },
   },
@@ -19964,8 +19846,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "PHILIP MENSAH STREET",
 
-      
-
       Area: 0.14462782414,
     },
   },
@@ -19986,8 +19866,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "APPIAH EMMANUEL LANE",
-
-      
 
       Area: 0.16528894187,
     },
@@ -20010,8 +19888,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "BOATEMAA ADWOA STREET",
 
-      
-
       Area: 0.20661117734,
     },
   },
@@ -20032,8 +19908,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "RAZARK FRIMPONG STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -20056,8 +19930,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "ABENA MENSAH STREET",
 
-      
-
       Area: 0.22231608072,
     },
   },
@@ -20079,8 +19951,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "SARPONG OWUSU ANDREWS STREET",
 
-      
-
       Area: 0.20661117733,
     },
   },
@@ -20101,8 +19971,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "PHILIP MENSAH STREET",
-
-      
 
       Area: 0.14462782414,
     },
@@ -20126,8 +19994,6 @@ export const trabuomFeatures = [
       Plot_No: "219",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.29163774633,
     },
   },
@@ -20148,8 +20014,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "APPIAH EMMANUEL LANE",
-
-      
 
       Area: 0.16528894187,
     },
@@ -20172,8 +20036,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "RAZARK FRIMPONG STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -20194,8 +20056,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "SARPONG OWUSU ANDREWS STREET",
-
-      
 
       Area: 0.20661117733,
     },
@@ -20220,8 +20080,6 @@ export const trabuomFeatures = [
       Plot_No: "23",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
 
-      
-
       Area: 0.11351561745,
     },
   },
@@ -20243,8 +20101,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "83",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.2031846856,
     },
@@ -20268,8 +20124,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "OPOKU ADU ESTHER STREET",
 
-      
-
       Area: 0.20201981784,
     },
   },
@@ -20291,8 +20145,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "SARPONG OWUSU ANDREWS STREET",
 
-      
-
       Area: 0.20661117733,
     },
   },
@@ -20313,8 +20165,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "KOJO NANTWI STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -20338,8 +20188,6 @@ export const trabuomFeatures = [
       Plot_No: "221",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.19225983816,
     },
   },
@@ -20361,8 +20209,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "PHILIP MENSAH STREET",
 
-      
-
       Area: 0.14462782414,
     },
   },
@@ -20383,8 +20229,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "14",
       Street_Nam: "ABDUL RAZARK MOHAMMED STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -20408,8 +20252,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "ABENA MENSAH STREET",
 
-      
-
       Area: 0.12824491512,
     },
   },
@@ -20430,8 +20272,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "RAZARK FRIMPONG STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -20454,8 +20294,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "SARPONG OWUSU ANDREWS STREET",
 
-      
-
       Area: 0.20661117733,
     },
   },
@@ -20476,8 +20314,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "13",
       Street_Nam: "KOJO NANTWI STREET",
-
-      
 
       Area: 0.16528894187,
     },
@@ -20501,8 +20337,6 @@ export const trabuomFeatures = [
       Plot_No: "81",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.20447305159,
     },
   },
@@ -20523,8 +20357,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "KOJO NANTWI STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -20547,8 +20379,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "OPOKU ADU ESTHER STREET",
 
-      
-
       Area: 0.20661117734,
     },
   },
@@ -20569,8 +20399,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "13",
       Street_Nam: "ABDUL RAZARK MOHAMMED STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -20594,8 +20422,6 @@ export const trabuomFeatures = [
       Plot_No: "223",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.29531134532,
     },
   },
@@ -20616,8 +20442,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "ABDUL RAZARK MOHAMMED STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -20640,8 +20464,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "FATHER TAWIAH STREET",
-
-      
 
       Area: 0.17906302036,
     },
@@ -20666,8 +20488,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "ABENA MENSAH STREET",
 
-      
-
       Area: 0.15467019859,
     },
   },
@@ -20689,8 +20509,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "225",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.13963375609,
     },
@@ -20715,8 +20533,6 @@ export const trabuomFeatures = [
       Plot_No: "21",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
 
-      
-
       Area: 0.22644211222,
     },
   },
@@ -20737,8 +20553,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "SARPONG OWUSU ANDREWS STREET",
-
-      
 
       Area: 0.20661117733,
     },
@@ -20762,8 +20576,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "KOJO NANTWI STREET",
 
-      
-
       Area: 0.16069758237,
     },
   },
@@ -20784,8 +20596,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "KOJO NANTWI STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -20808,8 +20618,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "OPOKU ADU ESTHER STREET",
 
-      
-
       Area: 0.20661117734,
     },
   },
@@ -20830,8 +20638,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "ABDUL RAZARK MOHAMMED STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -20854,8 +20660,6 @@ export const trabuomFeatures = [
       Plot_No: "40",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -20877,8 +20681,6 @@ export const trabuomFeatures = [
       Plot_No: "06",
       Street_Nam: "FATHER TAWIAH STREET",
 
-      
-
       Area: 0.18365437986,
     },
   },
@@ -20899,8 +20701,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "ABDUL RAZARK MOHAMMED STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -20924,8 +20724,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "KOJO NANTWI STREET",
 
-      
-
       Area: 0.20201981784,
     },
   },
@@ -20947,8 +20745,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "OPOKU ADU ESTHER STREET",
-
-      
 
       Area: 0.17906302036,
     },
@@ -20972,8 +20768,6 @@ export const trabuomFeatures = [
       Plot_No: "79",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.18158985903,
     },
   },
@@ -20994,8 +20788,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "19",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
-
-      
 
       Area: 0.16979568354,
     },
@@ -21018,8 +20810,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "OPANIN YAW DAMA STREET",
 
-      
-
       Area: 0.16528894187,
     },
   },
@@ -21041,8 +20831,6 @@ export const trabuomFeatures = [
       Plot_No: "227",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.24565606932,
     },
   },
@@ -21063,8 +20851,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "OPOKU ADU ESTHER STREET",
-
-      
 
       Area: 0.20661117733,
     },
@@ -21088,8 +20874,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "ABDUL RAZARK MOHAMMED STREET",
 
-      
-
       Area: 0.18702422261,
     },
   },
@@ -21112,8 +20896,6 @@ export const trabuomFeatures = [
       Plot_No: "159",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.22327758765,
     },
   },
@@ -21134,8 +20916,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "ABDUL RAZARK MOHAMMED STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -21159,8 +20939,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "KOJO NANTWI STREET",
 
-      
-
       Area: 0.20201981785,
     },
   },
@@ -21182,8 +20960,6 @@ export const trabuomFeatures = [
       Plot_No: "38",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -21204,8 +20980,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "KWAME ODURO STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -21229,8 +21003,6 @@ export const trabuomFeatures = [
       Plot_No: "77",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.17906302018,
     },
   },
@@ -21251,8 +21023,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
-
-      
 
       Area: 0.11314925486,
     },
@@ -21275,8 +21045,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "OPANIN YAW DAMA STREET",
 
-      
-
       Area: 0.16528894187,
     },
   },
@@ -21297,8 +21065,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "231",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.11560816462,
     },
@@ -21323,8 +21089,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "PHILIP MENSAH STREET",
 
-      
-
       Area: 0.18365713818,
     },
   },
@@ -21346,8 +21110,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "229",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.33500321771,
     },
@@ -21371,8 +21133,6 @@ export const trabuomFeatures = [
       Plot_No: "36",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.18702422261,
     },
   },
@@ -21393,8 +21153,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "ABDUL RAZARK MOHAMMED STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -21417,8 +21175,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "KOJO NANTWI STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -21439,8 +21195,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "KWAME ODURO STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -21466,8 +21220,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "ABDUL RAZARK MOHAMMED STREET",
 
-      
-
       Area: 0.17906302036,
     },
   },
@@ -21488,8 +21240,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "OPANIN YAW DAMA STREET",
-
-      
 
       Area: 0.16528894187,
     },
@@ -21513,8 +21263,6 @@ export const trabuomFeatures = [
       Plot_No: "233",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.21521563576,
     },
   },
@@ -21535,8 +21283,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "BASHIRU IBRAHIM STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -21560,8 +21306,6 @@ export const trabuomFeatures = [
       Plot_No: "41",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.22406571644,
     },
   },
@@ -21584,8 +21328,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "KWAME ODURO STREET",
 
-      
-
       Area: 0.17906302035,
     },
   },
@@ -21606,8 +21348,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "05",
       Street_Nam: "KOJO NANTWI STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -21631,8 +21371,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "OPOKU ADU ESTHER STREET",
 
-      
-
       Area: 0.17915469842,
     },
   },
@@ -21654,8 +21392,6 @@ export const trabuomFeatures = [
       Plot_No: "36",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.20660284422,
     },
   },
@@ -21676,8 +21412,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "ABDUL RAZARK MOHAMMED STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -21703,8 +21437,6 @@ export const trabuomFeatures = [
       Plot_No: "34",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.17906302036,
     },
   },
@@ -21729,8 +21461,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
 
-      
-
       Area: 0.30256990022,
     },
   },
@@ -21751,8 +21481,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "03",
       Street_Nam: "KOJO NANTWI STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -21775,8 +21503,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "BASHIRU IBRAHIM STREET",
 
-      
-
       Area: 0.22956797481,
     },
   },
@@ -21797,8 +21523,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "73",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.1836543797,
     },
@@ -21821,8 +21545,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "KAAKYIRE BADU STREET",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -21844,8 +21566,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "ABDUL RAZARK MOHAMMED STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -21866,8 +21586,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "BASHIRU IBRAHIM STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -21894,8 +21612,6 @@ export const trabuomFeatures = [
       Plot_No: "235",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.26675441599,
     },
   },
@@ -21916,8 +21632,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "32",
       Street_Nam: "AKWASI MENSAH STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -21941,8 +21655,6 @@ export const trabuomFeatures = [
       Plot_No: "39",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.22158154237,
     },
   },
@@ -21965,8 +21677,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "KWAME ODURO STREET",
 
-      
-
       Area: 0.20201981784,
     },
   },
@@ -21988,8 +21698,6 @@ export const trabuomFeatures = [
       Plot_No: "71",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.1836543797,
     },
   },
@@ -22010,8 +21718,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "BASHIRU IBRAHIM STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -22035,8 +21741,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "BASHIRU IBRAHIM STREET",
 
-      
-
       Area: 0.21996533845,
     },
   },
@@ -22057,8 +21761,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "KAAKYIRE BADU STREET",
-
-      
 
       Area: 0.22956797481,
     },
@@ -22081,8 +21783,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "KAAKYIRE BADU STREET",
 
-      
-
       Area: 0.21416350365,
     },
   },
@@ -22103,8 +21803,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "30",
       Street_Nam: "AKWASI MENSAH STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -22132,8 +21830,6 @@ export const trabuomFeatures = [
       Plot_No: "237",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.24784935369,
     },
   },
@@ -22156,8 +21852,6 @@ export const trabuomFeatures = [
       Plot_No: "37",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.22497661532,
     },
   },
@@ -22178,8 +21872,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "69",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.1836543797,
     },
@@ -22205,8 +21897,6 @@ export const trabuomFeatures = [
       Plot_No: "28",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.17815005194,
     },
   },
@@ -22227,8 +21917,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "BASHIRU IBRAHIM STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -22251,8 +21939,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "KAAKYIRE BADU STREET",
 
-      
-
       Area: 0.22956797481,
     },
   },
@@ -22273,8 +21959,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "KAAKYIRE BADU STREET",
-
-      
 
       Area: 0.21570910563,
     },
@@ -22297,8 +21981,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "70",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.18135870011,
     },
@@ -22325,8 +22007,6 @@ export const trabuomFeatures = [
       Plot_No: "239",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.19554801868,
     },
   },
@@ -22348,8 +22028,6 @@ export const trabuomFeatures = [
       Plot_No: "35",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -22370,8 +22048,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "67",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.1836543797,
     },
@@ -22395,8 +22071,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "BASHIRU IBRAHIM STREET",
 
-      
-
       Area: 0.22233745485,
     },
   },
@@ -22418,8 +22092,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "38",
       Street_Nam: "AMA BOATEMAA STREET",
-
-      
 
       Area: 0.17906302036,
     },
@@ -22444,8 +22116,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "KAAKYIRE BADU STREET",
 
-      
-
       Area: 0.20845346131,
     },
   },
@@ -22469,8 +22139,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
 
-      
-
       Area: 0.15890559663,
     },
   },
@@ -22491,8 +22159,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "KAAKYIRE BADU STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -22515,8 +22181,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "HARUNA NAOMI LANE",
 
-      
-
       Area: 0.16528894187,
     },
   },
@@ -22537,8 +22201,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "41",
       Street_Nam: "DARCOSTA FRIMPONG STREET",
-
-      
 
       Area: 0.1859500596,
     },
@@ -22562,8 +22224,6 @@ export const trabuomFeatures = [
       Plot_No: "68",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.18135870011,
     },
   },
@@ -22584,8 +22244,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "BASHIRU IBRAHIM STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -22609,8 +22267,6 @@ export const trabuomFeatures = [
       Plot_No: "33",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.22379965092,
     },
   },
@@ -22632,8 +22288,6 @@ export const trabuomFeatures = [
       Plot_No: "65",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.1836543797,
     },
   },
@@ -22654,8 +22308,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "29",
       Street_Nam: "AKWASI MENSAH STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -22679,8 +22331,6 @@ export const trabuomFeatures = [
       Plot_No: "36",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.17906302036,
     },
   },
@@ -22701,8 +22351,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "HARUNA NAOMI LANE",
-
-      
 
       Area: 0.16528894187,
     },
@@ -22725,8 +22373,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "241",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.1088372821,
     },
@@ -22755,8 +22401,6 @@ export const trabuomFeatures = [
       Plot_No: "30",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.22967903703,
     },
   },
@@ -22778,8 +22422,6 @@ export const trabuomFeatures = [
       Plot_No: "39",
       Street_Nam: "DARCOSTA FRIMPONG STREET",
 
-      
-
       Area: 0.1859500596,
     },
   },
@@ -22800,8 +22442,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "AKWABOAH CLOSE",
-
-      
 
       Area: 0.1859500596,
     },
@@ -22828,8 +22468,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
 
-      
-
       Area: 0.1978264331,
     },
   },
@@ -22852,8 +22490,6 @@ export const trabuomFeatures = [
       Plot_No: "63",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.1790630202,
     },
   },
@@ -22874,8 +22510,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "BASHIRU IBRAHIM STREET",
-
-      
 
       Area: 0.22956797481,
     },
@@ -22898,8 +22532,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "KAAKYIRE BADU STREET",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -22920,8 +22552,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "27",
       Street_Nam: "AKWASI MENSAH STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -22945,8 +22575,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "KAAKYIRE BADU STREET",
 
-      
-
       Area: 0.21593192219,
     },
   },
@@ -22969,8 +22597,6 @@ export const trabuomFeatures = [
       Plot_No: "66",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.17906302035,
     },
   },
@@ -22991,8 +22617,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "HARUNA NAOMI LANE",
-
-      
 
       Area: 0.16528894187,
     },
@@ -23015,8 +22639,6 @@ export const trabuomFeatures = [
       Plot_No: "37",
       Street_Nam: "DARCOSTA FRIMPONG STREET",
 
-      
-
       Area: 0.1859500596,
     },
   },
@@ -23037,8 +22659,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "AKWABOAH CLOSE",
-
-      
 
       Area: 0.1859500596,
     },
@@ -23061,8 +22681,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "31",
       Street_Nam: "AMA BOATEMAA STREET",
-
-      
 
       Area: 0.22470948353,
     },
@@ -23088,8 +22706,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
 
-      
-
       Area: 0.22173135755,
     },
   },
@@ -23110,8 +22726,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "KAAKYIRE BADU STREET",
-
-      
 
       Area: 0.22956797481,
     },
@@ -23135,8 +22749,6 @@ export const trabuomFeatures = [
       Plot_No: "34",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.17906302036,
     },
   },
@@ -23158,8 +22770,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "AKUKENE CRESCENT",
 
-      
-
       Area: 0.20661117734,
     },
   },
@@ -23180,8 +22790,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "25",
       Street_Nam: "AKWASI MENSAH STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -23205,8 +22813,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "KAAKYIRE BADU STREET",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -23227,8 +22833,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "64",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -23252,8 +22856,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "RICHARD AMPONSAH CLOSE",
 
-      
-
       Area: 0.17906302036,
     },
   },
@@ -23274,8 +22876,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "HARUNA NAOMI LANE",
-
-      
 
       Area: 0.16528894188,
     },
@@ -23299,8 +22899,6 @@ export const trabuomFeatures = [
       Plot_No: "35",
       Street_Nam: "DARCOSTA FRIMPONG STREET",
 
-      
-
       Area: 0.1813587001,
     },
   },
@@ -23323,8 +22921,6 @@ export const trabuomFeatures = [
       Plot_No: "61",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.17906302018,
     },
   },
@@ -23345,8 +22941,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "AKWABOAH CLOSE",
-
-      
 
       Area: 0.1859500596,
     },
@@ -23371,8 +22965,6 @@ export const trabuomFeatures = [
       Plot_No: "243",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.23705762913,
     },
   },
@@ -23395,8 +22987,6 @@ export const trabuomFeatures = [
       Plot_No: "29",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.2262664317,
     },
   },
@@ -23418,8 +23008,6 @@ export const trabuomFeatures = [
       Plot_No: "23",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.18365437986,
     },
   },
@@ -23440,8 +23028,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "62",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -23465,8 +23051,6 @@ export const trabuomFeatures = [
       Plot_No: "32",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.18365437986,
     },
   },
@@ -23487,8 +23071,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "13",
       Street_Nam: "RICHARD AMPONSAH CLOSE",
-
-      
 
       Area: 0.18365437986,
     },
@@ -23512,8 +23094,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "AKWABOAH CLOSE",
 
-      
-
       Area: 0.18135870011,
     },
   },
@@ -23534,8 +23114,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "AKUKENE CRESCENT",
-
-      
 
       Area: 0.22956797482,
     },
@@ -23559,8 +23137,6 @@ export const trabuomFeatures = [
       Plot_No: "59",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.17906302018,
     },
   },
@@ -23581,8 +23157,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "245",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.07788202189,
     },
@@ -23610,8 +23184,6 @@ export const trabuomFeatures = [
       Plot_No: "24",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.24125585508,
     },
   },
@@ -23632,8 +23204,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "21",
       Street_Nam: "AKWASI MENSAH STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -23657,8 +23227,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "AKWABOAH CLOSE",
 
-      
-
       Area: 0.17906302036,
     },
   },
@@ -23681,8 +23249,6 @@ export const trabuomFeatures = [
       Plot_No: "33",
       Street_Nam: "DARCOSTA FRIMPONG STREET",
 
-      
-
       Area: 0.20379477372,
     },
   },
@@ -23703,8 +23269,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "60",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -23729,8 +23293,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "KAAKYIRE BADU STREET",
 
-      
-
       Area: 0.19227018963,
     },
   },
@@ -23751,8 +23313,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "RICHARD AMPONSAH CLOSE",
-
-      
 
       Area: 0.18365437986,
     },
@@ -23779,8 +23339,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "AKUKENE CRESCENT",
 
-      
-
       Area: 0.69657660932,
     },
   },
@@ -23804,8 +23362,6 @@ export const trabuomFeatures = [
       Plot_No: "27",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.49038161707,
     },
   },
@@ -23826,8 +23382,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "AKWABOAH CLOSE",
-
-      
 
       Area: 0.18365437985,
     },
@@ -23854,8 +23408,6 @@ export const trabuomFeatures = [
       Plot_No: "22",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.22148978391,
     },
   },
@@ -23876,8 +23428,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "31",
       Street_Nam: "DARCOSTA FRIMPONG STREET",
-
-      
 
       Area: 0.20661117733,
     },
@@ -23900,8 +23450,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "RICHARD AMPONSAH CLOSE",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -23922,8 +23470,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "58",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -23947,8 +23493,6 @@ export const trabuomFeatures = [
       Plot_No: "57",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.17906302021,
     },
   },
@@ -23969,8 +23513,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "19",
       Street_Nam: "AKWASI MENSAH STREET",
-
-      
 
       Area: 0.27548156978,
     },
@@ -23993,8 +23535,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "AKWABOAH CLOSE",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -24016,8 +23556,6 @@ export const trabuomFeatures = [
       Plot_No: "56",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.18365437986,
     },
   },
@@ -24038,8 +23576,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "55",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.1836543797,
     },
@@ -24064,8 +23600,6 @@ export const trabuomFeatures = [
       Plot_No: "17",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.34213603794,
     },
   },
@@ -24086,8 +23620,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "29",
       Street_Nam: "DARCOSTA FRIMPONG STREET",
-
-      
 
       Area: 0.20661117733,
     },
@@ -24110,8 +23642,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "RICHARD AMPONSAH CLOSE",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -24132,8 +23662,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "AKWABOAH CLOSE",
-
-      
 
       Area: 0.18365437986,
     },
@@ -24157,8 +23685,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "RICHARD AMPONSAH CLOSE",
 
-      
-
       Area: 0.20201981784,
     },
   },
@@ -24181,8 +23707,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "SARFOWAA AFIA STREET",
 
-      
-
       Area: 0.22971549528,
     },
   },
@@ -24203,8 +23727,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "NYARKO PRISCILLA STREET",
-
-      
 
       Area: 0.22957590488,
     },
@@ -24227,8 +23749,6 @@ export const trabuomFeatures = [
       Plot_No: "54",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.18365437986,
     },
   },
@@ -24249,8 +23769,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "53",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.1836543797,
     },
@@ -24274,8 +23792,6 @@ export const trabuomFeatures = [
       Plot_No: "20",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.22502626784,
     },
   },
@@ -24298,8 +23814,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "RICHARD AMPONSAH CLOSE",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -24320,8 +23834,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "27",
       Street_Nam: "DARCOSTA FRIMPONG STREET",
-
-      
 
       Area: 0.20661117733,
     },
@@ -24346,8 +23858,6 @@ export const trabuomFeatures = [
       Plot_No: "23",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.31727493442,
     },
   },
@@ -24368,8 +23878,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "AKWABOAH CLOSE",
-
-      
 
       Area: 0.18365437986,
     },
@@ -24393,8 +23901,6 @@ export const trabuomFeatures = [
       Plot_No: "52",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.16594740207,
     },
   },
@@ -24417,8 +23923,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "RICHARD AMPONSAH CLOSE",
 
-      
-
       Area: 0.16867934536,
     },
   },
@@ -24440,8 +23944,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "26",
       Street_Nam: "AMA BOATEMAA STREET",
-
-      
 
       Area: 0.24597522621,
     },
@@ -24468,8 +23970,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "RICHARD AMPONSAH CLOSE",
 
-      
-
       Area: 0.18469690639,
     },
   },
@@ -24490,8 +23990,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "SARFOWAA AFIA STREET",
-
-      
 
       Area: 0.22957590488,
     },
@@ -24515,8 +24013,6 @@ export const trabuomFeatures = [
       Plot_No: "25",
       Street_Nam: "DARCOSTA FRIMPONG STREET",
 
-      
-
       Area: 0.20661117733,
     },
   },
@@ -24537,8 +24033,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "21",
       Street_Nam: "AMA BOATEMAA STREET",
-
-      
 
       Area: 0.2525247723,
     },
@@ -24566,8 +24060,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "AKWABOAH CLOSE",
 
-      
-
       Area: 0.59610399877,
     },
   },
@@ -24589,8 +24081,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "24",
       Street_Nam: "AMA BOATEMAA STREET",
-
-      
 
       Area: 0.2480130192,
     },
@@ -24614,8 +24104,6 @@ export const trabuomFeatures = [
       Plot_No: "49",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.12742996318,
     },
   },
@@ -24638,8 +24126,6 @@ export const trabuomFeatures = [
       Plot_No: "23",
       Street_Nam: "DARCOSTA FRIMPONG STREET",
 
-      
-
       Area: 0.24736245063,
     },
   },
@@ -24660,8 +24146,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "SARFOWAA AFIA STREET",
-
-      
 
       Area: 0.22957590488,
     },
@@ -24684,8 +24168,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "NYARKO PRISCILLA STREET",
 
-      
-
       Area: 0.22957590488,
     },
   },
@@ -24706,8 +24188,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "NYARKO PRISCILLA STREET",
-
-      
 
       Area: 0.22957590488,
     },
@@ -24731,8 +24211,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.27135581234,
     },
   },
@@ -24753,8 +24231,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "47",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -24777,8 +24253,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "SARFOWAA AFIA STREET",
 
-      
-
       Area: 0.22957590488,
     },
   },
@@ -24799,8 +24273,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "NYARKO PRISCILLA STREET",
-
-      
 
       Area: 0.22957590488,
     },
@@ -24823,8 +24295,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "NYARKO PRISCILLA STREET",
 
-      
-
       Area: 0.22957590488,
     },
   },
@@ -24846,8 +24316,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "BOATEMAA LYDIA STREET",
 
-      
-
       Area: 0.22957590488,
     },
   },
@@ -24868,8 +24336,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "45",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -24894,8 +24360,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.22966077615,
     },
   },
@@ -24917,8 +24381,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "AMA BOATEMAA STREET",
-
-      
 
       Area: 0.22717385082,
     },
@@ -24942,8 +24404,6 @@ export const trabuomFeatures = [
       Plot_No: "43",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.17332382099,
     },
   },
@@ -24964,8 +24424,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "NYARKO PRISCILLA STREET",
-
-      
 
       Area: 0.22957590488,
     },
@@ -24988,8 +24446,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "BOATEMAA LYDIA STREET",
 
-      
-
       Area: 0.22957590488,
     },
   },
@@ -25010,8 +24466,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "NYARKO PRISCILLA STREET",
-
-      
 
       Area: 0.22957590488,
     },
@@ -25035,8 +24489,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.22649478948,
     },
   },
@@ -25059,8 +24511,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "PHILIP FORKUO STREET",
 
-      
-
       Area: 0.14536607994,
     },
   },
@@ -25081,8 +24531,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "NYARKO PRISCILLA STREET",
-
-      
 
       Area: 0.22957590488,
     },
@@ -25105,8 +24553,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "BOATEMAA LYDIA STREET",
 
-      
-
       Area: 0.22957590488,
     },
   },
@@ -25127,8 +24573,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.13395486292,
     },
@@ -25152,8 +24596,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "BOATEMAA LYDIA STREET",
 
-      
-
       Area: 0.2066183144,
     },
   },
@@ -25175,8 +24617,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "PHILIP FORKUO STREET",
 
-      
-
       Area: 0.14198976209,
     },
   },
@@ -25197,8 +24637,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.15002466126,
     },
@@ -25222,8 +24660,6 @@ export const trabuomFeatures = [
       Plot_No: "41",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.17332382099,
     },
   },
@@ -25245,8 +24681,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "PHILIP FORKUO STREET",
 
-      
-
       Area: 0.15805956043,
     },
   },
@@ -25267,8 +24701,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.1660944596,
     },
@@ -25292,8 +24724,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.22786187006,
     },
   },
@@ -25315,8 +24745,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "BOATEMAA LYDIA STREET",
 
-      
-
       Area: 0.22957590488,
     },
   },
@@ -25337,8 +24765,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "15",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.18216425794,
     },
@@ -25362,8 +24788,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "BOATEMAA LYDIA STREET",
 
-      
-
       Area: 0.22715595947,
     },
   },
@@ -25384,8 +24808,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.19180613694,
     },
@@ -25409,8 +24831,6 @@ export const trabuomFeatures = [
       Plot_No: "39",
       Street_Nam: "AKUA AFRIYIE STREET",
 
-      
-
       Area: 0.17906302035,
     },
   },
@@ -25431,8 +24851,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "19",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.19984103611,
     },
@@ -25456,8 +24874,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "ODURO ADANSI STREET",
 
-      
-
       Area: 0.17906302036,
     },
   },
@@ -25478,8 +24894,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "21",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.20787593528,
     },
@@ -25502,8 +24916,6 @@ export const trabuomFeatures = [
       Plot_No: "23",
       Street_Nam: "PHILIP FORKUO STREET",
 
-      
-
       Area: 0.21591083445,
     },
   },
@@ -25525,8 +24937,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "OSEI RANSFORD STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -25547,8 +24957,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "ODURO ADANSI STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -25572,8 +24980,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.22705271459,
     },
   },
@@ -25594,8 +25000,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "04",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.2296494619,
     },
@@ -25618,8 +25022,6 @@ export const trabuomFeatures = [
       Plot_No: "25",
       Street_Nam: "PHILIP FORKUO STREET",
 
-      
-
       Area: 0.22394573362,
     },
   },
@@ -25640,8 +25042,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "03",
       Street_Nam: "1ST LINK",
-
-      
 
       Area: 0.22956797482,
     },
@@ -25664,8 +25064,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "KOFI BENSON STREET",
 
-      
-
       Area: 0.22957590487,
     },
   },
@@ -25687,8 +25085,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "PHILIP FORKUO STREET",
 
-      
-
       Area: 0.20668451571,
     },
   },
@@ -25709,8 +25105,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "27",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.23198063279,
     },
@@ -25734,8 +25128,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "KOFI BENSON STREET",
 
-      
-
       Area: 0.25548546334,
     },
   },
@@ -25757,8 +25149,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "PHILIP FORKUO STREET",
 
-      
-
       Area: 0.20668451571,
     },
   },
@@ -25779,8 +25169,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "OSEI RANSFORD STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -25804,8 +25192,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "OSEI LINDA STREET",
 
-      
-
       Area: 0.2250027241,
     },
   },
@@ -25828,8 +25214,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "ODURO ADANSI STREET",
 
-      
-
       Area: 0.14233214439,
     },
   },
@@ -25850,8 +25234,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.2296494619,
     },
@@ -25875,8 +25257,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "BOATEMAA LYDIA STREET",
 
-      
-
       Area: 0.22613375094,
     },
   },
@@ -25898,8 +25278,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.22549279634,
     },
@@ -25924,8 +25302,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.29794099888,
     },
   },
@@ -25947,8 +25323,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "37",
       Street_Nam: "AKUA AFRIYIE STREET",
-
-      
 
       Area: 0.17906302036,
     },
@@ -25972,8 +25346,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
 
-      
-
       Area: 0.22404938259,
     },
   },
@@ -25996,8 +25368,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "PHILIP FORKUO STREET",
 
-      
-
       Area: 0.22520565244,
     },
   },
@@ -26018,8 +25388,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.22964946191,
     },
@@ -26043,8 +25411,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "YEBOAH GEORGE STREET",
 
-      
-
       Area: 0.26610353193,
     },
   },
@@ -26065,8 +25431,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "18",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.2296494619,
     },
@@ -26091,8 +25455,6 @@ export const trabuomFeatures = [
       Plot_No: "22",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.32586437433,
     },
   },
@@ -26113,8 +25475,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
-
-      
 
       Area: 0.2296494619,
     },
@@ -26138,8 +25498,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.1763702056,
     },
   },
@@ -26161,8 +25519,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
 
-      
-
       Area: 0.20668451572,
     },
   },
@@ -26183,8 +25539,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "35",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -26208,8 +25562,6 @@ export const trabuomFeatures = [
       Plot_No: "22",
       Street_Nam: "PHILIP FORKUO STREET",
 
-      
-
       Area: 0.22548558542,
     },
   },
@@ -26231,8 +25583,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
 
-      
-
       Area: 0.20668451572,
     },
   },
@@ -26253,8 +25603,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "13",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
-
-      
 
       Area: 0.22964946191,
     },
@@ -26278,8 +25626,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
 
-      
-
       Area: 0.22594969075,
     },
   },
@@ -26300,8 +25646,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "28",
       Street_Nam: "PHILIP FORKUO STREET",
-
-      
 
       Area: 0.2280029112,
     },
@@ -26325,8 +25669,6 @@ export const trabuomFeatures = [
       Plot_No: "17",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
 
-      
-
       Area: 0.22436834475,
     },
   },
@@ -26347,8 +25689,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "33",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -26372,8 +25712,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.18139038408,
     },
   },
@@ -26394,8 +25732,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "19",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
-
-      
 
       Area: 0.2296494619,
     },
@@ -26419,8 +25755,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "YEBOAH GEORGE STREET",
 
-      
-
       Area: 0.2567311491,
     },
   },
@@ -26442,8 +25776,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "23",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
-
-      
 
       Area: 0.22405588631,
     },
@@ -26467,8 +25799,6 @@ export const trabuomFeatures = [
       Plot_No: "25",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
 
-      
-
       Area: 0.2233963758,
     },
   },
@@ -26489,8 +25819,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "27",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
-
-      
 
       Area: 0.22964946191,
     },
@@ -26514,8 +25842,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "YEBOAH GEORGE STREET",
 
-      
-
       Area: 0.22962251296,
     },
   },
@@ -26536,8 +25862,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "31",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -26562,8 +25886,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.22960046974,
     },
   },
@@ -26585,8 +25907,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
-
-      
 
       Area: 0.22959048365,
     },
@@ -26610,8 +25930,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
 
-      
-
       Area: 0.22453075813,
     },
   },
@@ -26634,8 +25952,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.22504322703,
     },
   },
@@ -26657,8 +25973,6 @@ export const trabuomFeatures = [
       Plot_No: "29",
       Street_Nam: "AKUA AFRIYIE STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -26679,8 +25993,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "YEBOAH GEORGE STREET",
-
-      
 
       Area: 0.22962251295,
     },
@@ -26712,8 +26024,6 @@ export const trabuomFeatures = [
       Plot_No: "149",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.27186800538,
     },
   },
@@ -26735,8 +26045,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
-
-      
 
       Area: 0.22545912464,
     },
@@ -26760,8 +26068,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
 
-      
-
       Area: 0.20224760896,
     },
   },
@@ -26782,8 +26088,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "14",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
-
-      
 
       Area: 0.20665228499,
     },
@@ -26806,8 +26110,6 @@ export const trabuomFeatures = [
       Plot_No: "16",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
 
-      
-
       Area: 0.20665228499,
     },
   },
@@ -26828,8 +26130,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "18",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
-
-      
 
       Area: 0.20665228499,
     },
@@ -26852,8 +26152,6 @@ export const trabuomFeatures = [
       Plot_No: "27",
       Street_Nam: "AKUA AFRIYIE STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -26874,8 +26172,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "AMA BOATEMAA STREET",
-
-      
 
       Area: 0.22957590488,
     },
@@ -26899,8 +26195,6 @@ export const trabuomFeatures = [
       Plot_No: "25",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.17723402919,
     },
   },
@@ -26921,8 +26215,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "AMA BOATEMAA STREET",
-
-      
 
       Area: 0.22957590488,
     },
@@ -26947,8 +26239,6 @@ export const trabuomFeatures = [
       Plot_No: "20",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
 
-      
-
       Area: 0.20307613029,
     },
   },
@@ -26969,8 +26259,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "KOO GYAN STREET",
-
-      
 
       Area: 0.22961364999,
     },
@@ -26994,8 +26282,6 @@ export const trabuomFeatures = [
       Plot_No: "23",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.20299671367,
     },
   },
@@ -27018,8 +26304,6 @@ export const trabuomFeatures = [
       Plot_No: "145",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.13143842701,
     },
   },
@@ -27041,8 +26325,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.22961364999,
     },
   },
@@ -27063,8 +26345,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "18",
       Street_Nam: "SARPONG KELVIN BAAH STREET",
-
-      
 
       Area: 0.27548156978,
     },
@@ -27088,8 +26368,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.21644069827,
     },
   },
@@ -27111,8 +26389,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.22030068009,
     },
@@ -27136,8 +26412,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.21932953012,
     },
   },
@@ -27160,8 +26434,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.1999422501,
     },
   },
@@ -27182,8 +26454,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "13",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.20665228499,
     },
@@ -27206,8 +26476,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.20665228498,
     },
   },
@@ -27228,8 +26496,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.20665228498,
     },
@@ -27252,8 +26518,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "143",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.27863375771,
     },
@@ -27280,8 +26544,6 @@ export const trabuomFeatures = [
       Plot_No: "21",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 1.42347659066,
     },
   },
@@ -27302,8 +26564,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "06",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.17225516231,
     },
@@ -27328,8 +26588,6 @@ export const trabuomFeatures = [
       Plot_No: "23",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.32077938962,
     },
   },
@@ -27350,8 +26608,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.17225516231,
     },
@@ -27375,8 +26631,6 @@ export const trabuomFeatures = [
       Plot_No: "25",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.22568803865,
     },
   },
@@ -27397,8 +26651,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.17225516231,
     },
@@ -27421,8 +26673,6 @@ export const trabuomFeatures = [
       Plot_No: "29",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.22963917151,
     },
   },
@@ -27443,8 +26693,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "31",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.22963917151,
     },
@@ -27468,8 +26716,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "FRANK ADDO KUFFUOR STREET",
 
-      
-
       Area: 0.17906371168,
     },
   },
@@ -27490,8 +26736,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "33",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.22963917151,
     },
@@ -27515,8 +26759,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.18875370963,
     },
   },
@@ -27538,8 +26780,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.19779539373,
     },
@@ -27563,8 +26803,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "141",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.38598193045,
     },
@@ -27593,8 +26831,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "DAVID AKUBILA STREET",
 
-      
-
       Area: 0.20903687542,
     },
   },
@@ -27618,8 +26854,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "GEORGINA TETTEH STREET",
 
-      
-
       Area: 0.17923858794,
     },
   },
@@ -27640,8 +26874,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "EDWARD LARYOR TETTEH STREET",
-
-      
 
       Area: 0.1836550889,
     },
@@ -27664,8 +26896,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "GEORGINA TETTEH STREET",
 
-      
-
       Area: 0.20661117733,
     },
   },
@@ -27686,8 +26916,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "22",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.22963917151,
     },
@@ -27710,8 +26938,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "EDWARD LARYOR TETTEH STREET",
 
-      
-
       Area: 0.1836550889,
     },
   },
@@ -27733,8 +26959,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "AUGUSTINE DARKO ABABIO STREET",
 
-      
-
       Area: 0.20661117734,
     },
   },
@@ -27755,8 +26979,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "24",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.22963917151,
     },
@@ -27783,8 +27005,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 1.48116363834,
     },
   },
@@ -27806,8 +27026,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "26",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.22340771731,
     },
@@ -27832,8 +27050,6 @@ export const trabuomFeatures = [
       Plot_No: "30",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.18037152918,
     },
   },
@@ -27856,8 +27072,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "SARPONG KELVIN BAAH STREET",
 
-      
-
       Area: 0.20201981784,
     },
   },
@@ -27879,8 +27093,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "04",
       Street_Nam: "FRANK ADDO KUFFUOR STREET",
-
-      
 
       Area: 0.17906310579,
     },
@@ -27908,8 +27120,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "DAVID AKUBILA STREET",
 
-      
-
       Area: 0.19872260223,
     },
   },
@@ -27930,8 +27140,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "SARPONG KELVIN BAAH STREET",
-
-      
 
       Area: 0.2525247723,
     },
@@ -27958,8 +27166,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "DAVID AKUBILA STREET",
 
-      
-
       Area: 0.19745460175,
     },
   },
@@ -27980,8 +27186,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "EDWARD LARYOR TETTEH STREET",
-
-      
 
       Area: 0.1836550889,
     },
@@ -28010,8 +27214,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "DAVID AKUBILA STREET",
 
-      
-
       Area: 0.20884974177,
     },
   },
@@ -28037,8 +27239,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "DAVID AKUBILA STREET",
 
-      
-
       Area: 0.18934846741,
     },
   },
@@ -28061,8 +27261,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "14",
       Street_Nam: "DAVID AKUBILA STREET",
-
-      
 
       Area: 0.18941625916,
     },
@@ -28089,8 +27287,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "DAVID AKUBILA STREET",
 
-      
-
       Area: 0.2081639203,
     },
   },
@@ -28114,8 +27310,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "OFORIWAA JOYCE STREET",
 
-      
-
       Area: 0.17634710645,
     },
   },
@@ -28137,8 +27331,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "GEORGINA TETTEH STREET",
-
-      
 
       Area: 0.17577124391,
     },
@@ -28167,8 +27359,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "KINGSLEY YAW SAM STREET",
 
-      
-
       Area: 0.19239243427,
     },
   },
@@ -28195,8 +27385,6 @@ export const trabuomFeatures = [
       Plot_No: "34",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.22246915816,
     },
   },
@@ -28217,8 +27405,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "GEORGINA TETTEH STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -28245,8 +27431,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "OPEN GATE STREET",
 
-      
-
       Area: 0.22965355541,
     },
   },
@@ -28267,8 +27451,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "BOAKYE ANSAH STREET",
-
-      
 
       Area: 0.18365446747,
     },
@@ -28291,8 +27473,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "NANA AKWASI AFRIYIE STREET",
 
-      
-
       Area: 0.20667525436,
     },
   },
@@ -28313,8 +27493,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "AUGUSTINE DARKO ABABIO STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -28340,8 +27518,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "OPEN GATE STREET",
 
-      
-
       Area: 0.22965291816,
     },
   },
@@ -28364,8 +27540,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.17903833114,
     },
   },
@@ -28387,8 +27561,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "EDWARD LARYOR TETTEH STREET",
 
-      
-
       Area: 0.18365508889,
     },
   },
@@ -28409,8 +27581,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "15",
       Street_Nam: "KYIDOM BARIMA STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -28435,8 +27605,6 @@ export const trabuomFeatures = [
       Plot_No: "04",
       Street_Nam: "NANA AKWASI AFRIYIE STREET",
 
-      
-
       Area: 0.22085952086,
     },
   },
@@ -28457,8 +27625,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "NANA ASOMA KARIKARI STREET",
-
-      
 
       Area: 0.20667525436,
     },
@@ -28481,8 +27647,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "SARPONG KELVIN BAAH STREET",
 
-      
-
       Area: 0.25252477231,
     },
   },
@@ -28504,8 +27668,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
-
-      
 
       Area: 0.17906302035,
     },
@@ -28531,8 +27693,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "AUGUSTINE DARKO ABABIO STREET",
 
-      
-
       Area: 0.47581815301,
     },
   },
@@ -28557,8 +27717,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "SARPONG KELVIN BAAH STREET",
 
-      
-
       Area: 0.19951262455,
     },
   },
@@ -28580,8 +27738,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "NANA ASOMA KARIKARI STREET",
 
-      
-
       Area: 0.18600772892,
     },
   },
@@ -28602,8 +27758,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "OFORIWAA JOYCE STREET",
-
-      
 
       Area: 0.16528894187,
     },
@@ -28629,8 +27783,6 @@ export const trabuomFeatures = [
       Plot_No: "65",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.18222758349,
     },
   },
@@ -28652,8 +27804,6 @@ export const trabuomFeatures = [
       Plot_No: "03",
       Street_Nam: "KINGSLEY YAW SAM STREET",
 
-      
-
       Area: 0.22959658713,
     },
   },
@@ -28674,8 +27824,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "2",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
-
-      
 
       Area: 0.22959658714,
     },
@@ -28699,8 +27847,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "YAW HUBERT AVENUE",
 
-      
-
       Area: 0.16758462162,
     },
   },
@@ -28722,8 +27868,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "BOAKYE ANSAH STREET",
 
-      
-
       Area: 0.18365446748,
     },
   },
@@ -28744,8 +27888,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
-
-      
 
       Area: 0.18348617196,
     },
@@ -28770,8 +27912,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "GLORIA OTENG STREET",
 
-      
-
       Area: 0.17871586246,
     },
   },
@@ -28793,8 +27933,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "SARPONG KELVIN BAAH STREET",
 
-      
-
       Area: 0.2525247723,
     },
   },
@@ -28815,8 +27953,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "13",
       Street_Nam: "KYIDOM BARIMA STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -28840,8 +27976,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "GLORIA OTENG STREET",
 
-      
-
       Area: 0.20116731559,
     },
   },
@@ -28863,8 +27997,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "06",
       Street_Nam: "KOOMI STREET",
-
-      
 
       Area: 0.22099652445,
     },
@@ -28888,8 +28020,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "SARPONG KELVIN BAAH STREET",
 
-      
-
       Area: 0.20021705254,
     },
   },
@@ -28910,8 +28040,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "AUGUSTINE DARKO ABABIO STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -28936,8 +28064,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "NANA AKWASI AFRIYIE STREET",
 
-      
-
       Area: 0.20671522239,
     },
   },
@@ -28960,8 +28086,6 @@ export const trabuomFeatures = [
       Plot_No: "2A",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.22722928591,
     },
   },
@@ -28983,8 +28107,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "AUGUSTINE DARKO ABABIO STREET",
-
-      
 
       Area: 0.19478187546,
     },
@@ -29009,8 +28131,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "NANA ASOMA KARIKARI STREET",
 
-      
-
       Area: 0.14469678418,
     },
   },
@@ -29031,8 +28151,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "03",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -29055,8 +28173,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "KYIDOM BARIMA STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -29081,8 +28197,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "NANA ASOMA KARIKARI STREET",
 
-      
-
       Area: 0.20671380968,
     },
   },
@@ -29104,8 +28218,6 @@ export const trabuomFeatures = [
       Plot_No: "04",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -29126,8 +28238,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "KINGSLEY YAW SAM STREET",
-
-      
 
       Area: 0.22959658713,
     },
@@ -29152,8 +28262,6 @@ export const trabuomFeatures = [
       Plot_No: "63",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.18519588228,
     },
   },
@@ -29174,8 +28282,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "BOAKYE ANSAH STREET",
-
-      
 
       Area: 0.18365446748,
     },
@@ -29198,8 +28304,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.22959658714,
     },
   },
@@ -29220,8 +28324,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
-
-      
 
       Area: 0.18334265328,
     },
@@ -29245,8 +28347,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "137",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.18982944629,
     },
@@ -29275,8 +28375,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "OPEN GATE STREET",
 
-      
-
       Area: 0.22978124832,
     },
   },
@@ -29299,8 +28397,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "BOAKYE ANSAH STREET",
-
-      
 
       Area: 0.18365962426,
     },
@@ -29329,8 +28425,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "OPEN GATE STREET",
 
-      
-
       Area: 0.22978191826,
     },
   },
@@ -29352,8 +28446,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "04",
       Street_Nam: "SARPONG KELVIN BAAH STREET",
-
-      
 
       Area: 0.2526775652,
     },
@@ -29380,8 +28472,6 @@ export const trabuomFeatures = [
       Plot_No: "06",
       Street_Nam: "NANA AKWASI AFRIYIE STREET",
 
-      
-
       Area: 0.22306189966,
     },
   },
@@ -29403,8 +28493,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "KYIDOM BARIMA STREET",
 
-      
-
       Area: 0.20661117734,
     },
   },
@@ -29425,8 +28513,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "04",
       Street_Nam: "KOOMI STREET",
-
-      
 
       Area: 0.2295701878,
     },
@@ -29450,8 +28536,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "NANA ASOMA KARIKARI  ROAD",
 
-      
-
       Area: 0.1795145375,
     },
   },
@@ -29474,8 +28558,6 @@ export const trabuomFeatures = [
       Plot_No: "04",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.2226829223,
     },
   },
@@ -29497,8 +28579,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "AUGUSTINE DARKO ABABIO STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -29519,8 +28599,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "14",
       Street_Nam: "KYIDOM BARIMA STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -29547,8 +28625,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "GLORIA OTENG STREET",
 
-      
-
       Area: 0.18089216982,
     },
   },
@@ -29572,8 +28648,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "SARPONG KELVIN BAAH STREET",
 
-      
-
       Area: 0.20161655449,
     },
   },
@@ -29594,8 +28668,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -29618,8 +28690,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "OFORIWAA JOYCE STREET",
 
-      
-
       Area: 0.18341507748,
     },
   },
@@ -29640,8 +28710,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "NANA AKWASI AFRIYIE STREET",
-
-      
 
       Area: 0.20671964047,
     },
@@ -29665,8 +28733,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "KINGSLEY YAW SAM STREET",
 
-      
-
       Area: 0.22636455353,
     },
   },
@@ -29687,8 +28753,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -29711,8 +28775,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.1831991346,
     },
   },
@@ -29733,8 +28795,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
-
-      
 
       Area: 0.22959658714,
     },
@@ -29763,8 +28823,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "GLORIA OTENG STREET",
 
-      
-
       Area: 0.17877238359,
     },
   },
@@ -29786,8 +28844,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "BOAKYE ANSAH STREET",
 
-      
-
       Area: 0.18365446748,
     },
   },
@@ -29808,8 +28864,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "NANA ASOMA KARIKARI STREET",
-
-      
 
       Area: 0.20671964047,
     },
@@ -29833,8 +28887,6 @@ export const trabuomFeatures = [
       Plot_No: "61",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.18538844329,
     },
   },
@@ -29855,8 +28907,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "GLORIA OTENG STREET",
-
-      
 
       Area: 0.17562068277,
     },
@@ -29884,8 +28934,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "GLORIA OTENG STREET",
 
-      
-
       Area: 0.17900309315,
     },
   },
@@ -29906,8 +28954,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "18",
       Street_Nam: "GLORIA OTENG STREET",
-
-      
 
       Area: 0.17562068278,
     },
@@ -29930,8 +28976,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "NANA ASOMA KARIKARI STREET",
 
-      
-
       Area: 0.18604767642,
     },
   },
@@ -29952,8 +28996,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "20",
       Street_Nam: "GLORIA OTENG STREET",
-
-      
 
       Area: 0.17562068277,
     },
@@ -29980,8 +29022,6 @@ export const trabuomFeatures = [
       Plot_No: "30",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.22697589433,
     },
   },
@@ -30002,8 +29042,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
-
-      
 
       Area: 0.1840591195,
     },
@@ -30026,8 +29064,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "AUGUSTINE DARKO ABABIO STREET",
-
-      
 
       Area: 0.18086596182,
     },
@@ -30056,8 +29092,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "GLORIA OTENG STREET",
 
-      
-
       Area: 0.18032963076,
     },
   },
@@ -30081,8 +29115,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
 
-      
-
       Area: 0.22966352901,
     },
   },
@@ -30105,8 +29137,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
-
-      
 
       Area: 0.22966296201,
     },
@@ -30134,8 +29164,6 @@ export const trabuomFeatures = [
       Plot_No: "135",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.36685595225,
     },
   },
@@ -30156,8 +29184,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "03",
       Street_Nam: "KOOMI STREET",
-
-      
 
       Area: 0.19314845874,
     },
@@ -30181,8 +29207,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.2274737082,
     },
   },
@@ -30203,8 +29227,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "OFORIWAA JOYCE STREET",
-
-      
 
       Area: 0.18316575206,
     },
@@ -30227,8 +29249,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "AUGUSTINE DARKO ABABIO STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -30249,8 +29269,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "BOAKYE ANSAH STREET",
-
-      
 
       Area: 0.18365409897,
     },
@@ -30275,8 +29293,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
 
-      
-
       Area: 0.22412364038,
     },
   },
@@ -30297,8 +29313,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
-
-      
 
       Area: 0.18301973625,
     },
@@ -30321,8 +29335,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -30343,8 +29355,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -30367,8 +29377,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
-
-      
 
       Area: 0.20081980611,
     },
@@ -30393,8 +29401,6 @@ export const trabuomFeatures = [
       Plot_No: "59",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.18511973344,
     },
   },
@@ -30416,8 +29422,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "KINGSLEY YAW SAM STREET",
-
-      
 
       Area: 0.22646008691,
     },
@@ -30441,8 +29445,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
 
-      
-
       Area: 0.1979761128,
     },
   },
@@ -30464,8 +29466,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.17383361286,
     },
   },
@@ -30486,8 +29486,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "19",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
-
-      
 
       Area: 0.17562068277,
     },
@@ -30516,8 +29514,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.42720918705,
     },
   },
@@ -30538,8 +29534,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "21",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
-
-      
 
       Area: 0.17562068277,
     },
@@ -30563,8 +29557,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
 
-      
-
       Area: 0.17766667392,
     },
   },
@@ -30585,8 +29577,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "05",
       Street_Nam: "ALVIN JOHNSON LANE",
-
-      
 
       Area: 0.19314845873,
     },
@@ -30609,8 +29599,6 @@ export const trabuomFeatures = [
       Plot_No: "23",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.17562068277,
     },
   },
@@ -30632,8 +29620,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "15",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
-
-      
 
       Area: 0.18604767642,
     },
@@ -30659,8 +29645,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "BOAKYE ANSAH STREET",
 
-      
-
       Area: 0.17934324862,
     },
   },
@@ -30683,8 +29667,6 @@ export const trabuomFeatures = [
       Plot_No: "25",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.17379827565,
     },
   },
@@ -30705,8 +29687,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "SETH WURAH STREET",
-
-      
 
       Area: 0.20661117734,
     },
@@ -30729,8 +29709,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "NANA AKWAMUHENE STREET",
 
-      
-
       Area: 0.18178678469,
     },
   },
@@ -30752,8 +29730,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.18287621757,
     },
   },
@@ -30774,8 +29750,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
-
-      
 
       Area: 0.18604767642,
     },
@@ -30803,8 +29777,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.17051580151,
     },
   },
@@ -30826,8 +29798,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "27",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
-
-      
 
       Area: 0.19088520321,
     },
@@ -30852,8 +29822,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.20009616614,
     },
   },
@@ -30875,8 +29843,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "133",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.26293189256,
     },
@@ -30900,8 +29866,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "KYIDOM BARIMA STREET",
 
-      
-
       Area: 0.20201981784,
     },
   },
@@ -30922,8 +29886,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
-
-      
 
       Area: 0.17383361287,
     },
@@ -30947,8 +29909,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
 
-      
-
       Area: 0.18300194379,
     },
   },
@@ -30969,8 +29929,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "KINGSLEY YAW SAM STREET",
-
-      
 
       Area: 0.22959658713,
     },
@@ -30994,8 +29952,6 @@ export const trabuomFeatures = [
       Plot_No: "018",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.17256419589,
     },
   },
@@ -31018,8 +29974,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.2257123803,
     },
   },
@@ -31040,8 +29994,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
-
-      
 
       Area: 0.18365437985,
     },
@@ -31066,8 +30018,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
 
-      
-
       Area: 0.22972442966,
     },
   },
@@ -31088,8 +30038,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "NANA AKWAMUHENE STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -31112,8 +30060,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "57",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.18512804954,
     },
@@ -31258,8 +30204,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.19015091942,
     },
   },
@@ -31287,8 +30231,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.19693532195,
     },
   },
@@ -31309,8 +30251,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "15",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
-
-      
 
       Area: 0.18273269889,
     },
@@ -31335,8 +30275,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
 
-      
-
       Area: 0.22973168894,
     },
   },
@@ -31357,8 +30295,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
-
-      
 
       Area: 0.17860980867,
     },
@@ -31385,8 +30321,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.17969922097,
     },
   },
@@ -31410,8 +30344,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
 
-      
-
       Area: 0.23101531571,
     },
   },
@@ -31432,8 +30364,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
-
-      
 
       Area: 0.1840591195,
     },
@@ -31459,8 +30389,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.19514312685,
     },
   },
@@ -31485,8 +30413,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
 
-      
-
       Area: 0.22355301879,
     },
   },
@@ -31507,8 +30433,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "13",
       Street_Nam: "KINGSLEY YAW SAM STREET",
-
-      
 
       Area: 0.22959658713,
     },
@@ -31539,8 +30463,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.24093459143,
     },
   },
@@ -31561,8 +30483,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
-
-      
 
       Area: 0.22959658714,
     },
@@ -31588,8 +30508,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
 
-      
-
       Area: 0.2274688617,
     },
   },
@@ -31610,8 +30528,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "NANA AKWAMUHENE STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -31636,8 +30552,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
 
-      
-
       Area: 0.22968680355,
     },
   },
@@ -31660,8 +30574,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "NANA AKWAMUENE STREET",
 
-      
-
       Area: 0.19316333408,
     },
   },
@@ -31682,8 +30594,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
-
-      
 
       Area: 0.18365675001,
     },
@@ -31706,8 +30616,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
 
-      
-
       Area: 0.18365437985,
     },
   },
@@ -31728,8 +30636,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
-
-      
 
       Area: 0.17887186626,
     },
@@ -31754,8 +30660,6 @@ export const trabuomFeatures = [
       Plot_No: "16",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
 
-      
-
       Area: 0.22968600193,
     },
   },
@@ -31777,8 +30681,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.18365675002,
     },
   },
@@ -31799,8 +30701,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "20",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
-
-      
 
       Area: 0.18365675002,
     },
@@ -31830,8 +30730,6 @@ export const trabuomFeatures = [
       Plot_No: "26",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.22511172421,
     },
   },
@@ -31854,8 +30752,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.1795145375,
     },
   },
@@ -31876,8 +30772,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "22",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
-
-      
 
       Area: 0.18365675002,
     },
@@ -31901,8 +30795,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "20",
       Street_Nam: "\\ABDUL AZIZ IBRAHIM STREET",
-
-      
 
       Area: 0.22968439869,
     },
@@ -31931,8 +30823,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "MARFO JOHNSON STREET",
 
-      
-
       Area: 0.22963364117,
     },
   },
@@ -31953,8 +30843,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "24",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
-
-      
 
       Area: 0.18365675002,
     },
@@ -31979,8 +30867,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "22",
       Street_Nam: "ABDUL AZIZ IBRAHIM STREET",
-
-      
 
       Area: 0.22080097605,
     },
@@ -32009,8 +30895,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "MARFO JOHNSON STREET",
 
-      
-
       Area: 0.22963370448,
     },
   },
@@ -32032,8 +30916,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
-
-      
 
       Area: 0.18266852362,
     },
@@ -32057,8 +30939,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "KINGSLEY YAW SAM STREET",
 
-      
-
       Area: 0.22766801931,
     },
   },
@@ -32079,8 +30959,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "SAM FOFIE STREET",
-
-      
 
       Area: 0.19513277859,
     },
@@ -32103,8 +30981,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.17780230342,
     },
   },
@@ -32125,8 +31001,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "14",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
-
-      
 
       Area: 0.22959658714,
     },
@@ -32155,8 +31029,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "MARFO JOHNSON STREET",
 
-      
-
       Area: 0.22969447293,
     },
   },
@@ -32184,8 +31056,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "MARFO JOHNSON STREET",
 
-      
-
       Area: 0.22127180603,
     },
   },
@@ -32207,8 +31077,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "NANA AKWAMUENE STREET",
 
-      
-
       Area: 0.19314845873,
     },
   },
@@ -32229,8 +31097,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "KINGSLEY YAW SAM STREET",
-
-      
 
       Area: 0.22959658714,
     },
@@ -32257,8 +31123,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "MARFO JOHNSON STREET",
-
-      
 
       Area: 0.22140366222,
     },
@@ -32289,8 +31153,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.22284239086,
     },
   },
@@ -32314,8 +31176,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "SAM FOFIE STREET",
 
-      
-
       Area: 0.1790719217,
     },
   },
@@ -32336,8 +31196,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "53",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.18940690382,
     },
@@ -32364,8 +31222,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "MARFO JOHNSON STREET",
 
-      
-
       Area: 0.22966122663,
     },
   },
@@ -32386,8 +31242,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "03",
       Street_Nam: "MALLAM MUSTAPHA STREET",
-
-      
 
       Area: 0.18365675001,
     },
@@ -32414,8 +31268,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "MARFO JOHNSON STREET",
 
-      
-
       Area: 0.22966366493,
     },
   },
@@ -32437,8 +31289,6 @@ export const trabuomFeatures = [
       Plot_No: "05",
       Street_Nam: "MALLAM MUSTAPHA STREET",
 
-      
-
       Area: 0.18365675001,
     },
   },
@@ -32459,8 +31309,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "14",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
-
-      
 
       Area: 0.17780230343,
     },
@@ -32484,8 +31332,6 @@ export const trabuomFeatures = [
       Plot_No: "16",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.22622225481,
     },
   },
@@ -32508,8 +31354,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.16815286346,
     },
   },
@@ -32531,8 +31375,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "AGYA AKUTU STREET",
 
-      
-
       Area: 0.19314845874,
     },
   },
@@ -32553,8 +31395,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "03",
       Street_Nam: "AKWASI KAMKAM STREET",
-
-      
 
       Area: 0.17780230342,
     },
@@ -32580,8 +31420,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "MARFO JOHNSON STREET",
-
-      
 
       Area: 0.22966610323,
     },
@@ -32611,8 +31449,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "DAY CARE STREET",
 
-      
-
       Area: 0.18371838649,
     },
   },
@@ -32633,8 +31469,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "NANA AKWAMUENE STREET",
-
-      
 
       Area: 0.19314845874,
     },
@@ -32661,8 +31495,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "MARFO JOHNSON STREET",
 
-      
-
       Area: 0.22966854152,
     },
   },
@@ -32684,8 +31516,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "SAM FOFIE STREET",
 
-      
-
       Area: 0.19513277859,
     },
   },
@@ -32706,8 +31536,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -32731,8 +31559,6 @@ export const trabuomFeatures = [
       Plot_No: "17",
       Street_Nam: "KINGSLEY YAW SAM STREET",
 
-      
-
       Area: 0.21146463737,
     },
   },
@@ -32755,8 +31581,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "MALLAM MUSTAPHA STREET",
-
-      
 
       Area: 0.18372473632,
     },
@@ -32783,8 +31607,6 @@ export const trabuomFeatures = [
       Plot_No: "21",
       Street_Nam: "MARFO JOHNSON STREET",
 
-      
-
       Area: 0.22964402609,
     },
   },
@@ -32809,8 +31631,6 @@ export const trabuomFeatures = [
       Plot_No: "131",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.17528664185,
     },
   },
@@ -32831,8 +31651,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "KINGSLEY YAW SAM STREET",
-
-      
 
       Area: 0.22959658714,
     },
@@ -32856,8 +31674,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "OHENEBA OWUSU AFRIYIE STREET",
 
-      
-
       Area: 0.18568850412,
     },
   },
@@ -32879,8 +31695,6 @@ export const trabuomFeatures = [
       Plot_No: "17",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.17269744545,
     },
   },
@@ -32901,8 +31715,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
-
-      
 
       Area: 0.17780230342,
     },
@@ -32928,8 +31740,6 @@ export const trabuomFeatures = [
       Plot_No: "51",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.18766963668,
     },
   },
@@ -32952,8 +31762,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "AGYA AKUTU STREET",
 
-      
-
       Area: 0.18860387674,
     },
   },
@@ -32974,8 +31782,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "AKWASI KAMKAM STREET",
-
-      
 
       Area: 0.17780230342,
     },
@@ -32999,8 +31805,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "AGYA AKUTU STREET",
 
-      
-
       Area: 0.16815286346,
     },
   },
@@ -33021,8 +31825,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -33045,8 +31847,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "KINGSLEY YAW SAM STREET",
 
-      
-
       Area: 0.21480355482,
     },
   },
@@ -33067,8 +31867,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "DAY CARE LANE",
-
-      
 
       Area: 0.19513277859,
     },
@@ -33091,8 +31889,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.17269744546,
     },
   },
@@ -33114,8 +31910,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "SAM FOFIE STREET",
 
-      
-
       Area: 0.19513277859,
     },
   },
@@ -33136,8 +31930,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "ANTHONY SAADEM TATER STREET",
-
-      
 
       Area: 0.22959658714,
     },
@@ -33161,8 +31953,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
 
-      
-
       Area: 0.17473094109,
     },
   },
@@ -33183,8 +31973,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "14",
       Street_Nam: "KINGSLEY YAW SAM STREET",
-
-      
 
       Area: 0.22959658714,
     },
@@ -33207,8 +31995,6 @@ export const trabuomFeatures = [
       Plot_No: "06",
       Street_Nam: "NTI APAU STREET",
 
-      
-
       Area: 0.17269744545,
     },
   },
@@ -33230,8 +32016,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "AKWASI KAMKAM STREET",
 
-      
-
       Area: 0.17780230342,
     },
   },
@@ -33252,8 +32036,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "MENSAH YAW STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -33284,8 +32066,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "DAY CARE STREET",
 
-      
-
       Area: 0.18225347016,
     },
   },
@@ -33306,8 +32086,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "14",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -33330,8 +32108,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "MALLAM MUSTAPHA STREET",
 
-      
-
       Area: 0.1756217672,
     },
   },
@@ -33352,8 +32128,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "21",
       Street_Nam: "KINGSLEY YAW SAM STREET",
-
-      
 
       Area: 0.21480355482,
     },
@@ -33376,8 +32150,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "MALLAM MUSTAPHA STREET",
 
-      
-
       Area: 0.16586500236,
     },
   },
@@ -33398,8 +32170,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "14",
       Street_Nam: "MALLAM MUSTAPHA STREET",
-
-      
 
       Area: 0.16586500236,
     },
@@ -33423,8 +32193,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "AGYA AKUTU STREET",
 
-      
-
       Area: 0.17724220269,
     },
   },
@@ -33447,8 +32215,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "ANTHONY SAADEM TATER STREET",
 
-      
-
       Area: 0.22481394021,
     },
   },
@@ -33469,8 +32235,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "MALLAM MUSTAPHA STREET",
-
-      
 
       Area: 0.16586500236,
     },
@@ -33495,8 +32259,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "AGYA AKUTU STREET",
 
-      
-
       Area: 0.19996681999,
     },
   },
@@ -33520,8 +32282,6 @@ export const trabuomFeatures = [
       Plot_No: "30",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.16015092331,
     },
   },
@@ -33543,8 +32303,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "20",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
-
-      
 
       Area: 0.18070749685,
     },
@@ -33570,8 +32328,6 @@ export const trabuomFeatures = [
       Plot_No: "24",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.96916429748,
     },
   },
@@ -33592,8 +32348,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -33619,8 +32373,6 @@ export const trabuomFeatures = [
       Plot_No: "49",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.16782832978,
     },
   },
@@ -33641,8 +32393,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "MENSAH YAW STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -33665,8 +32415,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "AKWASI KAMKAM STREET",
 
-      
-
       Area: 0.17489908244,
     },
   },
@@ -33687,8 +32435,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "MENSAH YAW STREET",
-
-      
 
       Area: 0.22956797481,
     },
@@ -33712,8 +32458,6 @@ export const trabuomFeatures = [
       Plot_No: "51",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.16859752022,
     },
   },
@@ -33736,8 +32480,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
 
-      
-
       Area: 0.16928903086,
     },
   },
@@ -33758,8 +32500,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "53",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.16777855155,
     },
@@ -33795,8 +32535,6 @@ export const trabuomFeatures = [
       Plot_No: "25",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.47814708051,
     },
   },
@@ -33817,8 +32555,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "23",
       Street_Nam: "KINGSLEY YAW SAM STREET",
-
-      
 
       Area: 0.21480355482,
     },
@@ -33841,8 +32577,6 @@ export const trabuomFeatures = [
       Plot_No: "55",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.17676697872,
     },
   },
@@ -33863,8 +32597,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "32",
       Street_Nam: "TRABUOM-NWENESO ROAD",
-
-      
 
       Area: 0.1340083788,
     },
@@ -33887,8 +32619,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "AGYA AKUTU STREET",
 
-      
-
       Area: 0.18178678469,
     },
   },
@@ -33909,8 +32639,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "57",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.17566021124,
     },
@@ -33934,8 +32662,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
 
-      
-
       Area: 0.19996555078,
     },
   },
@@ -33958,8 +32684,6 @@ export const trabuomFeatures = [
       Plot_No: "06",
       Street_Nam: "NTI APAU STREET",
 
-      
-
       Area: 0.1772422027,
     },
   },
@@ -33980,8 +32704,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "59",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.16506943799,
     },
@@ -34006,8 +32728,6 @@ export const trabuomFeatures = [
       Plot_No: "22",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.17762868099,
     },
   },
@@ -34029,8 +32749,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "MARFO JOHNSON STREET",
-
-      
 
       Area: 0.96265752287,
     },
@@ -34054,8 +32772,6 @@ export const trabuomFeatures = [
       Plot_No: "61",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.16463065223,
     },
   },
@@ -34076,8 +32792,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "AKWASI KAMKAM STREET",
-
-      
 
       Area: 0.18070552441,
     },
@@ -34100,8 +32814,6 @@ export const trabuomFeatures = [
       Plot_No: "63",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.1651660393,
     },
   },
@@ -34122,8 +32834,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
-
-      
 
       Area: 0.17383361287,
     },
@@ -34146,8 +32856,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "MENSAH YAW STREET",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -34169,8 +32877,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "MARFO JOHNSON STREET",
-
-      
 
       Area: 0.81883028906,
     },
@@ -34196,8 +32902,6 @@ export const trabuomFeatures = [
       Plot_No: "49",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.17082140857,
     },
   },
@@ -34218,8 +32922,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "MENSAH YAW STREET",
-
-      
 
       Area: 0.20883010585,
     },
@@ -34244,8 +32946,6 @@ export const trabuomFeatures = [
       Plot_No: "34",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.11017160814,
     },
   },
@@ -34268,8 +32968,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "SAMUEL MANU STREET",
 
-      
-
       Area: 0.16928903086,
     },
   },
@@ -34291,8 +32989,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "MENSAH YAW STREET",
 
-      
-
       Area: 0.18365437986,
     },
   },
@@ -34313,8 +33009,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "AGYA AKUTU STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -34347,8 +33041,6 @@ export const trabuomFeatures = [
       Plot_No: "129",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.81837577409,
     },
   },
@@ -34370,8 +33062,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "AKUA NKRUMAH STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -34397,8 +33087,6 @@ export const trabuomFeatures = [
       Plot_No: "20",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
 
-      
-
       Area: 0.17724220269,
     },
   },
@@ -34421,8 +33109,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "AKUA NKRUMAH STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -34449,8 +33135,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "NTI APAU STREET",
 
-      
-
       Area: 0.17719983598,
     },
   },
@@ -34473,8 +33157,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "ANTHONY SAADEM TATER STREET",
-
-      
 
       Area: 0.22376535252,
     },
@@ -34500,8 +33182,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "MARY ASUMPTA TATER STREET",
 
-      
-
       Area: 0.2237101917,
     },
   },
@@ -34523,8 +33203,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "OPPONG AFRIYIE STEPHEN STREET",
-
-      
 
       Area: 0.2129772085,
     },
@@ -34550,8 +33228,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "MARY ASUMPTA TATER STREET",
 
-      
-
       Area: 0.22491709966,
     },
   },
@@ -34573,8 +33249,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
 
-      
-
       Area: 0.17383361286,
     },
   },
@@ -34595,8 +33269,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "MENSAH YAW STREET",
-
-      
 
       Area: 0.1836778318,
     },
@@ -34622,8 +33294,6 @@ export const trabuomFeatures = [
       Plot_No: "48",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.16210047617,
     },
   },
@@ -34645,8 +33315,6 @@ export const trabuomFeatures = [
       Plot_No: "04",
       Street_Nam: "JEFFERY OWUSU STREET",
 
-      
-
       Area: 0.17383361286,
     },
   },
@@ -34667,8 +33335,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "MENSAH YAW STREET",
-
-      
 
       Area: 0.18365437986,
     },
@@ -34695,8 +33361,6 @@ export const trabuomFeatures = [
       Plot_No: "50",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.17874530695,
     },
   },
@@ -34718,8 +33382,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "SAMUEL MANU STREET",
-
-      
 
       Area: 0.17831833374,
     },
@@ -34743,8 +33405,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "AKWASI KAMKAM STREET",
 
-      
-
       Area: 0.17780171746,
     },
   },
@@ -34765,8 +33425,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "MENSAH YAW STREET",
-
-      
 
       Area: 0.21249894731,
     },
@@ -34790,8 +33448,6 @@ export const trabuomFeatures = [
       Plot_No: "52",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.14074163443,
     },
   },
@@ -34813,8 +33469,6 @@ export const trabuomFeatures = [
       Plot_No: "54",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.1274865637,
     },
   },
@@ -34835,8 +33489,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "ADJEI OKINE LANE",
-
-      
 
       Area: 0.18729179776,
     },
@@ -34860,8 +33512,6 @@ export const trabuomFeatures = [
       Plot_No: "56",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.09926601852,
     },
   },
@@ -34883,8 +33533,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "SAMUEL MANU STREET",
-
-      
 
       Area: 0.16928903086,
     },
@@ -34908,8 +33556,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "AKWASI KAMKAM STREET",
 
-      
-
       Area: 0.17724220269,
     },
   },
@@ -34931,8 +33577,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "64",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.11280006945,
     },
@@ -34958,8 +33602,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "MAAME AKOSUAH LYDIA STREET",
 
-      
-
       Area: 0.16275944337,
     },
   },
@@ -34983,8 +33625,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "22",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.92685176353,
     },
@@ -35010,8 +33650,6 @@ export const trabuomFeatures = [
       Plot_No: "60",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.13872383136,
     },
   },
@@ -35032,8 +33670,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "JEFFERY OWUSU STREET",
-
-      
 
       Area: 0.17383361286,
     },
@@ -35057,8 +33693,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
 
-      
-
       Area: 0.17383361286,
     },
   },
@@ -35080,8 +33714,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "66",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.1129460116,
     },
@@ -35107,8 +33739,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "AKUA MAA STREET",
 
-      
-
       Area: 0.17724221945,
     },
   },
@@ -35129,8 +33759,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "ADJEI OKINE LANE",
-
-      
 
       Area: 0.18729179776,
     },
@@ -35156,8 +33784,6 @@ export const trabuomFeatures = [
       Plot_No: "27",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.18285949104,
     },
   },
@@ -35178,8 +33804,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "MENSAH YAW STREET",
-
-      
 
       Area: 0.20661117733,
     },
@@ -35202,8 +33826,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "GEORGE MENSAH STREET",
 
-      
-
       Area: 0.16551759329,
     },
   },
@@ -35224,8 +33846,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "JEFF DACOSTA STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -35248,8 +33868,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "NANA NIMAKO STREET",
 
-      
-
       Area: 0.1871219909,
     },
   },
@@ -35270,8 +33888,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "JEFFERY OWUSU STREET",
-
-      
 
       Area: 0.17383361286,
     },
@@ -35305,8 +33921,6 @@ export const trabuomFeatures = [
       Plot_No: "42",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.18940853796,
     },
   },
@@ -35335,8 +33949,6 @@ export const trabuomFeatures = [
       Plot_No: "04",
       Street_Nam: "GEORGE MENSAH STREET",
 
-      
-
       Area: 0.17005992941,
     },
   },
@@ -35359,8 +33971,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "NANA NIMAKO STREET",
-
-      
 
       Area: 0.19631487616,
     },
@@ -35386,8 +33996,6 @@ export const trabuomFeatures = [
       Plot_No: "37",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.17662082815,
     },
   },
@@ -35411,8 +34019,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "COURAGE JAHMON STREET",
 
-      
-
       Area: 0.91842240181,
     },
   },
@@ -35434,8 +34040,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "MAAME BIRAGO STREET",
 
-      
-
       Area: 0.13330682429,
     },
   },
@@ -35456,8 +34060,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
-
-      
 
       Area: 0.17383361287,
     },
@@ -35481,8 +34083,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "MAAME AGYEIWAA STREET",
 
-      
-
       Area: 0.21015096826,
     },
   },
@@ -35503,8 +34103,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "43",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.12845156457,
     },
@@ -35527,8 +34125,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "JEFFERY OWUSU STREET",
 
-      
-
       Area: 0.17383361286,
     },
   },
@@ -35549,8 +34145,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "AKUA MAA STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -35575,8 +34169,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "GRACE GAMBARI STREET",
 
-      
-
       Area: 0.91834235659,
     },
   },
@@ -35599,8 +34191,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "MAAME BIRAGO STREET",
 
-      
-
       Area: 0.2019850508,
     },
   },
@@ -35621,8 +34211,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "AKUA MAA STREET",
-
-      
 
       Area: 0.17383193716,
     },
@@ -35645,8 +34233,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "JEFF DACOSTA STREET",
 
-      
-
       Area: 0.18178678469,
     },
   },
@@ -35667,8 +34253,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "JEFFERY OWUSU STREET",
-
-      
 
       Area: 0.17383361286,
     },
@@ -35691,8 +34275,6 @@ export const trabuomFeatures = [
       Plot_No: "35",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.1817867847,
     },
   },
@@ -35713,8 +34295,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "NANA NIMAKO STREET",
-
-      
 
       Area: 0.19492840817,
     },
@@ -35737,8 +34317,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "AKUA NKRUMAH STREET",
-
-      
 
       Area: 0.16928903086,
     },
@@ -35763,8 +34341,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "AKUA NKRUMAH STREET",
 
-      
-
       Area: 0.18178678469,
     },
   },
@@ -35786,8 +34362,6 @@ export const trabuomFeatures = [
       Plot_No: "38",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.18016868025,
     },
   },
@@ -35808,8 +34382,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "MAAME BIRAGO STREET",
-
-      
 
       Area: 0.12893799054,
     },
@@ -35835,8 +34407,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "NANA NIMAKO STREET",
 
-      
-
       Area: 0.18408651544,
     },
   },
@@ -35857,8 +34427,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "JEFFERY OWUSU STREET",
-
-      
 
       Area: 0.17383361286,
     },
@@ -35881,8 +34449,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "MAAME AKOSUAH LYDIA STREET",
 
-      
-
       Area: 0.18112310192,
     },
   },
@@ -35903,8 +34469,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "MAAME AGYEIWAA STREET",
-
-      
 
       Area: 0.17543842692,
     },
@@ -35927,8 +34491,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "AKUA MAA STREET",
 
-      
-
       Area: 0.18178678469,
     },
   },
@@ -35949,8 +34511,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "41",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.12240785802,
     },
@@ -35973,8 +34533,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "AKUA MAA STREET",
 
-      
-
       Area: 0.17383193717,
     },
   },
@@ -35995,8 +34553,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "JEFF DACOSTA STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -36019,8 +34575,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "MAAME AGYEIWAA STREET",
 
-      
-
       Area: 0.20140859659,
     },
   },
@@ -36041,8 +34595,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "MAAME BIRAGO STREET",
-
-      
 
       Area: 0.1989556559,
     },
@@ -36066,8 +34618,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "JEFF DACOSTA STREET",
 
-      
-
       Area: 0.1738417754,
     },
   },
@@ -36089,8 +34639,6 @@ export const trabuomFeatures = [
       Plot_No: "33",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.18178678469,
     },
   },
@@ -36111,8 +34659,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "JEFFERY OWUSU STREET",
-
-      
 
       Area: 0.17383361286,
     },
@@ -36136,8 +34682,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "AKUA NKRUMAH STREET",
 
-      
-
       Area: 0.16928903087,
     },
   },
@@ -36160,8 +34704,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "AKUA NKRUMAH STREET",
 
-      
-
       Area: 0.17724220269,
     },
   },
@@ -36183,8 +34725,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "36",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.17524555279,
     },
@@ -36216,8 +34756,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "PAA KWASI AKUFFO STREET",
 
-      
-
       Area: 0.16688137076,
     },
   },
@@ -36240,8 +34778,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "MAAME BIRAGO STREET",
 
-      
-
       Area: 0.13085436766,
     },
   },
@@ -36262,8 +34798,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "NTOBOASE LANE",
-
-      
 
       Area: 0.19198607337,
     },
@@ -36287,8 +34821,6 @@ export const trabuomFeatures = [
       Plot_No: "39",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.11990325413,
     },
   },
@@ -36311,8 +34843,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "JEFF DACOSTA STREET",
 
-      
-
       Area: 0.17724220269,
     },
   },
@@ -36333,8 +34863,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "NANA NIMAKO STREET",
-
-      
 
       Area: 0.18916985499,
     },
@@ -36358,8 +34886,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "AKUA MAA STREET",
 
-      
-
       Area: 0.16928731136,
     },
   },
@@ -36380,8 +34906,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "MAAME AGYEIWAA STREET",
-
-      
 
       Area: 0.17819586434,
     },
@@ -36404,8 +34928,6 @@ export const trabuomFeatures = [
       Plot_No: "31",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.18178678469,
     },
   },
@@ -36426,8 +34948,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "JEFFERY OWUSU STREET",
-
-      
 
       Area: 0.17383361286,
     },
@@ -36450,8 +34970,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "MAAME AGYEIWAA STREET",
 
-      
-
       Area: 0.19035895265,
     },
   },
@@ -36473,8 +34991,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "JEFF DACOSTA STREET",
 
-      
-
       Area: 0.17383361286,
     },
   },
@@ -36495,8 +35011,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "MAAME BIRAGO STREET",
-
-      
 
       Area: 0.19116543912,
     },
@@ -36520,8 +35034,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "COURAGE JAHMON STREET",
-
-      
 
       Area: 0.91838620512,
     },
@@ -36548,8 +35060,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "NANA NIMAKO STREET",
 
-      
-
       Area: 0.18028885982,
     },
   },
@@ -36572,8 +35082,6 @@ export const trabuomFeatures = [
       Plot_No: "29",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.1772422027,
     },
   },
@@ -36595,8 +35103,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "AKUA NKRUMAH STREET",
-
-      
 
       Area: 0.17724220269,
     },
@@ -36630,8 +35136,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "PAA KWASI AKUFFO STREET",
 
-      
-
       Area: 0.18821273179,
     },
   },
@@ -36653,8 +35157,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "JEFF DACOSTA STREET",
-
-      
 
       Area: 0.17724220269,
     },
@@ -36678,8 +35180,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "GRACE GAMBARI STREET",
 
-      
-
       Area: 0.90686735836,
     },
   },
@@ -36702,8 +35202,6 @@ export const trabuomFeatures = [
       Plot_No: "34",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.17892241991,
     },
   },
@@ -36724,8 +35222,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "NANA NIMAKO STREET",
-
-      
 
       Area: 0.19199216677,
     },
@@ -36749,8 +35245,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "AKUA NKRUMAH STREET",
 
-      
-
       Area: 0.16928903086,
     },
   },
@@ -36772,8 +35266,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "JEFF DACOSTA STREET",
 
-      
-
       Area: 0.17383361286,
     },
   },
@@ -36794,8 +35286,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "MAAME AGYEIWAA STREET",
-
-      
 
       Area: 0.18715484877,
     },
@@ -36823,8 +35313,6 @@ export const trabuomFeatures = [
       Plot_No: "03",
       Street_Nam: "PAA KWASI AKUFFO STREET",
 
-      
-
       Area: 0.19049045217,
     },
   },
@@ -36848,8 +35336,6 @@ export const trabuomFeatures = [
       Plot_No: "127",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.91838211842,
     },
   },
@@ -36870,8 +35356,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "MAAME AGYEIWAA STREET",
-
-      
 
       Area: 0.19045274247,
     },
@@ -36895,8 +35379,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "MAAME BIRAGO STREET",
 
-      
-
       Area: 0.18804227068,
     },
   },
@@ -36917,8 +35399,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "MAAME BIRAGO STREET",
-
-      
 
       Area: 0.19334619385,
     },
@@ -36941,8 +35421,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "AKUA NKRUMAH STREET",
 
-      
-
       Area: 0.18178678469,
     },
   },
@@ -36964,8 +35442,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "JEFF DACOSTA STREET",
 
-      
-
       Area: 0.18178678469,
     },
   },
@@ -36986,8 +35462,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "32",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.18334239347,
     },
@@ -37011,8 +35485,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "AKUA NKRUMAH STREET",
 
-      
-
       Area: 0.16928903086,
     },
   },
@@ -37035,8 +35507,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "AKUA MAA STREET",
 
-      
-
       Area: 0.17724220269,
     },
   },
@@ -37058,8 +35528,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "27",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.17724220269,
     },
@@ -37092,8 +35560,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "PAA KWASI AKUFFO STREET",
 
-      
-
       Area: 0.18329334342,
     },
   },
@@ -37116,8 +35582,6 @@ export const trabuomFeatures = [
       Plot_No: "23",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.17765360016,
     },
   },
@@ -37139,8 +35603,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "25",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.18014428044,
     },
@@ -37177,8 +35639,6 @@ export const trabuomFeatures = [
       Plot_No: "17",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.19715931999,
     },
   },
@@ -37201,8 +35661,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "AKUA MAA STREET",
 
-      
-
       Area: 0.17724040652,
     },
   },
@@ -37224,8 +35682,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "JEFF DACOSTA STREET",
 
-      
-
       Area: 0.18178678469,
     },
   },
@@ -37246,8 +35702,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "AKUA NKRUMAH STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -37271,8 +35725,6 @@ export const trabuomFeatures = [
       Plot_No: "27",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.17438702726,
     },
   },
@@ -37294,8 +35746,6 @@ export const trabuomFeatures = [
       Plot_No: "30",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.18266329317,
     },
   },
@@ -37316,8 +35766,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "15",
       Street_Nam: "AKUA MAA STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -37341,8 +35789,6 @@ export const trabuomFeatures = [
       Plot_No: "29",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.18206476016,
     },
   },
@@ -37363,8 +35809,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "25",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.18178678469,
     },
@@ -37387,8 +35831,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "31",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.17736705818,
     },
@@ -37413,8 +35855,6 @@ export const trabuomFeatures = [
       Plot_No: "37",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.19010952318,
     },
   },
@@ -37435,8 +35875,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "28",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.18350139349,
     },
@@ -37461,8 +35899,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "AKUA NKRUMAH STREET",
 
-      
-
       Area: 0.17724220269,
     },
   },
@@ -37483,8 +35919,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "AKUA MAA STREET",
-
-      
 
       Area: 0.18178678469,
     },
@@ -37509,8 +35943,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "COURAGE JAHMON STREET",
 
-      
-
       Area: 0.91837496913,
     },
   },
@@ -37531,8 +35963,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "23",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.1817867847,
     },
@@ -37565,8 +35995,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.1913452707,
     },
   },
@@ -37588,8 +36016,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "26",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.17969226097,
     },
@@ -37613,8 +36039,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "AKUA MAA STREET",
 
-      
-
       Area: 0.17724220269,
     },
   },
@@ -37637,8 +36061,6 @@ export const trabuomFeatures = [
       Plot_No: "28",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.20862902717,
     },
   },
@@ -37659,8 +36081,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "26",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.2433339583,
     },
@@ -37684,8 +36104,6 @@ export const trabuomFeatures = [
       Plot_No: "24",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.26685339407,
     },
   },
@@ -37706,8 +36124,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "22",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.2882958057,
     },
@@ -37731,8 +36147,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "20",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.28152102624,
     },
@@ -37760,8 +36174,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "18",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.31612555032,
     },
@@ -37791,8 +36203,6 @@ export const trabuomFeatures = [
       Plot_No: "16",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.25061239417,
     },
   },
@@ -37817,8 +36227,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.0789845857,
     },
   },
@@ -37839,8 +36247,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "21",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.18178678469,
     },
@@ -37863,8 +36269,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "30",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.17583817264,
     },
@@ -37889,8 +36293,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "AKUA MAA STREET",
 
-      
-
       Area: 0.18178503233,
     },
   },
@@ -37913,8 +36315,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.17380374389,
     },
   },
@@ -37935,8 +36335,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "19",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.18178678469,
     },
@@ -37961,8 +36359,6 @@ export const trabuomFeatures = [
       Plot_No: "20",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.91813273161,
     },
   },
@@ -37984,8 +36380,6 @@ export const trabuomFeatures = [
       Plot_No: "20",
       Street_Nam: "AKUA MAA STREET",
 
-      
-
       Area: 0.18178503233,
     },
   },
@@ -38006,8 +36400,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "FAKYE STREET",
-
-      
 
       Area: 0.18373472534,
     },
@@ -38032,8 +36424,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "JEFF DACOSTA STREET",
 
-      
-
       Area: 0.18179171745,
     },
   },
@@ -38057,8 +36447,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "MARFO JOHNSON STREET",
 
-      
-
       Area: 0.94166622418,
     },
   },
@@ -38079,8 +36467,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.17835660803,
     },
@@ -38103,8 +36489,6 @@ export const trabuomFeatures = [
       Plot_No: "17",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.18178678469,
     },
   },
@@ -38125,8 +36509,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "FAKYE STREET",
-
-      
 
       Area: 0.24482534533,
     },
@@ -38149,8 +36531,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "PAUL AGYEKUM LANE",
 
-      
-
       Area: 0.22964776516,
     },
   },
@@ -38171,8 +36551,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "PAUL AGYEKUM LANE",
-
-      
 
       Area: 0.22964776516,
     },
@@ -38195,8 +36573,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "PAUL AGYEKUM LANE",
 
-      
-
       Area: 0.22964776515,
     },
   },
@@ -38217,8 +36593,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "PAUL AGYEKUM LANE",
-
-      
 
       Area: 0.22964776516,
     },
@@ -38242,8 +36616,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "BONAH JONAS STREET",
 
-      
-
       Area: 0.17805598137,
     },
   },
@@ -38264,8 +36636,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "22",
       Street_Nam: "AKUA MAA STREET",
-
-      
 
       Area: 0.18178503233,
     },
@@ -38288,8 +36658,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "AKOSUA NYARKO STREET",
-
-      
 
       Area: 0.9057275539,
     },
@@ -38315,8 +36683,6 @@ export const trabuomFeatures = [
       Plot_No: "24",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.46837004381,
     },
   },
@@ -38338,8 +36704,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "15",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.1715958856,
     },
@@ -38366,8 +36730,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "GRACE GAMBARI STREET",
 
-      
-
       Area: 0.91831669035,
     },
   },
@@ -38388,8 +36750,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "FAKYE STREET",
-
-      
 
       Area: 0.18373472534,
     },
@@ -38412,8 +36772,6 @@ export const trabuomFeatures = [
       Plot_No: "24",
       Street_Nam: "AKUA MAA STREET",
 
-      
-
       Area: 0.18178503233,
     },
   },
@@ -38434,8 +36792,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.17761849239,
     },
@@ -38461,8 +36817,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "GRACE GAMBARI STREET",
 
-      
-
       Area: 0.90406268381,
     },
   },
@@ -38483,8 +36837,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "NYARKO ABRAKWAH STREET",
-
-      
 
       Area: 0.17945781329,
     },
@@ -38510,8 +36862,6 @@ export const trabuomFeatures = [
       Plot_No: "123",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.91435694977,
     },
   },
@@ -38535,8 +36885,6 @@ export const trabuomFeatures = [
       Plot_No: "29",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.18561120324,
     },
   },
@@ -38558,8 +36906,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "29",
       Street_Nam: "AFIA BEMA STREET",
-
-      
 
       Area: 0.13469379561,
     },
@@ -38583,8 +36929,6 @@ export const trabuomFeatures = [
       Plot_No: "23",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.2321026244,
     },
   },
@@ -38605,8 +36949,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "21",
       Street_Nam: "AFIA BEMA STREET",
-
-      
 
       Area: 0.22964776515,
     },
@@ -38629,8 +36971,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.22964776516,
     },
   },
@@ -38652,8 +36992,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "AFIA BEMA STREET",
-
-      
 
       Area: 0.22969479756,
     },
@@ -38686,8 +37024,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.83989759282,
     },
   },
@@ -38709,8 +37045,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.17110715155,
     },
@@ -38734,8 +37068,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.1671355484,
     },
   },
@@ -38756,8 +37088,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "NYARKO ABRAKWAH STREET",
-
-      
 
       Area: 0.17497777701,
     },
@@ -38780,8 +37110,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "NYARKO ABRAKWAH STREET",
-
-      
 
       Area: 0.17810011026,
     },
@@ -38806,8 +37134,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "ADU ISHMAEL STREET",
 
-      
-
       Area: 0.90418453383,
     },
   },
@@ -38828,8 +37154,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.18525116567,
     },
@@ -38853,8 +37177,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.16258288578,
     },
   },
@@ -38875,8 +37197,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "25",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.14694181577,
     },
@@ -38902,8 +37222,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.52201468553,
     },
   },
@@ -38926,8 +37244,6 @@ export const trabuomFeatures = [
       Plot_No: "24",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.11817322339,
     },
   },
@@ -38949,8 +37265,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "NYARKO ABRAKWAH STREET",
 
-      
-
       Area: 0.17670203659,
     },
   },
@@ -38971,8 +37285,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "AKOSUA NYARKO STREET",
-
-      
 
       Area: 0.91830693468,
     },
@@ -38996,8 +37308,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.17223912564,
     },
   },
@@ -39018,8 +37328,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "28",
       Street_Nam: "AFIA BEMA STREET",
-
-      
 
       Area: 0.23321485124,
     },
@@ -39042,8 +37350,6 @@ export const trabuomFeatures = [
       Plot_No: "20",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -39065,8 +37371,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -39087,8 +37391,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "AFIA BEMA STREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -39117,8 +37419,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.28747003113,
     },
   },
@@ -39139,8 +37439,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "AKOSUA NYARKO STREET",
-
-      
 
       Area: 0.9183068191,
     },
@@ -39164,8 +37462,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.18515076934,
     },
   },
@@ -39187,8 +37483,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "AFIA BEMA STREET",
-
-      
 
       Area: 0.18673643607,
     },
@@ -39212,8 +37506,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "NYARKO ABRAKWAH STREET",
 
-      
-
       Area: 0.17215144969,
     },
   },
@@ -39234,8 +37526,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "AKOSUA NYARKO STREET",
-
-      
 
       Area: 0.91830580828,
     },
@@ -39260,8 +37550,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.1817516826,
     },
   },
@@ -39284,8 +37572,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.19228386042,
     },
@@ -39310,8 +37596,6 @@ export const trabuomFeatures = [
       Plot_No: "31",
       Street_Nam: "OPPONG AFRIYIE STEPHEN STREET",
 
-      
-
       Area: 0.24707152792,
     },
   },
@@ -39332,8 +37616,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "AKOSUA NYARKO STREET",
-
-      
 
       Area: 0.9183059117,
     },
@@ -39357,8 +37639,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "PAUL KUSI STREET",
 
-      
-
       Area: 0.17865577851,
     },
   },
@@ -39379,8 +37659,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.17537801299,
     },
@@ -39403,8 +37681,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
-      
-
       Area: 0.20665907938,
     },
   },
@@ -39425,8 +37701,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "AFIA BEMA STREET",
-
-      
 
       Area: 0.18758713782,
     },
@@ -39456,8 +37730,6 @@ export const trabuomFeatures = [
       Plot_No: "119",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 1.07068609544,
     },
   },
@@ -39478,8 +37750,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "FAKYE LANE",
-
-      
 
       Area: 0.25253568033,
     },
@@ -39504,8 +37774,6 @@ export const trabuomFeatures = [
       Plot_No: "22",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.20239033551,
     },
   },
@@ -39526,8 +37794,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "07",
       Street_Nam: "KOFI NKANSAH SREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -39550,8 +37816,6 @@ export const trabuomFeatures = [
       Plot_No: "05",
       Street_Nam: "KOFI NKANSAH SREET",
 
-      
-
       Area: 0.22956797482,
     },
   },
@@ -39572,8 +37836,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "03",
       Street_Nam: "KOFI NKANSAH SREET",
-
-      
 
       Area: 0.22956797482,
     },
@@ -39596,8 +37858,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "KOFI NKANSAH STREET",
 
-      
-
       Area: 0.13712425183,
     },
   },
@@ -39618,8 +37878,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "AFIA BEMA STREET",
-
-      
 
       Area: 0.29001424174,
     },
@@ -39642,8 +37900,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "NYARKO ABRAKWAH STREET",
-
-      
 
       Area: 0.17231236504,
     },
@@ -39669,8 +37925,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.19472568303,
     },
   },
@@ -39693,8 +37947,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "ADU ISHMAEL STREET",
 
-      
-
       Area: 0.90203101796,
     },
   },
@@ -39715,8 +37967,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "MARGARET NIMO STREET",
-
-      
 
       Area: 0.91829995303,
     },
@@ -39741,8 +37991,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.16972932095,
     },
   },
@@ -39765,8 +38013,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.25013639961,
     },
   },
@@ -39787,8 +38033,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "KOFI NKANSAH STREET",
-
-      
 
       Area: 0.22962105038,
     },
@@ -39813,8 +38057,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "FAKYE LANE",
 
-      
-
       Area: 0.25253053184,
     },
   },
@@ -39835,8 +38077,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "MARGARET NIMO STREET",
-
-      
 
       Area: 0.91830026359,
     },
@@ -39861,8 +38101,6 @@ export const trabuomFeatures = [
       Plot_No: "25",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.20920643976,
     },
   },
@@ -39886,8 +38124,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "ERNEST SASU STREET",
 
-      
-
       Area: 0.21004183762,
     },
   },
@@ -39908,8 +38144,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "MARGARET NIMO STREET",
-
-      
 
       Area: 0.91830158316,
     },
@@ -39933,8 +38167,6 @@ export const trabuomFeatures = [
       Plot_No: "03",
       Street_Nam: "ABETOR SAMUEL STREET",
 
-      
-
       Area: 0.17357423949,
     },
   },
@@ -39956,8 +38188,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "PATRICIA ASUMANIN STREET",
 
-      
-
       Area: 0.22962105038,
     },
   },
@@ -39978,8 +38208,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "MARGARET NIMO STREET",
-
-      
 
       Area: 0.91830166849,
     },
@@ -40003,8 +38231,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "ERNEST SASU STREET",
-
-      
 
       Area: 0.19446320163,
     },
@@ -40035,8 +38261,6 @@ export const trabuomFeatures = [
       Plot_No: "117",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.76499521333,
     },
   },
@@ -40057,8 +38281,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "KOFI NKANSAH STREET",
-
-      
 
       Area: 0.22962105038,
     },
@@ -40082,8 +38304,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.21013834604,
     },
   },
@@ -40106,8 +38326,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "ERNEST SASU STREET",
 
-      
-
       Area: 0.21659953151,
     },
   },
@@ -40128,8 +38346,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "FAKYE LANE",
-
-      
 
       Area: 0.25253924875,
     },
@@ -40152,8 +38368,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.20659429539,
     },
   },
@@ -40175,8 +38389,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.23799406113,
     },
   },
@@ -40197,8 +38409,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "PATRICIA ASUMANIN STREET",
-
-      
 
       Area: 0.22962105038,
     },
@@ -40222,8 +38432,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "ERNEST SASU STREET",
 
-      
-
       Area: 0.2290211974,
     },
   },
@@ -40244,8 +38452,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "KOFI NKANSAH STREET",
-
-      
 
       Area: 0.22962105039,
     },
@@ -40268,8 +38474,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "PATRICIA ASUMANIN STREET",
-
-      
 
       Area: 0.23120905004,
     },
@@ -40294,8 +38498,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
-      
-
       Area: 0.20668867343,
     },
   },
@@ -40319,8 +38521,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "FAKYE LANE",
 
-      
-
       Area: 0.20662190391,
     },
   },
@@ -40342,8 +38542,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.24793436505,
     },
   },
@@ -40364,8 +38562,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "05",
       Street_Nam: "KUMI  MAHAMA STREET",
-
-      
 
       Area: 0.2525309478,
     },
@@ -40389,8 +38585,6 @@ export const trabuomFeatures = [
       Plot_No: "17",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.19470685266,
     },
   },
@@ -40411,8 +38605,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "PATRICIA ASUMANIN STREET",
-
-      
 
       Area: 0.22962105038,
     },
@@ -40435,8 +38627,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "MARGARET NIMO STREET",
 
-      
-
       Area: 0.91828415554,
     },
   },
@@ -40457,8 +38647,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "OPPONG ASARE STREET",
-
-      
 
       Area: 0.235430415,
     },
@@ -40481,8 +38669,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "MARGARET NIMO STREET",
 
-      
-
       Area: 0.91828413703,
     },
   },
@@ -40503,8 +38689,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "KOFI NKANSAH STREET",
-
-      
 
       Area: 0.22962105038,
     },
@@ -40528,8 +38712,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "PATRICIA ASUMANIN STREET",
-
-      
 
       Area: 0.18155641929,
     },
@@ -40562,8 +38744,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
-      
-
       Area: 1.26269699133,
     },
   },
@@ -40584,8 +38764,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "04",
       Street_Nam: "FUSENI IBRAHIM LANE",
-
-      
 
       Area: 0.18270171731,
     },
@@ -40608,8 +38786,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "OPPONG ASARE STREET",
 
-      
-
       Area: 0.22643500934,
     },
   },
@@ -40631,8 +38807,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "MARGARET NIMO STREET",
-
-      
 
       Area: 0.9182641308,
     },
@@ -40659,8 +38833,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "ERNEST SASU STREET",
 
-      
-
       Area: 0.202099922,
     },
   },
@@ -40681,8 +38853,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "PATRICIA ASUMANIN STREET",
-
-      
 
       Area: 0.22962105038,
     },
@@ -40705,8 +38875,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "PATRICIA ASUMANIN STREET",
 
-      
-
       Area: 0.19414031354,
     },
   },
@@ -40727,8 +38895,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "KOFI NKANSAH STREET",
-
-      
 
       Area: 0.22962105038,
     },
@@ -40754,8 +38920,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "ERNEST SASU STREET",
 
-      
-
       Area: 0.31086909779,
     },
   },
@@ -40779,8 +38943,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "ERNEST SASU STREET",
 
-      
-
       Area: 0.20212039944,
     },
   },
@@ -40802,8 +38964,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "PAT LANE",
 
-      
-
       Area: 0.14692350388,
     },
   },
@@ -40824,8 +38984,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "PATRICIA ASUMANIN STREET",
-
-      
 
       Area: 0.22962105038,
     },
@@ -40851,8 +39009,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "ADU ISHMAEL STREET",
 
-      
-
       Area: 0.90977397628,
     },
   },
@@ -40874,8 +39030,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "DORIS AMAKYE STREET",
-
-      
 
       Area: 0.17885022313,
     },
@@ -40899,8 +39053,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "KOFI NKANSAH STREET",
 
-      
-
       Area: 0.22912448712,
     },
   },
@@ -40922,8 +39074,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "PATRICIA ASUMANIN STREET",
-
-      
 
       Area: 0.20507647134,
     },
@@ -40949,8 +39099,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
-      
-
       Area: 0.22310564752,
     },
   },
@@ -40971,8 +39119,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "JANET AMPOFOWAA STREET",
-
-      
 
       Area: 0.91827977362,
     },
@@ -40996,8 +39142,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "JACINTA COFFIE STREET",
 
-      
-
       Area: 0.15610640081,
     },
   },
@@ -41019,8 +39163,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "BEN ADU FOFIE",
 
-      
-
       Area: 0.22956882294,
     },
   },
@@ -41041,8 +39183,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "BEN ADU FOFIE",
-
-      
 
       Area: 0.22956882294,
     },
@@ -41065,8 +39205,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "JANET AMPOFOWAA STREET",
 
-      
-
       Area: 0.91827986165,
     },
   },
@@ -41088,8 +39226,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "13",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.22190426373,
     },
@@ -41114,8 +39250,6 @@ export const trabuomFeatures = [
       Plot_No: "113",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.87519931909,
     },
   },
@@ -41138,8 +39272,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "PAT LANE",
 
-      
-
       Area: 0.14692350389,
     },
   },
@@ -41160,8 +39292,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "ERNEST OBENG STREET",
-
-      
 
       Area: 0.19126482633,
     },
@@ -41184,8 +39314,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "PATRICIA ASUMANIN STREET",
 
-      
-
       Area: 0.22962105038,
     },
   },
@@ -41206,8 +39334,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "PATRICIA ASUMANIN STREET",
-
-      
 
       Area: 0.25717036796,
     },
@@ -41234,8 +39360,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "OPPONG ASARE STREET",
 
-      
-
       Area: 0.19618164203,
     },
   },
@@ -41257,8 +39381,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "JACINTA COFFIE STREET",
-
-      
 
       Area: 0.15610622288,
     },
@@ -41283,8 +39405,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "PATRICIA ASUMANIN STREET",
 
-      
-
       Area: 0.25345999141,
     },
   },
@@ -41305,8 +39425,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "JACINTA COFFIE STREET",
-
-      
 
       Area: 0.17217598112,
     },
@@ -41330,8 +39448,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "BEN ADU FOFIE",
 
-      
-
       Area: 0.22956837359,
     },
   },
@@ -41352,8 +39468,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "15",
       Street_Nam: "PATRICIA ASUMANIN STREET",
-
-      
 
       Area: 0.2243581627,
     },
@@ -41378,8 +39492,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "13",
       Street_Nam: "DORIS AMAKYE STREET",
-
-      
 
       Area: 0.18393165445,
     },
@@ -41416,8 +39528,6 @@ export const trabuomFeatures = [
       Plot_No: "111",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.50980726796,
     },
   },
@@ -41440,8 +39550,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "BRIGHT DWOMOH MENSAH STREET",
 
-      
-
       Area: 0.17467694195,
     },
   },
@@ -41463,8 +39571,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "BEN ADU FOFIE",
-
-      
 
       Area: 0.20661130348,
     },
@@ -41493,8 +39599,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.5596919972,
     },
   },
@@ -41516,8 +39620,6 @@ export const trabuomFeatures = [
       Plot_No: "03",
       Street_Nam: "JASON OKYERE LANE",
 
-      
-
       Area: 0.22956809319,
     },
   },
@@ -41538,8 +39640,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.22955762133,
     },
@@ -41565,8 +39665,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.18180637897,
     },
   },
@@ -41588,8 +39686,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "BRIGHT DWOMOH MENSAH STREET",
-
-      
 
       Area: 0.19927035705,
     },
@@ -41613,8 +39709,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "18",
       Street_Nam: "PATRICIA ASUMANIN STREET",
-
-      
 
       Area: 0.22985056512,
     },
@@ -41640,8 +39734,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "BRIGHT DWOMOH MENSAH STREET",
 
-      
-
       Area: 0.18282650439,
     },
   },
@@ -41664,8 +39756,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "05",
       Street_Nam: "JASON OKYERELANE",
-
-      
 
       Area: 0.22956793339,
     },
@@ -41690,8 +39780,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.22955206328,
     },
   },
@@ -41712,8 +39800,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "07",
       Street_Nam: "LORRY PARK LANE",
-
-      
 
       Area: 0.20669737682,
     },
@@ -41739,8 +39825,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 1.06641392684,
     },
   },
@@ -41764,8 +39848,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.17909522867,
     },
   },
@@ -41787,8 +39869,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "BRIGHT DWOMOH MENSAH STREET",
-
-      
 
       Area: 0.20456520076,
     },
@@ -41812,8 +39892,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "JANET AMPOFOWAA STREET",
-
-      
 
       Area: 0.91167571664,
     },
@@ -41839,8 +39917,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
-      
-
       Area: 0.20660025037,
     },
   },
@@ -41861,8 +39937,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "05",
       Street_Nam: "LORRY PARK LANE",
-
-      
 
       Area: 0.20669737682,
     },
@@ -41886,8 +39960,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "ROBERT KONTOR STREET",
 
-      
-
       Area: 0.20661141234,
     },
   },
@@ -41908,8 +39980,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "ROBERT KONTOR STREET",
-
-      
 
       Area: 0.22956816235,
     },
@@ -41933,8 +40003,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.22030219342,
     },
   },
@@ -41955,8 +40023,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "03",
       Street_Nam: "LORRY PARK LANE",
-
-      
 
       Area: 0.20669737682,
     },
@@ -41981,8 +40047,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "BRIGHT DWOMOH MENSAH STREET",
 
-      
-
       Area: 0.2296895763,
     },
   },
@@ -42004,8 +40068,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "23",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
-
-      
 
       Area: 0.19984770408,
     },
@@ -42031,8 +40093,6 @@ export const trabuomFeatures = [
       Plot_No: "16",
       Street_Nam: "BRIGHT DWOMOH MENSAH STREET",
 
-      
-
       Area: 0.22974966105,
     },
   },
@@ -42053,8 +40113,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "ROBERT KONTOR STREET",
-
-      
 
       Area: 0.22956879686,
     },
@@ -42080,8 +40138,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.918194105,
     },
   },
@@ -42102,8 +40158,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "ROBERT KONTOR STREET",
-
-      
 
       Area: 0.2525256771,
     },
@@ -42129,8 +40183,6 @@ export const trabuomFeatures = [
       Plot_No: "16",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.62785186839,
     },
   },
@@ -42154,8 +40206,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "BRIGHT DWOMOH MENSAH",
 
-      
-
       Area: 0.22991764023,
     },
   },
@@ -42176,8 +40226,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "25",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
-
-      
 
       Area: 0.20670386076,
     },
@@ -42202,8 +40250,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.18986758055,
     },
   },
@@ -42226,8 +40272,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "EDWARD ANSAH LANE",
-
-      
 
       Area: 0.25252117192,
     },
@@ -42255,8 +40299,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "DWOMOH MENSAH STREET",
 
-      
-
       Area: 1.36846996361,
     },
   },
@@ -42278,8 +40320,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "20",
       Street_Nam: "DORIS AMAKYE STREET",
-
-      
 
       Area: 0.17842024963,
     },
@@ -42303,8 +40343,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "20",
       Street_Nam: "BRIGHT DWOMOH MENSAH",
-
-      
 
       Area: 0.23010620715,
     },
@@ -42330,8 +40368,6 @@ export const trabuomFeatures = [
       Plot_No: "25",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.23014662428,
     },
   },
@@ -42353,8 +40389,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "22",
       Street_Nam: "BRIGHT DWOMOH MENSAH",
-
-      
 
       Area: 0.18431169763,
     },
@@ -42378,8 +40412,6 @@ export const trabuomFeatures = [
       Plot_No: "22",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.20091833579,
     },
   },
@@ -42401,8 +40433,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "103",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.73701534417,
     },
@@ -42426,8 +40456,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "24",
       Street_Nam: "BRIGHT DWOMOH MENSAH",
-
-      
 
       Area: 0.18446911574,
     },
@@ -42455,8 +40483,6 @@ export const trabuomFeatures = [
       Plot_No: "101",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.69491548372,
     },
   },
@@ -42480,8 +40506,6 @@ export const trabuomFeatures = [
       Plot_No: "24",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.17559243778,
     },
   },
@@ -42504,8 +40528,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "99",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.20137326469,
     },
@@ -42532,8 +40554,6 @@ export const trabuomFeatures = [
       Plot_No: "29",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.18461063587,
     },
   },
@@ -42557,8 +40577,6 @@ export const trabuomFeatures = [
       Plot_No: "95",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.13080301459,
     },
   },
@@ -42579,8 +40597,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "93",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.21077049485,
     },
@@ -42607,8 +40623,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "GLORIA OTENG STREET",
-
-      
 
       Area: 0.18724523579,
     },
@@ -42637,8 +40651,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "GLORIA OTENG STREET",
-
-      
 
       Area: 0.18791553248,
     },
@@ -42669,8 +40681,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "GLORIA OTENG STREET",
 
-      
-
       Area: 0.19473982141,
     },
   },
@@ -42696,8 +40706,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "GLORIA OTENG STREET",
-
-      
 
       Area: 0.08893793295,
     },
@@ -42734,8 +40742,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "BOAKYE ANSAH STREET",
 
-      
-
       Area: 0.55923775615,
     },
   },
@@ -42758,8 +40764,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "BOAKYE ANSAH STREET",
-
-      
 
       Area: 0.18368393788,
     },
@@ -42784,8 +40788,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "BOAKYE ANSAH STREET",
 
-      
-
       Area: 0.18365769065,
     },
   },
@@ -42808,8 +40810,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "BOAKYE ANSAH STREET",
-
-      
 
       Area: 0.18366752398,
     },
@@ -42834,8 +40834,6 @@ export const trabuomFeatures = [
       Plot_No: "06",
       Street_Nam: "FRANK ADDO KUFFUOR STREET",
 
-      
-
       Area: 0.17906568878,
     },
   },
@@ -42858,8 +40856,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "12",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.16479592624,
     },
@@ -42884,8 +40880,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "DAVID AKUBILA STREET",
-
-      
 
       Area: 0.18505316619,
     },
@@ -42913,8 +40907,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "DAVID AKUBILA STREET",
 
-      
-
       Area: 0.1908986681,
     },
   },
@@ -42939,8 +40931,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "ANDREWS KWABEN BOADU STREET",
-
-      
 
       Area: 0.16294640472,
     },
@@ -42967,8 +40957,6 @@ export const trabuomFeatures = [
       Plot_No: "16",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.15951691133,
     },
   },
@@ -42991,8 +40979,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "18",
       Street_Nam: "AKWASI MENSAH STREET",
-
-      
 
       Area: 0.16528756668,
     },
@@ -43018,8 +41004,6 @@ export const trabuomFeatures = [
       Plot_No: "20",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.16529046937,
     },
   },
@@ -43041,8 +41025,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "22",
       Street_Nam: "AKWASI MENSAH STREET",
-
-      
 
       Area: 0.16336605709,
     },
@@ -43066,8 +41048,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "24",
       Street_Nam: "AKWASI MENSAH STREET",
-
-      
 
       Area: 0.16721207488,
     },
@@ -43093,8 +41073,6 @@ export const trabuomFeatures = [
       Plot_No: "26",
       Street_Nam: "AKWASI MENSAH STREET",
 
-      
-
       Area: 0.15676309484,
     },
   },
@@ -43117,8 +41095,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "217",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.1815779712,
     },
@@ -43143,8 +41119,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "PHILIP MENSAH STREET",
 
-      
-
       Area: 0.18364947091,
     },
   },
@@ -43167,8 +41141,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "PHILIP MENSAH STREET",
-
-      
 
       Area: 0.18365132906,
     },
@@ -43193,8 +41165,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "PHILIP MENSAH STREET",
 
-      
-
       Area: 0.18365729446,
     },
   },
@@ -43217,8 +41187,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "PHILIP MENSAH STREET",
-
-      
 
       Area: 0.18365717863,
     },
@@ -43243,8 +41211,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "DORIS AMAKYE STREET",
-
-      
 
       Area: 0.18178640661,
     },
@@ -43271,8 +41237,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.18177120621,
     },
   },
@@ -43296,8 +41260,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "ERNEST SASU STREET",
-
-      
 
       Area: 0.19754731782,
     },
@@ -43324,8 +41286,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "ERNEST SASU STREET",
 
-      
-
       Area: 0.20207781292,
     },
   },
@@ -43350,8 +41310,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "DORIS AMAKYE STREET",
-
-      
 
       Area: 0.19315844395,
     },
@@ -43379,8 +41337,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.19316364934,
     },
   },
@@ -43405,8 +41361,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "DORIS AMAKYE STREET",
-
-      
 
       Area: 0.19320651428,
     },
@@ -43434,8 +41388,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.18537427219,
     },
   },
@@ -43458,8 +41410,6 @@ export const trabuomFeatures = [
       Plot_No: "75",
       Street_Nam: "YAW BRONYA STREET",
 
-      
-
       Area: 0.17897123145,
     },
   },
@@ -43480,8 +41430,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "51",
       Street_Nam: "YAW BRONYA STREET",
-
-      
 
       Area: 0.11065272164,
     },
@@ -43507,8 +41455,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "RICHARD AMPONSAH CLOSE",
 
-      
-
       Area: 0.1618344151,
     },
   },
@@ -43531,8 +41477,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "TRABUOM-NWENESO ROAD",
-
-      
 
       Area: 0.22957389631,
     },
@@ -43557,8 +41501,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.15181866155,
     },
   },
@@ -43581,8 +41523,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "14",
       Street_Nam: "TRABUOM-NWENESO ROAD",
-
-      
 
       Area: 0.20740917324,
     },
@@ -43607,8 +41547,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "NWENESO - TRABUOM ROAD",
-
-      
 
       Area: 0.22959968587,
     },
@@ -43638,8 +41576,6 @@ export const trabuomFeatures = [
       Plot_No: "28",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.22506436573,
     },
   },
@@ -43663,8 +41599,6 @@ export const trabuomFeatures = [
       Plot_No: "32",
       Street_Nam: "TRABUOM-NWENESO ROAD",
 
-      
-
       Area: 0.22496057913,
     },
   },
@@ -43687,8 +41621,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "157",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.20407799959,
     },
@@ -43714,8 +41646,6 @@ export const trabuomFeatures = [
       Plot_No: "177",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.21701347202,
     },
   },
@@ -43737,8 +41667,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "193",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.13779377894,
     },
@@ -43763,8 +41691,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.25154437096,
     },
   },
@@ -43788,8 +41714,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.22655384609,
     },
   },
@@ -43812,8 +41736,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "SARFOWAA AFIA STREET",
-
-      
 
       Area: 0.14706884747,
     },
@@ -43839,8 +41761,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.24793808055,
     },
   },
@@ -43863,8 +41783,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "AMA BOATEMAA STREET",
-
-      
 
       Area: 0.25250149125,
     },
@@ -43889,8 +41807,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "AMA BOATEMAA STREET",
 
-      
-
       Area: 0.27787694171,
     },
   },
@@ -43913,8 +41829,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "20",
       Street_Nam: "AMA BOATEMAA STREET",
-
-      
 
       Area: 0.27782098718,
     },
@@ -43939,8 +41853,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "NANA  AKWAMUHENE",
 
-      
-
       Area: 0.18860254254,
     },
   },
@@ -43964,8 +41876,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "NANA AKWAMUENE STREET",
 
-      
-
       Area: 0.19313435288,
     },
   },
@@ -43988,8 +41898,6 @@ export const trabuomFeatures = [
       Plot_No: "21",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.1726974875,
     },
   },
@@ -44011,8 +41919,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "KINGSLEY YAW SAM STREET",
-
-      
 
       Area: 0.1607177909,
     },
@@ -44039,8 +41945,6 @@ export const trabuomFeatures = [
       Plot_No: "26",
       Street_Nam: "NANA ASOMA KARIKARI ROAD",
 
-      
-
       Area: 0.22229505453,
     },
   },
@@ -44063,8 +41967,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "15",
       Street_Nam: "NANA AKWAMUHENE STREET",
-
-      
 
       Area: 0.18179157953,
     },
@@ -44089,8 +41991,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "NANA AKWAMUHENE STREET",
 
-      
-
       Area: 0.18178125262,
     },
   },
@@ -44114,8 +42014,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "NANA AKWAMUHENE STREET",
 
-      
-
       Area: 0.1817994803,
     },
   },
@@ -44137,8 +42035,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "NANA AKWAMUHENE STREET",
-
-      
 
       Area: 0.18177460697,
     },
@@ -44163,8 +42059,6 @@ export const trabuomFeatures = [
       Plot_No: "2",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.2199362244,
     },
   },
@@ -44188,8 +42082,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.19669571824,
     },
   },
@@ -44211,8 +42103,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "18",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
-
-      
 
       Area: 0.17489753299,
     },
@@ -44242,8 +42132,6 @@ export const trabuomFeatures = [
       Plot_No: "24",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.16110806013,
     },
   },
@@ -44270,8 +42158,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
-
-      
 
       Area: 0.11668852552,
     },
@@ -44301,8 +42187,6 @@ export const trabuomFeatures = [
       Plot_No: "7",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.16490612947,
     },
   },
@@ -44330,8 +42214,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
-
-      
 
       Area: 0.16351396279,
     },
@@ -44362,8 +42244,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.16330069213,
     },
   },
@@ -44393,8 +42273,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.17025449227,
     },
   },
@@ -44420,8 +42298,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "11",
       Street_Nam: "GLORIA OTENG STREET",
-
-      
 
       Area: 0.18599724155,
     },
@@ -44450,8 +42326,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "GLORIA OTENG STREET",
 
-      
-
       Area: 0.18851309584,
     },
   },
@@ -44474,8 +42348,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "GLORIA OTENG STREET",
-
-      
 
       Area: 0.17004922433,
     },
@@ -44500,8 +42372,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "PHILIP FORKUO STREET",
 
-      
-
       Area: 0.21597449757,
     },
   },
@@ -44524,8 +42394,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "20",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.22223646671,
     },
@@ -44550,8 +42418,6 @@ export const trabuomFeatures = [
       Plot_No: "28",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.17808282909,
     },
   },
@@ -44575,8 +42441,6 @@ export const trabuomFeatures = [
       Plot_No: "27",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.22399847262,
     },
   },
@@ -44599,8 +42463,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "19",
       Street_Nam: "KWAKU ADUTWUM STREET",
-
-      
 
       Area: 0.19815863958,
     },
@@ -44637,8 +42499,6 @@ export const trabuomFeatures = [
       Plot_No: "115",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.85358753695,
     },
   },
@@ -44661,8 +42521,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "ADU ISHMAEL STREET",
-
-      
 
       Area: 0.90188296041,
     },
@@ -44688,8 +42546,6 @@ export const trabuomFeatures = [
       Plot_No: "121",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.89779635477,
     },
   },
@@ -44712,8 +42568,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "MARFO JOHNSON STREET",
-
-      
 
       Area: 0.97939662916,
     },
@@ -44738,8 +42592,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "GRACE GAMBARI STREET",
-
-      
 
       Area: 0.90229664123,
     },
@@ -44766,8 +42618,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "GRACE GAMBARI STREET",
 
-      
-
       Area: 0.91836161969,
     },
   },
@@ -44792,8 +42642,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "GRACE GAMBARI STREET",
-
-      
 
       Area: 0.9183486445,
     },
@@ -44820,8 +42668,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "COURAGE JAHMON STREET",
 
-      
-
       Area: 0.91832071428,
     },
   },
@@ -44847,8 +42693,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "COURAGE JAHMON STREET",
 
-      
-
       Area: 0.91835066955,
     },
   },
@@ -44873,8 +42717,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "COURAGE JAHMON STREET",
-
-      
 
       Area: 0.91836346577,
     },
@@ -44910,8 +42752,6 @@ export const trabuomFeatures = [
       Plot_No: "107",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.60601835208,
     },
   },
@@ -44936,8 +42776,6 @@ export const trabuomFeatures = [
       Plot_No: "109",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.62612232459,
     },
   },
@@ -44961,8 +42799,6 @@ export const trabuomFeatures = [
       Plot_No: "3",
       Street_Nam: "AKOSUA NYARKO STREET",
 
-      
-
       Area: 0.90375403233,
     },
   },
@@ -44985,8 +42821,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "AKOSUA NYARKO STREET",
-
-      
 
       Area: 0.9006672831,
     },
@@ -45012,8 +42846,6 @@ export const trabuomFeatures = [
       Street_Nam: "KWAKU ADUTWUM STREET",
       Owner_Info: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 0.16147299107,
     },
   },
@@ -45038,8 +42870,6 @@ export const trabuomFeatures = [
       Plot_No: "139",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.55991509415,
     },
   },
@@ -45062,8 +42892,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.90767583917,
     },
@@ -45090,8 +42918,6 @@ export const trabuomFeatures = [
       Plot_No: "105",
       Street_Nam: "ALEXANDER OWUSU STREET",
 
-      
-
       Area: 0.18410488194,
     },
   },
@@ -45114,8 +42940,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.21922809037,
     },
@@ -45140,8 +42964,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.22126183527,
     },
   },
@@ -45164,8 +42986,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "15",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.21899189175,
     },
@@ -45191,8 +43011,6 @@ export const trabuomFeatures = [
       Plot_No: "21",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.20661060653,
     },
   },
@@ -45216,8 +43034,6 @@ export const trabuomFeatures = [
       Plot_No: "23",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.20658604759,
     },
   },
@@ -45240,8 +43056,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "27",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.1138546474,
     },
@@ -45267,8 +43081,6 @@ export const trabuomFeatures = [
       Plot_No: "31",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.18758396207,
     },
   },
@@ -45291,8 +43103,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "33",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.18369276085,
     },
@@ -45317,8 +43127,6 @@ export const trabuomFeatures = [
       Plot_No: "35",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.16885563177,
     },
   },
@@ -45340,8 +43148,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "MALLAM MUSTAPHA STREET",
-
-      
 
       Area: 0.17561965094,
     },
@@ -45366,8 +43172,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "MALLAM MUSTAPHA STREET",
 
-      
-
       Area: 0.16587382779,
     },
   },
@@ -45390,8 +43194,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "MALLAM MUSTAPHA STREET",
-
-      
 
       Area: 0.16583761869,
     },
@@ -45417,8 +43219,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "SAM FOFIE STREET",
 
-      
-
       Area: 0.16129373784,
     },
   },
@@ -45440,8 +43240,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "7",
       Street_Nam: "MALLAM MUSTAPHA STREET",
-
-      
 
       Area: 0.18360643234,
     },
@@ -45466,8 +43264,6 @@ export const trabuomFeatures = [
       Plot_No: "9",
       Street_Nam: "MALLAM MUSTAPHA STREET",
 
-      
-
       Area: 0.18367084672,
     },
   },
@@ -45491,8 +43287,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "MALLAM MUSTAPHA STREET",
 
-      
-
       Area: 0.17358709486,
     },
   },
@@ -45515,8 +43309,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "55",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.18669144005,
     },
@@ -45546,8 +43338,6 @@ export const trabuomFeatures = [
       Plot_No: "32",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.22395957249,
     },
   },
@@ -45572,8 +43362,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "28",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.22502936732,
     },
@@ -45600,8 +43388,6 @@ export const trabuomFeatures = [
       Plot_No: "18",
       Street_Nam: "ADU ISHMAEL AVENUE",
 
-      
-
       Area: 0.91805808555,
     },
   },
@@ -45624,8 +43410,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "16",
       Street_Nam: "ADU ISHMAEL AVENUE",
-
-      
 
       Area: 0.90472020175,
     },
@@ -45650,8 +43434,6 @@ export const trabuomFeatures = [
       Plot_No: "65",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.1682637606,
     },
   },
@@ -45675,8 +43457,6 @@ export const trabuomFeatures = [
       Plot_No: "62",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.12854526951,
     },
   },
@@ -45699,8 +43479,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "58",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.14892184959,
     },
@@ -45729,8 +43507,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "46",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
-
-      
 
       Area: 0.16799041799,
     },
@@ -45763,8 +43539,6 @@ export const trabuomFeatures = [
       Plot_No: "44",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.19434255137,
     },
   },
@@ -45794,8 +43568,6 @@ export const trabuomFeatures = [
       Plot_No: "40",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.18365651962,
     },
   },
@@ -45823,8 +43595,6 @@ export const trabuomFeatures = [
       Plot_No: "39",
       Street_Nam: "FRIMPONG PAUL CRESCENT",
 
-      
-
       Area: 0.14780723047,
     },
   },
@@ -45848,8 +43618,6 @@ export const trabuomFeatures = [
       Plot_No: "021",
       Street_Nam: "JEFF DACOSTA STREET",
 
-      
-
       Area: 0.18179078227,
     },
   },
@@ -45872,8 +43640,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "MAAME AGYEIWAA STREET",
-
-      
 
       Area: 0.17124526124,
     },
@@ -45905,8 +43671,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "PAA KWASI AKUFFO STREET",
-
-      
 
       Area: 0.17445346254,
     },
@@ -45940,8 +43704,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "PAA KWASI AKUFFO STREET",
 
-      
-
       Area: 0.17808389834,
     },
   },
@@ -45966,8 +43728,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "21",
       Street_Nam: "NANA KOFI CRESCENT",
-
-      
 
       Area: 0.18013730556,
     },
@@ -46002,8 +43762,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.19468858142,
     },
   },
@@ -46031,8 +43789,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "NANA KOFI CRESCENT",
 
-      
-
       Area: 0.16752713225,
     },
   },
@@ -46057,8 +43813,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "PAA KWASI AKUFFO STREET",
 
-      
-
       Area: 0.16535981147,
     },
   },
@@ -46080,8 +43834,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "EDWARD ANSAH LANE",
-
-      
 
       Area: 0.2295866147,
     },
@@ -46106,8 +43858,6 @@ export const trabuomFeatures = [
       Plot_No: "21",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
-      
-
       Area: 0.20211439593,
     },
   },
@@ -46130,8 +43880,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
-
-      
 
       Area: 0.20660001472,
     },
@@ -46156,8 +43904,6 @@ export const trabuomFeatures = [
       Plot_No: "15",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
-      
-
       Area: 0.19629010443,
     },
   },
@@ -46181,8 +43927,6 @@ export const trabuomFeatures = [
       Plot_No: "13",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
-      
-
       Area: 0.21964308832,
     },
   },
@@ -46205,8 +43949,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
-
-      
 
       Area: 0.19990618561,
     },
@@ -46232,8 +43974,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
-      
-
       Area: 0.20662473861,
     },
   },
@@ -46256,8 +43996,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
-
-      
 
       Area: 0.17652936694,
     },
@@ -46282,8 +44020,6 @@ export const trabuomFeatures = [
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
       Cadastral: "8",
-
-      
 
       Area: 0.11492035447,
     },
@@ -46315,8 +44051,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
-      
-
       Area: 0.09758417756,
     },
   },
@@ -46340,8 +44074,6 @@ export const trabuomFeatures = [
       Plot_No: "27",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.20857431202,
     },
   },
@@ -46363,8 +44095,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "26",
       Street_Nam: "AFIA BEMA STREET",
-
-      
 
       Area: 0.15662625845,
     },
@@ -46388,8 +44118,6 @@ export const trabuomFeatures = [
       Plot_No: "25",
       Street_Nam: "AFIA BEMA STREET",
 
-      
-
       Area: 0.2298897332,
     },
   },
@@ -46411,8 +44139,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "PAUL AGYEKUM LANE",
-
-      
 
       Area: 0.22960055206,
     },
@@ -46436,8 +44162,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "JASON OKYERE LANE",
 
-      
-
       Area: 0.20661135328,
     },
   },
@@ -46459,8 +44183,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "JASON OKYERE LANE",
-
-      
 
       Area: 0.20661122259,
     },
@@ -46485,8 +44207,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "KUMI MAHAMA STREET",
 
-      
-
       Area: 0.22958314273,
     },
   },
@@ -46510,8 +44230,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "KUMI MAHAMA STREET",
 
-      
-
       Area: 0.2295695195,
     },
   },
@@ -46533,8 +44251,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "03",
       Street_Nam: "KUMI  MAHAMA STREET",
-
-      
 
       Area: 0.2066162043,
     },
@@ -46558,8 +44274,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "FAKYE LANE",
-
-      
 
       Area: 0.2066230599,
     },
@@ -46586,8 +44300,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "FAKYE LANE",
 
-      
-
       Area: 0.2066144972,
     },
   },
@@ -46610,8 +44322,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "97",
       Street_Nam: "ALEXANDER OWUSU STREET",
-
-      
 
       Area: 0.15078389425,
     },
@@ -46637,8 +44347,6 @@ export const trabuomFeatures = [
       Plot_No: "20",
       Street_Nam: "SOLOMON ASUMANIN AVENUE",
 
-      
-
       Area: 0.44228768585,
     },
   },
@@ -46662,8 +44370,6 @@ export const trabuomFeatures = [
       Plot_No: "16",
       Street_Nam: "PATRICIA ASUMANIN STREET",
 
-      
-
       Area: 0.212852872,
     },
   },
@@ -46686,8 +44392,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "BRIGHT DWOMOH MENSAH",
-
-      
 
       Area: 0.17403567449,
     },
@@ -46713,8 +44417,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "OPPONG ASARE STREET",
 
-      
-
       Area: 0.2727429418,
     },
   },
@@ -46738,8 +44440,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "27",
       Street_Nam: "DORIS AMAKYE STREET",
-
-      
 
       Area: 0.1845162448,
     },
@@ -46765,8 +44465,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "23",
       Street_Nam: "DORIS AMAKYE STREET",
-
-      
 
       Area: 0.22996326829,
     },
@@ -46795,8 +44493,6 @@ export const trabuomFeatures = [
       Plot_No: "21",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.22981517632,
     },
   },
@@ -46822,8 +44518,6 @@ export const trabuomFeatures = [
       Plot_No: "19",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.2296843996,
     },
   },
@@ -46847,8 +44541,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "DORIS AMAKYE STREET",
-
-      
 
       Area: 0.20668259832,
     },
@@ -46874,8 +44566,6 @@ export const trabuomFeatures = [
       Plot_No: "11",
       Street_Nam: "DORIS AMAKYE STREET",
 
-      
-
       Area: 0.16761765025,
     },
   },
@@ -46898,8 +44588,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "ERNEST SASU STREET",
-
-      
 
       Area: 0.19778134643,
     },
@@ -46924,8 +44612,6 @@ export const trabuomFeatures = [
       Plot_No: "12",
       Street_Nam: "NYARKO ABRAKWAH STREET",
 
-      
-
       Area: 0.19849926466,
     },
   },
@@ -46949,8 +44635,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "NYARKO ABRAKWAH STREET",
 
-      
-
       Area: 0.19997249635,
     },
   },
@@ -46973,8 +44657,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "NYARKO ABRAKWAH STREET",
-
-      
 
       Area: 0.19341600829,
     },
@@ -47000,8 +44682,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "NYARKO ABRAKWAH STREET",
 
-      
-
       Area: 0.18787880218,
     },
   },
@@ -47025,8 +44705,6 @@ export const trabuomFeatures = [
       Plot_No: "21",
       Street_Nam: "AKUA MAA STREET",
 
-      
-
       Area: 0.17724256272,
     },
   },
@@ -47048,8 +44726,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "SAMUEL MANU STREET",
-
-      
 
       Area: 0.183093771,
     },
@@ -47074,8 +44750,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "SAMUEL MANU STREET",
 
-      
-
       Area: 0.18072446502,
     },
   },
@@ -47098,8 +44772,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "AKWASI KAMKAM STREET",
 
-      
-
       Area: 0.17589290262,
     },
   },
@@ -47121,8 +44793,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "AKWASI KAMKAM STREET",
-
-      
 
       Area: 0.180391269,
     },
@@ -47147,8 +44817,6 @@ export const trabuomFeatures = [
       Plot_No: "6",
       Street_Nam: "AKWASI KAMKAM STREET",
 
-      
-
       Area: 0.18382343914,
     },
   },
@@ -47171,8 +44839,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "4",
       Street_Nam: "AKWASI KAMKAM STREET",
-
-      
 
       Area: 0.18695357433,
     },
@@ -47197,8 +44863,6 @@ export const trabuomFeatures = [
       Plot_No: "10",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
 
-      
-
       Area: 0.17406009131,
     },
   },
@@ -47221,8 +44885,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "3",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
-
-      
 
       Area: 0.17367107051,
     },
@@ -47247,8 +44909,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
 
-      
-
       Area: 0.17853510187,
     },
   },
@@ -47269,8 +44929,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "8",
       Street_Nam: "NANA KWAKU AKWABOAH STREET",
-
-      
 
       Area: 0.17507128423,
     },
@@ -47293,8 +44951,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "09",
       Street_Nam: "JEFF DACOSTA STREET",
-
-      
 
       Area: 0.17304145157,
     },
@@ -47319,8 +44975,6 @@ export const trabuomFeatures = [
       Plot_No: "8",
       Street_Nam: "JEFF DACOSTA STREET",
 
-      
-
       Area: 0.16928615463,
     },
   },
@@ -47344,8 +44998,6 @@ export const trabuomFeatures = [
       Plot_No: "08",
       Street_Nam: "JEFF DACOSTA STREET",
 
-      
-
       Area: 0.173827969,
     },
   },
@@ -47367,8 +45019,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "JEFF DACOSTA STREET",
-
-      
 
       Area: 0.18177789235,
     },
@@ -47397,8 +45047,6 @@ export const trabuomFeatures = [
       Plot_No: "04",
       Street_Nam: "KWAKU ADUTWUM STREET",
 
-      
-
       Area: 3.10350012498,
     },
   },
@@ -47421,8 +45069,6 @@ export const trabuomFeatures = [
       Plot_No: "31",
       Street_Nam: "HON. PHILIPA FRIMPONG STREET",
 
-      
-
       Area: 0.22953073137,
     },
   },
@@ -47444,8 +45090,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "GLORIA OTENG STREET",
 
-      
-
       Area: 0.18183585776,
     },
   },
@@ -47466,8 +45110,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "10",
       Street_Nam: "GLORIA OTENG STREET",
-
-      
 
       Area: 0.18100909799,
     },
@@ -47492,8 +45134,6 @@ export const trabuomFeatures = [
       Plot_No: "14",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.17905893791,
     },
   },
@@ -47514,8 +45154,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "17",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
-
-      
 
       Area: 0.17041142865,
     },
@@ -47545,8 +45183,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "6",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
-
-      
 
       Area: 0.20486432727,
     },
@@ -47579,8 +45215,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "MARIAMA ABUBAKAR STREET",
 
-      
-
       Area: 0.2064326649,
     },
   },
@@ -47609,8 +45243,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "23",
       Street_Nam: "OWUSU VIVAN ANSAH STREET",
-
-      
 
       Area: 0.17562401149,
     },
@@ -47641,8 +45273,6 @@ export const trabuomFeatures = [
       Plot_No: "4",
       Street_Nam: "DAY CARE STREET",
 
-      
-
       Area: 0.17391155088,
     },
   },
@@ -47671,8 +45301,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "05",
       Street_Nam: "DAY CARE STREET",
-
-      
 
       Area: 0.18313253299,
     },
@@ -47704,8 +45332,6 @@ export const trabuomFeatures = [
       Plot_No: "03",
       Street_Nam: "DAY CARE STREET",
 
-      
-
       Area: 0.18486046758,
     },
   },
@@ -47735,8 +45361,6 @@ export const trabuomFeatures = [
       Plot_No: "5",
       Street_Nam: "PAA KWASI AKUFFO STREET",
 
-      
-
       Area: 0.1602735819,
     },
   },
@@ -47763,8 +45387,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "9",
       Street_Nam: "PAA KWASI AKUFFO STREET",
-
-      
 
       Area: 0.13161746807,
     },
@@ -66026,8 +63648,6 @@ export const trabuomFeatures = [
     properties: {
       Plot_No: "5",
       Street_Nam: "AKUA AFRIYIE STREET",
-
-      
 
       Area: 0.22900025869,
     },

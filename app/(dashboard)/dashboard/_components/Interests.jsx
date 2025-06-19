@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableCell
+  TableCell,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 
@@ -27,8 +27,8 @@ export default function InterestedClients() {
         console.log(error.message);
       }
     };
-    
-    fetchClients()
+
+    fetchClients();
   }, []);
 
   console.log(clients);

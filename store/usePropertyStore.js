@@ -117,7 +117,7 @@ const usePropertyStore = create(
               .eq("user_id", userId)
               .eq("property_id", propertyId);
 
-            console.log('error', error);
+            console.log("error", error);
             if (error) throw error;
 
             set((state) => ({
@@ -128,7 +128,7 @@ const usePropertyStore = create(
             const { error } = await supabase
               .from("favorites")
               .insert([{ user_id: userId, property_id: propertyId }]);
-            console.log('error', error);
+            console.log("error", error);
             if (error) throw error;
 
             // Find the property from various possible sources
@@ -229,10 +229,12 @@ const usePropertyStore = create(
           const to = from + propertiesPerPage - 1;
 
           // Start with basic query - just approved properties
-          let query = supabase.from("properties").select(
-            "id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, location_coordinates, description, features, region, property_type, rental_type, rental_duration, rental_price, rental_available_from, rental_available_to, rental_deposit, rental_utilities_included, rental_furnished, airbnb_min_stay, listing_type, negotiable",
-            { count: "exact" }
-          );
+          let query = supabase
+            .from("properties")
+            .select(
+              "id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, location_coordinates, description, features, region, property_type, rental_type, rental_duration, rental_price, rental_available_from, rental_available_to, rental_deposit, rental_utilities_included, rental_furnished, airbnb_min_stay, listing_type, negotiable",
+              { count: "exact" }
+            );
 
           // Only fetch approved properties
           query = query.eq("status", "approved");
@@ -264,22 +266,33 @@ const usePropertyStore = create(
           }
 
           // Add price range filter based on listing type
-          if (filters.priceRange && Array.isArray(filters.priceRange) && filters.priceRange.length === 2) {
+          if (
+            filters.priceRange &&
+            Array.isArray(filters.priceRange) &&
+            filters.priceRange.length === 2
+          ) {
             const [minPrice, maxPrice] = filters.priceRange;
-            
+
             if (minPrice > 0 || maxPrice < 10000000) {
-              if (filters.property_type === 'sale') {
+              if (filters.property_type === "sale") {
                 // For sale properties, filter by price
-                query = query
-                  .gte('price', minPrice)
-                  .lte('price', maxPrice);
-                console.log('Applying sale price filter:', { minPrice, maxPrice });
-              } else if (filters.property_type === 'rent' || filters.property_type === 'airbnb') {
+                query = query.gte("price", minPrice).lte("price", maxPrice);
+                console.log("Applying sale price filter:", {
+                  minPrice,
+                  maxPrice,
+                });
+              } else if (
+                filters.property_type === "rent" ||
+                filters.property_type === "airbnb"
+              ) {
                 // For rental properties, filter by rental_price
                 query = query
-                  .gte('rental_price', minPrice)
-                  .lte('rental_price', maxPrice);
-                console.log('Applying rental price filter:', { minPrice, maxPrice });
+                  .gte("rental_price", minPrice)
+                  .lte("rental_price", maxPrice);
+                console.log("Applying rental price filter:", {
+                  minPrice,
+                  maxPrice,
+                });
               }
             }
           }
@@ -290,7 +303,7 @@ const usePropertyStore = create(
           const { data, error, count } = await query;
 
           if (error) {
-            console.error('Query error:', error);
+            console.error("Query error:", error);
             throw error;
           }
 
@@ -341,11 +354,12 @@ const usePropertyStore = create(
                 : [],
               coordinates,
               // Add listing type specific fields
-              listing_type: property.listing_type || 'sale',
+              listing_type: property.listing_type || "sale",
               rental_price: property.rental_price || null,
               rental_duration: property.rental_duration || null,
               rental_deposit: property.rental_deposit || null,
-              rental_utilities_included: property.rental_utilities_included || false,
+              rental_utilities_included:
+                property.rental_utilities_included || false,
               rental_furnished: property.rental_furnished || false,
               rental_available_from: property.rental_available_from || null,
               rental_available_to: property.rental_available_to || null,
@@ -446,7 +460,7 @@ const usePropertyStore = create(
               : [],
             coordinates,
             // Add listing type specific fields
-            listing_type: data.listing_type || 'sale',
+            listing_type: data.listing_type || "sale",
             rental_price: data.rental_price || null,
             rental_duration: data.rental_duration || null,
             rental_deposit: data.rental_deposit || null,
@@ -521,11 +535,12 @@ const usePropertyStore = create(
                 : [],
               coordinates,
               // Add listing type specific fields
-              listing_type: property.property_type || 'sale',
+              listing_type: property.property_type || "sale",
               rental_price: property.rental_price || null,
               rental_duration: property.rental_duration || null,
               rental_deposit: property.rental_deposit || null,
-              rental_utilities_included: property.rental_utilities_included || false,
+              rental_utilities_included:
+                property.rental_utilities_included || false,
               rental_furnished: property.rental_furnished || false,
               rental_available_from: property.rental_available_from || null,
               rental_available_to: property.rental_available_to || null,

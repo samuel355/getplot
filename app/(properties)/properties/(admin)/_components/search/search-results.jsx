@@ -40,7 +40,7 @@ export function SearchResults() {
     setSelectedProperty(results);
     setIsRejectionDialogOpen(true);
   };
-  
+
   // Handler for property rejection
   const handleRejectProperty = async () => {
     if (!selectedProperty) return;
@@ -78,7 +78,7 @@ export function SearchResults() {
         properties={results}
         openRejectDialog={handleOpenRejectDialog}
       />
-      
+
       <RejectionDialog
         isOpen={isRejectionDialogOpen}
         setIsOpen={setIsRejectionDialogOpen}

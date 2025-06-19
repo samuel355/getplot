@@ -1,16 +1,9 @@
 "use client";
 import Link from "next/link";
-import {
-  Loader,
-} from "lucide-react";
+import { Loader } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 
@@ -23,8 +16,8 @@ const Dashboard = () => {
   const [usersList, setUsersList] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  
-  useEffect(() => {    
+
+  useEffect(() => {
     fetchPlots("trabuom");
     fetchPlots("dar_es_salaam");
     fetchPlots("nthc");
@@ -32,7 +25,7 @@ const Dashboard = () => {
     fetchPlots("berekuso");
     fetchUsers();
   }, []);
-  
+
   const fetchPlots = async (databaseName) => {
     try {
       setLoading(true);
@@ -87,7 +80,7 @@ const Dashboard = () => {
       console.log(error.message);
     }
   };
-  
+
   return (
     <div className="flex w-full flex-col -mt-4">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background">
@@ -116,18 +109,18 @@ const Dashboard = () => {
           >
             NTHC(Santeo)
           </Link>
-            <Link
-              href="/dashboard/dar-es-salaam"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Dar Es Salaam
-            </Link>
-            <Link
-              href="/dashboard/berekuso"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Berekuso
-            </Link>
+          <Link
+            href="/dashboard/dar-es-salaam"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Dar Es Salaam
+          </Link>
+          <Link
+            href="/dashboard/berekuso"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Berekuso
+          </Link>
         </nav>
       </header>
       <main className="flex flex-1 flex-col gap-3 mt-5">
@@ -246,8 +239,8 @@ const Dashboard = () => {
                 View Plots
               </Link>
             </CardContent>
-          </Card>   
-          </div>
+          </Card>
+        </div>
         <div className="grid gap-4 md:gap-8 grid-cols-1 mt-3">
           <Card x-chunk="dashboard-01-chunk-5">
             <CardHeader>

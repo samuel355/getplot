@@ -23,7 +23,7 @@ import {
   TableHead,
   TableCell,
   TableHeader,
-  TableBody
+  TableBody,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
@@ -96,7 +96,6 @@ export function ClientsTable({ data, columns, loading }) {
           <option value={10}>10</option>
           <option value={20}>20</option>
         </select>
-
       </div>
 
       <div className="flex items-center justify-between py-1 px-2">
@@ -128,7 +127,6 @@ export function ClientsTable({ data, columns, loading }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        
       </div>
 
       <Table>

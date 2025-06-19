@@ -18,4 +18,4 @@ export default function FeaturesTab({ property }) {
       )}
     </div>
   );
-} 
+}

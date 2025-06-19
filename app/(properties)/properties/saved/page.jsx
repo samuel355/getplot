@@ -1,13 +1,19 @@
 "use client";
 
-import { useUser } from '@clerk/nextjs';
-import { useEffect, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Bookmark, MapPin, Bed, Bath, DollarSign } from 'lucide-react';
-import Link from 'next/link';
-import usePropertyStore from '@/store/usePropertyStore';
-import { useToast } from '@/hooks/use-toast';
+import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Bookmark, MapPin, Bed, Bath, DollarSign } from "lucide-react";
+import Link from "next/link";
+import usePropertyStore from "@/store/usePropertyStore";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SavedProperties() {
   const { user } = useUser();
@@ -21,7 +27,7 @@ export default function SavedProperties() {
         try {
           await fetchFavorites(user.id);
         } catch (error) {
-          console.error('Error loading favorites:', error);
+          console.error("Error loading favorites:", error);
           toast({
             title: "Error",
             description: "Failed to load saved properties. Please try again.",
@@ -41,13 +47,15 @@ export default function SavedProperties() {
     if (result.success) {
       toast({
         title: "Property Removed",
-        description: "The property has been removed from your saved properties.",
+        description:
+          "The property has been removed from your saved properties.",
         variant: "default",
       });
     } else {
       toast({
         title: "Error",
-        description: result.message || "Failed to remove the property. Please try again.",
+        description:
+          result.message || "Failed to remove the property. Please try again.",
         variant: "destructive",
       });
     }
@@ -76,9 +84,7 @@ export default function SavedProperties() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Saved Properties</h1>
         <Button variant="outline" asChild>
-          <Link href="/market-place">
-            Browse More Properties
-          </Link>
+          <Link href="/market-place">Browse More Properties</Link>
         </Button>
       </div>
 
@@ -88,19 +94,21 @@ export default function SavedProperties() {
             <Bookmark className="h-12 w-12 mx-auto mb-4 text-gray-400" />
             <h3 className="text-lg font-semibold mb-2">No Saved Properties</h3>
             <p className="text-gray-500 mb-4">
-              You haven't saved any properties yet. Browse the market place to find properties you like.
+              You haven't saved any properties yet. Browse the market place to
+              find properties you like.
             </p>
             <Button asChild>
-              <Link href="/market-place">
-                Browse Properties
-              </Link>
+              <Link href="/market-place">Browse Properties</Link>
             </Button>
           </CardContent>
         </Card>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {favorites.map((property) => (
-            <Card key={property.id} className="hover:shadow-lg transition-shadow">
+            <Card
+              key={property.id}
+              className="hover:shadow-lg transition-shadow"
+            >
               <CardHeader>
                 <CardTitle className="text-lg">{property.title}</CardTitle>
                 <CardDescription className="flex items-center gap-1">
@@ -121,9 +129,19 @@ export default function SavedProperties() {
                   <div className="flex items-center gap-1">
                     <span>
                       {property.listing_type === "rent" ? (
-                        <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/month</span></>
+                        <>
+                          GHS {Number(property.rental_price).toLocaleString()}
+                          <span className="text-xs text-muted-foreground">
+                            /month
+                          </span>
+                        </>
                       ) : property.listing_type === "airbnb" ? (
-                        <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/day</span></>
+                        <>
+                          GHS {Number(property.rental_price).toLocaleString()}
+                          <span className="text-xs text-muted-foreground">
+                            /day
+                          </span>
+                        </>
                       ) : (
                         <>GHS {Number(property.price).toLocaleString()}</>
                       )}
@@ -131,9 +149,9 @@ export default function SavedProperties() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    className="flex-1" 
+                  <Button
+                    variant="outline"
+                    className="flex-1"
                     onClick={() => handleRemoveFavorite(property.id)}
                   >
                     <Bookmark className="h-4 w-4 mr-2" />
@@ -152,4 +170,4 @@ export default function SavedProperties() {
       )}
     </div>
   );
-} 
+}

@@ -38,20 +38,21 @@ export default function UserPropertiesPage() {
     <AdminLayout>
       <div className="flex-1 p-6 space-y-6">
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-          >
+          <Button variant="ghost" onClick={() => router.back()}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
-          
+
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              {userData ? `${userData.firstName} ${userData.lastName}'s Properties` : 'User Properties'}
+              {userData
+                ? `${userData.firstName} ${userData.lastName}'s Properties`
+                : "User Properties"}
             </h1>
             {userData && (
-              <p className="text-muted-foreground">{userData.emailAddresses[0].emailAddress}</p>
+              <p className="text-muted-foreground">
+                {userData.emailAddresses[0].emailAddress}
+              </p>
             )}
           </div>
         </div>

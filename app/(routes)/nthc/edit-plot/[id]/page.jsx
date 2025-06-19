@@ -161,7 +161,7 @@ const EditPlot = () => {
 
       if (paidAmount - plotTotalAmount > 0) {
         toast.error(
-          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot.",
+          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot."
         );
         return;
       }
@@ -264,7 +264,7 @@ const EditPlot = () => {
       toast.success("Plot details updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        router.replace('/nthc');
+        router.replace("/nthc");
       }, 1500);
     }
     if (error) {
@@ -328,7 +328,7 @@ const EditPlot = () => {
       toast.success("Plot  updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        window.location.href = '/nthc';
+        window.location.href = "/nthc";
       }, 1100);
     }
     if (error) {

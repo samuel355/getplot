@@ -1,8 +1,8 @@
 "use client";
 
-import { useUser } from '@clerk/nextjs';
-import { useState, useEffect } from 'react';
-import { supabase } from '@/utils/supabase/client';
+import { useUser } from "@clerk/nextjs";
+import { useState, useEffect } from "react";
+import { supabase } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,10 +19,10 @@ import {
   AlertTriangle,
   Plus,
   Home,
-  MapPin
-} from 'lucide-react';
-import Link from 'next/link';
-import toast from 'react-hot-toast';
+  MapPin,
+} from "lucide-react";
+import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function MyPropertiesDashboard() {
   const { user, isSignedIn } = useUser();
@@ -32,66 +32,70 @@ export default function MyPropertiesDashboard() {
     approved: 0,
     pending: 0,
     rejected: 0,
-    sold: 0
+    sold: 0,
   });
   const [recentProperties, setRecentProperties] = useState([]);
-  
+
   useEffect(() => {
     if (!isSignedIn) return;
-    
+
     const fetchDashboardData = async () => {
       setLoading(true);
       try {
         const userId = user.id;
-        
+
         // Fetch user's properties
         const { data: properties, error } = await supabase
-          .from('properties')
-          .select('*')
-          .eq('user_id', userId);
-        
+          .from("properties")
+          .select("*")
+          .eq("user_id", userId);
+
         if (error) throw error;
-        
+
         // Calculate stats
-        const approved = properties.filter(p => p.status === 'approved').length;
-        const pending = properties.filter(p => p.status === 'pending').length;
-        const rejected = properties.filter(p => p.status === 'rejected').length;
-        const sold = properties.filter(p => p.status === 'sold').length;
-        
+        const approved = properties.filter(
+          (p) => p.status === "approved"
+        ).length;
+        const pending = properties.filter((p) => p.status === "pending").length;
+        const rejected = properties.filter(
+          (p) => p.status === "rejected"
+        ).length;
+        const sold = properties.filter((p) => p.status === "sold").length;
+
         setStats({
           total: properties.length,
           approved,
           pending,
           rejected,
-          sold
+          sold,
         });
-        
+
         // Get recent properties
         const { data: recent, error: recentError } = await supabase
-          .from('properties')
-          .select('*')
-          .eq('user_id', userId)
-          .order('created_at', { ascending: false })
+          .from("properties")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
           .limit(5);
-        
+
         if (recentError) throw recentError;
-        
+
         setRecentProperties(recent || []);
       } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-        toast.error('Failed to load dashboard data');
+        console.error("Error fetching dashboard data:", error);
+        toast.error("Failed to load dashboard data");
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchDashboardData();
   }, [isSignedIn, user]);
-  
+
   if (!isSignedIn) {
     return <div>Please sign in to view this page</div>;
   }
-  
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -103,23 +107,29 @@ export default function MyPropertiesDashboard() {
           </Button>
         </Link>
       </div>
-      
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Total Properties</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Properties
+            </CardTitle>
             <Building className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {loading ? <div className="h-8 w-16 bg-muted animate-pulse rounded-md"></div> : stats.total}
+              {loading ? (
+                <div className="h-8 w-16 bg-muted animate-pulse rounded-md"></div>
+              ) : (
+                stats.total
+              )}
             </div>
             <p className="text-xs text-muted-foreground">
               All your property listings
             </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Approved</CardTitle>
@@ -127,29 +137,37 @@ export default function MyPropertiesDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {loading ? <div className="h-8 w-16 bg-muted animate-pulse rounded-md"></div> : stats.approved}
+              {loading ? (
+                <div className="h-8 w-16 bg-muted animate-pulse rounded-md"></div>
+              ) : (
+                stats.approved
+              )}
             </div>
             <p className="text-xs text-muted-foreground">
               Actively listed properties
             </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Pending Approval</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Pending Approval
+            </CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {loading ? <div className="h-8 w-16 bg-muted animate-pulse rounded-md"></div> : stats.pending}
+              {loading ? (
+                <div className="h-8 w-16 bg-muted animate-pulse rounded-md"></div>
+              ) : (
+                stats.pending
+              )}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Waiting for review
-            </p>
+            <p className="text-xs text-muted-foreground">Waiting for review</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Rejected</CardTitle>
@@ -157,14 +175,16 @@ export default function MyPropertiesDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {loading ? <div className="h-8 w-16 bg-muted animate-pulse rounded-md"></div> : stats.rejected}
+              {loading ? (
+                <div className="h-8 w-16 bg-muted animate-pulse rounded-md"></div>
+              ) : (
+                stats.rejected
+              )}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Need revision
-            </p>
+            <p className="text-xs text-muted-foreground">Need revision</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Sold</CardTitle>
@@ -172,7 +192,11 @@ export default function MyPropertiesDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {loading ? <div className="h-8 w-16 bg-muted animate-pulse rounded-md"></div> : stats.sold}
+              {loading ? (
+                <div className="h-8 w-16 bg-muted animate-pulse rounded-md"></div>
+              ) : (
+                stats.sold
+              )}
             </div>
             <p className="text-xs text-muted-foreground">
               Completed transactions
@@ -180,14 +204,16 @@ export default function MyPropertiesDashboard() {
           </CardContent>
         </Card>
       </div>
-      
+
       <div className="mt-6">
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>My Recent Properties</CardTitle>
               <Link href="/properties/list">
-                <Button variant="outline" size="sm">View All</Button>
+                <Button variant="outline" size="sm">
+                  View All
+                </Button>
               </Link>
             </div>
             <CardDescription>Your latest property listings</CardDescription>
@@ -208,11 +234,18 @@ export default function MyPropertiesDashboard() {
             ) : recentProperties.length > 0 ? (
               <div className="space-y-4">
                 {recentProperties.map((property) => (
-                  <Link key={property.id} href={`/properties/property/${property.id}`} className="flex items-center gap-4 rounded-lg p-2 hover:bg-muted">
+                  <Link
+                    key={property.id}
+                    href={`/properties/property/${property.id}`}
+                    className="flex items-center gap-4 rounded-lg p-2 hover:bg-muted"
+                  >
                     <div className="h-12 w-12 rounded-md overflow-hidden bg-muted">
-                      <img 
-                        src={property.images?.[0]?.url || '/placeholder-property.jpg'} 
-                        alt={property.title} 
+                      <img
+                        src={
+                          property.images?.[0]?.url ||
+                          "/placeholder-property.jpg"
+                        }
+                        alt={property.title}
                         className="h-full w-full object-cover"
                       />
                     </div>
@@ -230,7 +263,9 @@ export default function MyPropertiesDashboard() {
             ) : (
               <div className="text-center py-8">
                 <Building className="h-12 w-12 mx-auto text-muted-foreground" />
-                <h3 className="mt-2 text-sm font-medium">No properties found</h3>
+                <h3 className="mt-2 text-sm font-medium">
+                  No properties found
+                </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Get started by creating a new property.
                 </p>
@@ -256,12 +291,12 @@ function StatusBadge({ status }) {
     rejected: "bg-red-100 text-red-800 border-red-200",
     sold: "bg-blue-100 text-blue-800 border-blue-200",
   };
-  
+
   const style = statusStyles[status] || statusStyles.pending;
-  
+
   return (
     <span className={`text-xs px-2 py-1 rounded-full border ${style}`}>
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );
-} 
+}

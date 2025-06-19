@@ -1,4 +1,4 @@
-import { Bar } from 'react-chartjs-2';
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -6,8 +6,8 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend
-} from 'chart.js';
+  Legend,
+} from "chart.js";
 
 ChartJS.register(
   CategoryScale,
@@ -20,13 +20,13 @@ ChartJS.register(
 
 export function LocationChart({ data }) {
   const chartData = {
-    labels: data.map(item => item.location),
+    labels: data.map((item) => item.location),
     datasets: [
       {
-        label: 'Properties',
-        data: data.map(item => item.count),
-        backgroundColor: 'rgba(59, 130, 246, 0.5)',
-        borderColor: 'rgb(59, 130, 246)',
+        label: "Properties",
+        data: data.map((item) => item.count),
+        backgroundColor: "rgba(59, 130, 246, 0.5)",
+        borderColor: "rgb(59, 130, 246)",
         borderWidth: 1,
       },
     ],
@@ -36,11 +36,11 @@ export function LocationChart({ data }) {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
       title: {
         display: true,
-        text: 'Popular Locations',
+        text: "Popular Locations",
       },
     },
     scales: {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <style>
@@ -10,20 +11,24 @@
       margin: 0;
       padding: 0;
     }
+
     .container {
       max-width: 600px;
       margin: 0 auto;
       padding: 20px;
     }
+
     .header {
       background-color: #dcfce7;
       text-align: center;
       padding: 20px;
       margin-bottom: 30px;
     }
+
     .content {
       padding: 20px;
     }
+
     .button {
       display: inline-block;
       padding: 12px 24px;
@@ -33,6 +38,7 @@
       border-radius: 6px;
       margin: 20px 0;
     }
+
     .footer {
       text-align: center;
       padding: 20px;
@@ -42,17 +48,18 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="header">
       <h1 style="color: #166534; margin: 0;">Account Restored</h1>
     </div>
-    
+
     <div class="content">
       <p>Hello <%= firstName %>,</p>
-      
+
       <p>We're pleased to inform you that your account has been restored and you can now access our platform again.</p>
-      
+
       <p>You can now:</p>
       <ul>
         <li>Log in to your account</li>
@@ -60,24 +67,25 @@
         <li>Access your existing listings</li>
         <li>Interact with other users</li>
       </ul>
-      
+
       <div style="text-align: center;">
         <a href="<%= appUrl %>/sign-in" class="button">
           Log In Now
         </a>
       </div>
-      
+
       <p>Thank you for your patience and understanding.</p>
-      
+
       <p>
         Best regards,<br>
         The GetOnePlot Team
       </p>
     </div>
-    
+
     <div class="footer">
       <p>&copy; <%= year %> GetOnePlot. All rights reserved.</p>
     </div>
   </div>
 </body>
+
 </html>

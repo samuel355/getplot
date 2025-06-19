@@ -85,14 +85,13 @@ export default function DetailsTab({ property }) {
                 <dt className="text-gray-500">Available From</dt>
                 <dd className="font-medium">
                   {property?.rental_available_from
-                    ? new Date(property?.rental_available_from).toLocaleDateString(
-                        "en-US",
-                        {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        }
-                      )
+                    ? new Date(
+                        property?.rental_available_from
+                      ).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
                     : "N/A"}
                 </dd>
               </div>
@@ -100,14 +99,13 @@ export default function DetailsTab({ property }) {
                 <dt className="text-gray-500">Available To</dt>
                 <dd className="font-medium">
                   {property?.rental_available_to
-                    ? new Date(property?.rental_available_to).toLocaleDateString(
-                        "en-US",
-                        {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        }
-                      )
+                    ? new Date(
+                        property?.rental_available_to
+                      ).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
                     : "N/A"}
                 </dd>
               </div>
@@ -132,4 +130,4 @@ export default function DetailsTab({ property }) {
       </div>
     </div>
   );
-} 
+}

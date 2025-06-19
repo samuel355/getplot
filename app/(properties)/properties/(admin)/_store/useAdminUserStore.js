@@ -29,26 +29,25 @@ const useAdminUserStore = create((set, get) => ({
 
       // Fetch all users from Clerk
       let users = [];
-      const response = await fetch('/api/users');
-      if(!response.ok){
-        throw new Error('Failed to fetch users')
+      const response = await fetch("/api/users");
+      if (!response.ok) {
+        throw new Error("Failed to fetch users");
       }
-      
+
       const data = await response.json();
-      if(data){
-        users = data.data
-        
+      if (data) {
+        users = data.data;
       }
 
       // Format user data
-      const formattedUsers = users.map(user => ({
+      const formattedUsers = users.map((user) => ({
         id: user.id,
         email: user.emailAddresses[0]?.emailAddress,
         firstName: user.firstName,
         lastName: user.lastName,
         imageUrl: user.imageUrl,
-        role: user.publicMetadata?.role || 'user',
-        status: user.publicMetadata?.banned ? 'banned' : 'active',
+        role: user.publicMetadata?.role || "user",
+        status: user.publicMetadata?.banned ? "banned" : "active",
         createdAt: user.createdAt,
         lastSignIn: user.lastSignInAt,
         // Add any other relevant user data
@@ -57,10 +56,10 @@ const useAdminUserStore = create((set, get) => ({
       // Calculate stats
       const stats = {
         total: formattedUsers.length,
-        admins: formattedUsers.filter(u => u.role === 'admin').length,
-        sysadmins: formattedUsers.filter(u => u.role === 'sysadmin').length,
-        regularUsers: formattedUsers.filter(u => u.role === 'user').length,
-        banned: formattedUsers.filter(u => u.status === 'banned').length,
+        admins: formattedUsers.filter((u) => u.role === "admin").length,
+        sysadmins: formattedUsers.filter((u) => u.role === "sysadmin").length,
+        regularUsers: formattedUsers.filter((u) => u.role === "user").length,
+        banned: formattedUsers.filter((u) => u.status === "banned").length,
       };
 
       set({
@@ -71,7 +70,6 @@ const useAdminUserStore = create((set, get) => ({
 
       // Apply initial filtering
       get().filterUsers();
-
     } catch (error) {
       console.error("Error fetching users:", error);
       set({
@@ -91,7 +89,7 @@ const useAdminUserStore = create((set, get) => ({
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        user =>
+        (user) =>
           user.email?.toLowerCase().includes(query) ||
           user.firstName?.toLowerCase().includes(query) ||
           user.lastName?.toLowerCase().includes(query) ||
@@ -100,22 +98,26 @@ const useAdminUserStore = create((set, get) => ({
     }
 
     // Filter by role
-    if (roleFilter !== 'all') {
-      filtered = filtered.filter(user => user.role === roleFilter);
+    if (roleFilter !== "all") {
+      filtered = filtered.filter((user) => user.role === roleFilter);
     }
 
     // Sort users
     switch (sortOrder) {
-      case 'newest':
+      case "newest":
         filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         break;
-      case 'oldest':
+      case "oldest":
         filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         break;
-      case 'name':
-        filtered.sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`));
+      case "name":
+        filtered.sort((a, b) =>
+          `${a.firstName} ${a.lastName}`.localeCompare(
+            `${b.firstName} ${b.lastName}`
+          )
+        );
         break;
-      case 'email':
+      case "email":
         filtered.sort((a, b) => a.email.localeCompare(b.email));
         break;
     }
@@ -144,32 +146,30 @@ const useAdminUserStore = create((set, get) => ({
   // Update user role
   updateUserRole: async (userId, newRole) => {
     try {
-      
       const response = await fetch(`/api/admin/update-user`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ userId, newRole }),
       });
-      
-      if (!response.ok) { 
-        throw new Error('Failed to update user role');
+
+      if (!response.ok) {
+        throw new Error("Failed to update user role");
       }
-      
 
       // Update local state
-      const updatedUsers = get().users.map(user =>
+      const updatedUsers = get().users.map((user) =>
         user.id === userId ? { ...user, role: newRole } : user
       );
 
       // Update stats
       const stats = {
         total: updatedUsers.length,
-        admins: updatedUsers.filter(u => u.role === 'admin').length,
-        sysadmins: updatedUsers.filter(u => u.role === 'sysadmin').length,
-        regularUsers: updatedUsers.filter(u => u.role === 'user').length,
-        banned: updatedUsers.filter(u => u.status === 'banned').length,
+        admins: updatedUsers.filter((u) => u.role === "admin").length,
+        sysadmins: updatedUsers.filter((u) => u.role === "sysadmin").length,
+        regularUsers: updatedUsers.filter((u) => u.role === "user").length,
+        banned: updatedUsers.filter((u) => u.status === "banned").length,
       };
 
       set({
@@ -196,15 +196,17 @@ const useAdminUserStore = create((set, get) => ({
       });
 
       // Update local state
-      const updatedUsers = get().users.map(user =>
-        user.id === userId ? { ...user, status: ban ? 'banned' : 'active' } : user
+      const updatedUsers = get().users.map((user) =>
+        user.id === userId
+          ? { ...user, status: ban ? "banned" : "active" }
+          : user
       );
 
       // Update stats
       const stats = {
         ...get().stats,
-        banned: ban 
-          ? get().stats.banned + 1 
+        banned: ban
+          ? get().stats.banned + 1
           : Math.max(0, get().stats.banned - 1),
       };
 

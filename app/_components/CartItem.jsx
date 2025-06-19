@@ -7,11 +7,11 @@ import React from "react";
 import { toast } from "sonner";
 
 const CartItem = ({ plot }) => {
-  const {removePlot} = useCart()
+  const { removePlot } = useCart();
   const handleRemovePlot = () => {
-    removePlot(plot.id)
-    toast.success('Plot Removed successfully')
-  }
+    removePlot(plot.id);
+    toast.success("Plot Removed successfully");
+  };
   return (
     <Card key={plot.id}>
       <CardContent className="flex items-start gap-4 p-4">
@@ -24,7 +24,7 @@ const CartItem = ({ plot }) => {
           <p className="font-semibold mt-1">
             GHS {plot.plotTotalAmount.toLocaleString()}
           </p>
-          
+
           <p>At {plot.location} </p>
         </div>
         <div className="flex flex-col justify-between gap-8">

@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
@@ -33,7 +33,6 @@ export function ExpressInterestDialog({
   setIsDialogOpen,
   table,
 }) {
-
   const [loader2, setLoader2] = useState(false);
   const [customerData, setCustomerData] = useState(customerInfo);
   const [allDetails, setAllDetails] = useState();
@@ -464,4 +463,3 @@ export function ExpressInterestDialog({
     </Dialog>
   );
 }
-

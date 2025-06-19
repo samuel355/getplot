@@ -29,9 +29,9 @@ export default function UserRoleDialog({
   const roles = [
     { value: "user", label: "Regular User" },
     { value: "admin", label: "Administrator" },
-    ...(currentUserRole === "sysadmin" ? [
-      { value: "sysadmin", label: "System Administrator" }
-    ] : []),
+    ...(currentUserRole === "sysadmin"
+      ? [{ value: "sysadmin", label: "System Administrator" }]
+      : []),
   ];
 
   return (
@@ -66,10 +66,7 @@ export default function UserRoleDialog({
 
         <div className="py-4">
           <Label htmlFor="role">Select Role</Label>
-          <Select
-            value={newRole}
-            onValueChange={setNewRole}
-          >
+          <Select value={newRole} onValueChange={setNewRole}>
             <SelectTrigger className="w-full mt-2">
               <SelectValue placeholder="Select a role" />
             </SelectTrigger>
@@ -81,8 +78,9 @@ export default function UserRoleDialog({
                     value={role.value}
                     disabled={
                       // Prevent changing own role or assigning sysadmin if not sysadmin
-                      (selectedUser?.id === currentUserRole?.id) ||
-                      (role.value === "sysadmin" && currentUserRole !== "sysadmin")
+                      selectedUser?.id === currentUserRole?.id ||
+                      (role.value === "sysadmin" &&
+                        currentUserRole !== "sysadmin")
                     }
                   >
                     {role.label}
@@ -94,10 +92,7 @@ export default function UserRoleDialog({
         </div>
 
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => setIsOpen(false)}
-          >
+          <Button variant="outline" onClick={() => setIsOpen(false)}>
             Cancel
           </Button>
           <Button

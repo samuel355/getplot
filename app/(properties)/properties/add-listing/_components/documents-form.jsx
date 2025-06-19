@@ -2,7 +2,12 @@
 import { useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 
-export default function DocumentsForm({ formData, updateFormData, nextStep, prevStep }) {
+export default function DocumentsForm({
+  formData,
+  updateFormData,
+  nextStep,
+  prevStep,
+}) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -15,37 +20,40 @@ export default function DocumentsForm({ formData, updateFormData, nextStep, prev
 
     try {
       const uploadedDocs = [];
-      
+
       for (const file of files) {
-        if (file.type !== 'application/pdf') {
-          throw new Error('Only PDF files are allowed');
+        if (file.type !== "application/pdf") {
+          throw new Error("Only PDF files are allowed");
         }
-        
-        if (file.size > 5 * 1024 * 1024) { // 5MB limit
-          throw new Error('File size should not exceed 5MB');
+
+        if (file.size > 5 * 1024 * 1024) {
+          // 5MB limit
+          throw new Error("File size should not exceed 5MB");
         }
 
         const fileName = `${Date.now()}-${file.name}`;
         const { data, error: uploadError } = await supabase.storage
-          .from('property-documents')
+          .from("property-documents")
           .upload(`documents/${fileName}`, file);
 
         if (uploadError) throw uploadError;
 
-        const { data: { publicUrl } } = supabase.storage
-          .from('property-documents')
+        const {
+          data: { publicUrl },
+        } = supabase.storage
+          .from("property-documents")
           .getPublicUrl(`documents/${fileName}`);
 
         uploadedDocs.push({
           name: file.name,
           url: publicUrl,
           type: file.type,
-          size: file.size
+          size: file.size,
         });
       }
 
       updateFormData({
-        documents: [...(formData.documents || []), ...uploadedDocs]
+        documents: [...(formData.documents || []), ...uploadedDocs],
       });
     } catch (err) {
       setError(err.message);
@@ -66,10 +74,13 @@ export default function DocumentsForm({ formData, updateFormData, nextStep, prev
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-6">Upload Documents (Optional)</h2>
+      <h2 className="text-xl font-semibold mb-6">
+        Upload Documents (Optional)
+      </h2>
       <p className="text-gray-600 mb-4">
-        Upload any relevant documents for your property (e.g., floor plans, certificates, permits).
-        Only PDF files are accepted, maximum 5MB per file.
+        Upload any relevant documents for your property (e.g., floor plans,
+        certificates, permits). Only PDF files are accepted, maximum 5MB per
+        file.
       </p>
 
       {error && (
@@ -103,10 +114,23 @@ export default function DocumentsForm({ formData, updateFormData, nextStep, prev
           <h3 className="font-medium mb-2">Uploaded Documents</h3>
           <div className="space-y-2">
             {formData.documents.map((doc, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-md"
+              >
                 <div className="flex items-center">
-                  <svg className="w-6 h-6 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  <svg
+                    className="w-6 h-6 text-gray-400 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    />
                   </svg>
                   <span className="text-sm truncate max-w-xs">{doc.name}</span>
                 </div>
@@ -115,8 +139,18 @@ export default function DocumentsForm({ formData, updateFormData, nextStep, prev
                   onClick={() => removeDocument(index)}
                   className="text-red-600 hover:text-red-800"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
                   </svg>
                 </button>
               </div>
@@ -143,4 +177,4 @@ export default function DocumentsForm({ formData, updateFormData, nextStep, prev
       </div>
     </div>
   );
-} 
+}

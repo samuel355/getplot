@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, Check, X, Clock } from "lucide-react";
 
 export function StatsCards({ approvalStats }) {
@@ -16,19 +11,21 @@ export function StatsCards({ approvalStats }) {
     {
       title: "Approved",
       value: approvalStats.approved,
-      percentage: approvalStats.rate + '%',
+      percentage: approvalStats.rate + "%",
       icon: <Check className="h-4 w-4 text-green-500" />,
     },
     {
       title: "Rejected",
       value: approvalStats.rejected,
-      percentage: ((approvalStats.rejected / approvalStats.total) * 100).toFixed(1) + '%',
+      percentage:
+        ((approvalStats.rejected / approvalStats.total) * 100).toFixed(1) + "%",
       icon: <X className="h-4 w-4 text-red-500" />,
     },
     {
       title: "Pending",
       value: approvalStats.pending,
-      percentage: ((approvalStats.pending / approvalStats.total) * 100).toFixed(1) + '%',
+      percentage:
+        ((approvalStats.pending / approvalStats.total) * 100).toFixed(1) + "%",
       icon: <Clock className="h-4 w-4 text-yellow-500" />,
     },
   ];
@@ -38,9 +35,7 @@ export function StatsCards({ approvalStats }) {
       {stats.map((stat) => (
         <Card key={stat.title}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              {stat.title}
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
             {stat.icon}
           </CardHeader>
           <CardContent>

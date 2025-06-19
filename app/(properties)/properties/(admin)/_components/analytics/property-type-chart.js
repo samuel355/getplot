@@ -1,10 +1,5 @@
-import { Doughnut } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend
-} from 'chart.js';
+import { Doughnut } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -14,14 +9,8 @@ export function PropertyTypeChart({ data }) {
     datasets: [
       {
         data: Object.values(data),
-        backgroundColor: [
-          'rgba(59, 130, 246, 0.5)',
-          'rgba(34, 197, 94, 0.5)',
-        ],
-        borderColor: [
-          'rgb(59, 130, 246)',
-          'rgb(34, 197, 94)',
-        ],
+        backgroundColor: ["rgba(59, 130, 246, 0.5)", "rgba(34, 197, 94, 0.5)"],
+        borderColor: ["rgb(59, 130, 246)", "rgb(34, 197, 94)"],
         borderWidth: 1,
       },
     ],
@@ -31,11 +20,11 @@ export function PropertyTypeChart({ data }) {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
       title: {
         display: true,
-        text: 'Property Types Distribution',
+        text: "Property Types Distribution",
       },
     },
   };

@@ -13,8 +13,8 @@ export function GeneralSettings() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await updateSettings('general', formData);
-    
+    const result = await updateSettings("general", formData);
+
     if (result.success) {
       toast({
         title: "Settings Updated",
@@ -41,7 +41,9 @@ export function GeneralSettings() {
             <Input
               id="siteName"
               value={formData.siteName}
-              onChange={(e) => setFormData({...formData, siteName: e.target.value})}
+              onChange={(e) =>
+                setFormData({ ...formData, siteName: e.target.value })
+              }
             />
           </div>
 
@@ -51,19 +53,28 @@ export function GeneralSettings() {
               id="supportEmail"
               type="email"
               value={formData.supportEmail}
-              onChange={(e) => setFormData({...formData, supportEmail: e.target.value})}
+              onChange={(e) =>
+                setFormData({ ...formData, supportEmail: e.target.value })
+              }
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="maxImagesPerProperty">Max Images Per Property</Label>
+            <Label htmlFor="maxImagesPerProperty">
+              Max Images Per Property
+            </Label>
             <Input
               id="maxImagesPerProperty"
               type="number"
               min="1"
               max="20"
               value={formData.maxImagesPerProperty}
-              onChange={(e) => setFormData({...formData, maxImagesPerProperty: parseInt(e.target.value)})}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  maxImagesPerProperty: parseInt(e.target.value),
+                })
+              }
             />
           </div>
 
@@ -75,7 +86,12 @@ export function GeneralSettings() {
               min="1"
               max="10"
               value={formData.maxImageSize}
-              onChange={(e) => setFormData({...formData, maxImageSize: parseInt(e.target.value)})}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  maxImageSize: parseInt(e.target.value),
+                })
+              }
             />
           </div>
 

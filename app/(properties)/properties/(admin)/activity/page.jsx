@@ -40,20 +40,20 @@ export default function ActivityLogsPage() {
   return (
     <AuthCheck>
       <AdminLayout>
-      <div className="p-8">
-        <h1 className="text-3xl font-bold mb-8">Activity Logs</h1>
+        <div className="p-8">
+          <h1 className="text-3xl font-bold mb-8">Activity Logs</h1>
 
-        <LogFilters />
+          <LogFilters />
 
-        <div className="bg-white rounded-lg shadow">
-          <LogTable logs={logs} />
+          <div className="bg-white rounded-lg shadow">
+            <LogTable logs={logs} />
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <LogPagination />
+          </div>
         </div>
-
-        <div className="mt-6 flex justify-center">
-          <LogPagination />
-        </div>
-      </div>
-    </AdminLayout>
+      </AdminLayout>
     </AuthCheck>
   );
 }

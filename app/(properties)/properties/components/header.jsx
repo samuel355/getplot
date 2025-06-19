@@ -1,7 +1,16 @@
 "use client";
 
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Search, Bell, Menu, CheckCircle, XCircle, Eye, Mail, Clock } from "lucide-react";
+import {
+  Search,
+  Bell,
+  Menu,
+  CheckCircle,
+  XCircle,
+  Eye,
+  Mail,
+  Clock,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -15,8 +24,10 @@ export default function Header() {
   const { isMobileOpen, setIsMobileOpen } = useSidebar();
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
-  
-  const isAdmin = user?.publicMetadata?.role === 'admin' || user?.publicMetadata?.role === 'sysadmin';
+
+  const isAdmin =
+    user?.publicMetadata?.role === "admin" ||
+    user?.publicMetadata?.role === "sysadmin";
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -26,50 +37,57 @@ export default function Header() {
         router.push(`/properties/search?q=${encodeURIComponent(searchQuery)}`);
       } else {
         // Regular users search their properties
-        router.push(`/properties/list?search=${encodeURIComponent(searchQuery)}`);
+        router.push(
+          `/properties/list?search=${encodeURIComponent(searchQuery)}`
+        );
       }
     }
   };
-  
+
   return (
     <header className="border-b bg-white fixed top-0 left-0 right-0 z-40">
       <div className="flex h-16 items-center px-4 md:px-6">
         <div className="md:hidden">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             size="icon"
             onClick={() => setIsMobileOpen(!isMobileOpen)}
           >
             <Menu className="h-5 w-5" />
           </Button>
         </div>
-        
+
         <div className="hidden md:flex md:flex-1">
           <h1 className="text-xl font-semibold text-foreground">
             {isAdmin ? "Admin Dashboard" : "Properties Dashboard"}
           </h1>
         </div>
-        
+
         <div className="flex items-center gap-4 md:ml-auto">
-          <form onSubmit={handleSearch} className="relative hidden md:flex w-64">
+          <form
+            onSubmit={handleSearch}
+            className="relative hidden md:flex w-64"
+          >
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <input
               type="search"
-              placeholder={isAdmin ? "Search all properties..." : "Search my properties..."}
+              placeholder={
+                isAdmin ? "Search all properties..." : "Search my properties..."
+              }
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-background rounded-md border border-input pl-8 pr-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
           </form>
-          
+
           <NotificationButton isAdmin={isAdmin} />
-          
-          <UserButton 
+
+          <UserButton
             afterSignOutUrl="/"
             appearance={{
               elements: {
-                avatarBox: "h-8 w-8"
-              }
+                avatarBox: "h-8 w-8",
+              },
             }}
           />
         </div>
@@ -87,15 +105,15 @@ function NotificationButton({ isAdmin }) {
 
   const getNotificationIcon = (type) => {
     switch (type) {
-      case 'property_approved':
+      case "property_approved":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'property_rejected':
+      case "property_rejected":
         return <XCircle className="h-4 w-4 text-red-500" />;
-      case 'property_interest':
+      case "property_interest":
         return <Eye className="h-4 w-4 text-blue-500" />;
-      case 'user_banned':
+      case "user_banned":
         return <XCircle className="h-4 w-4 text-red-500" />;
-      case 'user_unbanned':
+      case "user_unbanned":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       default:
         return <Bell className="h-4 w-4 text-muted-foreground" />;
@@ -104,18 +122,18 @@ function NotificationButton({ isAdmin }) {
 
   const getNotificationTitle = (type) => {
     switch (type) {
-      case 'property_approved':
-        return 'Property Approved';
-      case 'property_rejected':
-        return 'Property Rejected';
-      case 'property_interest':
-        return 'New Property Interest';
-      case 'user_banned':
-        return 'Account Banned';
-      case 'user_unbanned':
-        return 'Account Unbanned';
+      case "property_approved":
+        return "Property Approved";
+      case "property_rejected":
+        return "Property Rejected";
+      case "property_interest":
+        return "New Property Interest";
+      case "user_banned":
+        return "Account Banned";
+      case "user_unbanned":
+        return "Account Unbanned";
       default:
-        return type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        return type.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase());
     }
   };
 
@@ -124,14 +142,14 @@ function NotificationButton({ isAdmin }) {
     const fetchNotifications = async () => {
       try {
         let query = supabase
-          .from('notifications')
-          .select('*')
-          .eq('status', 'pending')
-          .order('created_at', { ascending: false })
+          .from("notifications")
+          .select("*")
+          .eq("status", "pending")
+          .order("created_at", { ascending: false })
           .limit(10);
 
         if (!isAdmin) {
-          query = query.eq('user_id', user.id);
+          query = query.eq("user_id", user.id);
         }
 
         const { data, error } = await query;
@@ -140,7 +158,7 @@ function NotificationButton({ isAdmin }) {
         setNotifications(data || []);
         setUnreadCount(data?.length || 0);
       } catch (error) {
-        console.error('Error fetching notifications:', error);
+        console.error("Error fetching notifications:", error);
       }
     };
 
@@ -150,48 +168,44 @@ function NotificationButton({ isAdmin }) {
   const markAsRead = async (notificationId) => {
     try {
       const { error } = await supabase
-        .from('notifications')
-        .update({ 
-          status: 'sent',
-          sent_at: new Date().toISOString()
+        .from("notifications")
+        .update({
+          status: "sent",
+          sent_at: new Date().toISOString(),
         })
-        .eq('id', notificationId);
+        .eq("id", notificationId);
 
       if (error) throw error;
-      
+
       // Remove the notification from the local state since it's no longer pending
-      setNotifications(notifications.filter(n => n.id !== notificationId));
-      setUnreadCount(prev => prev - 1);
+      setNotifications(notifications.filter((n) => n.id !== notificationId));
+      setUnreadCount((prev) => prev - 1);
     } catch (error) {
-      console.error('Error marking notification as sent:', error);
+      console.error("Error marking notification as sent:", error);
     }
   };
 
   return (
     <div className="relative">
-      <Button 
-        variant="ghost" 
-        size="icon"
-        onClick={() => setIsOpen(!isOpen)}
-      >
+      <Button variant="ghost" size="icon" onClick={() => setIsOpen(!isOpen)}>
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
           <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500"></span>
         )}
         <span className="sr-only">Notifications</span>
       </Button>
-      
+
       {isOpen && (
         <div className="absolute right-0 mt-2 w-96 rounded-md shadow-lg bg-white z-50 border animate-in fade-in-0 zoom-in-95">
           <div className="p-3 border-b flex justify-between items-center">
             <h3 className="text-sm font-medium">Notifications</h3>
-            <Button 
-              variant="link" 
-              size="sm" 
+            <Button
+              variant="link"
+              size="sm"
               className="text-xs"
               onClick={() => {
                 setIsOpen(false);
-                router.push('/properties/notifications');
+                router.push("/properties/notifications");
               }}
             >
               View all
@@ -199,10 +213,12 @@ function NotificationButton({ isAdmin }) {
           </div>
           <div className="max-h-[480px] overflow-y-auto">
             {notifications.length > 0 ? (
-              notifications.map(notification => (
-                <div 
-                  key={notification.id} 
-                  className={`p-4 border-b hover:bg-gray-50 ${notification.status === 'pending' ? 'bg-blue-50' : ''}`}
+              notifications.map((notification) => (
+                <div
+                  key={notification.id}
+                  className={`p-4 border-b hover:bg-gray-50 ${
+                    notification.status === "pending" ? "bg-blue-50" : ""
+                  }`}
                 >
                   <div className="flex items-start gap-3">
                     <div className="mt-1">
@@ -214,7 +230,10 @@ function NotificationButton({ isAdmin }) {
                           {getNotificationTitle(notification.type)}
                         </p>
                         <span className="text-xs text-gray-500">
-                          {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
+                          {formatDistanceToNow(
+                            new Date(notification.created_at),
+                            { addSuffix: true }
+                          )}
                         </span>
                       </div>
                       <p className="text-sm text-gray-600 mt-1">
@@ -227,7 +246,7 @@ function NotificationButton({ isAdmin }) {
                         </div>
                       )}
                       <div className="mt-2 flex items-center gap-2">
-                        {notification.status === 'pending' && (
+                        {notification.status === "pending" && (
                           <Button
                             variant="outline"
                             size="sm"
@@ -245,7 +264,9 @@ function NotificationButton({ isAdmin }) {
                             className="text-xs h-7"
                             onClick={() => {
                               setIsOpen(false);
-                              router.push(`/properties/property/${notification.property_id}`);
+                              router.push(
+                                `/properties/property/${notification.property_id}`
+                              );
                             }}
                           >
                             <Eye className="h-3 w-3 mr-1" />

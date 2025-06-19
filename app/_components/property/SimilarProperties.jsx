@@ -50,4 +50,4 @@ export default function SimilarProperties({ similarProperties }) {
       </div>
     </div>
   );
-} 
+}

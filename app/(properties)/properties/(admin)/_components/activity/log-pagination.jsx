@@ -23,7 +23,7 @@ export function LogPagination() {
             disabled={pagination.page === 1}
           />
         </PaginationItem>
-        
+
         {pages.map((page) => (
           <PaginationItem key={page}>
             <PaginationLink
@@ -34,7 +34,7 @@ export function LogPagination() {
             </PaginationLink>
           </PaginationItem>
         ))}
-        
+
         <PaginationItem>
           <PaginationNext
             onClick={() => fetchLogs(pagination.page + 1)}

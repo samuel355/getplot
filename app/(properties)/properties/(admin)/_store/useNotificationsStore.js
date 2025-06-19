@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import { supabase } from "@/utils/supabase/client";
 
 const useNotificationsStore = create((set, get) => ({
@@ -11,8 +11,8 @@ const useNotificationsStore = create((set, get) => ({
     dateRange: null,
   },
   sort: {
-    field: 'created_at',
-    order: 'desc',
+    field: "created_at",
+    order: "desc",
   },
 
   // Fetch notifications
@@ -22,9 +22,9 @@ const useNotificationsStore = create((set, get) => ({
 
       // First, get the user's properties to get the correct user_id
       const { data: userProperties, error: propertiesError } = await supabase
-        .from('properties')
-        .select('user_id, user_email')
-        .eq('user_email', userId)
+        .from("properties")
+        .select("user_id, user_email")
+        .eq("user_email", userId)
         .limit(1);
 
       if (propertiesError) throw propertiesError;
@@ -34,8 +34,9 @@ const useNotificationsStore = create((set, get) => ({
       const userIdentifier = propertyUserId || userId;
 
       let query = supabase
-        .from('notifications')
-        .select(`
+        .from("notifications")
+        .select(
+          `
           *,
           properties (
             id,
@@ -44,24 +45,28 @@ const useNotificationsStore = create((set, get) => ({
             user_id,
             user_email
           )
-        `)
-        .order(get().sort.field, { ascending: get().sort.order === 'asc' });
+        `
+        )
+        .order(get().sort.field, { ascending: get().sort.order === "asc" });
 
       // Apply filters
       const { filters } = get();
       if (!isAdmin) {
         // For regular users, show notifications for their properties
-        query = query.or(`user_id.eq.${userIdentifier},properties.user_id.eq.${userIdentifier}`);
+        query = query.or(
+          `user_id.eq.${userIdentifier},properties.user_id.eq.${userIdentifier}`
+        );
       }
       if (filters.type) {
-        query = query.eq('type', filters.type);
+        query = query.eq("type", filters.type);
       }
       if (filters.status) {
-        query = query.eq('status', filters.status);
+        query = query.eq("status", filters.status);
       }
       if (filters.dateRange) {
-        query = query.gte('created_at', filters.dateRange.start)
-                    .lte('created_at', filters.dateRange.end);
+        query = query
+          .gte("created_at", filters.dateRange.start)
+          .lte("created_at", filters.dateRange.end);
       }
 
       const { data, error } = await query;
@@ -69,7 +74,7 @@ const useNotificationsStore = create((set, get) => ({
       if (error) throw error;
       set({ notifications: data || [], loading: false });
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error("Error fetching notifications:", error);
       set({ error: error.message, loading: false });
     }
   },
@@ -77,7 +82,7 @@ const useNotificationsStore = create((set, get) => ({
   // Set filters
   setFilters: (filters) => {
     set((state) => ({
-      filters: { ...state.filters, ...filters }
+      filters: { ...state.filters, ...filters },
     }));
   },
 
@@ -90,22 +95,24 @@ const useNotificationsStore = create((set, get) => ({
   markAsSent: async (notificationId) => {
     try {
       const { error } = await supabase
-        .from('notifications')
-        .update({ 
-          status: 'sent',
-          sent_at: new Date().toISOString()
+        .from("notifications")
+        .update({
+          status: "sent",
+          sent_at: new Date().toISOString(),
         })
-        .eq('id', notificationId);
+        .eq("id", notificationId);
 
       if (error) throw error;
 
       set((state) => ({
-        notifications: state.notifications.map(n =>
-          n.id === notificationId ? { ...n, status: 'sent', sent_at: new Date().toISOString() } : n
-        )
+        notifications: state.notifications.map((n) =>
+          n.id === notificationId
+            ? { ...n, status: "sent", sent_at: new Date().toISOString() }
+            : n
+        ),
       }));
     } catch (error) {
-      console.error('Error marking notification as sent:', error);
+      console.error("Error marking notification as sent:", error);
       throw error;
     }
   },
@@ -115,9 +122,9 @@ const useNotificationsStore = create((set, get) => ({
     try {
       // Get the user's properties to get the correct user_id
       const { data: userProperties, error: propertiesError } = await supabase
-        .from('properties')
-        .select('user_id, user_email')
-        .eq('user_email', userId)
+        .from("properties")
+        .select("user_id, user_email")
+        .eq("user_email", userId)
         .limit(1);
 
       if (propertiesError) throw propertiesError;
@@ -126,24 +133,26 @@ const useNotificationsStore = create((set, get) => ({
       const userIdentifier = propertyUserId || userId;
 
       const { error } = await supabase
-        .from('notifications')
-        .update({ 
-          status: 'sent',
-          sent_at: new Date().toISOString()
+        .from("notifications")
+        .update({
+          status: "sent",
+          sent_at: new Date().toISOString(),
         })
-        .or(`user_id.eq.${userIdentifier},properties.user_id.eq.${userIdentifier}`);
+        .or(
+          `user_id.eq.${userIdentifier},properties.user_id.eq.${userIdentifier}`
+        );
 
       if (error) throw error;
 
       set((state) => ({
-        notifications: state.notifications.map(n => ({ 
-          ...n, 
-          status: 'sent',
-          sent_at: new Date().toISOString()
-        }))
+        notifications: state.notifications.map((n) => ({
+          ...n,
+          status: "sent",
+          sent_at: new Date().toISOString(),
+        })),
       }));
     } catch (error) {
-      console.error('Error marking all notifications as sent:', error);
+      console.error("Error marking all notifications as sent:", error);
       throw error;
     }
   },
@@ -152,17 +161,19 @@ const useNotificationsStore = create((set, get) => ({
   deleteNotification: async (notificationId) => {
     try {
       const { error } = await supabase
-        .from('notifications')
+        .from("notifications")
         .delete()
-        .eq('id', notificationId);
+        .eq("id", notificationId);
 
       if (error) throw error;
 
       set((state) => ({
-        notifications: state.notifications.filter(n => n.id !== notificationId)
+        notifications: state.notifications.filter(
+          (n) => n.id !== notificationId
+        ),
       }));
     } catch (error) {
-      console.error('Error deleting notification:', error);
+      console.error("Error deleting notification:", error);
       throw error;
     }
   },
@@ -174,9 +185,9 @@ const useNotificationsStore = create((set, get) => ({
         type: null,
         status: null,
         dateRange: null,
-      }
+      },
     });
-  }
+  },
 }));
 
 export default useNotificationsStore;

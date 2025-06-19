@@ -19,7 +19,7 @@ export function BulkRejectDialog({ isOpen, setIsOpen }) {
 
   const handleReject = async () => {
     const result = await bulkRejectProperties(reason);
-    
+
     if (result.success) {
       toast({
         title: "Success",
@@ -41,8 +41,8 @@ export function BulkRejectDialog({ isOpen, setIsOpen }) {
         <DialogHeader>
           <DialogTitle>Bulk Reject Properties</DialogTitle>
           <DialogDescription>
-            You are about to reject {selectedItems.length} properties. 
-            Please provide a reason for rejection.
+            You are about to reject {selectedItems.length} properties. Please
+            provide a reason for rejection.
           </DialogDescription>
         </DialogHeader>
 
@@ -56,10 +56,7 @@ export function BulkRejectDialog({ isOpen, setIsOpen }) {
         </div>
 
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => setIsOpen(false)}
-          >
+          <Button variant="outline" onClick={() => setIsOpen(false)}>
             Cancel
           </Button>
           <Button

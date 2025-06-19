@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import CartItem from "@/app/_components/CartItem";
 import Header from "@/app/_components/Header";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import React from "react";
 const Checkout = () => {
   const { plots, getTotal } = useCart();
   const total = getTotal();
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <>
@@ -36,9 +36,7 @@ const Checkout = () => {
               <div className="lg:col-span-2">
                 <div className="space-y-4 max-h-[48rem] overflow-y-scroll">
                   {plots.map((plot) => (
-                    <CartItem
-                      plot={plot}
-                    />
+                    <CartItem plot={plot} />
                   ))}
                 </div>
               </div>
@@ -60,7 +58,11 @@ const Checkout = () => {
                         <span>Total</span>
                         <span>GHS {total.toLocaleString()}</span>
                       </div>
-                      <Button onClick={() => router.push('/buy-plot')} className="w-full" size="lg">
+                      <Button
+                        onClick={() => router.push("/buy-plot")}
+                        className="w-full"
+                        size="lg"
+                      >
                         Proceed to Payment
                       </Button>
                     </div>

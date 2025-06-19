@@ -34,15 +34,15 @@ export const columns = [
       const type = row.getValue("type");
       const getTypeBadge = (type) => {
         switch (type) {
-          case 'property_approved':
+          case "property_approved":
             return <Badge variant="success">Approved</Badge>;
-          case 'property_rejected':
+          case "property_rejected":
             return <Badge variant="destructive">Rejected</Badge>;
-          case 'property_interest':
+          case "property_interest":
             return <Badge variant="outline">Interest</Badge>;
-          case 'user_banned':
+          case "user_banned":
             return <Badge variant="destructive">User Banned</Badge>;
-          case 'user_unbanned':
+          case "user_unbanned":
             return <Badge variant="success">User Unbanned</Badge>;
           default:
             return <Badge>{type}</Badge>;
@@ -61,13 +61,15 @@ export const columns = [
     cell: ({ row }) => {
       const property = row.original.properties;
       return property ? (
-        <Link 
+        <Link
           href={`/properties/${property.id}`}
           className="text-primary hover:underline"
         >
           {property.title}
         </Link>
-      ) : '-';
+      ) : (
+        "-"
+      );
     },
   },
   {
@@ -125,9 +127,7 @@ export const columns = [
               </DropdownMenuItem>
             )}
             {!notification.read && (
-              <DropdownMenuItem
-                onClick={() => markAsRead(notification.id)}
-              >
+              <DropdownMenuItem onClick={() => markAsRead(notification.id)}>
                 <Check className="mr-2 h-4 w-4" />
                 Mark as Read
               </DropdownMenuItem>
@@ -145,4 +145,4 @@ export const columns = [
       );
     },
   },
-]; 
+];

@@ -42,20 +42,20 @@ export default function AddListingPage() {
     rental_available_to: null,
     rental_deposit: null,
     rental_utilities_included: false,
-    rental_furnished: false
+    rental_furnished: false,
   });
-  
+
   const totalSteps = 7;
-  
+
   const updateFormData = (data) => {
-    setFormData(prev => ({ ...prev, ...data }));
+    setFormData((prev) => ({ ...prev, ...data }));
   };
-  
+
   const nextStep = () => {
     setStep(step + 1);
     window.scrollTo(0, 0);
   };
-  
+
   const prevStep = () => {
     setStep(step - 1);
     window.scrollTo(0, 0);
@@ -64,77 +64,78 @@ export default function AddListingPage() {
   return (
     <>
       <main className="w-full md:w-[85%] lg:w-[90%] max-w-6xl mx-auto px-4 sm:px-6 py-16 min-h-screen mt-1 mb-16">
-        <h1 className="text-3xl font-bold text-center mb-10">Add New Property Listing</h1>
-        
+        <h1 className="text-3xl font-bold text-center mb-10">
+          Add New Property Listing
+        </h1>
+
         <div className="mb-10">
-          <Stepper 
+          <Stepper
             steps={[
-              "Property Details", 
-              "Location", 
-              "Images", 
-              "Pricing", 
+              "Property Details",
+              "Location",
+              "Images",
+              "Pricing",
               "Features",
               "Documents",
-              "Review"
-            ]} 
-            currentStep={step} 
+              "Review",
+            ]}
+            currentStep={step}
           />
         </div>
-        
+
         <div className="bg-white shadow-lg rounded-lg p-6 sm:p-8 md:p-10">
-          <div className="min-h-[500px]"> {/* Added fixed minimum height container */}
+          <div className="min-h-[500px]">
+            {" "}
+            {/* Added fixed minimum height container */}
             {step === 1 && (
-              <PropertyDetailsForm 
-                formData={formData} 
-                updateFormData={updateFormData} 
-                nextStep={nextStep} 
+              <PropertyDetailsForm
+                formData={formData}
+                updateFormData={updateFormData}
+                nextStep={nextStep}
               />
             )}
             {step === 2 && (
-              <LocationForm 
-                formData={formData} 
-                updateFormData={updateFormData} 
-                nextStep={nextStep} 
-                prevStep={prevStep} 
+              <LocationForm
+                formData={formData}
+                updateFormData={updateFormData}
+                nextStep={nextStep}
+                prevStep={prevStep}
               />
             )}
             {step === 3 && (
-              <ImagesForm 
-                formData={formData} 
-                updateFormData={updateFormData} 
-                nextStep={nextStep} 
-                prevStep={prevStep} 
+              <ImagesForm
+                formData={formData}
+                updateFormData={updateFormData}
+                nextStep={nextStep}
+                prevStep={prevStep}
               />
             )}
             {step === 4 && (
-              <PricingForm 
-                formData={formData} 
-                updateFormData={updateFormData} 
-                nextStep={nextStep} 
-                prevStep={prevStep} 
+              <PricingForm
+                formData={formData}
+                updateFormData={updateFormData}
+                nextStep={nextStep}
+                prevStep={prevStep}
               />
             )}
             {step === 5 && (
-              <FeaturesForm 
-                formData={formData} 
-                updateFormData={updateFormData} 
-                nextStep={nextStep} 
-                prevStep={prevStep} 
+              <FeaturesForm
+                formData={formData}
+                updateFormData={updateFormData}
+                nextStep={nextStep}
+                prevStep={prevStep}
               />
             )}
             {step === 6 && (
-              <DocumentsForm 
-                formData={formData} 
-                updateFormData={updateFormData} 
-                nextStep={nextStep} 
-                prevStep={prevStep} 
+              <DocumentsForm
+                formData={formData}
+                updateFormData={updateFormData}
+                nextStep={nextStep}
+                prevStep={prevStep}
               />
             )}
             {step === 7 && (
-              <ReviewSubmit 
-                formData={formData} 
-                prevStep={prevStep} 
-              />
+              <ReviewSubmit formData={formData} prevStep={prevStep} />
             )}
           </div>
         </div>

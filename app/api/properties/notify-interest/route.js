@@ -22,34 +22,34 @@ export async function POST(request) {
 
     // Get property details
     const { data: property, error: propertyError } = await supabase
-      .from('properties')
-      .select('*, users(*)')
-      .eq('id', propertyId)
+      .from("properties")
+      .select("*, users(*)")
+      .eq("id", propertyId)
       .single();
 
     if (propertyError) throw propertyError;
 
     // Get interested user details
     const { data: interestedUser, error: userError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', interestedUserId)
+      .from("users")
+      .select("*")
+      .eq("id", interestedUserId)
       .single();
 
     if (userError) throw userError;
 
     // Create notification in database
     const { data: notification, error: notificationError } = await supabase
-      .from('notifications')
+      .from("notifications")
       .insert({
-        type: 'property_interest',
+        type: "property_interest",
         user_id: property.user_id,
         property_id: propertyId,
         message: `New interest in your property: ${property.title}`,
         metadata: {
           interested_user: interestedUser,
-          message: message
-        }
+          message: message,
+        },
       })
       .select()
       .single();
@@ -83,10 +83,7 @@ export async function POST(request) {
 
     return NextResponse.json({ success: true, notification });
   } catch (error) {
-    console.error('Error in notify-interest:', error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    console.error("Error in notify-interest:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
-} 
+}

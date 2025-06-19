@@ -37,7 +37,7 @@ const page = () => {
 
   return (
     <>
-      <Header/>
+      <Header />
       <div className="w-full mx-12 overflow-x-hidden mb-8 pt-[7.5rem]">
         <h1 className="font-bold text-lg my-4 text-center capitalize">
           DAR-ES-SALAAM SITE

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <style>
@@ -10,26 +11,31 @@
       margin: 0;
       padding: 0;
     }
+
     .container {
       max-width: 600px;
       margin: 0 auto;
       padding: 20px;
     }
+
     .header {
       background-color: #f8f9fa;
       text-align: center;
       padding: 20px;
       margin-bottom: 30px;
     }
+
     .content {
       padding: 20px;
     }
+
     .notice {
       background-color: #fee2e2;
       border-left: 4px solid #ef4444;
       padding: 15px;
       margin: 20px 0;
     }
+
     .button {
       display: inline-block;
       padding: 12px 24px;
@@ -39,6 +45,7 @@
       border-radius: 6px;
       margin: 20px 0;
     }
+
     .footer {
       text-align: center;
       padding: 20px;
@@ -48,41 +55,46 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="header">
       <h1 style="color: #1f2937; margin: 0;">Property Listing Update</h1>
     </div>
-    
+
     <div class="content">
       <p>Hello <%= firstName %>,</p>
-      
-      <p>Thank you for submitting your property listing to our platform. After careful review, we're unable to approve your listing at this time.</p>
-      
+
+      <p>Thank you for submitting your property listing to our platform. After careful review, we're unable to approve
+        your listing at this time.</p>
+
       <div class="notice">
         <p style="font-weight: bold; margin-bottom: 4px;">Reason for Rejection:</p>
-        <p style="margin-top: 0;"><%= rejectionReason %></p>
+        <p style="margin-top: 0;">
+          <%= rejectionReason %>
+        </p>
       </div>
-      
+
       <p>You can edit your listing to address these issues and resubmit it for review:</p>
-      
+
       <div style="text-align: center;">
         <a href="<%= appUrl %>/properties/edit/<%= propertyId %>" class="button">
           Edit Your Listing
         </a>
       </div>
-      
+
       <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
-      
+
       <p>
         Best regards,<br>
         The GetOnePlot Team
       </p>
     </div>
-    
+
     <div class="footer">
       <p>&copy; <%= year %> GetOnePlot. All rights reserved.</p>
     </div>
   </div>
 </body>
+
 </html>

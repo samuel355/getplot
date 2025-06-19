@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 export async function POST(request) {
   try {
     const { userId } = auth();
-    
+
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -46,29 +46,32 @@ export async function POST(request) {
     const batchSize = 5;
     for (let i = 0; i < properties.length; i += batchSize) {
       const batch = properties.slice(i, i + batchSize);
-      
-      await Promise.all(batch.map(async (property) => {
-        // Compile template with data
-        const html = ejs.render(template, {
-          propertyTitle: property.title,
-          reason,
-          appUrl: process.env.NEXT_PUBLIC_APP_URL,
-        });
 
-        // Send email
-        await transporter.sendMail({
-          from: `"Property Manager" <${process.env.EMAIL_FROM}>`,
-          to: property.user.email,
-          subject: action === 'approved' 
-            ? 'Your Property Has Been Approved'
-            : 'Your Property Has Been Rejected',
-          html,
-        });
-      }));
+      await Promise.all(
+        batch.map(async (property) => {
+          // Compile template with data
+          const html = ejs.render(template, {
+            propertyTitle: property.title,
+            reason,
+            appUrl: process.env.NEXT_PUBLIC_APP_URL,
+          });
+
+          // Send email
+          await transporter.sendMail({
+            from: `"Property Manager" <${process.env.EMAIL_FROM}>`,
+            to: property.user.email,
+            subject:
+              action === "approved"
+                ? "Your Property Has Been Approved"
+                : "Your Property Has Been Rejected",
+            html,
+          });
+        })
+      );
 
       // Add a small delay between batches to prevent rate limiting
       if (i + batchSize < properties.length) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
 

@@ -65,7 +65,7 @@ const BuyPlot = () => {
   const { id } = useParams();
   const router = useRouter();
   const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
-  const databaseName = 'yabi'
+  const databaseName = "yabi";
 
   // Errors Checks
   const [statusEr, setStatusEr] = useState(false);
@@ -312,7 +312,7 @@ const BuyPlot = () => {
         .catch((error) => {
           console.error(
             "There was a problem with your fetch operation:",
-            error,
+            error
           );
           toast.error("Your Transaction verification was not successfull");
         });
@@ -362,8 +362,7 @@ const BuyPlot = () => {
             " " +
             allDetails.properties.Street_Nam,
           plotSize:
-            parseFloat(allDetails?.properties?.Area).toFixed(2) +
-            " Acres ",
+            parseFloat(allDetails?.properties?.Area).toFixed(2) + " Acres ",
         }),
       });
       setVerifyLoading(false);

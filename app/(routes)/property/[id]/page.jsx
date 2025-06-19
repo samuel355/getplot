@@ -153,9 +153,13 @@ export default function PropertyPage() {
 
     let priceText = "";
     if (selectedProperty.listing_type === "rent") {
-      priceText = `GHS ${Number(selectedProperty.rental_price).toLocaleString()}/month`;
+      priceText = `GHS ${Number(
+        selectedProperty.rental_price
+      ).toLocaleString()}/month`;
     } else if (selectedProperty.listing_type === "airbnb") {
-      priceText = `GHS ${Number(selectedProperty.rental_price).toLocaleString()}/day`;
+      priceText = `GHS ${Number(
+        selectedProperty.rental_price
+      ).toLocaleString()}/day`;
     } else {
       priceText = `GHS ${Number(selectedProperty.price).toLocaleString()}`;
     }
@@ -449,7 +453,10 @@ export default function PropertyPage() {
               <div className="relative h-[30rem] rounded-lg overflow-hidden mb-2">
                 <div className="w-full h-full bg-gray-100 rounded">
                   <Image
-                    src={selectedProperty?.images[selectedImage] || "/placeholder-property.jpg"}
+                    src={
+                      selectedProperty?.images[selectedImage] ||
+                      "/placeholder-property.jpg"
+                    }
                     alt={selectedProperty?.title}
                     width={500}
                     height={500}
@@ -521,8 +528,16 @@ export default function PropertyPage() {
                   {selectedProperty?.listing_type === "airbnb"
                     ? "Airbnb for short stay"
                     : selectedProperty?.type === "house"
-                    ? `House for ${selectedProperty.listing_type === "rent" ? "Rent" : "Sale"}`
-                    : `Land for ${selectedProperty?.listing_type === "rent" ? "Rent" : "Sale"}`}
+                    ? `House for ${
+                        selectedProperty.listing_type === "rent"
+                          ? "Rent"
+                          : "Sale"
+                      }`
+                    : `Land for ${
+                        selectedProperty?.listing_type === "rent"
+                          ? "Rent"
+                          : "Sale"
+                      }`}
                 </div>
 
                 {/* View Full Image Button */}
@@ -543,21 +558,24 @@ export default function PropertyPage() {
                       <button
                         key={index}
                         onClick={() => setSelectedImage(index)}
-                        className={`flex-shrink-0 w-24 h-16 rounded-md overflow-hidden ${selectedImage === index
+                        className={`flex-shrink-0 w-24 h-16 rounded-md overflow-hidden ${
+                          selectedImage === index
                             ? "ring-2 ring-primary"
                             : "opacity-70 hover:opacity-100"
-                          }`}
+                        }`}
                       >
                         <img
                           src={image}
-                          alt={`${selectedProperty?.title} - image ${index + 1}`}
+                          alt={`${selectedProperty?.title} - image ${
+                            index + 1
+                          }`}
                           className="w-full h-full object-cover"
                         />
                       </button>
                     ))}
                   </div>
                 )}
-              </div>
+            </div>
 
             {/* Property details */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -606,7 +624,7 @@ export default function PropertyPage() {
                   </button>
                 </div>
               </div>
-              
+
               <Tabs defaultValue="overview" className="w-full">
                 <TabsList className="grid w-full grid-cols-5">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -852,7 +870,7 @@ export default function PropertyPage() {
         </div>
       </main>
       <Footer />
-      {selectedProperty?.images && ( selectedProperty.images.length > 0) && (
+      {selectedProperty?.images && selectedProperty.images.length > 0 && (
         <ImageViewerModal
           images={selectedProperty.images}
           currentIndex={selectedImage}

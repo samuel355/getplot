@@ -14,7 +14,6 @@ const page = () => {
 
   useEffect(() => {
     getPlost();
-
   }, []);
 
   //Fetch Plots from supabase

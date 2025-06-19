@@ -35,11 +35,11 @@ const EditPlot = () => {
   const [plotData, setPlotData] = useState(plotInfo);
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
-  const {user, isSignedIn, isLoaded} = useUser()
+  const { user, isSignedIn, isLoaded } = useUser();
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const router = useRouter();
-  
+
   // Errors Checks
   const [statusEr, setStatusEr] = useState(false);
   const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
@@ -50,8 +50,8 @@ const EditPlot = () => {
   const [countryEr, setCountryEr] = useState(false);
   const [phoneEr, setPhoneEr] = useState(false);
   const [resAddressEr, setResAddressEr] = useState(false);
-  const [isAvailable, setIsAvailable] = useState(false)
-  
+  const [isAvailable, setIsAvailable] = useState(false);
+
   const {
     firstname,
     lastname,
@@ -108,7 +108,7 @@ const EditPlot = () => {
     } else {
       router.push("/trabuom");
     }
-    
+
     if (isLoaded) {
       if (!isSignedIn) {
         router.push("/");
@@ -259,7 +259,7 @@ const EditPlot = () => {
       toast.success("Plot details updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        router.replace('/trabuom');
+        router.replace("/trabuom");
       }, 1500);
     }
     if (error) {
@@ -268,16 +268,16 @@ const EditPlot = () => {
       setLoader2(false);
     }
   };
-  
+
   const onInputChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
     setPlotData({ ...plotData, [name]: value });
     const selectedStatus = e.target.value;
-    if(selectedStatus === 'Available'){
-      setIsAvailable(true)
-    }else{
-      setIsAvailable(false)
+    if (selectedStatus === "Available") {
+      setIsAvailable(true);
+    } else {
+      setIsAvailable(false);
     }
   };
 
@@ -295,22 +295,22 @@ const EditPlot = () => {
       event.preventDefault();
     }
   };
-  
-  const handleAvailableSubmit = async(e) => {
-    e.preventDefault()
+
+  const handleAvailableSubmit = async (e) => {
+    e.preventDefault();
     //Update plot details with plotData on Supabase
     setLoader2(true);
     const { data, error } = await supabase
       .from("trabuom")
       .update({
-        status: 'Available',
-        firstname: '',
-        lastname: '',
-        email: '',
-        country: '',
-        phone: '',
-        residentialAddress: '',
-        agent: '',
+        status: "Available",
+        firstname: "",
+        lastname: "",
+        email: "",
+        country: "",
+        phone: "",
+        residentialAddress: "",
+        agent: "",
         plotTotalAmount: plotData.plotTotalAmount,
         paidAmount: 0,
         remainingAmount: 0,
@@ -323,7 +323,7 @@ const EditPlot = () => {
       toast.success("Plot updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        window.location.href='/trabuom';
+        window.location.href = "/trabuom";
       }, 1100);
     }
     if (error) {
@@ -331,7 +331,7 @@ const EditPlot = () => {
       toast.error("Sorry errror happened updating the plot ");
       setLoader2(false);
     }
-  }
+  };
 
   return (
     <>
@@ -474,28 +474,29 @@ const EditPlot = () => {
                     </div>
                   )}
 
-                  {
-                    isAvailable ? (
-                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
-                        <button
-                          onClick={handleAvailableSubmit}
-                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
-                        >
-                          {loader1 ? <Loader className="animate-spin" /> : "Submit"}
-                        </button>
-                      </div>
-                    ): (
-                      <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
-                        <button
-                          onClick={handleStep1}
-                          className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
-                        >
-                          {loader1 ? <Loader className="animate-spin" /> : "Next"}
-                        </button>
-                      </div>
-                    )
-                  }
-                  
+                  {isAvailable ? (
+                    <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                      <button
+                        onClick={handleAvailableSubmit}
+                        className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                      >
+                        {loader1 ? (
+                          <Loader className="animate-spin" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
+                      <button
+                        onClick={handleStep1}
+                        className="bg-primary text-white py-2 px-4 rounded-md shadow-md"
+                      >
+                        {loader1 ? <Loader className="animate-spin" /> : "Next"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 

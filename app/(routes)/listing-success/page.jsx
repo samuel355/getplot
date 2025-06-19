@@ -17,28 +17,26 @@ export default function ListingSuccessPage() {
           Listing Submitted Successfully!
         </h2>
         <p className="mt-2 text-gray-600">
-          Your property listing has been submitted for review. We'll notify you once it's approved.
+          Your property listing has been submitted for review. We'll notify you
+          once it's approved.
         </p>
         <div className="mt-8 text-sm text-gray-500">
           <p>Reference ID: {id}</p>
         </div>
         <div className="mt-8 flex flex-col space-y-3">
-          <Link 
-            href={`/properties/property/${id}`} 
+          <Link
+            href={`/properties/property/${id}`}
             className="bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition duration-300"
           >
             View Your Listing
           </Link>
-          <Link 
-            href="/properties/my-dashboard" 
+          <Link
+            href="/properties/my-dashboard"
             className="border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50 transition duration-300"
           >
             Go to Dashboard
           </Link>
-          <Link 
-            href="/" 
-            className="text-primary hover:underline"
-          >
+          <Link href="/" className="text-primary hover:underline">
             Return to Home
           </Link>
         </div>

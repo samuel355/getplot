@@ -1,9 +1,9 @@
 "use client";
 
-import { useToast } from '@/hooks/use-toast';
-import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useToast } from "@/hooks/use-toast";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function AdminLayout({ children }) {
   const { user, isSignedIn, isLoaded } = useUser();

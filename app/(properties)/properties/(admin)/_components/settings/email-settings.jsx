@@ -17,15 +17,17 @@ import { useToast } from "@/hooks/use-toast";
 export function EmailSettings() {
   const { settings, updateSettings, updateEmailTemplate } = useSettingsStore();
   const { toast } = useToast();
-  const [selectedTemplate, setSelectedTemplate] = useState('propertyApproved');
+  const [selectedTemplate, setSelectedTemplate] = useState("propertyApproved");
   const [templateContent, setTemplateContent] = useState(
-    settings.email.templates[selectedTemplate] || ''
+    settings.email.templates[selectedTemplate] || ""
   );
-  const [notifications, setNotifications] = useState(settings.email.notifications);
+  const [notifications, setNotifications] = useState(
+    settings.email.notifications
+  );
 
   const handleTemplateUpdate = async () => {
     const result = await updateEmailTemplate(selectedTemplate, templateContent);
-    
+
     if (result.success) {
       toast({
         title: "Template Updated",
@@ -41,8 +43,8 @@ export function EmailSettings() {
   };
 
   const handleNotificationUpdate = async () => {
-    const result = await updateSettings('email', { notifications });
-    
+    const result = await updateSettings("email", { notifications });
+
     if (result.success) {
       toast({
         title: "Settings Updated",
@@ -70,8 +72,11 @@ export function EmailSettings() {
               <Switch
                 id="propertyApproved"
                 checked={notifications.propertyApproved}
-                onCheckedChange={(checked) => 
-                  setNotifications({...notifications, propertyApproved: checked})
+                onCheckedChange={(checked) =>
+                  setNotifications({
+                    ...notifications,
+                    propertyApproved: checked,
+                  })
                 }
               />
             </div>
@@ -81,8 +86,11 @@ export function EmailSettings() {
               <Switch
                 id="propertyRejected"
                 checked={notifications.propertyRejected}
-                onCheckedChange={(checked) => 
-                  setNotifications({...notifications, propertyRejected: checked})
+                onCheckedChange={(checked) =>
+                  setNotifications({
+                    ...notifications,
+                    propertyRejected: checked,
+                  })
                 }
               />
             </div>
@@ -92,8 +100,8 @@ export function EmailSettings() {
               <Switch
                 id="userBanned"
                 checked={notifications.userBanned}
-                onCheckedChange={(checked) => 
-                  setNotifications({...notifications, userBanned: checked})
+                onCheckedChange={(checked) =>
+                  setNotifications({ ...notifications, userBanned: checked })
                 }
               />
             </div>
@@ -103,13 +111,15 @@ export function EmailSettings() {
               <Switch
                 id="userUnbanned"
                 checked={notifications.userUnbanned}
-                onCheckedChange={(checked) => 
-                  setNotifications({...notifications, userUnbanned: checked})
+                onCheckedChange={(checked) =>
+                  setNotifications({ ...notifications, userUnbanned: checked })
                 }
               />
             </div>
 
-            <Button onClick={handleNotificationUpdate}>Save Notification Settings</Button>
+            <Button onClick={handleNotificationUpdate}>
+              Save Notification Settings
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -130,8 +140,12 @@ export function EmailSettings() {
                   <SelectValue placeholder="Select a template" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="propertyApproved">Property Approved</SelectItem>
-                  <SelectItem value="propertyRejected">Property Rejected</SelectItem>
+                  <SelectItem value="propertyApproved">
+                    Property Approved
+                  </SelectItem>
+                  <SelectItem value="propertyRejected">
+                    Property Rejected
+                  </SelectItem>
                   <SelectItem value="userBanned">User Banned</SelectItem>
                   <SelectItem value="userUnbanned">User Unbanned</SelectItem>
                 </SelectContent>
@@ -147,7 +161,8 @@ export function EmailSettings() {
                 className="font-mono"
               />
               <p className="text-sm text-muted-foreground">
-                Available variables: {`{{firstName}}, {{lastName}}, {{email}}, {{propertyTitle}}`}
+                Available variables:{" "}
+                {`{{firstName}}, {{lastName}}, {{email}}, {{propertyTitle}}`}
               </p>
             </div>
 

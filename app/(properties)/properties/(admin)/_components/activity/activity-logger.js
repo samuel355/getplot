@@ -5,8 +5,8 @@ export const logActivity = async ({
   action,
   details,
   userId,
-  status = 'success',
-  metadata = {}
+  status = "success",
+  metadata = {},
 }) => {
   const { createLog } = useActivityLogStore.getState();
 
@@ -21,22 +21,22 @@ export const logActivity = async ({
 };
 
 export const LOG_TYPES = {
-  PROPERTY: 'property',
-  USER: 'user',
-  SETTINGS: 'settings',
-  SYSTEM: 'system',
+  PROPERTY: "property",
+  USER: "user",
+  SETTINGS: "settings",
+  SYSTEM: "system",
 };
 
 export const LOG_ACTIONS = {
-  CREATE: 'create',
-  UPDATE: 'update',
-  DELETE: 'delete',
-  APPROVE: 'approve',
-  REJECT: 'reject',
-  BAN: 'ban',
-  UNBAN: 'unban',
-  ROLE_CHANGE: 'role_change',
-  SETTINGS_UPDATE: 'settings_update',
-  LOGIN: 'login',
-  LOGOUT: 'logout',
+  CREATE: "create",
+  UPDATE: "update",
+  DELETE: "delete",
+  APPROVE: "approve",
+  REJECT: "reject",
+  BAN: "ban",
+  UNBAN: "unban",
+  ROLE_CHANGE: "role_change",
+  SETTINGS_UPDATE: "settings_update",
+  LOGIN: "login",
+  LOGOUT: "logout",
 };

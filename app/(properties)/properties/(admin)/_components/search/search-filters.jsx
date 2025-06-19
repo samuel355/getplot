@@ -42,15 +42,15 @@ export function SearchFilters() {
   // Calculate active filters count
   useEffect(() => {
     let count = 0;
-    if (filters.type !== 'all') count++;
-    if (filters.status !== 'all') count++;
+    if (filters.type !== "all") count++;
+    if (filters.status !== "all") count++;
     if (filters.priceRange.min) count++;
     if (filters.priceRange.max) count++;
     if (filters.dateRange.from) count++;
     if (filters.dateRange.to) count++;
-    if (filters.location !== 'all') count++;
-    if (filters.bedrooms !== 'any') count++;
-    if (filters.bathrooms !== 'any') count++;
+    if (filters.location !== "all") count++;
+    if (filters.bedrooms !== "any") count++;
+    if (filters.bathrooms !== "any") count++;
     if (filters.features.length > 0) count++;
     if (filters.userId) count++;
     setActiveFiltersCount(count);
@@ -69,7 +69,7 @@ export function SearchFilters() {
             className="pl-8"
           />
         </div>
-        
+
         <Button
           variant="outline"
           onClick={() => setShowFilters(!showFilters)}
@@ -78,8 +78,8 @@ export function SearchFilters() {
           <Filter className="h-4 w-4 mr-2" />
           Filters
           {activeFiltersCount > 0 && (
-            <Badge 
-              variant="secondary" 
+            <Badge
+              variant="secondary"
               className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center"
             >
               {activeFiltersCount}
@@ -107,7 +107,7 @@ export function SearchFilters() {
             <Label>Property Type</Label>
             <Select
               value={filters.type}
-              onValueChange={(value) => setFilter('type', value)}
+              onValueChange={(value) => setFilter("type", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select type" />
@@ -125,7 +125,7 @@ export function SearchFilters() {
             <Label>Status</Label>
             <Select
               value={filters.status}
-              onValueChange={(value) => setFilter('status', value)}
+              onValueChange={(value) => setFilter("status", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select status" />
@@ -147,19 +147,23 @@ export function SearchFilters() {
                 type="number"
                 placeholder="Min"
                 value={filters.priceRange.min}
-                onChange={(e) => setFilter('priceRange', {
-                  ...filters.priceRange,
-                  min: e.target.value
-                })}
+                onChange={(e) =>
+                  setFilter("priceRange", {
+                    ...filters.priceRange,
+                    min: e.target.value,
+                  })
+                }
               />
               <Input
                 type="number"
                 placeholder="Max"
                 value={filters.priceRange.max}
-                onChange={(e) => setFilter('priceRange', {
-                  ...filters.priceRange,
-                  max: e.target.value
-                })}
+                onChange={(e) =>
+                  setFilter("priceRange", {
+                    ...filters.priceRange,
+                    max: e.target.value,
+                  })
+                }
               />
             </div>
           </div>
@@ -195,10 +199,12 @@ export function SearchFilters() {
                     from: filters.dateRange.from,
                     to: filters.dateRange.to,
                   }}
-                  onSelect={(range) => setFilter('dateRange', {
-                    from: range?.from,
-                    to: range?.to
-                  })}
+                  onSelect={(range) =>
+                    setFilter("dateRange", {
+                      from: range?.from,
+                      to: range?.to,
+                    })
+                  }
                   initialFocus
                 />
               </PopoverContent>
@@ -210,7 +216,7 @@ export function SearchFilters() {
             <Label>Location</Label>
             <Select
               value={filters.location}
-              onValueChange={(value) => setFilter('location', value)}
+              onValueChange={(value) => setFilter("location", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select location" />
@@ -219,7 +225,9 @@ export function SearchFilters() {
                 <SelectItem value="all">All Locations</SelectItem>
                 <SelectItem value="Accra">Accra</SelectItem>
                 <SelectItem value="Kumasi">Kumasi</SelectItem>
-                <SelectItem value="East Legon Hills">East Legon Hills</SelectItem>
+                <SelectItem value="East Legon Hills">
+                  East Legon Hills
+                </SelectItem>
                 <SelectItem value="East Legon">East Legon</SelectItem>
                 <SelectItem value="Legon">Legon</SelectItem>
                 <SelectItem value="NTHC">NTHC</SelectItem>
@@ -235,7 +243,7 @@ export function SearchFilters() {
             <Label>Bedrooms</Label>
             <Select
               value={filters.bedrooms}
-              onValueChange={(value) => setFilter('bedrooms', value)}
+              onValueChange={(value) => setFilter("bedrooms", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select bedrooms" />
@@ -256,7 +264,7 @@ export function SearchFilters() {
             <Label>Bathrooms</Label>
             <Select
               value={filters.bathrooms}
-              onValueChange={(value) => setFilter('bathrooms', value)}
+              onValueChange={(value) => setFilter("bathrooms", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select bathrooms" />
@@ -276,8 +284,10 @@ export function SearchFilters() {
           <div className="space-y-2">
             <Label>Features</Label>
             <Select
-              value={filters.features[0] || 'any'}
-              onValueChange={(value) => setFilter('features', value === 'any' ? [] : [value])}
+              value={filters.features[0] || "any"}
+              onValueChange={(value) =>
+                setFilter("features", value === "any" ? [] : [value])
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select features" />
@@ -285,7 +295,9 @@ export function SearchFilters() {
               <SelectContent>
                 <SelectItem value="any">Any</SelectItem>
                 <SelectItem value="Swimming Pool">Swimming Pool</SelectItem>
-                <SelectItem value="Air Conditioning">Air Conditioning</SelectItem>
+                <SelectItem value="Air Conditioning">
+                  Air Conditioning
+                </SelectItem>
                 <SelectItem value="Garage">Garage</SelectItem>
                 <SelectItem value="Fenced">Fenced</SelectItem>
               </SelectContent>

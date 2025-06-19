@@ -1,16 +1,16 @@
-'use client'
-import GoogleMapsProvider from '@/providers/google-map-provider';
-import { useUser } from '@clerk/nextjs';
-import { useEffect } from 'react';
-import Header from './properties/components/header';
-import Sidebar from './properties/components/sidebar';
-import { SidebarProvider } from './properties/contexts/sidebar-context';
+"use client";
+import GoogleMapsProvider from "@/providers/google-map-provider";
+import { useUser } from "@clerk/nextjs";
+import { useEffect } from "react";
+import Header from "./properties/components/header";
+import Sidebar from "./properties/components/sidebar";
+import { SidebarProvider } from "./properties/contexts/sidebar-context";
 
 export default function DashboardLayout({ children }) {
   const { user, isSignedIn, isLoaded } = useUser();
   useEffect(() => {
     if (isLoaded && !user) {
-      window.location.href = '/market-place';
+      window.location.href = "/market-place";
     }
   }, [isLoaded, isSignedIn, user]);
 

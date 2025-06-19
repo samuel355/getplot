@@ -34,7 +34,7 @@ import {
   Layers,
   RefreshCw,
   Navigation,
-  Info
+  Info,
 } from "lucide-react";
 import GoogleMapsProvider from "@/providers/google-map-provider";
 
@@ -54,7 +54,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
   // New state variables for enhanced functionality
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [interestPlotId, setInterestPlotId] = useState();
-  const [mapType, setMapType] = useState('roadmap');
+  const [mapType, setMapType] = useState("roadmap");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMapTypeMenuOpen, setIsMapTypeMenuOpen] = useState(false);
   const { addPlot, isInCart } = useCart();
@@ -109,7 +109,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
 
   // Function to handle fullscreen toggle
   const toggleFullscreen = () => {
-    const mapContainer = document.querySelector('.map-container');
+    const mapContainer = document.querySelector(".map-container");
     if (!isFullscreen) {
       if (mapContainer.requestFullscreen) {
         mapContainer.requestFullscreen();
@@ -148,19 +148,23 @@ const Map = ({ parcels, center, setCartOpen }) => {
   const fitBoundsToAllParcels = () => {
     if (map && parcels && parcels.length > 0) {
       const bounds = new google.maps.LatLngBounds();
-      
-      parcels.forEach(feature => {
-        if (feature.geometry && feature.geometry.coordinates && feature.geometry.coordinates[0]) {
-          feature.geometry.coordinates[0].forEach(coord => {
+
+      parcels.forEach((feature) => {
+        if (
+          feature.geometry &&
+          feature.geometry.coordinates &&
+          feature.geometry.coordinates[0]
+        ) {
+          feature.geometry.coordinates[0].forEach((coord) => {
             bounds.extend({ lat: coord[1], lng: coord[0] });
           });
         }
       });
-      
+
       map.fitBounds(bounds, 50); // 50px padding
-      
+
       // Prevent zooming too far
-      google.maps.event.addListenerOnce(map, 'idle', () => {
+      google.maps.event.addListenerOnce(map, "idle", () => {
         if (map.getZoom() > 19) map.setZoom(19);
         if (map.getZoom() < 16) map.setZoom(16);
       });
@@ -176,7 +180,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
 
       // Add custom controls to the map
       map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
-        document.getElementById('map-controls')
+        document.getElementById("map-controls")
       );
 
       setTimeout(() => {
@@ -185,16 +189,16 @@ const Map = ({ parcels, center, setCartOpen }) => {
       }, 1000);
 
       // Listen for fullscreen change events
-      document.addEventListener('fullscreenchange', () => {
+      document.addEventListener("fullscreenchange", () => {
         setIsFullscreen(!!document.fullscreenElement);
       });
-      document.addEventListener('webkitfullscreenchange', () => {
+      document.addEventListener("webkitfullscreenchange", () => {
         setIsFullscreen(!!document.webkitFullscreenElement);
       });
-      document.addEventListener('mozfullscreenchange', () => {
+      document.addEventListener("mozfullscreenchange", () => {
         setIsFullscreen(!!document.mozFullscreenElement);
       });
-      document.addEventListener('MSFullscreenChange', () => {
+      document.addEventListener("MSFullscreenChange", () => {
         setIsFullscreen(!!document.msFullscreenElement);
       });
     },
@@ -218,7 +222,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
   //Add Marker inside Polygon
   const markerInfo = (coordinates, text, status) => {
     if (!map) return;
-    
+
     const polygonCoords = [];
     for (const coord of coordinates) {
       const [lng, lat] = coord;
@@ -281,16 +285,17 @@ const Map = ({ parcels, center, setCartOpen }) => {
       plot_size = feature?.properties?.Area.toFixed(2);
     } else if (pathname === "/yabi") {
       plot_size = feature?.properties?.Area.toFixed(2);
-    }else if (pathname === "/berekuso") {
+    } else if (pathname === "/berekuso") {
       plot_size = feature?.properties?.Area.toFixed(2);
     }
-
 
     const contentString = `
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
       <div class="px-2 py-3 flex flex-col">
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2}</div>
-        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(43560*plot_size).toLocaleString()} Square ft </div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(
+      43560 * plot_size
+    ).toLocaleString()} Square ft </div>
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 8px; font-weight: bold">GHS. ${feature.plotTotalAmount.toLocaleString()} </div>
         <p style="display: ${
           status === "On Hold" ? "block" : "none"
@@ -672,13 +677,17 @@ const Map = ({ parcels, center, setCartOpen }) => {
               </div>
               <DialogFooter>
                 <Button onClick={hanldeSaveNewPrice} type="button">
-                  {loading ? <Loader className="animate-spin" /> : "Save changes"}
+                  {loading ? (
+                    <Loader className="animate-spin" />
+                  ) : (
+                    "Save changes"
+                  )}
                 </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         </form>
-        
+
         <div className="w-full z-10 flex md:hidden flex-row items-center mb-4">
           <div className="flex w-full items-center space-x-3">
             <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
@@ -693,7 +702,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
             <span>Sold</span>
           </div>
         </div>
-        
+
         {/* Main map container with the map-container class for fullscreen functionality */}
         <div className="map-container relative w-full">
           <GoogleMap
@@ -708,14 +717,16 @@ const Map = ({ parcels, center, setCartOpen }) => {
               mapTypeControl: false, // We'll implement our own
               zoomControl: false, // We'll implement our own
               scrollwheel: true,
-              gestureHandling: 'greedy', // Makes the map easier to use on mobile
+              gestureHandling: "greedy", // Makes the map easier to use on mobile
               mapTypeId: mapType,
             }}
             className="relative"
           >
             {/* Legend overlay */}
             <div className="absolute w-40 top-20 left-0 bg-white/90 shadow-md rounded-md z-10 hidden md:flex md:flex-col justify-center items-center">
-              <div className="p-2 bg-gray-100 font-medium rounded-t-md w-full">Land Status</div>
+              <div className="p-2 bg-gray-100 font-medium rounded-t-md w-full">
+                Land Status
+              </div>
               <div className="flex gap-3 w-full items-center pl-2 pt-3">
                 <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
                 <span>Available</span>
@@ -729,108 +740,123 @@ const Map = ({ parcels, center, setCartOpen }) => {
                 <span>Sold</span>
               </div>
             </div>
-  
+
             {/* Custom map controls */}
-            <div 
-              id="map-controls" 
+            <div
+              id="map-controls"
               className="absolute top-4 right-4 bg-white shadow-lg rounded-lg p-2 flex flex-col gap-2 z-10"
             >
               {/* Zoom controls */}
-              <button 
+              <button
                 onClick={() => map && map.setZoom(map.getZoom() + 1)}
                 className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
                 title="Zoom in"
               >
                 <ZoomIn size={20} />
               </button>
-              <button 
+              <button
                 onClick={() => map && map.setZoom(map.getZoom() - 1)}
                 className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
                 title="Zoom out"
               >
                 <ZoomOut size={20} />
               </button>
-              
+
               {/* Separator */}
               <div className="border-t border-gray-200 my-1"></div>
-              
+
               {/* Map type control */}
               <div className="relative">
-                <button 
+                <button
                   onClick={() => setIsMapTypeMenuOpen(!isMapTypeMenuOpen)}
                   className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
                   title="Change map type"
                 >
                   <Layers size={20} />
                 </button>
-                
+
                 {isMapTypeMenuOpen && (
                   <div className="absolute right-full mr-2 top-0 bg-white shadow-lg rounded-lg overflow-hidden">
-                    <button 
-                      onClick={() => changeMapType('roadmap')}
-                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'roadmap' ? 'bg-blue-50 text-blue-600' : ''}`}
+                    <button
+                      onClick={() => changeMapType("roadmap")}
+                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
+                        mapType === "roadmap" ? "bg-blue-50 text-blue-600" : ""
+                      }`}
                     >
                       Road Map
                     </button>
-                    <button 
-                      onClick={() => changeMapType('satellite')}
-                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'satellite' ? 'bg-blue-50 text-blue-600' : ''}`}
+                    <button
+                      onClick={() => changeMapType("satellite")}
+                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
+                        mapType === "satellite"
+                          ? "bg-blue-50 text-blue-600"
+                          : ""
+                      }`}
                     >
                       Satellite
                     </button>
-                    <button 
-                      onClick={() => changeMapType('hybrid')}
-                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'hybrid' ? 'bg-blue-50 text-blue-600' : ''}`}
+                    <button
+                      onClick={() => changeMapType("hybrid")}
+                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
+                        mapType === "hybrid" ? "bg-blue-50 text-blue-600" : ""
+                      }`}
                     >
                       Hybrid
                     </button>
-                    <button 
-                      onClick={() => changeMapType('terrain')}
-                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${mapType === 'terrain' ? 'bg-blue-50 text-blue-600' : ''}`}
+                    <button
+                      onClick={() => changeMapType("terrain")}
+                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
+                        mapType === "terrain" ? "bg-blue-50 text-blue-600" : ""
+                      }`}
                     >
                       Terrain
                     </button>
                   </div>
                 )}
               </div>
-              
+
               {/* Fullscreen toggle */}
-              <button 
+              <button
                 onClick={toggleFullscreen}
                 className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
                 title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
               >
                 <Maximize size={20} />
               </button>
-              
+
               {/* Fit all parcels */}
-              <button 
+              <button
                 onClick={fitBoundsToAllParcels}
                 className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
                 title="Show all plots"
               >
                 <MapPin size={20} />
               </button>
-              
+
               {/* Refresh map */}
-              <button 
+              <button
                 onClick={() => window.location.reload()}
                 className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
                 title="Refresh map"
               >
                 <RefreshCw size={20} />
               </button>
-              
+
               {/* Help/Info Button */}
-              <button 
-                onClick={() => tToast.info("Click on any plot to see details and take actions", { duration: 5000 })}
+              <button
+                onClick={() =>
+                  tToast.info(
+                    "Click on any plot to see details and take actions",
+                    { duration: 5000 }
+                  )
+                }
                 className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
                 title="Help"
               >
                 <Info size={20} />
               </button>
             </div>
-  
+
             {/* Plot polygons */}
             {parcels?.map((feature, index) => (
               <React.Fragment key={index}>
@@ -840,7 +866,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
                     fillColor: getColorBasedOnStatus(feature.status),
                     fillOpacity: 0.8,
                     strokeWeight: 1,
-                    strokeColor: '#000000',
+                    strokeColor: "#000000",
                   }}
                   onClick={() =>
                     handleInfo(
@@ -854,40 +880,41 @@ const Map = ({ parcels, center, setCartOpen }) => {
                     )
                   }
                 />
-  
-                {map && markerInfo(
-                  feature.geometry.coordinates[0],
-                  feature.properties.Plot_No,
-                  feature.status
-                )}
+
+                {map &&
+                  markerInfo(
+                    feature.geometry.coordinates[0],
+                    feature.properties.Plot_No,
+                    feature.status
+                  )}
               </React.Fragment>
             ))}
           </GoogleMap>
-          
+
           {/* Mobile-friendly bottom navigation bar (visible on smaller screens) */}
           <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg z-20 flex justify-around items-center py-2 border-t">
-            <button 
+            <button
               onClick={() => map && map.setZoom(map.getZoom() + 1)}
               className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
             >
               <ZoomIn size={18} />
               <span>Zoom In</span>
             </button>
-            <button 
+            <button
               onClick={() => map && map.setZoom(map.getZoom() - 1)}
               className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
             >
               <ZoomOut size={18} />
               <span>Zoom Out</span>
             </button>
-            <button 
+            <button
               onClick={() => setIsMapTypeMenuOpen(!isMapTypeMenuOpen)}
               className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
             >
               <Layers size={18} />
               <span>Map Type</span>
             </button>
-            <button 
+            <button
               onClick={fitBoundsToAllParcels}
               className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
             >
@@ -895,44 +922,66 @@ const Map = ({ parcels, center, setCartOpen }) => {
               <span>All Plots</span>
             </button>
           </div>
-          
+
           {/* Mobile map type menu (slides up from bottom) */}
           {isMapTypeMenuOpen && (
-            <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30" onClick={() => setIsMapTypeMenuOpen(false)}>
-              <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl p-4" onClick={e => e.stopPropagation()}>
+            <div
+              className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+              onClick={() => setIsMapTypeMenuOpen(false)}
+            >
+              <div
+                className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl p-4"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4"></div>
                 <h3 className="text-lg font-medium mb-3">Map Type</h3>
                 <div className="grid grid-cols-2 gap-2">
-                  <button 
-                    onClick={() => changeMapType('roadmap')}
-                    className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'roadmap' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
+                  <button
+                    onClick={() => changeMapType("roadmap")}
+                    className={`p-3 rounded-lg flex flex-col items-center border ${
+                      mapType === "roadmap"
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200"
+                    }`}
                   >
                     <span className="mb-1">Road</span>
                     <div className="w-10 h-10 bg-gray-100 rounded-md"></div>
                   </button>
-                  <button 
-                    onClick={() => changeMapType('satellite')}
-                    className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'satellite' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
+                  <button
+                    onClick={() => changeMapType("satellite")}
+                    className={`p-3 rounded-lg flex flex-col items-center border ${
+                      mapType === "satellite"
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200"
+                    }`}
                   >
                     <span className="mb-1">Satellite</span>
                     <div className="w-10 h-10 bg-gray-700 rounded-md"></div>
                   </button>
-                  <button 
-                    onClick={() => changeMapType('hybrid')}
-                    className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'hybrid' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
+                  <button
+                    onClick={() => changeMapType("hybrid")}
+                    className={`p-3 rounded-lg flex flex-col items-center border ${
+                      mapType === "hybrid"
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200"
+                    }`}
                   >
                     <span className="mb-1">Hybrid</span>
                     <div className="w-10 h-10 bg-gray-800 rounded-md border border-white"></div>
                   </button>
-                  <button 
-                    onClick={() => changeMapType('terrain')}
-                    className={`p-3 rounded-lg flex flex-col items-center border ${mapType === 'terrain' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'}`}
+                  <button
+                    onClick={() => changeMapType("terrain")}
+                    className={`p-3 rounded-lg flex flex-col items-center border ${
+                      mapType === "terrain"
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200"
+                    }`}
                   >
                     <span className="mb-1">Terrain</span>
                     <div className="w-10 h-10 bg-green-100 rounded-md"></div>
                   </button>
                 </div>
-                <button 
+                <button
                   onClick={() => setIsMapTypeMenuOpen(false)}
                   className="mt-4 w-full p-3 bg-primary text-white rounded-lg font-medium"
                 >
@@ -942,7 +991,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
             </div>
           )}
         </div>
-        
+
         {/* Status bar below map */}
         <div className="w-full bg-white shadow-md rounded-md mt-2 p-2 text-sm flex justify-between items-center">
           <div className="flex items-center gap-2">
@@ -952,7 +1001,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
             </span>
           </div>
           <div>
-            <button 
+            <button
               onClick={fitBoundsToAllParcels}
               className="text-primary hover:underline flex items-center gap-1"
             >
@@ -961,7 +1010,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
             </button>
           </div>
         </div>
-        
+
         {/* Express Interest Dialog */}
         {isDialogOpen && (
           <ExpressInterestDialog

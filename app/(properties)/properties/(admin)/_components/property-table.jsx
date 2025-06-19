@@ -34,19 +34,19 @@ export default function PropertyTable({
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      const uniqueUserIds = [...new Set(properties.map(p => p.user_id))];
+      const uniqueUserIds = [...new Set(properties.map((p) => p.user_id))];
       const userInfoMap = {};
 
       for (const userId of uniqueUserIds) {
         try {
-          const response = await fetch('/api/get-user/', {
-            method: 'POST',
+          const response = await fetch("/api/get-user/", {
+            method: "POST",
             body: JSON.stringify({ userId }),
           });
           const data = await response.json();
           userInfoMap[userId] = data;
         } catch (error) {
-          console.error('Error fetching user info:', error);
+          console.error("Error fetching user info:", error);
         }
       }
 
@@ -128,7 +128,9 @@ export default function PropertyTable({
               </TableCell>
               <TableCell>
                 <div className="text-sm">
-                  {user ? `${user.firstName} ${user.lastName}` : property.user_id}
+                  {user
+                    ? `${user.firstName} ${user.lastName}`
+                    : property.user_id}
                 </div>
               </TableCell>
               <TableCell>
@@ -138,9 +140,15 @@ export default function PropertyTable({
               </TableCell>
               <TableCell>
                 {property.listing_type === "rent" ? (
-                  <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-gray-500">/month</span></>
+                  <>
+                    GHS {Number(property.rental_price).toLocaleString()}
+                    <span className="text-xs text-gray-500">/month</span>
+                  </>
                 ) : property.listing_type === "airbnb" ? (
-                  <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-gray-500">/day</span></>
+                  <>
+                    GHS {Number(property.rental_price).toLocaleString()}
+                    <span className="text-xs text-gray-500">/day</span>
+                  </>
                 ) : (
                   <>GHS {Number(property.price).toLocaleString()}</>
                 )}

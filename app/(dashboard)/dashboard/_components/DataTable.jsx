@@ -48,7 +48,7 @@ export function DataTable({ columns, data, loading }) {
   const globalFilterFn = (row, columnId, filterValue) => {
     return row.original // `row.original` access to the raw row data
       ? Object.values(row.original).some((value) =>
-          String(value).toLowerCase().includes(filterValue.toLowerCase()),
+          String(value).toLowerCase().includes(filterValue.toLowerCase())
         )
       : false;
   };
@@ -206,7 +206,7 @@ export function DataTable({ columns, data, loading }) {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 );
@@ -222,7 +222,10 @@ export function DataTable({ columns, data, loading }) {
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className={cell.column.columnDef.className}>
+                  <TableCell
+                    key={cell.id}
+                    className={cell.column.columnDef.className}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -237,7 +240,7 @@ export function DataTable({ columns, data, loading }) {
           )}
         </TableBody>
       </Table>
-      
+
       <div className="flex items-center justify-between mr-2">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}

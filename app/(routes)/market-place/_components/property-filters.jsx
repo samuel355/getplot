@@ -1,14 +1,18 @@
 "use client";
 
-import { useState, Fragment, useEffect } from 'react';
-import { Dialog, Disclosure, Popover, Transition } from '@headlessui/react';
-import { ChevronDownIcon, XMarkIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
-import { useRouter } from 'next/navigation';
+import { useState, Fragment, useEffect } from "react";
+import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
+import {
+  ChevronDownIcon,
+  XMarkIcon,
+  AdjustmentsHorizontalIcon,
+} from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 
 const PropertyFilters = ({ filters, onFilterChange }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  
+
   const locations = [
     "All Regions",
     "Ahafo",
@@ -26,9 +30,9 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
     "Upper West",
     "Volta",
     "Western",
-    "Western North"
+    "Western North",
   ];
-  
+
   const [priceRange, setPriceRange] = useState([0, 10000000]);
   const [rentalPriceRange, setRentalPriceRange] = useState([0, 10000]);
   const [bedrooms, setBedrooms] = useState("any");
@@ -53,16 +57,16 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
       bathrooms: "any",
       propertyType: "all",
       location: "all",
-      property_type: "all"
+      property_type: "all",
     });
   };
 
   const handlePriceChange = (range) => {
-    if (!filters.property_type || filters.property_type === 'all') {
+    if (!filters.property_type || filters.property_type === "all") {
       // Don't allow price selection if no listing type is selected
       return;
     }
-    console.log('Setting price range:', range);
+    console.log("Setting price range:", range);
     onFilterChange({ priceRange: range });
   };
 
@@ -83,34 +87,37 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
   };
 
   const handleListingTypeChange = (property_type) => {
-    console.log('Changing listing type to:', property_type);
+    console.log("Changing listing type to:", property_type);
     // Reset price range when listing type changes
-    onFilterChange({ 
+    onFilterChange({
       property_type,
-      priceRange: [0, 10000000] // Reset to default range
+      priceRange: [0, 10000000], // Reset to default range
     });
   };
 
   const applyFilters = () => {
     setOpen(false);
-    
-    console.log('Applying filters:', filters);
-    
+
+    console.log("Applying filters:", filters);
+
     // Update URL with filter parameters
     const queryParams = new URLSearchParams();
-    queryParams.set('propertyType', filters.propertyType);
-    queryParams.set('minPrice', filters.priceRange[0]);
-    queryParams.set('maxPrice', filters.priceRange[1]);
-    queryParams.set('location', filters.location);
-    if (filters.bedrooms !== 'any') queryParams.set('bedrooms', filters.bedrooms);
-    if (filters.bathrooms !== 'any') queryParams.set('bathrooms', filters.bathrooms);
-    if (filters.property_type !== 'all') queryParams.set('property_type', filters.property_type);
-    
-    console.log('Updated URL params:', queryParams.toString());
-    
+    queryParams.set("propertyType", filters.propertyType);
+    queryParams.set("minPrice", filters.priceRange[0]);
+    queryParams.set("maxPrice", filters.priceRange[1]);
+    queryParams.set("location", filters.location);
+    if (filters.bedrooms !== "any")
+      queryParams.set("bedrooms", filters.bedrooms);
+    if (filters.bathrooms !== "any")
+      queryParams.set("bathrooms", filters.bathrooms);
+    if (filters.property_type !== "all")
+      queryParams.set("property_type", filters.property_type);
+
+    console.log("Updated URL params:", queryParams.toString());
+
     router.push(`/market-place?${queryParams.toString()}`, { scroll: false });
   };
-  
+
   return (
     <div className="bg-white shadow-md rounded-lg mb-6 relative z-10">
       {/* Desktop filters */}
@@ -120,7 +127,10 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
           <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-medium text-gray-700 hover:text-gray-900">
               Property Type
-              <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+              <ChevronDownIcon
+                className="h-5 w-5 flex-none text-gray-400"
+                aria-hidden="true"
+              />
             </Popover.Button>
 
             <Transition
@@ -136,25 +146,31 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                 <div className="py-1">
                   <button
                     className={`block px-4 py-2 text-sm w-full text-left ${
-                      filters.propertyType === 'all' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                      filters.propertyType === "all"
+                        ? "bg-gray-100 text-primary"
+                        : "text-gray-700"
                     }`}
-                    onClick={() => handlePropertyTypeChange('all')}
+                    onClick={() => handlePropertyTypeChange("all")}
                   >
                     All Properties
                   </button>
                   <button
                     className={`block px-4 py-2 text-sm w-full text-left ${
-                      filters.propertyType === 'land' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                      filters.propertyType === "land"
+                        ? "bg-gray-100 text-primary"
+                        : "text-gray-700"
                     }`}
-                    onClick={() => handlePropertyTypeChange('land')}
+                    onClick={() => handlePropertyTypeChange("land")}
                   >
                     Land Only
                   </button>
                   <button
                     className={`block px-4 py-2 text-sm w-full text-left ${
-                      filters.propertyType === 'house' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                      filters.propertyType === "house"
+                        ? "bg-gray-100 text-primary"
+                        : "text-gray-700"
                     }`}
-                    onClick={() => handlePropertyTypeChange('house')}
+                    onClick={() => handlePropertyTypeChange("house")}
                   >
                     Houses
                   </button>
@@ -167,7 +183,10 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
           <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-medium text-gray-700 hover:text-gray-900">
               Listing Type
-              <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+              <ChevronDownIcon
+                className="h-5 w-5 flex-none text-gray-400"
+                aria-hidden="true"
+              />
             </Popover.Button>
 
             <Transition
@@ -183,33 +202,41 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                 <div className="py-1">
                   <button
                     className={`block px-4 py-2 text-sm w-full text-left ${
-                      filters.property_type === 'all' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                      filters.property_type === "all"
+                        ? "bg-gray-100 text-primary"
+                        : "text-gray-700"
                     }`}
-                    onClick={() => handleListingTypeChange('all')}
+                    onClick={() => handleListingTypeChange("all")}
                   >
                     All Listings
                   </button>
                   <button
                     className={`block px-4 py-2 text-sm w-full text-left ${
-                      filters.property_type === 'sale' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                      filters.property_type === "sale"
+                        ? "bg-gray-100 text-primary"
+                        : "text-gray-700"
                     }`}
-                    onClick={() => handleListingTypeChange('sale')}
+                    onClick={() => handleListingTypeChange("sale")}
                   >
                     For Sale
                   </button>
                   <button
                     className={`block px-4 py-2 text-sm w-full text-left ${
-                      filters.property_type === 'rent' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                      filters.property_type === "rent"
+                        ? "bg-gray-100 text-primary"
+                        : "text-gray-700"
                     }`}
-                    onClick={() => handleListingTypeChange('rent')}
+                    onClick={() => handleListingTypeChange("rent")}
                   >
                     For Rent
                   </button>
                   <button
                     className={`block px-4 py-2 text-sm w-full text-left ${
-                      filters.property_type === 'airbnb' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                      filters.property_type === "airbnb"
+                        ? "bg-gray-100 text-primary"
+                        : "text-gray-700"
                     }`}
-                    onClick={() => handleListingTypeChange('airbnb')}
+                    onClick={() => handleListingTypeChange("airbnb")}
                   >
                     Airbnb
                   </button>
@@ -221,11 +248,17 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
           {/* Price Range Filter */}
           <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-medium text-gray-700 hover:text-gray-900">
-              {!filters.property_type || filters.property_type === 'all' ? 'Price Range' :
-               filters.property_type === 'rent' ? 'Monthly Rent Range (GHS)' : 
-               filters.property_type === 'airbnb' ? 'Daily Price Range (GHS)' : 
-               'Price Range (GHS)'}
-              <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+              {!filters.property_type || filters.property_type === "all"
+                ? "Price Range"
+                : filters.property_type === "rent"
+                ? "Monthly Rent Range (GHS)"
+                : filters.property_type === "airbnb"
+                ? "Daily Price Range (GHS)"
+                : "Price Range (GHS)"}
+              <ChevronDownIcon
+                className="h-5 w-5 flex-none text-gray-400"
+                aria-hidden="true"
+              />
             </Popover.Button>
 
             <Transition
@@ -238,14 +271,17 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
               leaveTo="opacity-0 translate-y-1"
             >
               <Popover.Panel className="absolute left-0 z-10 mt-2 w-64 origin-top-left rounded-md bg-white p-4 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                {(!filters.property_type || filters.property_type === 'all') ? (
+                {!filters.property_type || filters.property_type === "all" ? (
                   <div className="text-sm text-gray-500">
                     Please select a listing type first to filter by price
                   </div>
                 ) : (
                   <div className="space-y-4">
                     <div>
-                      <label htmlFor="min-price" className="block text-sm font-medium text-gray-700">
+                      <label
+                        htmlFor="min-price"
+                        className="block text-sm font-medium text-gray-700"
+                      >
                         Minimum Price (GHS)
                       </label>
                       <input
@@ -261,7 +297,10 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                       />
                     </div>
                     <div>
-                      <label htmlFor="max-price" className="block text-sm font-medium text-gray-700">
+                      <label
+                        htmlFor="max-price"
+                        className="block text-sm font-medium text-gray-700"
+                      >
                         Maximum Price (GHS)
                       </label>
                       <input
@@ -286,7 +325,10 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
           <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-medium text-gray-700 hover:text-gray-900">
               Location
-              <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+              <ChevronDownIcon
+                className="h-5 w-5 flex-none text-gray-400"
+                aria-hidden="true"
+              />
             </Popover.Button>
 
             <Transition
@@ -304,10 +346,11 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                     <button
                       key={location}
                       className={`block px-4 py-2 text-sm w-full text-left ${
-                        (location === "All Regions" && filters.location === "all") || 
-                        filters.location === location 
-                          ? 'bg-gray-100 text-primary' 
-                          : 'text-gray-700'
+                        (location === "All Regions" &&
+                          filters.location === "all") ||
+                        filters.location === location
+                          ? "bg-gray-100 text-primary"
+                          : "text-gray-700"
                       }`}
                       onClick={() => handleLocationChange(location)}
                     >
@@ -320,11 +363,14 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
           </Popover>
 
           {/* Bedrooms Filter (only relevant for houses) */}
-          {filters.propertyType !== 'land' && (
+          {filters.propertyType !== "land" && (
             <Popover className="relative">
               <Popover.Button className="flex items-center gap-x-1 text-sm font-medium text-gray-700 hover:text-gray-900">
                 Bedrooms
-                <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+                <ChevronDownIcon
+                  className="h-5 w-5 flex-none text-gray-400"
+                  aria-hidden="true"
+                />
               </Popover.Button>
 
               <Transition
@@ -340,9 +386,11 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                   <div className="py-1">
                     <button
                       className={`block px-4 py-2 text-sm w-full text-left ${
-                        filters.bedrooms === 'any' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                        filters.bedrooms === "any"
+                          ? "bg-gray-100 text-primary"
+                          : "text-gray-700"
                       }`}
-                      onClick={() => handleBedroomsChange('any')}
+                      onClick={() => handleBedroomsChange("any")}
                     >
                       Any
                     </button>
@@ -350,7 +398,9 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                       <button
                         key={num}
                         className={`block px-4 py-2 text-sm w-full text-left ${
-                          filters.bedrooms === num ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                          filters.bedrooms === num
+                            ? "bg-gray-100 text-primary"
+                            : "text-gray-700"
                         }`}
                         onClick={() => handleBedroomsChange(num)}
                       >
@@ -364,11 +414,14 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
           )}
 
           {/* Bathrooms Filter (only relevant for houses) */}
-          {filters.propertyType !== 'land' && (
+          {filters.propertyType !== "land" && (
             <Popover className="relative">
               <Popover.Button className="flex items-center gap-x-1 text-sm font-medium text-gray-700 hover:text-gray-900">
                 Bathrooms
-                <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+                <ChevronDownIcon
+                  className="h-5 w-5 flex-none text-gray-400"
+                  aria-hidden="true"
+                />
               </Popover.Button>
 
               <Transition
@@ -384,9 +437,11 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                   <div className="py-1">
                     <button
                       className={`block px-4 py-2 text-sm w-full text-left ${
-                        filters.bathrooms === 'any' ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                        filters.bathrooms === "any"
+                          ? "bg-gray-100 text-primary"
+                          : "text-gray-700"
                       }`}
-                      onClick={() => handleBathroomsChange('any')}
+                      onClick={() => handleBathroomsChange("any")}
                     >
                       Any
                     </button>
@@ -394,7 +449,9 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                       <button
                         key={num}
                         className={`block px-4 py-2 text-sm w-full text-left ${
-                          filters.bathrooms === num ? 'bg-gray-100 text-primary' : 'text-gray-700'
+                          filters.bathrooms === num
+                            ? "bg-gray-100 text-primary"
+                            : "text-gray-700"
                         }`}
                         onClick={() => handleBathroomsChange(num)}
                       >
@@ -476,15 +533,22 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
 
                 <div className="px-4 pt-6 pb-2">
                   {/* Property Type */}
-                  <Disclosure as="div" className="py-6 border-t border-gray-200">
+                  <Disclosure
+                    as="div"
+                    className="py-6 border-t border-gray-200"
+                  >
                     {({ open }) => (
                       <>
                         <h3 className="flow-root">
                           <Disclosure.Button className="flex w-full items-center justify-between py-2 text-sm text-gray-400 hover:text-gray-500">
-                            <span className="font-medium text-gray-900">Property Type</span>
+                            <span className="font-medium text-gray-900">
+                              Property Type
+                            </span>
                             <span className="ml-6 flex items-center">
                               <ChevronDownIcon
-                                className={`${open ? '-rotate-180' : 'rotate-0'} h-5 w-5 transform`}
+                                className={`${
+                                  open ? "-rotate-180" : "rotate-0"
+                                } h-5 w-5 transform`}
                                 aria-hidden="true"
                               />
                             </span>
@@ -497,8 +561,8 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                                 id="filter-mobile-property-all"
                                 name="property-type"
                                 type="radio"
-                                checked={filters.propertyType === 'all'}
-                                onChange={() => handlePropertyTypeChange('all')}
+                                checked={filters.propertyType === "all"}
+                                onChange={() => handlePropertyTypeChange("all")}
                                 className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                               />
                               <label
@@ -513,8 +577,10 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                                 id="filter-mobile-property-land"
                                 name="property-type"
                                 type="radio"
-                                checked={filters.propertyType === 'land'}
-                                onChange={() => handlePropertyTypeChange('land')}
+                                checked={filters.propertyType === "land"}
+                                onChange={() =>
+                                  handlePropertyTypeChange("land")
+                                }
                                 className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                               />
                               <label
@@ -529,8 +595,10 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                                 id="filter-mobile-property-house"
                                 name="property-type"
                                 type="radio"
-                                checked={filters.propertyType === 'house'}
-                                onChange={() => handlePropertyTypeChange('house')}
+                                checked={filters.propertyType === "house"}
+                                onChange={() =>
+                                  handlePropertyTypeChange("house")
+                                }
                                 className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                               />
                               <label
@@ -547,15 +615,22 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                   </Disclosure>
 
                   {/* Listing Type */}
-                  <Disclosure as="div" className="py-6 border-t border-gray-200">
+                  <Disclosure
+                    as="div"
+                    className="py-6 border-t border-gray-200"
+                  >
                     {({ open }) => (
                       <>
                         <h3 className="flow-root">
                           <Disclosure.Button className="flex w-full items-center justify-between py-2 text-sm text-gray-400 hover:text-gray-500">
-                            <span className="font-medium text-gray-900">Listing Type</span>
+                            <span className="font-medium text-gray-900">
+                              Listing Type
+                            </span>
                             <span className="ml-6 flex items-center">
                               <ChevronDownIcon
-                                className={`${open ? '-rotate-180' : 'rotate-0'} h-5 w-5 transform`}
+                                className={`${
+                                  open ? "-rotate-180" : "rotate-0"
+                                } h-5 w-5 transform`}
                                 aria-hidden="true"
                               />
                             </span>
@@ -568,8 +643,8 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                                 id="filter-mobile-listing-all"
                                 name="listing-type"
                                 type="radio"
-                                checked={filters.property_type === 'all'}
-                                onChange={() => handleListingTypeChange('all')}
+                                checked={filters.property_type === "all"}
+                                onChange={() => handleListingTypeChange("all")}
                                 className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                               />
                               <label
@@ -584,8 +659,8 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                                 id="filter-mobile-listing-sale"
                                 name="listing-type"
                                 type="radio"
-                                checked={filters.property_type === 'sale'}
-                                onChange={() => handleListingTypeChange('sale')}
+                                checked={filters.property_type === "sale"}
+                                onChange={() => handleListingTypeChange("sale")}
                                 className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                               />
                               <label
@@ -600,8 +675,8 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                                 id="filter-mobile-listing-rent"
                                 name="listing-type"
                                 type="radio"
-                                checked={filters.property_type === 'rent'}
-                                onChange={() => handleListingTypeChange('rent')}
+                                checked={filters.property_type === "rent"}
+                                onChange={() => handleListingTypeChange("rent")}
                                 className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                               />
                               <label
@@ -616,8 +691,10 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                                 id="filter-mobile-listing-airbnb"
                                 name="listing-type"
                                 type="radio"
-                                checked={filters.property_type === 'airbnb'}
-                                onChange={() => handleListingTypeChange('airbnb')}
+                                checked={filters.property_type === "airbnb"}
+                                onChange={() =>
+                                  handleListingTypeChange("airbnb")
+                                }
                                 className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                               />
                               <label
@@ -634,19 +711,26 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                   </Disclosure>
 
                   {/* Price Range */}
-                  <Disclosure as="div" className="py-6 border-t border-gray-200">
+                  <Disclosure
+                    as="div"
+                    className="py-6 border-t border-gray-200"
+                  >
                     {({ open }) => (
                       <>
                         <h3 className="flow-root">
                           <Disclosure.Button className="flex w-full items-center justify-between py-2 text-sm text-gray-400 hover:text-gray-500">
                             <span className="font-medium text-gray-900">
-                              {filters.property_type === 'rent' ? 'Monthly Rent Range' : 
-                               filters.property_type === 'airbnb' ? 'Daily Price Range' : 
-                               'Price Range'}
+                              {filters.property_type === "rent"
+                                ? "Monthly Rent Range"
+                                : filters.property_type === "airbnb"
+                                ? "Daily Price Range"
+                                : "Price Range"}
                             </span>
                             <span className="ml-6 flex items-center">
                               <ChevronDownIcon
-                                className={`${open ? '-rotate-180' : 'rotate-0'} h-5 w-5 transform`}
+                                className={`${
+                                  open ? "-rotate-180" : "rotate-0"
+                                } h-5 w-5 transform`}
                                 aria-hidden="true"
                               />
                             </span>
@@ -655,26 +739,42 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                         <Disclosure.Panel className="pt-2">
                           <div className="space-y-4">
                             <div>
-                              <label htmlFor="min-price-mobile" className="block text-sm font-medium text-gray-700">
+                              <label
+                                htmlFor="min-price-mobile"
+                                className="block text-sm font-medium text-gray-700"
+                              >
                                 Minimum Price (GHS)
                               </label>
                               <input
                                 type="number"
                                 id="min-price-mobile"
                                 value={filters.priceRange[0]}
-                                onChange={(e) => handlePriceChange([parseInt(e.target.value), filters.priceRange[1]])}
+                                onChange={(e) =>
+                                  handlePriceChange([
+                                    parseInt(e.target.value),
+                                    filters.priceRange[1],
+                                  ])
+                                }
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
                               />
                             </div>
                             <div>
-                              <label htmlFor="max-price-mobile" className="block text-sm font-medium text-gray-700">
+                              <label
+                                htmlFor="max-price-mobile"
+                                className="block text-sm font-medium text-gray-700"
+                              >
                                 Maximum Price (GHS)
                               </label>
                               <input
                                 type="number"
                                 id="max-price-mobile"
                                 value={filters.priceRange[1]}
-                                onChange={(e) => handlePriceChange([filters.priceRange[0], parseInt(e.target.value)])}
+                                onChange={(e) =>
+                                  handlePriceChange([
+                                    filters.priceRange[0],
+                                    parseInt(e.target.value),
+                                  ])
+                                }
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
                               />
                             </div>
@@ -685,15 +785,22 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                   </Disclosure>
 
                   {/* Location */}
-                  <Disclosure as="div" className="py-6 border-t border-gray-200">
+                  <Disclosure
+                    as="div"
+                    className="py-6 border-t border-gray-200"
+                  >
                     {({ open }) => (
                       <>
                         <h3 className="flow-root">
                           <Disclosure.Button className="flex w-full items-center justify-between py-2 text-sm text-gray-400 hover:text-gray-500">
-                            <span className="font-medium text-gray-900">Location</span>
+                            <span className="font-medium text-gray-900">
+                              Location
+                            </span>
                             <span className="ml-6 flex items-center">
                               <ChevronDownIcon
-                                className={`${open ? '-rotate-180' : 'rotate-0'} h-5 w-5 transform`}
+                                className={`${
+                                  open ? "-rotate-180" : "rotate-0"
+                                } h-5 w-5 transform`}
                                 aria-hidden="true"
                               />
                             </span>
@@ -704,18 +811,25 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                             {locations.map((location) => (
                               <div key={location} className="flex items-center">
                                 <input
-                                  id={`filter-mobile-location-${location.toLowerCase().replace(/\s+/g, '-')}`}
+                                  id={`filter-mobile-location-${location
+                                    .toLowerCase()
+                                    .replace(/\s+/g, "-")}`}
                                   name="location"
                                   type="radio"
                                   checked={
-                                    (location === "All Regions" && filters.location === "all") || 
+                                    (location === "All Regions" &&
+                                      filters.location === "all") ||
                                     filters.location === location
                                   }
-                                  onChange={() => handleLocationChange(location)}
+                                  onChange={() =>
+                                    handleLocationChange(location)
+                                  }
                                   className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                                 />
                                 <label
-                                  htmlFor={`filter-mobile-location-${location.toLowerCase().replace(/\s+/g, '-')}`}
+                                  htmlFor={`filter-mobile-location-${location
+                                    .toLowerCase()
+                                    .replace(/\s+/g, "-")}`}
                                   className="ml-3 text-sm text-gray-700"
                                 >
                                   {location}
@@ -729,16 +843,23 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                   </Disclosure>
 
                   {/* Bedrooms (only for houses) */}
-                  {filters.propertyType !== 'land' && (
-                    <Disclosure as="div" className="py-6 border-t border-gray-200">
+                  {filters.propertyType !== "land" && (
+                    <Disclosure
+                      as="div"
+                      className="py-6 border-t border-gray-200"
+                    >
                       {({ open }) => (
                         <>
                           <h3 className="flow-root">
                             <Disclosure.Button className="flex w-full items-center justify-between py-2 text-sm text-gray-400 hover:text-gray-500">
-                              <span className="font-medium text-gray-900">Bedrooms</span>
+                              <span className="font-medium text-gray-900">
+                                Bedrooms
+                              </span>
                               <span className="ml-6 flex items-center">
                                 <ChevronDownIcon
-                                  className={`${open ? '-rotate-180' : 'rotate-0'} h-5 w-5 transform`}
+                                  className={`${
+                                    open ? "-rotate-180" : "rotate-0"
+                                  } h-5 w-5 transform`}
                                   aria-hidden="true"
                                 />
                               </span>
@@ -751,8 +872,8 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                                   id="filter-mobile-bedrooms-any"
                                   name="bedrooms"
                                   type="radio"
-                                  checked={filters.bedrooms === 'any'}
-                                  onChange={() => handleBedroomsChange('any')}
+                                  checked={filters.bedrooms === "any"}
+                                  onChange={() => handleBedroomsChange("any")}
                                   className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                                 />
                                 <label
@@ -788,16 +909,23 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                   )}
 
                   {/* Bathrooms (only for houses) */}
-                  {filters.propertyType !== 'land' && (
-                    <Disclosure as="div" className="py-6 border-t border-gray-200">
+                  {filters.propertyType !== "land" && (
+                    <Disclosure
+                      as="div"
+                      className="py-6 border-t border-gray-200"
+                    >
                       {({ open }) => (
                         <>
                           <h3 className="flow-root">
                             <Disclosure.Button className="flex w-full items-center justify-between py-2 text-sm text-gray-400 hover:text-gray-500">
-                              <span className="font-medium text-gray-900">Bathrooms</span>
+                              <span className="font-medium text-gray-900">
+                                Bathrooms
+                              </span>
                               <span className="ml-6 flex items-center">
                                 <ChevronDownIcon
-                                  className={`${open ? '-rotate-180' : 'rotate-0'} h-5 w-5 transform`}
+                                  className={`${
+                                    open ? "-rotate-180" : "rotate-0"
+                                  } h-5 w-5 transform`}
                                   aria-hidden="true"
                                 />
                               </span>
@@ -810,8 +938,8 @@ const PropertyFilters = ({ filters, onFilterChange }) => {
                                   id="filter-mobile-bathrooms-any"
                                   name="bathrooms"
                                   type="radio"
-                                  checked={filters.bathrooms === 'any'}
-                                  onChange={() => handleBathroomsChange('any')}
+                                  checked={filters.bathrooms === "any"}
+                                  onChange={() => handleBathroomsChange("any")}
                                   className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                                 />
                                 <label

@@ -97,7 +97,6 @@ export default function PropertyDetailsForm({
   updateFormData,
   nextStep,
 }) {
-
   const {
     register,
     handleSubmit,
@@ -109,9 +108,11 @@ export default function PropertyDetailsForm({
     resolver: yupResolver(schema),
     defaultValues: {
       ...formData,
-      type: formData.type || 'house',
-      property_type: formData.property_type || (formData.type === 'land' ? 'sale' : ''),
-      listing_type: formData.listing_type || (formData.type === 'land' ? 'sale' : '')
+      type: formData.type || "house",
+      property_type:
+        formData.property_type || (formData.type === "land" ? "sale" : ""),
+      listing_type:
+        formData.listing_type || (formData.type === "land" ? "sale" : ""),
     },
   });
 
@@ -119,21 +120,21 @@ export default function PropertyDetailsForm({
 
   // Set default values when land is selected
   useEffect(() => {
-    if (propertyType === 'land') {
-      setValue('property_type', 'sale');
-      setValue('listing_type', 'sale');
-      trigger('property_type');
-      trigger('listing_type');
+    if (propertyType === "land") {
+      setValue("property_type", "sale");
+      setValue("listing_type", "sale");
+      trigger("property_type");
+      trigger("listing_type");
     }
   }, [propertyType, setValue, trigger]);
 
   const onSubmit = (data) => {
     // Ensure land properties are always set to sale
-    if (data.type === 'land') {
-      data.property_type = 'sale';
-      data.listing_type = 'sale';
+    if (data.type === "land") {
+      data.property_type = "sale";
+      data.listing_type = "sale";
     }
-    
+
     updateFormData(data);
     nextStep();
   };
@@ -174,7 +175,7 @@ export default function PropertyDetailsForm({
           )}
         </div>
 
-        {propertyType === 'house' && (
+        {propertyType === "house" && (
           <>
             <div className="mb-8">
               <label className="block text-gray-700 mb-3 font-medium">
@@ -246,7 +247,9 @@ export default function PropertyDetailsForm({
                 </label>
               </div>
               {errors.property_type && (
-                <p className="text-red-500 text-sm mt-1">{errors.property_type.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.property_type.message}
+                </p>
               )}
             </div>
 
@@ -284,7 +287,9 @@ export default function PropertyDetailsForm({
                 </label>
               </div>
               {errors.listing_type && (
-                <p className="text-red-500 text-sm mt-1">{errors.listing_type.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.listing_type.message}
+                </p>
               )}
             </div>
           </>
@@ -302,7 +307,7 @@ export default function PropertyDetailsForm({
             {...register("title")}
             className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder={
-              propertyType === "house" 
+              propertyType === "house"
                 ? "e.g., Modern 3-Bedroom House in East Legon"
                 : "e.g., Prime Residential Plot in Airport Residential Area"
             }
@@ -354,7 +359,9 @@ export default function PropertyDetailsForm({
             placeholder="e.g., 0241234567"
           />
           {errors.contact && (
-            <p className="text-red-500 text-sm mt-1">{errors.contact.message}</p>
+            <p className="text-red-500 text-sm mt-1">
+              {errors.contact.message}
+            </p>
           )}
         </div>
 
@@ -488,7 +495,9 @@ export default function PropertyDetailsForm({
               </label>
             </div>
             {errors.rental_type && (
-              <p className="text-red-500 text-sm mt-1">{errors.rental_type.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.rental_type.message}
+              </p>
             )}
           </div>
         )}
@@ -537,7 +546,9 @@ export default function PropertyDetailsForm({
               </label>
             </div>
             {errors.rental_duration && (
-              <p className="text-red-500 text-sm mt-1">{errors.rental_duration.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.rental_duration.message}
+              </p>
             )}
           </div>
         )}
@@ -555,7 +566,9 @@ export default function PropertyDetailsForm({
                 placeholder="e.g., 1000"
               />
               {errors.rental_price && (
-                <p className="text-red-500 text-sm mt-1">{errors.rental_price.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.rental_price.message}
+                </p>
               )}
             </div>
             <div>
@@ -569,7 +582,9 @@ export default function PropertyDetailsForm({
                 placeholder="e.g., 2000"
               />
               {errors.rental_deposit && (
-                <p className="text-red-500 text-sm mt-1">{errors.rental_deposit.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.rental_deposit.message}
+                </p>
               )}
             </div>
           </div>
@@ -587,7 +602,9 @@ export default function PropertyDetailsForm({
                 className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
               {errors.rental_available_from && (
-                <p className="text-red-500 text-sm mt-1">{errors.rental_available_from.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.rental_available_from.message}
+                </p>
               )}
             </div>
             <div>
@@ -600,7 +617,9 @@ export default function PropertyDetailsForm({
                 className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
               {errors.rental_available_to && (
-                <p className="text-red-500 text-sm mt-1">{errors.rental_available_to.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.rental_available_to.message}
+                </p>
               )}
             </div>
           </div>

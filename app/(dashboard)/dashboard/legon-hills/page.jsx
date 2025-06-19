@@ -31,7 +31,7 @@ export default function LegonHills() {
       plotTotalAmount,
       paidAmount,
       remainingAmount
-    `,
+    `
       );
 
       if (error) {

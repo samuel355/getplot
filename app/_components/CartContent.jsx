@@ -25,9 +25,7 @@ const CartContent = ({ open, setOpen }) => {
           <DropdownMenuContent className="w-72 mt-2 mr-2">
             <div className="space-y-2 max-h-72 overflow-y-scroll mb-2">
               {plots.map((plot) => (
-                <CartItem
-                  plot={plot}
-                />
+                <CartItem plot={plot} />
               ))}
             </div>
 

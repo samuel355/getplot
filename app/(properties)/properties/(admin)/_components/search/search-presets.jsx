@@ -23,18 +23,19 @@ import useAdvancedSearchStore from "../../_store/useAdvancedSearchStore";
 import { useToast } from "@/hooks/use-toast";
 
 export function SearchPresets() {
-  const { savedPresets, savePreset, loadPreset, deletePreset } = useAdvancedSearchStore();
+  const { savedPresets, savePreset, loadPreset, deletePreset } =
+    useAdvancedSearchStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [presetName, setPresetName] = useState("");
   const { toast } = useToast();
 
   const handleSavePreset = () => {
     if (!presetName.trim()) return;
-    
+
     savePreset(presetName);
     setPresetName("");
     setIsDialogOpen(false);
-    
+
     toast({
       title: "Preset Saved",
       description: "Your search preset has been saved",
@@ -43,7 +44,7 @@ export function SearchPresets() {
 
   const handleDeletePreset = (presetId, presetName) => {
     deletePreset(presetId);
-    
+
     toast({
       title: "Preset Deleted",
       description: `"${presetName}" has been deleted`,
@@ -74,15 +75,10 @@ export function SearchPresets() {
             />
           </div>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsDialogOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSavePreset}>
-              Save Preset
-            </Button>
+            <Button onClick={handleSavePreset}>Save Preset</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

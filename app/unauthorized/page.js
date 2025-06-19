@@ -11,7 +11,8 @@ export default function Unauthorized() {
       <div className="text-center p-8 bg-white rounded-lg shadow-md max-w-md">
         <h1 className="text-3xl font-bold text-red-600 mb-4">Access Denied</h1>
         <p className="text-gray-600 mb-6">
-          You are not authorized to access these resources. Please contact the administrator if you believe this is an error.
+          You are not authorized to access these resources. Please contact the
+          administrator if you believe this is an error.
         </p>
         <Button
           onClick={() => router.push("/")}
@@ -22,4 +23,4 @@ export default function Unauthorized() {
       </div>
     </div>
   );
-} 
+}

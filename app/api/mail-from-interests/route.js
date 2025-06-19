@@ -39,7 +39,7 @@ export async function POST(request) {
       secure: true,
       auth: {
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS, 
+        pass: process.env.SMTP_PASS,
       },
     });
 
@@ -48,7 +48,7 @@ export async function POST(request) {
       from: email, // sender
       to: process.env.SMTP_EMAIL, // list of receivers
       subject: "Potential client to buy a land",
-      html: htmlContent, 
+      html: htmlContent,
     });
 
     return NextResponse.json({

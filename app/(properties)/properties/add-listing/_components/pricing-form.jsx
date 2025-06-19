@@ -12,7 +12,7 @@ export default function PricingForm({
 }) {
   const schema = yup.object().shape({
     listing_type: yup.string().required(),
-  
+
     price: yup
       .number()
       .transform((value, originalValue) =>
@@ -27,7 +27,7 @@ export default function PricingForm({
             .typeError("Please enter a valid number"),
         otherwise: (schema) => schema.notRequired().nullable(),
       }),
-  
+
     rental_price: yup
       .number()
       .transform((value, originalValue) =>
@@ -42,13 +42,13 @@ export default function PricingForm({
             .typeError("Please enter a valid number"),
         otherwise: (schema) => schema.notRequired().nullable(),
       }),
-  
+
     rental_duration: yup.string().when("listing_type", {
       is: "rent",
       then: (schema) => schema.required("Rental duration is required"),
       otherwise: (schema) => schema.notRequired(),
     }),
-  
+
     airbnb_min_stay: yup
       .number()
       .transform((value, originalValue) =>
@@ -63,10 +63,9 @@ export default function PricingForm({
             .typeError("Please enter a valid number"),
         otherwise: (schema) => schema.notRequired().nullable(),
       }),
-  
+
     negotiable: yup.boolean(),
   });
-  
 
   const {
     register,
@@ -80,11 +79,10 @@ export default function PricingForm({
       price: formData.price ?? null,
       rental_price: formData.rental_price ?? null,
       airbnb_min_stay: formData.airbnb_min_stay ?? null,
-      rental_duration: formData.rental_duration || '',
+      rental_duration: formData.rental_duration || "",
       negotiable: formData.negotiable || false,
-      listing_type: formData.listing_type || 'sale',
-    }
-    
+      listing_type: formData.listing_type || "sale",
+    },
   });
 
   useEffect(() => {

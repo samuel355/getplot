@@ -6,7 +6,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
 import {
   DropdownMenu,
@@ -196,19 +196,15 @@ const DeleteDialog = ({
   id,
   clientData,
 }) => {
-  
   const handleDelete = async () => {
-    const { error } = await supabase
-      .from(databaseName)
-      .delete()
-      .eq("id", id)
-    if(error){
-      toast.error('Sorry something went wrong');
-      console.log(error)
-      setDeleteDialog(false)
+    const { error } = await supabase.from(databaseName).delete().eq("id", id);
+    if (error) {
+      toast.error("Sorry something went wrong");
+      console.log(error);
+      setDeleteDialog(false);
     }
-    setDeleteDialog(false)
-    tToast('Details deleted successfully')
+    setDeleteDialog(false);
+    tToast("Details deleted successfully");
     setTimeout(() => {
       window.location.reload();
     }, 1000);

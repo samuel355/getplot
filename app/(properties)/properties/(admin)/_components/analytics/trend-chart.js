@@ -1,4 +1,4 @@
-import { Line } from 'react-chartjs-2';
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -7,8 +7,8 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend
-} from 'chart.js';
+  Legend,
+} from "chart.js";
 
 // Register ChartJS components
 ChartJS.register(
@@ -26,22 +26,22 @@ export function TrendChart({ data }) {
     labels: data.labels,
     datasets: [
       {
-        label: 'Total Listings',
+        label: "Total Listings",
         data: data.listings,
-        borderColor: 'rgb(59, 130, 246)',
-        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+        borderColor: "rgb(59, 130, 246)",
+        backgroundColor: "rgba(59, 130, 246, 0.5)",
       },
       {
-        label: 'Approved',
+        label: "Approved",
         data: data.approved,
-        borderColor: 'rgb(34, 197, 94)',
-        backgroundColor: 'rgba(34, 197, 94, 0.5)',
+        borderColor: "rgb(34, 197, 94)",
+        backgroundColor: "rgba(34, 197, 94, 0.5)",
       },
       {
-        label: 'Rejected',
+        label: "Rejected",
         data: data.rejected,
-        borderColor: 'rgb(239, 68, 68)',
-        backgroundColor: 'rgba(239, 68, 68, 0.5)',
+        borderColor: "rgb(239, 68, 68)",
+        backgroundColor: "rgba(239, 68, 68, 0.5)",
       },
     ],
   };
@@ -50,11 +50,11 @@ export function TrendChart({ data }) {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
       title: {
         display: true,
-        text: 'Property Listing Trends',
+        text: "Property Listing Trends",
       },
     },
     scales: {

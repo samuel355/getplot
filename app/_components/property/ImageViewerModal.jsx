@@ -9,10 +9,20 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import Image from "next/image";
-import { XMarkIcon, ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import {
+  XMarkIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+} from "@heroicons/react/24/outline";
 import { Loader2 } from "lucide-react";
 
-const ImageViewerModal = ({ images, currentIndex, isOpen, onClose, onNavigate }) => {
+const ImageViewerModal = ({
+  images,
+  currentIndex,
+  isOpen,
+  onClose,
+  onNavigate,
+}) => {
   const [isLoading, setIsLoading] = useState(true);
   const handleKeyDown = useCallback(
     (event) => {
@@ -56,7 +66,9 @@ const ImageViewerModal = ({ images, currentIndex, isOpen, onClose, onNavigate })
           </button>
         </DialogHeader>
 
-        <DialogDescription className="sr-only">Image viewer modal, use arrow keys to navigate images.</DialogDescription>
+        <DialogDescription className="sr-only">
+          Image viewer modal, use arrow keys to navigate images.
+        </DialogDescription>
 
         <div className="relative w-full h-full flex items-center justify-center bg-gray-700">
           {isLoading && (
@@ -69,7 +81,9 @@ const ImageViewerModal = ({ images, currentIndex, isOpen, onClose, onNavigate })
             alt={`Property image ${currentIndex + 1}`}
             layout="fill"
             objectFit="contain"
-            className={`rounded-lg transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+            className={`rounded-lg transition-opacity duration-300 ${
+              isLoading ? "opacity-0" : "opacity-100"
+            }`}
             onLoadingComplete={() => setIsLoading(false)}
           />
 
@@ -103,4 +117,4 @@ const ImageViewerModal = ({ images, currentIndex, isOpen, onClose, onNavigate })
   );
 };
 
-export default ImageViewerModal; 
+export default ImageViewerModal;

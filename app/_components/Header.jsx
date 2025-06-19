@@ -7,17 +7,17 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { 
-  Building, 
-  Menu, 
-  ShoppingCart, 
-  ChevronDown, 
-  Map, 
-  Layout, 
+import {
+  Building,
+  Menu,
+  ShoppingCart,
+  ChevronDown,
+  Map,
+  Layout,
   UserCircle,
   Bell,
   Search,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -48,9 +48,11 @@ const Header = () => {
   const { plots } = useCart();
 
   // Check if current path is in a dashboard section
-  const isInDashboard = path.includes('/dashboard') || path.includes('/properties');
-  const isPropertiesDashboard = path.includes('/properties');
-  const isLandDashboard = path.includes('/dashboard') && !path.includes('/properties');
+  const isInDashboard =
+    path.includes("/dashboard") || path.includes("/properties");
+  const isPropertiesDashboard = path.includes("/properties");
+  const isLandDashboard =
+    path.includes("/dashboard") && !path.includes("/properties");
 
   // If we're in a dashboard, show the dashboard header instead
   if (isInDashboard) {
@@ -84,7 +86,7 @@ const Header = () => {
           {/* Center section: Dashboard tabs */}
           <div className="hidden md:flex items-center">
             <nav className="flex space-x-1">
-              <Link 
+              <Link
                 href="/dashboard"
                 className={cn(
                   "relative px-3 py-2 rounded-md text-sm font-medium transition-colors",
@@ -98,8 +100,8 @@ const Header = () => {
                   <span>Land Sites</span>
                 </div>
               </Link>
-              
-              <Link 
+
+              <Link
                 href="/properties"
                 className={cn(
                   "relative px-3 py-2 rounded-md text-sm font-medium transition-colors",
@@ -126,7 +128,7 @@ const Header = () => {
                 className="w-full bg-gray-50 border border-gray-200 pl-8 pr-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
               />
             </div>
-            
+
             <Button variant="ghost" size="icon" className="hidden md:flex">
               <Bell className="h-5 w-5" />
               <span className="sr-only">Notifications</span>
@@ -167,7 +169,12 @@ const Header = () => {
             </DropdownMenu>
 
             {/* Mobile menu button */}
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
               <Menu className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
             </Button>
@@ -191,7 +198,7 @@ const Header = () => {
                   className="w-full bg-gray-50 border border-gray-200 pl-8 pr-3 py-2 text-sm rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
                 />
               </div>
-              
+
               <div className="flex items-center justify-between py-2">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
@@ -206,8 +213,8 @@ const Header = () => {
                   Sign out
                 </Button>
               </div>
-              
-              <Link 
+
+              <Link
                 href="/dashboard"
                 className={cn(
                   "flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
@@ -220,8 +227,8 @@ const Header = () => {
                 <Map className="h-4 w-4" />
                 <span>Land Sites Dashboard</span>
               </Link>
-              
-              <Link 
+
+              <Link
                 href="/properties"
                 className={cn(
                   "flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
@@ -234,8 +241,8 @@ const Header = () => {
                 <Building className="h-4 w-4" />
                 <span>Properties Dashboard</span>
               </Link>
-              
-              <Link 
+
+              <Link
                 href="/properties/list"
                 className={cn(
                   "flex items-center gap-2 px-3 py-2.5 pl-8 rounded-md text-sm transition-colors",
@@ -247,8 +254,8 @@ const Header = () => {
               >
                 <span>My Properties</span>
               </Link>
-              
-              <Link 
+
+              <Link
                 href="/dashboard/plots"
                 className={cn(
                   "flex items-center gap-2 px-3 py-2.5 pl-8 rounded-md text-sm transition-colors",
@@ -260,13 +267,17 @@ const Header = () => {
               >
                 <span>My Plots</span>
               </Link>
-              
-              <Button variant="ghost" size="sm" className="w-full justify-start h-10 px-3 text-gray-700">
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start h-10 px-3 text-gray-700"
+              >
                 <Bell className="h-4 w-4 mr-2" />
                 Notifications
               </Button>
-              
-              <Link 
+
+              <Link
                 href="/"
                 className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
                 onClick={() => setMobileMenuOpen(false)}
@@ -316,34 +327,62 @@ const Header = () => {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger 
+                  <NavigationMenuTrigger
                     className={cn(
                       "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
-                      (path === "/nthc" || path === "/dar-es-salaam" || path === "/trabuom" || path === "/legon-hills" || path === "/yabi") 
-                        ? "text-primary font-bold" 
+                      path === "/nthc" ||
+                        path === "/dar-es-salaam" ||
+                        path === "/trabuom" ||
+                        path === "/legon-hills" ||
+                        path === "/yabi"
+                        ? "text-primary font-bold"
                         : "text-gray-700"
-                    )}  
+                    )}
                   >
                     Our Sites
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-2 p-4  md:grid-cols-2">
-                      <ListItem href="/nthc" title="NTHC" isActive={path === "/nthc"}>
+                      <ListItem
+                        href="/nthc"
+                        title="NTHC"
+                        isActive={path === "/nthc"}
+                      >
                         NTHC (Kwadaso)
                       </ListItem>
-                      <ListItem href="/dar-es-salaam" title="Dar Es Salaam" isActive={path === "/dar-es-salaam"}>
+                      <ListItem
+                        href="/dar-es-salaam"
+                        title="Dar Es Salaam"
+                        isActive={path === "/dar-es-salaam"}
+                      >
                         Dar Es Salaam (Ejisu)
                       </ListItem>
-                      <ListItem href="/trabuom" title="Trabuom" isActive={path === "/trabuom"}>
+                      <ListItem
+                        href="/trabuom"
+                        title="Trabuom"
+                        isActive={path === "/trabuom"}
+                      >
                         Trabuom
                       </ListItem>
-                      <ListItem href="/legon-hills" title="Lego n Hills" isActive={path === "/legon-hills"}>
+                      <ListItem
+                        href="/legon-hills"
+                        title="Lego n Hills"
+                        isActive={path === "/legon-hills"}
+                      >
                         East Legon Hills
                       </ListItem>
-                      <ListItem href="/yabi" title="Yabi" isActive={path === "/yabi"}>
+                      <ListItem
+                        href="/yabi"
+                        title="Yabi"
+                        isActive={path === "/yabi"}
+                      >
                         Yabi
                       </ListItem>
-                      <ListItem href="/berekuso" title="Berekuso" isActive={path === "/berekuso"}>
+                      <ListItem
+                        href="/berekuso"
+                        title="Berekuso"
+                        isActive={path === "/berekuso"}
+                      >
                         Berekuso
                       </ListItem>
                     </ul>
@@ -355,54 +394,71 @@ const Header = () => {
                     href="/market-place"
                     className={cn(
                       "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
-                      path === "/market-place" ? "text-primary font-bold" : "text-gray-700"
+                      path === "/market-place"
+                        ? "text-primary font-bold"
+                        : "text-gray-700"
                     )}
                   >
                     Market Place
                   </Link>
                 </NavigationMenuItem>
-                
+
                 <NavigationMenuItem>
                   <Link
                     href="/contact-us"
                     className={cn(
                       "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
-                      path === "/contact-us" ? "text-primary font-bold" : "text-gray-700"
+                      path === "/contact-us"
+                        ? "text-primary font-bold"
+                        : "text-gray-700"
                     )}
                   >
                     Contact Us
                   </Link>
                 </NavigationMenuItem>
 
-                {isSignedIn && (user?.publicMetadata?.role === "sysadmin" || user?.publicMetadata?.role === "admin") && (
-                  <NavigationMenuItem>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className={cn(
-                          "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary gap-1",
-                          path.includes('/dashboard') || path.includes('/properties') ? "text-primary font-bold" : "text-gray-700"
-                        )}>
-                          Dashboard
-                          <ChevronDown className="h-4 w-4" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem asChild>
-                          <Link href="/dashboard" className="flex items-center gap-2">
-                            <Map className="h-4 w-4" />
-                            <span>Land Sites Dashboard</span>
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link href="/properties" className="flex items-center gap-2">
-                            <Building className="h-4 w-4" />
-                            <span>Properties Dashboard</span>
-                          </Link>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </NavigationMenuItem>
-                )}
+                {isSignedIn &&
+                  (user?.publicMetadata?.role === "sysadmin" ||
+                    user?.publicMetadata?.role === "admin") && (
+                    <NavigationMenuItem>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            className={cn(
+                              "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary gap-1",
+                              path.includes("/dashboard") ||
+                                path.includes("/properties")
+                                ? "text-primary font-bold"
+                                : "text-gray-700"
+                            )}
+                          >
+                            Dashboard
+                            <ChevronDown className="h-4 w-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem asChild>
+                            <Link
+                              href="/dashboard"
+                              className="flex items-center gap-2"
+                            >
+                              <Map className="h-4 w-4" />
+                              <span>Land Sites Dashboard</span>
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link
+                              href="/properties"
+                              className="flex items-center gap-2"
+                            >
+                              <Building className="h-4 w-4" />
+                              <span>Properties Dashboard</span>
+                            </Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </NavigationMenuItem>
+                  )}
               </NavigationMenuList>
             </NavigationMenu>
           </nav>
@@ -433,7 +489,7 @@ const Header = () => {
                   <p className="ml-2 text-xs text-gray-500 py-1">Our Sites</p>
 
                   <DropdownMenuItem asChild>
-                    <Link 
+                    <Link
                       href="/nthc"
                       className={cn(
                         "w-full pl-4 py-1.5",
@@ -444,18 +500,19 @@ const Header = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link 
+                    <Link
                       href="/dar-es-salaam"
                       className={cn(
                         "w-full pl-4 py-1.5",
-                        path === "/dar-es-salaam" && "text-primary font-semibold"
+                        path === "/dar-es-salaam" &&
+                          "text-primary font-semibold"
                       )}
                     >
                       Dar Es Salaam (Ejisu)
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link 
+                    <Link
                       href="/trabuom"
                       className={cn(
                         "w-full pl-4 py-1.5",
@@ -466,7 +523,7 @@ const Header = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link 
+                    <Link
                       href="/legon-hills"
                       className={cn(
                         "w-full pl-4 py-1.5",
@@ -477,7 +534,7 @@ const Header = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link 
+                    <Link
                       href="/yabi"
                       className={cn(
                         "w-full pl-4 py-1.5",
@@ -489,7 +546,7 @@ const Header = () => {
                   </DropdownMenuItem>
 
                   <DropdownMenuSeparator />
-                  
+
                   <DropdownMenuItem asChild>
                     <Link
                       href="/market-place"
@@ -514,36 +571,43 @@ const Header = () => {
                     </Link>
                   </DropdownMenuItem>
 
-                  {isSignedIn && (user?.publicMetadata?.role === "sysadmin" || user?.publicMetadata?.role === "admin") && (
-                    <>
-                      <DropdownMenuSeparator />
-                      <p className="ml-2 text-xs text-gray-500 py-1">Dashboards</p>
-                      <DropdownMenuItem asChild>
-                        <Link 
-                          href="/dashboard"
-                          className={cn(
-                            "w-full pl-4 py-1.5 flex items-center gap-2",
-                            path.includes("/dashboard") && !path.includes("/properties") && "text-primary font-semibold"
-                          )}
-                        >
-                          <Map className="h-4 w-4" />
-                          Land Sites Dashboard
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link 
-                          href="/properties"
-                          className={cn(
-                            "w-full pl-4 py-1.5 flex items-center gap-2",
-                            path.includes("/properties") && "text-primary font-semibold"
-                          )}
-                        >
-                          <Building className="h-4 w-4" />
-                          Properties Dashboard
-                        </Link>
-                      </DropdownMenuItem>
-                    </>
-                  )}
+                  {isSignedIn &&
+                    (user?.publicMetadata?.role === "sysadmin" ||
+                      user?.publicMetadata?.role === "admin") && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <p className="ml-2 text-xs text-gray-500 py-1">
+                          Dashboards
+                        </p>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/dashboard"
+                            className={cn(
+                              "w-full pl-4 py-1.5 flex items-center gap-2",
+                              path.includes("/dashboard") &&
+                                !path.includes("/properties") &&
+                                "text-primary font-semibold"
+                            )}
+                          >
+                            <Map className="h-4 w-4" />
+                            Land Sites Dashboard
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/properties"
+                            className={cn(
+                              "w-full pl-4 py-1.5 flex items-center gap-2",
+                              path.includes("/properties") &&
+                                "text-primary font-semibold"
+                            )}
+                          >
+                            <Building className="h-4 w-4" />
+                            Properties Dashboard
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
+                    )}
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -569,13 +633,13 @@ const Header = () => {
           )}
 
           {/* User button - show if signed in */}
-          
+
           {isSignedIn && (
             <div className="ml-4">
               <UserButton />
             </div>
           )}
-          
+
           {/* Sign in button - show if not signed in */}
           {/* {!isSignedIn && (
             <div className="ml-4">

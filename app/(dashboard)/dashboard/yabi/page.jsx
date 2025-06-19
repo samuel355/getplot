@@ -13,7 +13,7 @@ export default function Yabi() {
   const [plotData, setPlotData] = useState([]);
   const [loading, setLoading] = useState(false);
   const databaseName = "yabi";
-  const insertCalled = useRef(false)
+  const insertCalled = useRef(false);
 
   useEffect(() => {
     fetchPlotData();

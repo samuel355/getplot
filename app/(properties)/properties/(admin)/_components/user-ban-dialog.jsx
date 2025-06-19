@@ -24,9 +24,7 @@ export default function UserBanDialog({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {isBan ? "Ban User" : "Unban User"}
-          </DialogTitle>
+          <DialogTitle>{isBan ? "Ban User" : "Unban User"}</DialogTitle>
           <DialogDescription>
             {isBan
               ? "This will prevent the user from accessing the platform."
@@ -68,10 +66,7 @@ export default function UserBanDialog({
         )}
 
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => setIsOpen(false)}
-          >
+          <Button variant="outline" onClick={() => setIsOpen(false)}>
             Cancel
           </Button>
           <Button

@@ -1,27 +1,32 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 
-const ImageWithLogo = ({ imageUrl, logoUrl, logoPosition = 'bottomRight', logoSize = 100 }) => {
+const ImageWithLogo = ({
+  imageUrl,
+  logoUrl,
+  logoPosition = "bottomRight",
+  logoSize = 100,
+}) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const addLogoToImage = async () => {
       const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
 
       // Load the main image
       const mainImage = new Image();
-      mainImage.crossOrigin = 'anonymous';
+      mainImage.crossOrigin = "anonymous";
       mainImage.src = imageUrl;
 
       // Load the logo
       const logo = new Image();
-      logo.crossOrigin = 'anonymous';
+      logo.crossOrigin = "anonymous";
       logo.src = logoUrl;
 
       // Wait for both images to load
       await Promise.all([
-        new Promise(resolve => mainImage.onload = resolve),
-        new Promise(resolve => logo.onload = resolve)
+        new Promise((resolve) => (mainImage.onload = resolve)),
+        new Promise((resolve) => (logo.onload = resolve)),
       ]);
 
       // Set canvas size to match the main image
@@ -36,19 +41,19 @@ const ImageWithLogo = ({ imageUrl, logoUrl, logoPosition = 'bottomRight', logoSi
       const padding = 20; // Padding from edges
 
       switch (logoPosition) {
-        case 'topLeft':
+        case "topLeft":
           logoX = padding;
           logoY = padding;
           break;
-        case 'topRight':
+        case "topRight":
           logoX = canvas.width - logoSize - padding;
           logoY = padding;
           break;
-        case 'bottomLeft':
+        case "bottomLeft":
           logoX = padding;
           logoY = canvas.height - logoSize - padding;
           break;
-        case 'bottomRight':
+        case "bottomRight":
         default:
           logoX = canvas.width - logoSize - padding;
           logoY = canvas.height - logoSize - padding;
@@ -66,9 +71,9 @@ const ImageWithLogo = ({ imageUrl, logoUrl, logoPosition = 'bottomRight', logoSi
 
   const handleDownload = () => {
     const canvas = canvasRef.current;
-    const link = document.createElement('a');
-    link.download = 'image-with-logo.png';
-    link.href = canvas.toDataURL('image/png');
+    const link = document.createElement("a");
+    link.download = "image-with-logo.png";
+    link.href = canvas.toDataURL("image/png");
     link.click();
   };
 
@@ -77,13 +82,9 @@ const ImageWithLogo = ({ imageUrl, logoUrl, logoPosition = 'bottomRight', logoSi
       <canvas
         ref={canvasRef}
         className="max-w-full h-auto"
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
       />
-      <img
-        src={imageUrl}
-        alt="Original"
-        className="max-w-full h-auto"
-      />
+      <img src={imageUrl} alt="Original" className="max-w-full h-auto" />
       <button
         onClick={handleDownload}
         className="absolute bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
@@ -94,4 +95,4 @@ const ImageWithLogo = ({ imageUrl, logoUrl, logoPosition = 'bottomRight', logoSi
   );
 };
 
-export default ImageWithLogo; 
+export default ImageWithLogo;

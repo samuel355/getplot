@@ -150,10 +150,7 @@ export default function Contact() {
                       data-original="#000000"
                     ></path>
                   </svg>
-                  <a
-                    href="tel:233248838005"
-                    class="text-primary text-sm ml-3"
-                  >
+                  <a href="tel:233248838005" class="text-primary text-sm ml-3">
                     <strong>+233 32 200 8282/+233 54 855 4216</strong>
                   </a>
                 </li>

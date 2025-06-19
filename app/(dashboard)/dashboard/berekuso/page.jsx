@@ -31,7 +31,7 @@ export default function Berekuso() {
       plotTotalAmount,
       paidAmount,
       remainingAmount
-    `,
+    `
       );
 
       if (error) {

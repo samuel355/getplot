@@ -1,7 +1,6 @@
-"use client"
+"use client";
 
-import { ColumnDef } from "@tanstack/react-table"
-
+import { ColumnDef } from "@tanstack/react-table";
 
 export const columns = [
   {
@@ -18,7 +17,7 @@ export const columns = [
   },
   {
     accessorKey: "properties.Area",
-    header: "Size (Acres)"
+    header: "Size (Acres)",
   },
   {
     accessorKey: "plotTotalAmount",
@@ -33,5 +32,5 @@ export const columns = [
 
       return <div className="text-right font-medium">{formatted}</div>;
     },
-  }
-]
+  },
+];

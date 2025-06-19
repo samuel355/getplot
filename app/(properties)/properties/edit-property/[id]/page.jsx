@@ -41,7 +41,7 @@ export default function EditPropertyPage() {
     rental_available_to: null,
     rental_deposit: null,
     rental_utilities_included: false,
-    rental_furnished: false
+    rental_furnished: false,
   });
 
   const router = useRouter();
@@ -71,10 +71,10 @@ export default function EditPropertyPage() {
 
         // Check if the current user is the owner of the property
         const isOwner = user?.id === data.user_id;
-        const isAdmin = user?.publicMetadata?.role === 'admin';
-        const isSysAdmin = user?.publicMetadata?.role === 'sysadmin';
+        const isAdmin = user?.publicMetadata?.role === "admin";
+        const isSysAdmin = user?.publicMetadata?.role === "sysadmin";
         console.log(isSysAdmin);
-        
+
         if (!isOwner && !isAdmin && !isSysAdmin) {
           setError("You don't have permission to edit this property");
           return;
@@ -91,7 +91,7 @@ export default function EditPropertyPage() {
             ) {
               // Parse from POINT format
               const match = data.location_coordinates.match(
-                /POINT\((-?\d+\.?\d*) (-?\d+\.?\d*)\)/,
+                /POINT\((-?\d+\.?\d*) (-?\d+\.?\d*)\)/
               );
               if (match) {
                 coordinates = {
@@ -116,9 +116,9 @@ export default function EditPropertyPage() {
           ...data,
           coordinates,
           negotiable: data.negotiable || false,
-          property_type: data.property_type || 'sale',
-          listing_type: data.listing_type || 'sale',
-          type: data.type || 'house'
+          property_type: data.property_type || "sale",
+          listing_type: data.listing_type || "sale",
+          type: data.type || "house",
         });
       } catch (err) {
         console.error("Error fetching property:", err);
@@ -128,10 +128,9 @@ export default function EditPropertyPage() {
       }
     };
 
-    if(isSignedIn && user){
+    if (isSignedIn && user) {
       fetchProperty();
     }
-    
   }, [propertyId, user]);
 
   const totalSteps = 6;
@@ -244,11 +243,11 @@ export default function EditPropertyPage() {
               />
             )}
             {step === 6 && (
-              <DocumentsForm 
-                formData={formData} 
-                updateFormData={updateFormData} 
-                nextStep={nextStep} 
-                prevStep={prevStep} 
+              <DocumentsForm
+                formData={formData}
+                updateFormData={updateFormData}
+                nextStep={nextStep}
+                prevStep={prevStep}
               />
             )}
             {step === 7 && (

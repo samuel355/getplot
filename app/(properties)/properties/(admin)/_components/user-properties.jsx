@@ -12,7 +12,7 @@ export default function UserProperties({ userId }) {
     const fetchUserProperties = async () => {
       try {
         setLoading(true);
-        
+
         const { data, error } = await supabase
           .from("properties")
           .select("*")
@@ -51,7 +51,9 @@ export default function UserProperties({ userId }) {
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">User Properties</h2>
       {properties.length === 0 ? (
-        <p className="text-muted-foreground">This user has no properties listed.</p>
+        <p className="text-muted-foreground">
+          This user has no properties listed.
+        </p>
       ) : (
         <PropertyTable properties={properties} hideActions />
       )}

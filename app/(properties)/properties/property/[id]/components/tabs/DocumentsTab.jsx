@@ -1,4 +1,4 @@
-import { FileText } from 'lucide-react';
+import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,14 +22,16 @@ export default function DocumentsTab({ property }) {
                   <CardTitle className="text-base">{doc.name}</CardTitle>
                 </div>
                 <CardDescription>
-                  {doc.size ? `${(doc.size / 1024 / 1024).toFixed(2)} MB` : 'Size not available'}
+                  {doc.size
+                    ? `${(doc.size / 1024 / 1024).toFixed(2)} MB`
+                    : "Size not available"}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full"
-                  onClick={() => window.open(doc.url, '_blank')}
+                  onClick={() => window.open(doc.url, "_blank")}
                 >
                   View Document
                 </Button>
@@ -48,4 +50,4 @@ export default function DocumentsTab({ property }) {
       )}
     </div>
   );
-} 
+}

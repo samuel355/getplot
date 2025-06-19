@@ -22,13 +22,13 @@ import { format } from "date-fns";
 export function LogTable({ logs }) {
   const getActionIcon = (type) => {
     switch (type) {
-      case 'property':
+      case "property":
         return <Home className="h-4 w-4" />;
-      case 'user':
+      case "user":
         return <User className="h-4 w-4" />;
-      case 'settings':
+      case "settings":
         return <Settings className="h-4 w-4" />;
-      case 'system':
+      case "system":
         return <Shield className="h-4 w-4" />;
       default:
         return <AlertCircle className="h-4 w-4" />;
@@ -37,21 +37,21 @@ export function LogTable({ logs }) {
 
   const getStatusBadge = (status) => {
     switch (status) {
-      case 'success':
+      case "success":
         return (
           <Badge variant="outline" className="bg-green-50 text-green-700">
             <Check className="h-3 w-3 mr-1" />
             Success
           </Badge>
         );
-      case 'error':
+      case "error":
         return (
           <Badge variant="outline" className="bg-red-50 text-red-700">
             <X className="h-3 w-3 mr-1" />
             Error
           </Badge>
         );
-      case 'pending':
+      case "pending":
         return (
           <Badge variant="outline" className="bg-yellow-50 text-yellow-700">
             <RefreshCw className="h-3 w-3 mr-1" />
@@ -59,11 +59,7 @@ export function LogTable({ logs }) {
           </Badge>
         );
       default:
-        return (
-          <Badge variant="outline">
-            {status}
-          </Badge>
-        );
+        return <Badge variant="outline">{status}</Badge>;
     }
   };
 
@@ -81,9 +77,7 @@ export function LogTable({ logs }) {
       <TableBody>
         {logs.map((log) => (
           <TableRow key={log.id}>
-            <TableCell>
-              {format(new Date(log.created_at), 'PPpp')}
-            </TableCell>
+            <TableCell>{format(new Date(log.created_at), "PPpp")}</TableCell>
             <TableCell>
               <div className="flex items-center gap-2">
                 <img
@@ -91,7 +85,9 @@ export function LogTable({ logs }) {
                   alt={log.user?.firstName}
                   className="h-6 w-6 rounded-full"
                 />
-                <span>{log.user?.firstName} {log.user?.lastName}</span>
+                <span>
+                  {log.user?.firstName} {log.user?.lastName}
+                </span>
               </div>
             </TableCell>
             <TableCell>
@@ -103,9 +99,7 @@ export function LogTable({ logs }) {
             <TableCell>
               <p className="max-w-md truncate">{log.details}</p>
             </TableCell>
-            <TableCell>
-              {getStatusBadge(log.status)}
-            </TableCell>
+            <TableCell>{getStatusBadge(log.status)}</TableCell>
           </TableRow>
         ))}
       </TableBody>

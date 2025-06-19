@@ -24,7 +24,13 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import OptGroup from "./OptGroup";
 import Link from "next/link";
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const columns = [
   {
@@ -251,9 +257,8 @@ const DeletePlotDialog = ({
   onOpenChange,
   setDelDialogOpen,
   table,
-  plotData
+  plotData,
 }) => {
-  
   let databaseName;
   if (table && table === "nthc") {
     databaseName = "nthc";
@@ -267,24 +272,24 @@ const DeletePlotDialog = ({
   if (table && table === "legon-hills") {
     databaseName = "legon_hills";
   }
-  
+
   const handleDeletePlot = async () => {
     console.log("Delete----->: ", plotId, "from database -> ", databaseName);
     const { data, error } = await supabase
       .from(databaseName)
       .delete()
       .eq("id", plotId);
-    
-    if(error){
-      toast.error('Something went wrong deleting plot')
+
+    if (error) {
+      toast.error("Something went wrong deleting plot");
     }
-    sonarToast('Plot Deleted Successfully')
-    setDelDialogOpen(false)
+    sonarToast("Plot Deleted Successfully");
+    setDelDialogOpen(false);
     setTimeout(() => {
       window.location.reload();
     }, 1000);
   };
-  
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       {plotData && (
@@ -478,7 +483,7 @@ const ViewPlotDialog = ({
 
       if (paidAmount - plotTotalAmount > 0) {
         toast.error(
-          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot.",
+          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot."
         );
         return;
       }

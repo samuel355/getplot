@@ -8,12 +8,12 @@ import useSettingsStore from "../../_store/useSettingsStore";
 import { useToast } from "@/hooks/use-toast";
 
 export function FeaturedProperties() {
-  const { 
-    settings, 
-    featuredProperties, 
-    updateSettings, 
+  const {
+    settings,
+    featuredProperties,
+    updateSettings,
     fetchFeaturedProperties,
-    toggleFeatured 
+    toggleFeatured,
   } = useSettingsStore();
   const { toast } = useToast();
 
@@ -22,8 +22,8 @@ export function FeaturedProperties() {
   }, [fetchFeaturedProperties]);
 
   const handleSettingsUpdate = async (newSettings) => {
-    const result = await updateSettings('featured', newSettings);
-    
+    const result = await updateSettings("featured", newSettings);
+
     if (result.success) {
       toast({
         title: "Settings Updated",
@@ -40,11 +40,13 @@ export function FeaturedProperties() {
 
   const handleToggleFeatured = async (propertyId, featured) => {
     const result = await toggleFeatured(propertyId, featured);
-    
+
     if (result.success) {
       toast({
         title: featured ? "Property Featured" : "Property Unfeatured",
-        description: `Property has been ${featured ? 'added to' : 'removed from'} featured listings`,
+        description: `Property has been ${
+          featured ? "added to" : "removed from"
+        } featured listings`,
       });
     } else {
       toast({
@@ -69,10 +71,12 @@ export function FeaturedProperties() {
                 id="maxFeatured"
                 type="number"
                 value={settings.featured.maxFeaturedProperties}
-                onChange={(e) => handleSettingsUpdate({
-                  ...settings.featured,
-                  maxFeaturedProperties: parseInt(e.target.value)
-                })}
+                onChange={(e) =>
+                  handleSettingsUpdate({
+                    ...settings.featured,
+                    maxFeaturedProperties: parseInt(e.target.value),
+                  })
+                }
               />
             </div>
 
@@ -82,10 +86,12 @@ export function FeaturedProperties() {
                 id="duration"
                 type="number"
                 value={settings.featured.featuredDuration}
-                onChange={(e) => handleSettingsUpdate({
-                  ...settings.featured,
-                  featuredDuration: parseInt(e.target.value)
-                })}
+                onChange={(e) =>
+                  handleSettingsUpdate({
+                    ...settings.featured,
+                    featuredDuration: parseInt(e.target.value),
+                  })
+                }
               />
             </div>
 
@@ -94,10 +100,12 @@ export function FeaturedProperties() {
               <Switch
                 id="autoRemove"
                 checked={settings.featured.autoRemoveExpired}
-                onCheckedChange={(checked) => handleSettingsUpdate({
-                  ...settings.featured,
-                  autoRemoveExpired: checked
-                })}
+                onCheckedChange={(checked) =>
+                  handleSettingsUpdate({
+                    ...settings.featured,
+                    autoRemoveExpired: checked,
+                  })
+                }
               />
             </div>
           </div>
@@ -111,11 +119,15 @@ export function FeaturedProperties() {
         <CardContent>
           <div className="space-y-4">
             {featuredProperties.map((property) => (
-              <div key={property.id} className="flex items-center justify-between border-b pb-2">
+              <div
+                key={property.id}
+                className="flex items-center justify-between border-b pb-2"
+              >
                 <div>
                   <h3 className="font-medium">{property.title}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Featured until: {new Date(property.featured_until).toLocaleDateString()}
+                    Featured until:{" "}
+                    {new Date(property.featured_until).toLocaleDateString()}
                   </p>
                 </div>
                 <Button

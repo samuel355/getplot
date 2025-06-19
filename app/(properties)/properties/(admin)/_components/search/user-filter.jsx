@@ -16,12 +16,12 @@ import useAdminUserStore from "../../_store/useAdminUserStore";
 
 export function UserFilter() {
   const { setFilter, filters } = useAdvancedSearchStore();
-  const {users} = useAdminUserStore()
+  const { users } = useAdminUserStore();
   const { clerkClient } = useClerk();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
-  console.log(users)
+  console.log(users);
 
   // Fetch users from Clerk
   // useEffect(() => {
@@ -46,9 +46,14 @@ export function UserFilter() {
   // Update search results
   useEffect(() => {
     setFilteredUsers(
-      users.filter(user =>
-        `${user.firstName} ${user.lastName}`.toLowerCase().includes(search.toLowerCase()) ||
-        user.emailAddresses[0]?.emailAddress.toLowerCase().includes(search.toLowerCase())
+      users.filter(
+        (user) =>
+          `${user.firstName} ${user.lastName}`
+            .toLowerCase()
+            .includes(search.toLowerCase()) ||
+          user.emailAddresses[0]?.emailAddress
+            .toLowerCase()
+            .includes(search.toLowerCase())
       )
     );
   }, [search, users]);
@@ -58,17 +63,24 @@ export function UserFilter() {
 
   // Clear selected user
   const handleClearUser = () => {
-    setFilter('userId', null);
+    setFilter("userId", null);
     setIsOpen(false);
   };
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={isOpen} className="w-[200px] justify-start">
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={isOpen}
+          className="w-[200px] justify-start"
+        >
           <User className="mr-2 h-4 w-4" />
           {filters.userId ? (
-            users.find(u => u.id === filters.userId)?.firstName + ' ' + users.find(u => u.id === filters.userId)?.lastName
+            users.find((u) => u.id === filters.userId)?.firstName +
+            " " +
+            users.find((u) => u.id === filters.userId)?.lastName
           ) : (
             <span>Select User</span>
           )}
@@ -85,21 +97,26 @@ export function UserFilter() {
             className="w-full mt-1"
           />
         </div>
-        
+
         <ScrollArea className="max-h-[300px]">
-          {filteredUsers.map(user => (
+          {filteredUsers.map((user) => (
             <Button
               key={user.id}
               variant="ghost"
-              className={`w-full justify-start data-[state=active]:bg-accent data-[state=active]:text-accent-foreground rounded-none pl-4 ${isSelected(user.id) ? 'font-semibold' : ''}`}
+              className={`w-full justify-start data-[state=active]:bg-accent data-[state=active]:text-accent-foreground rounded-none pl-4 ${
+                isSelected(user.id) ? "font-semibold" : ""
+              }`}
               onClick={() => {
-                setFilter('userId', user.id);
+                setFilter("userId", user.id);
                 setIsOpen(false);
               }}
             >
               <Avatar className="mr-2 h-5 w-5">
                 <AvatarImage src={user.imageUrl} alt={user.firstName} />
-                <AvatarFallback>{user.firstName[0]}{user.lastName[0]}</AvatarFallback>
+                <AvatarFallback>
+                  {user.firstName[0]}
+                  {user.lastName[0]}
+                </AvatarFallback>
               </Avatar>
               <span>
                 {user.firstName} {user.lastName}
@@ -113,10 +130,14 @@ export function UserFilter() {
             <div className="p-4 text-muted-foreground">No users found</div>
           )}
         </ScrollArea>
-        
+
         {filters.userId && (
           <div className="p-2 border-t">
-            <Button variant="ghost" className="w-full text-red-500 hover:bg-red-50" onClick={handleClearUser}>
+            <Button
+              variant="ghost"
+              className="w-full text-red-500 hover:bg-red-50"
+              onClick={handleClearUser}
+            >
               Clear User
             </Button>
           </div>

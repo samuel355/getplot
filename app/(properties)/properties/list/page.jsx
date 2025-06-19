@@ -95,7 +95,10 @@ export default function PropertyListPage() {
           .select("*")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false })
-          .range((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage - 1);
+          .range(
+            (currentPage - 1) * itemsPerPage,
+            currentPage * itemsPerPage - 1
+          );
 
         if (statusFilter !== "all") {
           query = query.eq("status", statusFilter);
@@ -220,34 +223,54 @@ export default function PropertyListPage() {
         </TabsList>
         <TabsContent value="all">
           {renderProperties(viewMode, properties, loading, handleDeleteConfirm)}
-          {renderPagination(totalCount, currentPage, setCurrentPage, itemsPerPage)}
+          {renderPagination(
+            totalCount,
+            currentPage,
+            setCurrentPage,
+            itemsPerPage
+          )}
         </TabsContent>
         <TabsContent value="house">
           {renderProperties(
             viewMode,
             properties.filter((p) => p.type === "house"),
             loading,
-            handleDeleteConfirm,
+            handleDeleteConfirm
           )}
-          {renderPagination(totalCount, currentPage, setCurrentPage, itemsPerPage)}
+          {renderPagination(
+            totalCount,
+            currentPage,
+            setCurrentPage,
+            itemsPerPage
+          )}
         </TabsContent>
         <TabsContent value="land">
           {renderProperties(
             viewMode,
             properties.filter((p) => p.type === "land"),
             loading,
-            handleDeleteConfirm,
+            handleDeleteConfirm
           )}
-          {renderPagination(totalCount, currentPage, setCurrentPage, itemsPerPage)}
+          {renderPagination(
+            totalCount,
+            currentPage,
+            setCurrentPage,
+            itemsPerPage
+          )}
         </TabsContent>
         <TabsContent value="pending">
           {renderProperties(
             viewMode,
             properties.filter((p) => p.status === "pending"),
             loading,
-            handleDeleteConfirm,
+            handleDeleteConfirm
           )}
-          {renderPagination(totalCount, currentPage, setCurrentPage, itemsPerPage)}
+          {renderPagination(
+            totalCount,
+            currentPage,
+            setCurrentPage,
+            itemsPerPage
+          )}
         </TabsContent>
       </Tabs>
 
@@ -353,9 +376,19 @@ function renderProperties(viewMode, properties, loading, onDelete) {
                   <div className="flex flex-col">
                     <span>
                       {property.listing_type === "rent" ? (
-                        <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/month</span></>
+                        <>
+                          GHS {Number(property.rental_price).toLocaleString()}
+                          <span className="text-xs text-muted-foreground">
+                            /month
+                          </span>
+                        </>
                       ) : property.listing_type === "airbnb" ? (
-                        <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/day</span></>
+                        <>
+                          GHS {Number(property.rental_price).toLocaleString()}
+                          <span className="text-xs text-muted-foreground">
+                            /day
+                          </span>
+                        </>
                       ) : (
                         <>GHS {Number(property.price).toLocaleString()}</>
                       )}
@@ -464,9 +497,19 @@ function renderProperties(viewMode, properties, loading, onDelete) {
               <div className="flex justify-between items-center mt-2">
                 <div className="font-medium">
                   {property.listing_type === "rent" ? (
-                    <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/month</span></>
+                    <>
+                      GHS {Number(property.rental_price).toLocaleString()}
+                      <span className="text-xs text-muted-foreground">
+                        /month
+                      </span>
+                    </>
                   ) : property.listing_type === "airbnb" ? (
-                    <>GHS {Number(property.rental_price).toLocaleString()}<span className="text-xs text-muted-foreground">/day</span></>
+                    <>
+                      GHS {Number(property.rental_price).toLocaleString()}
+                      <span className="text-xs text-muted-foreground">
+                        /day
+                      </span>
+                    </>
                   ) : (
                     <>GHS {Number(property.price).toLocaleString()}</>
                   )}
@@ -538,7 +581,12 @@ function StatusBadge({ status }) {
   );
 }
 
-const renderPagination = (totalCount, currentPage, setCurrentPage, itemsPerPage) => {
+const renderPagination = (
+  totalCount,
+  currentPage,
+  setCurrentPage,
+  itemsPerPage
+) => {
   const totalPages = Math.ceil(totalCount / itemsPerPage);
   if (totalPages <= 1) return null;
 

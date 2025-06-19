@@ -27,17 +27,17 @@ export async function POST(request) {
       port: parseInt(process.env.SMTP_PORT || "587"),
       secure: true, // true for 465, false for other ports
       auth: {
-        user: process.env.SMTP_USER, 
-        pass: process.env.SMTP_PASS, 
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
 
     // Send email
     await transporter.sendMail({
-      from: process.env.SMTP_FROM, 
-      to: to, 
-      subject: subject, 
-      html: htmlContent, 
+      from: process.env.SMTP_FROM,
+      to: to,
+      subject: subject,
+      html: htmlContent,
     });
 
     console.log("Email sent successfully");

@@ -403,7 +403,7 @@ const Map = () => {
       callInfo.addEventListener("click", () => {
         alert("Call For Info \n 0322008282 or +233 54 855 4216");
       });
-      
+
       const Btn = document.getElementById("changePlotID");
       Btn.addEventListener("click", () => {
         const content = Btn.getAttribute("data-text");

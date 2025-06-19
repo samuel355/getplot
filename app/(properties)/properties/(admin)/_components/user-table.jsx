@@ -145,7 +145,9 @@ export default function UserTable({
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                   <DropdownMenuItem
-                    onClick={() => window.location.href = `mailto:${user.email}`}
+                    onClick={() =>
+                      (window.location.href = `mailto:${user.email}`)
+                    }
                   >
                     <Mail className="h-4 w-4 mr-2" />
                     Email User
@@ -156,23 +158,32 @@ export default function UserTable({
                       View Properties
                     </Link>
                   </DropdownMenuItem>
-                  
+
                   <DropdownMenuSeparator />
-                  
+
                   {/* Only show role change option if current user has sufficient permissions */}
-                  {(currentUserRole === "sysadmin" || 
-                    (currentUserRole === "admin" && user.role !== "sysadmin")) && (
+                  {(currentUserRole === "sysadmin" ||
+                    (currentUserRole === "admin" &&
+                      user.role !== "sysadmin")) && (
                     <DropdownMenuItem onClick={() => onChangeRole(user)}>
                       <UserCog className="h-4 w-4 mr-2" />
                       Change Role
                     </DropdownMenuItem>
                   )}
-                  
+
                   {/* Only show ban/unban if target is not a sysadmin */}
                   {user.role !== "sysadmin" && (
                     <DropdownMenuItem
-                      onClick={() => user.status === "active" ? onBanUser(user) : onUnbanUser(user)}
-                      className={user.status === "active" ? "text-red-600" : "text-green-600"}
+                      onClick={() =>
+                        user.status === "active"
+                          ? onBanUser(user)
+                          : onUnbanUser(user)
+                      }
+                      className={
+                        user.status === "active"
+                          ? "text-red-600"
+                          : "text-green-600"
+                      }
                     >
                       <Ban className="h-4 w-4 mr-2" />
                       {user.status === "active" ? "Ban User" : "Unban User"}

@@ -10,21 +10,21 @@ export default function AdvancedSearchPage() {
   return (
     <AuthCheck>
       <AdminLayout>
-      <div className="p-8 space-y-6">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold">Advanced Search</h1>
-            <p className="text-muted-foreground">
-              Search and filter properties with advanced criteria
-            </p>
+        <div className="p-8 space-y-6">
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold">Advanced Search</h1>
+              <p className="text-muted-foreground">
+                Search and filter properties with advanced criteria
+              </p>
+            </div>
+            <SearchPresets />
           </div>
-          <SearchPresets />
-        </div> 
 
-        <SearchFilters />
-        <SearchResults />
-      </div>
-    </AdminLayout>
+          <SearchFilters />
+          <SearchResults />
+        </div>
+      </AdminLayout>
     </AuthCheck>
   );
 }

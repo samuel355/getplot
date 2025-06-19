@@ -3,8 +3,12 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState, useEffect, useRef } from "react";
-import { GoogleMap, Marker,StandaloneSearchBox } from "@react-google-maps/api";
-import { MapPinIcon, ArrowsPointingOutIcon, MapIcon } from '@heroicons/react/24/outline';
+import { GoogleMap, Marker, StandaloneSearchBox } from "@react-google-maps/api";
+import {
+  MapPinIcon,
+  ArrowsPointingOutIcon,
+  MapIcon,
+} from "@heroicons/react/24/outline";
 
 const schema = yup.object().shape({
   location: yup.string().required("Location is required"),
@@ -31,24 +35,36 @@ const ghanaRegions = [
   "Upper West",
   "Volta",
   "Western",
-  "Western North"
+  "Western North",
 ];
 
-export default function LocationForm({ formData, updateFormData, nextStep, prevStep }) {
-  const [mapCenter, setMapCenter] = useState({ lat: 5.6037, lng: -0.1870 }); // Accra, Ghana
-  const [markerPosition, setMarkerPosition] = useState(formData.coordinates || null);
+export default function LocationForm({
+  formData,
+  updateFormData,
+  nextStep,
+  prevStep,
+}) {
+  const [mapCenter, setMapCenter] = useState({ lat: 5.6037, lng: -0.187 }); // Accra, Ghana
+  const [markerPosition, setMarkerPosition] = useState(
+    formData.coordinates || null
+  );
   const [mapZoom, setMapZoom] = useState(15);
   const [isMarkerDraggable, setIsMarkerDraggable] = useState(true);
   const [isFindingLocation, setIsFindingLocation] = useState(false);
-  
+
   const searchBoxRef = useRef(null);
   const mapRef = useRef(null);
-  
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm({
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: formData
+    defaultValues: formData,
   });
-  
+
   useEffect(() => {
     // Initialize marker position from existing data if available
     if (formData.coordinates) {
@@ -60,10 +76,10 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
   const handleMapClick = (event) => {
     const newPosition = {
       lat: event.latLng.lat(),
-      lng: event.latLng.lng()
+      lng: event.latLng.lng(),
     };
     setMarkerPosition(newPosition);
-    
+
     // Reverse geocode to get address (optional)
     if (window.google && window.google.maps) {
       const geocoder = new window.google.maps.Geocoder();
@@ -71,10 +87,12 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
         if (status === "OK" && results[0]) {
           const address = results[0].formatted_address;
           setValue("address", address);
-          
+
           // Extract the locality or area name
           const locality = results[0].address_components.find(
-            comp => comp.types.includes("locality") || comp.types.includes("neighborhood")
+            (comp) =>
+              comp.types.includes("locality") ||
+              comp.types.includes("neighborhood")
           );
           if (locality) {
             setValue("location", locality.long_name);
@@ -83,20 +101,20 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
       });
     }
   };
-  
+
   const handlePlacesChanged = () => {
     const places = searchBoxRef.current.getPlaces();
     if (places && places.length > 0) {
       const place = places[0];
       const newPosition = {
         lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng()
+        lng: place.geometry.location.lng(),
       };
-      
+
       setMarkerPosition(newPosition);
       setMapCenter(newPosition);
       setMapZoom(16); // Zoom in when a place is selected
-      
+
       // Update form fields
       setValue("location", place.name);
       setValue("address", place.formatted_address);
@@ -108,10 +126,10 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
       alert("Please select a location on the map");
       return;
     }
-    
+
     updateFormData({
       ...data,
-      coordinates: markerPosition
+      coordinates: markerPosition,
     });
     nextStep();
   };
@@ -124,22 +142,24 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
         (position) => {
           const pos = {
             lat: position.coords.latitude,
-            lng: position.coords.longitude
+            lng: position.coords.longitude,
           };
           setMapCenter(pos);
           setMarkerPosition(pos);
           setMapZoom(18); // Zoom in closer when using current location
-          
+
           // Reverse geocode to get address
           if (window.google && window.google.maps) {
             const geocoder = new window.google.maps.Geocoder();
             geocoder.geocode({ location: pos }, (results, status) => {
               if (status === "OK" && results[0]) {
                 setValue("address", results[0].formatted_address);
-                
+
                 // Extract locality or area name
                 const locality = results[0].address_components.find(
-                  comp => comp.types.includes("locality") || comp.types.includes("neighborhood")
+                  (comp) =>
+                    comp.types.includes("locality") ||
+                    comp.types.includes("neighborhood")
                 );
                 if (locality) {
                   setValue("location", locality.long_name);
@@ -164,17 +184,17 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
 
   const mapStyles = {
     height: "400px",
-    width: "100%"
+    width: "100%",
   };
-  
+
   const onMapLoad = (map) => {
     mapRef.current = map;
   };
-  
+
   const enableMarkerDragging = () => {
     setIsMarkerDraggable(true);
   };
-  
+
   // Center map on marker
   const centerMapOnMarker = () => {
     if (markerPosition && mapRef.current) {
@@ -187,13 +207,13 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
     <div className="min-h-[600px]">
       <form onSubmit={handleSubmit(onSubmit)}>
         <h2 className="text-xl font-semibold mb-6">Location Information</h2>
-        
+
         <div className="mb-6">
           <label className="block text-gray-700 mb-2 font-medium">
             Search for Location
           </label>
           <StandaloneSearchBox
-            onLoad={ref => searchBoxRef.current = ref}
+            onLoad={(ref) => (searchBoxRef.current = ref)}
             onPlacesChanged={handlePlacesChanged}
           >
             <div className="relative">
@@ -208,12 +228,16 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
             </div>
           </StandaloneSearchBox>
           <p className="text-sm text-gray-500 mt-1">
-            Type to search for a location or use the map below to pinpoint the exact property location
+            Type to search for a location or use the map below to pinpoint the
+            exact property location
           </p>
         </div>
-        
+
         <div className="mb-6">
-          <label htmlFor="region" className="block text-gray-700 mb-2 font-medium">
+          <label
+            htmlFor="region"
+            className="block text-gray-700 mb-2 font-medium"
+          >
             Region
           </label>
           <select
@@ -222,15 +246,22 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
             className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select a region</option>
-            {ghanaRegions.map(region => (
-              <option key={region} value={region}>{region}</option>
+            {ghanaRegions.map((region) => (
+              <option key={region} value={region}>
+                {region}
+              </option>
             ))}
           </select>
-          {errors.region && <p className="text-red-500 text-sm mt-1">{errors.region.message}</p>}
+          {errors.region && (
+            <p className="text-red-500 text-sm mt-1">{errors.region.message}</p>
+          )}
         </div>
-        
+
         <div className="mb-6">
-          <label htmlFor="location" className="block text-gray-700 mb-2 font-medium">
+          <label
+            htmlFor="location"
+            className="block text-gray-700 mb-2 font-medium"
+          >
             Location/Area
           </label>
           <input
@@ -239,11 +270,18 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
             className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder="e.g., East Legon, Accra"
           />
-          {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>}
+          {errors.location && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.location.message}
+            </p>
+          )}
         </div>
-        
+
         <div className="mb-6">
-          <label htmlFor="address" className="block text-gray-700 mb-2 font-medium">
+          <label
+            htmlFor="address"
+            className="block text-gray-700 mb-2 font-medium"
+          >
             Full Address
           </label>
           <textarea
@@ -253,12 +291,18 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
             className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter the full address of the property"
           ></textarea>
-          {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
+          {errors.address && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.address.message}
+            </p>
+          )}
         </div>
-        
+
         <div className="mb-6">
           <div className="flex justify-between items-center mb-3">
-            <label className="block text-gray-700 font-medium">Pin Location on Map</label>
+            <label className="block text-gray-700 font-medium">
+              Pin Location on Map
+            </label>
             <div className="flex space-x-2">
               {markerPosition && (
                 <button
@@ -275,7 +319,9 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
                 onClick={handleGetCurrentLocation}
                 disabled={isFindingLocation}
                 className={`inline-flex items-center text-sm ${
-                  isFindingLocation ? "text-gray-400" : "text-blue-600 hover:text-blue-800"
+                  isFindingLocation
+                    ? "text-gray-400"
+                    : "text-blue-600 hover:text-blue-800"
                 }`}
               >
                 <MapPinIcon className="h-4 w-4 mr-1" />
@@ -283,7 +329,7 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
               </button>
             </div>
           </div>
-          
+
           <div className="rounded-lg overflow-hidden border border-gray-300 shadow-md">
             <GoogleMap
               mapContainerStyle={mapStyles}
@@ -294,7 +340,7 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
               options={{
                 streetViewControl: false,
                 mapTypeControl: true,
-                fullscreenControl: true
+                fullscreenControl: true,
               }}
             >
               {markerPosition && (
@@ -304,18 +350,21 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
                   onDragEnd={(e) => {
                     const newPos = {
                       lat: e.latLng.lat(),
-                      lng: e.latLng.lng()
+                      lng: e.latLng.lng(),
                     };
                     setMarkerPosition(newPos);
-                    
+
                     // Optional: Update address via reverse geocoding
                     if (window.google && window.google.maps) {
                       const geocoder = new window.google.maps.Geocoder();
-                      geocoder.geocode({ location: newPos }, (results, status) => {
-                        if (status === "OK" && results[0]) {
-                          setValue("address", results[0].formatted_address);
+                      geocoder.geocode(
+                        { location: newPos },
+                        (results, status) => {
+                          if (status === "OK" && results[0]) {
+                            setValue("address", results[0].formatted_address);
+                          }
                         }
-                      });
+                      );
                     }
                   }}
                   animation={window.google?.maps.Animation.DROP}
@@ -323,13 +372,16 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
               )}
             </GoogleMap>
           </div>
-          
+
           <div className="mt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm">
             {markerPosition ? (
               <div className="text-gray-600 mb-2 sm:mb-0">
-                <span className="font-medium">Selected coordinates:</span> {markerPosition.lat.toFixed(6)}, {markerPosition.lng.toFixed(6)}
+                <span className="font-medium">Selected coordinates:</span>{" "}
+                {markerPosition.lat.toFixed(6)}, {markerPosition.lng.toFixed(6)}
                 <p className="text-xs text-gray-500 mt-1">
-                  {isMarkerDraggable ? "You can drag the pin to refine its position" : "Click the map to drop a pin"}
+                  {isMarkerDraggable
+                    ? "You can drag the pin to refine its position"
+                    : "Click the map to drop a pin"}
                 </p>
               </div>
             ) : (
@@ -338,7 +390,7 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
                 Click on the map to select the property location
               </p>
             )}
-            
+
             {markerPosition && !isMarkerDraggable && (
               <button
                 type="button"
@@ -350,7 +402,7 @@ export default function LocationForm({ formData, updateFormData, nextStep, prevS
             )}
           </div>
         </div>
-        
+
         <div className="flex justify-between mt-8">
           <button
             type="button"

@@ -27,15 +27,15 @@ const BuyPlot = () => {
   const [loader2, setLoader2] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [plotData, setPlotData] = useState(plotInfo);
-  const { plots, getTotal,clearCart } = useCart();
+  const { plots, getTotal, clearCart } = useCart();
   const total = getTotal();
   const router = useRouter();
 
   useEffect(() => {
-    if(plots.length <= 0){
-      router.replace('/checkout')
+    if (plots.length <= 0) {
+      router.replace("/checkout");
     }
-  }, [plots])
+  }, [plots]);
 
   const { firstname, lastname, email, country, phone, residentialAddress } =
     plotData;
@@ -141,7 +141,6 @@ const BuyPlot = () => {
       toast.error("You have not selected any plot to buy");
       router.replace("/");
     }
-    
   };
 
   return (

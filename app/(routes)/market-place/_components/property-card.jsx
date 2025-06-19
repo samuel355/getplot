@@ -87,7 +87,10 @@ const PropertyCard = ({ property, isCompact = false }) => {
           {/* Property image */}
           <div className="w-full aspect-[6/9] bg-gray-100 rounded">
             <Image
-              src={property.images[currentImageIndex] || "/placeholder-property.jpg"}
+              src={
+                property.images[currentImageIndex] ||
+                "/placeholder-property.jpg"
+              }
               alt={property.title}
               fill
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"

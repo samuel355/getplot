@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import { supabase } from "@/utils/supabase/client";
 
 const formatDateForSupabase = (date) => {
@@ -6,9 +6,9 @@ const formatDateForSupabase = (date) => {
   try {
     const d = new Date(date);
     if (isNaN(d.getTime())) return null;
-    return d.toISOString().split('.')[0];
+    return d.toISOString().split(".")[0];
   } catch (error) {
-    console.error('Error formatting date:', error);
+    console.error("Error formatting date:", error);
     return null;
   }
 };
@@ -19,11 +19,11 @@ const useActivityLogStore = create((set, get) => ({
   loading: false,
   error: null,
   filters: {
-    type: 'all',
-    status: 'all',
+    type: "all",
+    status: "all",
     dateRange: {
       from: null,
-      to: null
+      to: null,
     },
   },
   pagination: {
@@ -37,36 +37,34 @@ const useActivityLogStore = create((set, get) => ({
     try {
       set({ loading: true });
       const { filters, pagination } = get();
-      
+
       let query = supabase
-        .from('activity_logs')
-        .select('*', { count: 'exact' });
+        .from("activity_logs")
+        .select("*", { count: "exact" });
 
       // Apply filters
-      if (filters.type !== 'all') {
-        query = query.eq('type', filters.type);
+      if (filters.type !== "all") {
+        query = query.eq("type", filters.type);
       }
 
-      if (filters.status !== 'all') {
-        query = query.eq('status', filters.status);
+      if (filters.status !== "all") {
+        query = query.eq("status", filters.status);
       }
 
       const fromDate = formatDateForSupabase(filters.dateRange.from);
       if (fromDate) {
-        query = query.gte('created_at', fromDate);
+        query = query.gte("created_at", fromDate);
       }
 
       const toDate = formatDateForSupabase(filters.dateRange.to);
       if (toDate) {
-        query = query.lte('created_at', toDate);
+        query = query.lte("created_at", toDate);
       }
 
       // Apply pagination
       const from = (page - 1) * pagination.limit;
       const to = from + pagination.limit - 1;
-      query = query
-        .order('created_at', { ascending: false })
-        .range(from, to);
+      query = query.order("created_at", { ascending: false }).range(from, to);
 
       const { data, error, count } = await query;
 
@@ -83,9 +81,9 @@ const useActivityLogStore = create((set, get) => ({
         loading: false,
       });
     } catch (error) {
-      console.error('Error fetching activity logs:', error);
-      set({ 
-        error: 'Failed to fetch activity logs',
+      console.error("Error fetching activity logs:", error);
+      set({
+        error: "Failed to fetch activity logs",
         loading: false,
       });
     }
@@ -105,12 +103,10 @@ const useActivityLogStore = create((set, get) => ({
   // Create new log entry
   createLog: async (logData) => {
     try {
-      const { error } = await supabase
-        .from('activity_logs')
-        .insert({
-          ...logData,
-          created_at: formatDateForSupabase(new Date()),
-        });
+      const { error } = await supabase.from("activity_logs").insert({
+        ...logData,
+        created_at: formatDateForSupabase(new Date()),
+      });
 
       if (error) throw error;
 
@@ -118,7 +114,7 @@ const useActivityLogStore = create((set, get) => ({
       await get().fetchLogs(get().pagination.page);
       return { success: true };
     } catch (error) {
-      console.error('Error creating activity log:', error);
+      console.error("Error creating activity log:", error);
       return { success: false, error };
     }
   },

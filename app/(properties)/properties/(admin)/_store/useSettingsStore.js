@@ -1,14 +1,14 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import { supabase } from "@/utils/supabase/client";
 
 const useSettingsStore = create((set, get) => ({
   // Settings state
   settings: {
     general: {
-      siteName: 'Property Manager',
-      supportEmail: '',
+      siteName: "Property Manager",
+      supportEmail: "",
       maxImagesPerProperty: 10,
-      allowedImageTypes: ['image/jpeg', 'image/png', 'image/webp'],
+      allowedImageTypes: ["image/jpeg", "image/png", "image/webp"],
       maxImageSize: 5, // in MB
     },
     property: {
@@ -16,9 +16,9 @@ const useSettingsStore = create((set, get) => ({
       minPrice: 0,
       maxPrice: 10000000,
       allowNegotiable: true,
-      requiredFields: ['title', 'description', 'location', 'price'],
-      houseFields: ['bedrooms', 'bathrooms', 'size'],
-      landFields: ['size'],
+      requiredFields: ["title", "description", "location", "price"],
+      houseFields: ["bedrooms", "bathrooms", "size"],
+      landFields: ["size"],
     },
     email: {
       templates: {},
@@ -43,18 +43,18 @@ const useSettingsStore = create((set, get) => ({
   fetchSettings: async () => {
     try {
       set({ loading: true });
-      
+
       const { data, error } = await supabase
-        .from('settings')
-        .select('*')
+        .from("settings")
+        .select("*")
         .single();
 
       if (error) throw error;
 
       set({ settings: data || get().settings });
     } catch (error) {
-      console.error('Error fetching settings:', error);
-      set({ error: 'Failed to fetch settings' });
+      console.error("Error fetching settings:", error);
+      set({ error: "Failed to fetch settings" });
     } finally {
       set({ loading: false });
     }
@@ -69,25 +69,23 @@ const useSettingsStore = create((set, get) => ({
         ...get().settings,
         [section]: {
           ...get().settings[section],
-          ...newSettings
-        }
+          ...newSettings,
+        },
       };
 
-      const { error } = await supabase
-        .from('settings')
-        .upsert({ 
-          id: 1, // Assuming single settings record
-          ...updatedSettings,
-          updated_at: new Date(),
-        });
+      const { error } = await supabase.from("settings").upsert({
+        id: 1, // Assuming single settings record
+        ...updatedSettings,
+        updated_at: new Date(),
+      });
 
       if (error) throw error;
 
       set({ settings: updatedSettings });
       return { success: true };
     } catch (error) {
-      console.error('Error updating settings:', error);
-      set({ error: 'Failed to update settings' });
+      console.error("Error updating settings:", error);
+      set({ error: "Failed to update settings" });
       return { success: false, error };
     } finally {
       set({ loading: false });
@@ -100,17 +98,17 @@ const useSettingsStore = create((set, get) => ({
       set({ loading: true });
 
       const { data, error } = await supabase
-        .from('properties')
-        .select('*')
-        .eq('featured', true)
-        .order('featured_until', { ascending: true });
+        .from("properties")
+        .select("*")
+        .eq("featured", true)
+        .order("featured_until", { ascending: true });
 
       if (error) throw error;
 
       set({ featuredProperties: data });
     } catch (error) {
-      console.error('Error fetching featured properties:', error);
-      set({ error: 'Failed to fetch featured properties' });
+      console.error("Error fetching featured properties:", error);
+      set({ error: "Failed to fetch featured properties" });
     } finally {
       set({ loading: false });
     }
@@ -121,27 +119,30 @@ const useSettingsStore = create((set, get) => ({
     try {
       set({ loading: true });
 
-      const featuredUntil = featured 
-        ? new Date(Date.now() + get().settings.featured.featuredDuration * 24 * 60 * 60 * 1000)
+      const featuredUntil = featured
+        ? new Date(
+            Date.now() +
+              get().settings.featured.featuredDuration * 24 * 60 * 60 * 1000
+          )
         : null;
 
       const { error } = await supabase
-        .from('properties')
-        .update({ 
+        .from("properties")
+        .update({
           featured,
           featured_until: featuredUntil,
-          updated_at: new Date()
+          updated_at: new Date(),
         })
-        .eq('id', propertyId);
+        .eq("id", propertyId);
 
       if (error) throw error;
 
       // Refresh featured properties
       await get().fetchFeaturedProperties();
-      
+
       return { success: true };
     } catch (error) {
-      console.error('Error updating featured status:', error);
+      console.error("Error updating featured status:", error);
       return { success: false, error };
     } finally {
       set({ loading: false });
@@ -156,16 +157,16 @@ const useSettingsStore = create((set, get) => ({
       const { settings } = get();
       const updatedTemplates = {
         ...settings.email.templates,
-        [templateName]: content
+        [templateName]: content,
       };
 
-      const result = await get().updateSettings('email', {
-        templates: updatedTemplates
+      const result = await get().updateSettings("email", {
+        templates: updatedTemplates,
       });
 
       return result;
     } catch (error) {
-      console.error('Error updating email template:', error);
+      console.error("Error updating email template:", error);
       return { success: false, error };
     } finally {
       set({ loading: false });

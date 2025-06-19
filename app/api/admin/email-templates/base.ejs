@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,11 +13,13 @@
       padding: 0;
       background-color: #f8f9fa;
     }
+
     .container {
       max-width: 600px;
       margin: 0 auto;
       padding: 20px;
     }
+
     .header {
       background-color: #ffffff;
       text-align: center;
@@ -24,12 +27,14 @@
       margin-bottom: 30px;
       border-bottom: 1px solid #e5e7eb;
     }
+
     .content {
       background-color: #ffffff;
       padding: 30px;
       border-radius: 8px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
+
     .button {
       display: inline-block;
       padding: 12px 24px;
@@ -40,6 +45,7 @@
       margin: 20px 0;
       font-weight: 500;
     }
+
     .footer {
       text-align: center;
       padding: 20px;
@@ -47,39 +53,45 @@
       font-size: 14px;
       margin-top: 30px;
     }
+
     .greeting {
       margin-bottom: 20px;
     }
+
     .signature {
       margin-top: 30px;
       color: #4b5563;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="header">
-      <h1 style="color: #1f2937; margin: 0;"><%= title %></h1>
+      <h1 style="color: #1f2937; margin: 0;">
+        <%= title %>
+      </h1>
     </div>
-    
+
     <div class="content">
       <div class="greeting">
         <p>Hello <%= firstName %>,</p>
       </div>
-      
+
       <%- body %>
-      
-      <div class="signature">
-        <p>
-          Best regards,<br>
-          The GetOnePlot Team
-        </p>
-      </div>
+
+        <div class="signature">
+          <p>
+            Best regards,<br>
+            The GetOnePlot Team
+          </p>
+        </div>
     </div>
-    
+
     <div class="footer">
       <p>&copy; <%= year %> GetOnePlot. All rights reserved.</p>
     </div>
   </div>
 </body>
-</html> 
+
+</html>

@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, ShieldCheck, UserCheck, UserX, User } from "lucide-react";
 
 export default function UserStats({ stats }) {
@@ -40,9 +35,7 @@ export default function UserStats({ stats }) {
       {statCards.map((stat) => (
         <Card key={stat.title}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              {stat.title}
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
             {stat.icon}
           </CardHeader>
           <CardContent>

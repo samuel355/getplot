@@ -1,8 +1,8 @@
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle } from "lucide-react";
 
 export default function FeaturesTab({ property }) {
   const features = property.features || [];
-  
+
   return (
     <div>
       <h3 className="text-lg font-semibold mb-3">Property Features</h3>
@@ -16,8 +16,10 @@ export default function FeaturesTab({ property }) {
           ))}
         </div>
       ) : (
-        <p className="text-muted-foreground">No features listed for this property.</p>
+        <p className="text-muted-foreground">
+          No features listed for this property.
+        </p>
       )}
     </div>
   );
-} 
+}

@@ -1,9 +1,4 @@
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OverviewTab from "./tabs/OverviewTab";
 import DetailsTab from "./tabs/DetailsTab";
 import FeaturesTab from "./tabs/FeaturesTab";
@@ -37,4 +32,4 @@ export default function PropertyTabs({ property }) {
       </TabsContent>
     </Tabs>
   );
-} 
+}

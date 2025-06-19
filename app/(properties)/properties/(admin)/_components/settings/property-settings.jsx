@@ -14,8 +14,8 @@ export function PropertySettings() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await updateSettings('property', formData);
-    
+    const result = await updateSettings("property", formData);
+
     if (result.success) {
       toast({
         title: "Settings Updated",
@@ -42,8 +42,8 @@ export function PropertySettings() {
             <Switch
               id="requireApproval"
               checked={formData.requireApproval}
-              onCheckedChange={(checked) => 
-                setFormData({...formData, requireApproval: checked})
+              onCheckedChange={(checked) =>
+                setFormData({ ...formData, requireApproval: checked })
               }
             />
           </div>
@@ -53,8 +53,8 @@ export function PropertySettings() {
             <Switch
               id="allowNegotiable"
               checked={formData.allowNegotiable}
-              onCheckedChange={(checked) => 
-                setFormData({...formData, allowNegotiable: checked})
+              onCheckedChange={(checked) =>
+                setFormData({ ...formData, allowNegotiable: checked })
               }
             />
           </div>
@@ -66,7 +66,12 @@ export function PropertySettings() {
                 id="minPrice"
                 type="number"
                 value={formData.minPrice}
-                onChange={(e) => setFormData({...formData, minPrice: parseInt(e.target.value)})}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    minPrice: parseInt(e.target.value),
+                  })
+                }
               />
             </div>
 
@@ -76,7 +81,12 @@ export function PropertySettings() {
                 id="maxPrice"
                 type="number"
                 value={formData.maxPrice}
-                onChange={(e) => setFormData({...formData, maxPrice: parseInt(e.target.value)})}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    maxPrice: parseInt(e.target.value),
+                  })
+                }
               />
             </div>
           </div>

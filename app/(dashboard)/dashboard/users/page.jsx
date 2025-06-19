@@ -19,7 +19,7 @@ const Users = () => {
         const data = await response.json();
         setClientList(data);
       } catch (err) {
-        setLoading(false)
+        setLoading(false);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -38,7 +38,15 @@ const Users = () => {
   }
 
   const selectData = clientList.data.map(
-    ({ id, imageUrl, username, firstName, lastName, publicMetadata, emailAddresses }) => ({
+    ({
+      id,
+      imageUrl,
+      username,
+      firstName,
+      lastName,
+      publicMetadata,
+      emailAddresses,
+    }) => ({
       id,
       imageUrl,
       username,
@@ -62,4 +70,3 @@ const Users = () => {
 };
 
 export default Users;
-

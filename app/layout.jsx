@@ -1,4 +1,3 @@
-
 import { ClerkProvider } from "@clerk/nextjs";
 import { PrimeReactProvider } from "primereact/api";
 import "./globals.css";
@@ -17,7 +16,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <PrimeReactProvider>
-      <ClerkProvider signOutUrl="/" signInUrl="/sign-in" afterSignInUrl="/properties/list" afterSignOutUrl="/">
+      <ClerkProvider
+        signOutUrl="/"
+        signInUrl="/sign-in"
+        afterSignInUrl="/properties/list"
+        afterSignOutUrl="/"
+      >
         <html lang="en">
           <body>
             <ToastMessage />

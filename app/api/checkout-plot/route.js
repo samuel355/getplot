@@ -6,26 +6,30 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   try {
     const data = await request.formData();
-    const to = data.get('to');
-    const firstname = data.get('firstname');
-    const lastname = data.get('lastname');
-    const total_amount = data.get('total_amount')
-    const plotDetails = JSON.parse(data.get('plotDetails'));
-    const pdf = data.get('pdf'); //Get pdf file 
+    const to = data.get("to");
+    const firstname = data.get("firstname");
+    const lastname = data.get("lastname");
+    const total_amount = data.get("total_amount");
+    const plotDetails = JSON.parse(data.get("plotDetails"));
+    const pdf = data.get("pdf"); //Get pdf file
 
     const subject = "Plot & Payment Details";
-    const templatePath = path.resolve(process.cwd(), "emails", "checkout-plot.ejs");
+    const templatePath = path.resolve(
+      process.cwd(),
+      "emails",
+      "checkout-plot.ejs"
+    );
     const htmlContent = await ejs.renderFile(templatePath, {
       firstname,
       lastname,
       plotDetails,
-      total_amount
+      total_amount,
     });
 
     let transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST, 
+      host: process.env.SMTP_HOST,
       port: parseInt(process.env.SMTP_PORT || "587"),
-      secure: true, 
+      secure: true,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -39,9 +43,9 @@ export async function POST(request) {
       html: htmlContent,
       attachments: [
         {
-          filename: 'plot_details.pdf',
+          filename: "plot_details.pdf",
           content: Buffer.from(await pdf.arrayBuffer()), // Convert the readable stream to a buffer.
-          contentType: 'application/pdf',
+          contentType: "application/pdf",
         },
       ],
     });

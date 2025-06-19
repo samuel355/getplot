@@ -95,4 +95,4 @@ export function ExpressInterest({ propertyId }) {
       </DialogContent>
     </Dialog>
   );
-} 
+}

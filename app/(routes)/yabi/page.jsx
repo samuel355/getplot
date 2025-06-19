@@ -7,14 +7,12 @@ import Header from "@/app/_components/Header";
 import { insertFeatures } from "../../_actions/upload-plots-into-db";
 import { trabuomNewFeatures } from "../trabuom/trabuom-new-features";
 
-
 const page = () => {
   const [plots, setPlots] = useState([]);
   const [center, setCenter] = useState({
     lng: -1.7057369777796925,
     lat: 6.649850287766676,
   });
-
 
   useEffect(() => {
     getPlots();

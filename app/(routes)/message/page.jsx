@@ -9,13 +9,13 @@ const SuccessPage = () => {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
   const router = useRouter();
-  const {clearCart } = useCart();
+  const { clearCart } = useCart();
 
   useEffect(() => {
     if (redirect === "" || redirect === null || redirect === undefined) {
       router.push("/");
-    }else{
-      setLoading(false)
+    } else {
+      setLoading(false);
       clearCart();
     }
   }, [redirect]);
@@ -50,7 +50,7 @@ const SuccessPage = () => {
               The chosen plot will be on hold for you for 24 hours. <br />
               Check your email for all the details and instructions.
             </p>
-            
+
             <a className="flex items-center rounded bg-primary px-4 py-2 text-white">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +66,10 @@ const SuccessPage = () => {
                   d="M7 16l-4-4m0 0l4-4m-4 4h18"
                 />
               </svg>
-              <Link href={`${redirect}`} className="text-sm font-medium text-white">
+              <Link
+                href={`${redirect}`}
+                className="text-sm font-medium text-white"
+              >
                 You can buy or reserve other plots{" "}
               </Link>
             </a>

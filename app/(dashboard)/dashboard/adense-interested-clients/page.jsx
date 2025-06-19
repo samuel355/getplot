@@ -18,7 +18,7 @@ const Users = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            databaseName: 'dar_es_salaam_interests',
+            databaseName: "dar_es_salaam_interests",
           }),
         });
         if (!response.ok) {

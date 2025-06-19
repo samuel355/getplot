@@ -25,21 +25,24 @@ export function LogFilters() {
 
   const handleDateRangeSelect = (date) => {
     if (!date) return;
-    
-    if (!filters.dateRange.from || (filters.dateRange.from && filters.dateRange.to)) {
+
+    if (
+      !filters.dateRange.from ||
+      (filters.dateRange.from && filters.dateRange.to)
+    ) {
       // Start new range
       setFilters({
         ...filters,
-        dateRange: { from: date, to: null }
+        dateRange: { from: date, to: null },
       });
     } else {
       // Complete the range
       setFilters({
         ...filters,
-        dateRange: { 
+        dateRange: {
           from: filters.dateRange.from,
-          to: date 
-        }
+          to: date,
+        },
       });
       setIsCalendarOpen(false);
     }
@@ -47,15 +50,15 @@ export function LogFilters() {
 
   const formatDateDisplay = () => {
     if (!filters.dateRange.from) return "Pick a date range";
-    
+
     const fromDate = filters.dateRange.from;
     const toDate = filters.dateRange.to;
-    
+
     if (!isValid(fromDate)) return "Pick a date range";
-    if (!toDate) return format(fromDate, 'PP');
-    if (!isValid(toDate)) return format(fromDate, 'PP');
-    
-    return `${format(fromDate, 'PP')} - ${format(toDate, 'PP')}`;
+    if (!toDate) return format(fromDate, "PP");
+    if (!isValid(toDate)) return format(fromDate, "PP");
+
+    return `${format(fromDate, "PP")} - ${format(toDate, "PP")}`;
   };
 
   return (

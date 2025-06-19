@@ -18,14 +18,16 @@ const Home = () => {
     router.prefetch("/nthc");
     router.prefetch("/trabuom");
   }, [router]);
-  
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow pt-8 md:pt-20 lg:pt-24">
         <Hero />
         <div className="w-full px-4 py-12">
-          <h2 className="text-3xl font-bold mb-8 text-center">Featured Properties</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">
+            Featured Properties
+          </h2>
           <PropertyCarousel />
         </div>
       </main>

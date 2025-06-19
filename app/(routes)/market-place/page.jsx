@@ -17,14 +17,14 @@ export default function MarketPlace() {
     properties,
     loading,
     filters,
-    currentPage, 
+    currentPage,
     totalPages,
     totalProperties,
     setFilters,
     fetchProperties,
     setPage,
   } = usePropertyStore();
-  
+
   const [viewMode, setViewMode] = useState("grid"); // grid, map
   const searchParams = useSearchParams();
 
@@ -39,7 +39,7 @@ export default function MarketPlace() {
     const sortBy = searchParams.get("sortBy") || "newest";
     const property_type = searchParams.get("property_type") || "all";
     const page = parseInt(searchParams.get("page") || "1");
-    
+
     // Update store with URL params
     setFilters({
       propertyType,
@@ -50,17 +50,17 @@ export default function MarketPlace() {
       sortBy,
       property_type,
     });
-    
+
     setPage(page);
-    
+
     // Fetch properties with the current filters and page
     fetchProperties(page);
-    
   }, [searchParams]);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) { // Tailwind's 'md' breakpoint is 768px
+      if (window.innerWidth < 768) {
+        // Tailwind's 'md' breakpoint is 768px
         setViewMode("grid");
       }
     };
@@ -82,11 +82,11 @@ export default function MarketPlace() {
   const handlePageChange = (page) => {
     setPage(page);
     fetchProperties(page);
-    
+
     // Update URL to include page
     const url = new URL(window.location.href);
-    url.searchParams.set('page', page);
-    window.history.pushState({}, '', url);
+    url.searchParams.set("page", page);
+    window.history.pushState({}, "", url);
   };
 
   return (

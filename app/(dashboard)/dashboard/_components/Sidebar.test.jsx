@@ -1,16 +1,16 @@
-import { render, screen, cleanup } from '@testing-library/react';
-import Sidebar from './Sidebar';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useUser, useClerk } from '@clerk/nextjs';
+import { render, screen, cleanup } from "@testing-library/react";
+import Sidebar from "./Sidebar";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useUser, useClerk } from "@clerk/nextjs";
 
 // Mock Next.js hooks
-jest.mock('next/navigation', () => ({
+jest.mock("next/navigation", () => ({
   usePathname: jest.fn(),
   useSearchParams: jest.fn(),
 }));
 
 // Mock Clerk hooks
-jest.mock('@clerk/nextjs', () => ({
+jest.mock("@clerk/nextjs", () => ({
   useUser: jest.fn(),
   useClerk: jest.fn(() => ({
     signOut: jest.fn(),
@@ -18,16 +18,18 @@ jest.mock('@clerk/nextjs', () => ({
   UserButton: () => <div data-testid="user-button" />,
 }));
 
-describe('Sidebar', () => {
+describe("Sidebar", () => {
   beforeEach(() => {
-    usePathname.mockReturnValue('/dashboard'); // Default path for tests
-    useSearchParams.mockReturnValue({ get: (key) => (key === 'table' ? 'dashboard' : null) });
+    usePathname.mockReturnValue("/dashboard"); // Default path for tests
+    useSearchParams.mockReturnValue({
+      get: (key) => (key === "table" ? "dashboard" : null),
+    });
     useUser.mockReturnValue({
       user: {
-        fullName: 'Test User',
-        username: 'testuser',
-        emailAddresses: [{ emailAddress: 'test@example.com' }],
-        imageUrl: 'https://example.com/avatar.jpg',
+        fullName: "Test User",
+        username: "testuser",
+        emailAddresses: [{ emailAddress: "test@example.com" }],
+        imageUrl: "https://example.com/avatar.jpg",
       },
       isSignedIn: true,
     });
@@ -37,37 +39,37 @@ describe('Sidebar', () => {
     cleanup();
   });
 
-  it('renders the Dashboard link', () => {
+  it("renders the Dashboard link", () => {
     render(<Sidebar />);
-    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
   });
 
-  it('renders the Users link', () => {
+  it("renders the Users link", () => {
     render(<Sidebar />);
-    expect(screen.getByText('Users')).toBeInTheDocument();
+    expect(screen.getByText("Users")).toBeInTheDocument();
   });
 
-  it('displays the user\'s full name and email', () => {
+  it("displays the user's full name and email", () => {
     render(<Sidebar />);
-    expect(screen.getByText('Test User')).toBeInTheDocument();
-    expect(screen.getByText('test@example.com')).toBeInTheDocument();
+    expect(screen.getByText("Test User")).toBeInTheDocument();
+    expect(screen.getByText("test@example.com")).toBeInTheDocument();
   });
 
   it('renders the "Sites Dashboard" title', () => {
     render(<Sidebar />);
-    expect(screen.getByText('SITES DASHBOARD')).toBeInTheDocument();
+    expect(screen.getByText("SITES DASHBOARD")).toBeInTheDocument();
   });
 
-  it('applies active styling to the current path', () => {
-    usePathname.mockReturnValue('/dashboard/users');
+  it("applies active styling to the current path", () => {
+    usePathname.mockReturnValue("/dashboard/users");
     render(<Sidebar />);
-    const usersLink = screen.getByText('Users').closest('a');
-    expect(usersLink).toHaveClass('bg-primary');
-    expect(usersLink).toHaveClass('text-primary-foreground');
+    const usersLink = screen.getByText("Users").closest("a");
+    expect(usersLink).toHaveClass("bg-primary");
+    expect(usersLink).toHaveClass("text-primary-foreground");
   });
 
-  it('renders interested clients section title', () => {
+  it("renders interested clients section title", () => {
     render(<Sidebar />);
-    expect(screen.getByText('Interested Clients')).toBeInTheDocument();
+    expect(screen.getByText("Interested Clients")).toBeInTheDocument();
   });
-}); 
+});

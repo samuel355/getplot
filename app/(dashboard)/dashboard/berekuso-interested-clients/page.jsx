@@ -18,7 +18,7 @@ const BerekusoInterests = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            databaseName: 'berekuso_interests',
+            databaseName: "berekuso_interests",
           }),
         });
         if (!response.ok) {

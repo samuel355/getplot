@@ -112,7 +112,6 @@ export function UsersTable({ data, columns, loading }) {
           <option value={10}>10</option>
           <option value={20}>20</option>
         </select>
-
       </div>
 
       <div className="flex items-center justify-between py-1 px-2">

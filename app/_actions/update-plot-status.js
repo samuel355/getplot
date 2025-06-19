@@ -20,7 +20,7 @@ export const updatePlotStatus = async (
       email: email,
       phone: phone,
       country: country,
-      residentialAddress: residentialAddress
+      residentialAddress: residentialAddress,
     })
     .eq("id", id);
   if (error) {

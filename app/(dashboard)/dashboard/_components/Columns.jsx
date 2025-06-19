@@ -393,8 +393,8 @@ const ViewPlotDialog = ({
   const [step2, setStep2] = useState(false);
 
   const pathname = usePathname();
-  const [plotProperties, setPlotProperties] = useState()
-  const [plotSize, setPlotSize] = useState()
+  const [plotProperties, setPlotProperties] = useState();
+  const [plotSize, setPlotSize] = useState();
 
   const {
     firstname,
@@ -430,7 +430,7 @@ const ViewPlotDialog = ({
   }
   if (table && table === "berekuso") {
     databaseName = "berekuso";
-  } 
+  }
 
   useEffect(() => {
     if (plotId && databaseName) {
@@ -591,17 +591,32 @@ const ViewPlotDialog = ({
                         name="plotSize"
                         value={
                           pathname === "/dashboard/trabuom"
-                            ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
+                            ? `${(allDetails?.properties?.Area || 0).toFixed(
+                                2
+                              )} Acres`
                             : pathname === "/dashboard/nthc"
-                            ? `${((allDetails?.properties?.SHAPE_Area || 0) * 3109111.525693).toFixed(2)} Acres`
+                            ? `${(
+                                (allDetails?.properties?.SHAPE_Area || 0) *
+                                3109111.525693
+                              ).toFixed(2)} Acres`
                             : pathname === "/dashboard/legon-hills"
-                            ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
+                            ? `${(allDetails?.properties?.Area || 0).toFixed(
+                                2
+                              )} Acres`
                             : pathname === "/dashboard/dar-es-salaam"
-                            ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
+                            ? `${(allDetails?.properties?.Area || 0).toFixed(
+                                2
+                              )} Acres`
                             : pathname === "/dashboard/yabi"
-                            ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
-                            : pathname === "/dashboard/berekuso" || pathname === "/dashboard/berekuso-interested-clients "
-                            ? `${(allDetails?.properties?.Area || 0).toFixed(2)} Acres`
+                            ? `${(allDetails?.properties?.Area || 0).toFixed(
+                                2
+                              )} Acres`
+                            : pathname === "/dashboard/berekuso" ||
+                              pathname ===
+                                "/dashboard/berekuso-interested-clients "
+                            ? `${(allDetails?.properties?.Area || 0).toFixed(
+                                2
+                              )} Acres`
                             : ""
                         }
                       />
@@ -893,7 +908,7 @@ const plotInfo = {
   remarks: "",
   plotStatus: "",
   status: "",
-  plotProperties: ""
+  plotProperties: "",
 };
 
 const EditPlotDialog = ({

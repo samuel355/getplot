@@ -4,7 +4,10 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function AuthCheck({ children, allowedRoles = ["admin", "sysadmin"] }) {
+export default function AuthCheck({
+  children,
+  allowedRoles = ["admin", "sysadmin"],
+}) {
   const { userId, isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
 
@@ -37,4 +40,4 @@ export default function AuthCheck({ children, allowedRoles = ["admin", "sysadmin
   }
 
   return children;
-} 
+}

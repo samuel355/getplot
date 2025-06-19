@@ -2,9 +2,12 @@ export default function ListYourPropertyCallout() {
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 my-6 flex items-center justify-between">
       <div>
-        <h2 className="text-sm md:text-lg font-semibold text-primary">Want to list your property?</h2>
+        <h2 className="text-sm md:text-lg font-semibold text-primary">
+          Want to list your property?
+        </h2>
         <p className="text-primary text-xs md:text-md">
-          Contact us with your details and we'll help you get your property listed on our marketplace.
+          Contact us with your details and we'll help you get your property
+          listed on our marketplace.
         </p>
       </div>
       <a
@@ -15,4 +18,4 @@ export default function ListYourPropertyCallout() {
       </a>
     </div>
   );
-} 
+}

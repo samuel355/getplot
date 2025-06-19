@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import {
-  GoogleMap,
-  Marker,
-  InfoWindow
-} from "@react-google-maps/api";
+import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import PropertyCard from "./property-card";
 import {
   Search,
@@ -66,7 +62,7 @@ const PropertyMap = ({ properties, loading }) => {
         (p) =>
           p.title?.toLowerCase().includes(query) ||
           p.location?.toLowerCase().includes(query) ||
-          p.description?.toLowerCase().includes(query),
+          p.description?.toLowerCase().includes(query)
       );
     }
 
@@ -83,7 +79,7 @@ const PropertyMap = ({ properties, loading }) => {
         fitMapToBounds();
       }
     },
-    [properties, manuallyPannedTo],
+    [properties, manuallyPannedTo]
   );
 
   // Function to fit map to property boundaries
@@ -154,7 +150,7 @@ const PropertyMap = ({ properties, loading }) => {
     if (filteredProperties.length === 0) return defaultCenter;
 
     const validCoordinates = filteredProperties.filter(
-      (p) => p.coordinates && p.coordinates.lat && p.coordinates.lng,
+      (p) => p.coordinates && p.coordinates.lat && p.coordinates.lng
     );
 
     if (validCoordinates.length === 0) return defaultCenter;
@@ -190,7 +186,7 @@ const PropertyMap = ({ properties, loading }) => {
       "idle",
       () => {
         google.maps.event.removeListener(listener);
-      },
+      }
     );
   }, []);
 
@@ -279,9 +275,9 @@ const PropertyMap = ({ properties, loading }) => {
         (error) => {
           console.error("Error getting user location:", error);
           alert(
-            "Unable to get your location. Please check your browser permissions.",
+            "Unable to get your location. Please check your browser permissions."
           );
-        },
+        }
       );
     } else {
       alert("Geolocation is not supported by this browser.");
@@ -368,7 +364,9 @@ const PropertyMap = ({ properties, loading }) => {
             <div className="relative">
               <button
                 onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
-                className={`p-2 rounded ${isFilterMenuOpen ? "bg-gray-100" : "hover:bg-gray-100"}`}
+                className={`p-2 rounded ${
+                  isFilterMenuOpen ? "bg-gray-100" : "hover:bg-gray-100"
+                }`}
                 title="Filter properties"
               >
                 <Filter size={20} className="text-gray-600" />
@@ -489,27 +487,46 @@ const PropertyMap = ({ properties, loading }) => {
                         <div className="flex-grow min-w-0">
                           <div className="flex flex-col">
                             <div className="flex items-center gap-2">
-                              <h3 className="text-sm font-medium text-gray-900">{property.title}</h3>
+                              <h3 className="text-sm font-medium text-gray-900">
+                                {property.title}
+                              </h3>
                               <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
-                                {property.type === 'house' 
-                                  ? (property.listing_type === 'airbnb'
-                                    ? 'Airbnb'
-                                    : `House for ${property.listing_type === 'rent' ? 'Rent' : 'Sale'}`)
-                                  : `Land for ${property.listing_type === 'rent' ? 'Rent' : 'Sale'}`}
+                                {property.type === "house"
+                                  ? property.listing_type === "airbnb"
+                                    ? "Airbnb"
+                                    : `House for ${
+                                        property.listing_type === "rent"
+                                          ? "Rent"
+                                          : "Sale"
+                                      }`
+                                  : `Land for ${
+                                      property.listing_type === "rent"
+                                        ? "Rent"
+                                        : "Sale"
+                                    }`}
                               </span>
                             </div>
-                            <p className="text-sm text-gray-500">{property.location}</p>
+                            <p className="text-sm text-gray-500">
+                              {property.location}
+                            </p>
                             {property.region && (
-                              <p className="text-xs text-gray-400">{property.region}</p>
+                              <p className="text-xs text-gray-400">
+                                {property.region}
+                              </p>
                             )}
                           </div>
                           <p className="text-primary font-semibold text-sm mt-1">
-                            GHS {(property.listing_type === 'rent' || property.listing_type === 'airbnb' 
-                              ? property.rental_price 
-                              : property.price)?.toLocaleString()}
-                            {property.listing_type === 'rent' && ' / month'}
-                            {property.listing_type === 'airbnb' && ' / day'}
-                            {property.listing_type === 'sale' && property.negotiable && ' (Negotiable)'}
+                            GHS{" "}
+                            {(property.listing_type === "rent" ||
+                            property.listing_type === "airbnb"
+                              ? property.rental_price
+                              : property.price
+                            )?.toLocaleString()}
+                            {property.listing_type === "rent" && " / month"}
+                            {property.listing_type === "airbnb" && " / day"}
+                            {property.listing_type === "sale" &&
+                              property.negotiable &&
+                              " (Negotiable)"}
                           </p>
                         </div>
                       </div>
@@ -558,8 +575,8 @@ const PropertyMap = ({ properties, loading }) => {
                           selectedProperty.id === property.id
                             ? "/images/marker-active.png"
                             : property.type === "house"
-                              ? "/images/marker-house.png"
-                              : "/images/marker-land.png",
+                            ? "/images/marker-house.png"
+                            : "/images/marker-land.png",
                         scaledSize: new google.maps.Size(32, 40),
                         origin: new google.maps.Point(0, 0),
                         anchor: new google.maps.Point(16, 40),
@@ -570,7 +587,7 @@ const PropertyMap = ({ properties, loading }) => {
                           : 1
                       }
                     />
-                  ),
+                  )
               )}
 
               {selectedProperty && selectedProperty.coordinates && (
@@ -640,28 +657,36 @@ const PropertyMap = ({ properties, loading }) => {
                 <div className="absolute right-full mr-2 top-0 bg-white shadow-lg rounded-lg overflow-hidden">
                   <button
                     onClick={() => changeMapType("roadmap")}
-                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 flex items-center ${mapType === "roadmap" ? "bg-blue-50 text-blue-600" : ""}`}
+                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 flex items-center ${
+                      mapType === "roadmap" ? "bg-blue-50 text-blue-600" : ""
+                    }`}
                   >
                     <MapPin className="mr-2" size={16} />
                     Road Map
                   </button>
                   <button
                     onClick={() => changeMapType("satellite")}
-                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 flex items-center ${mapType === "satellite" ? "bg-blue-50 text-blue-600" : ""}`}
+                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 flex items-center ${
+                      mapType === "satellite" ? "bg-blue-50 text-blue-600" : ""
+                    }`}
                   >
                     <Compass className="mr-2" size={16} />
                     Satellite
                   </button>
                   <button
                     onClick={() => changeMapType("hybrid")}
-                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 flex items-center ${mapType === "hybrid" ? "bg-blue-50 text-blue-600" : ""}`}
+                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 flex items-center ${
+                      mapType === "hybrid" ? "bg-blue-50 text-blue-600" : ""
+                    }`}
                   >
                     <Building2 className="mr-2" size={16} />
                     Hybrid
                   </button>
                   <button
                     onClick={() => changeMapType("terrain")}
-                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 flex items-center ${mapType === "terrain" ? "bg-blue-50 text-blue-600" : ""}`}
+                    className={`px-3 py-2 w-full text-left hover:bg-gray-100 flex items-center ${
+                      mapType === "terrain" ? "bg-blue-50 text-blue-600" : ""
+                    }`}
                   >
                     <Paintbrush className="mr-2" size={16} />
                     Terrain

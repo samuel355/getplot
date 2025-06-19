@@ -14,13 +14,14 @@ import { BulkRejectDialog } from "./bulk-reject-dialog";
 import { useToast } from "@/hooks/use-toast";
 
 export function BulkActionBar() {
-  const { selectedItems, bulkApproveProperties, exportData } = useBulkActionStore();
+  const { selectedItems, bulkApproveProperties, exportData } =
+    useBulkActionStore();
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
   const { toast } = useToast();
 
   const handleBulkApprove = async () => {
     const result = await bulkApproveProperties();
-    
+
     if (result.success) {
       toast({
         title: "Success",
@@ -37,7 +38,7 @@ export function BulkActionBar() {
 
   const handleExport = async (format) => {
     const result = await exportData(format);
-    
+
     if (result.success) {
       toast({
         title: "Success",
@@ -86,11 +87,11 @@ export function BulkActionBar() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>More Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => handleExport('csv')}>
+          <DropdownMenuItem onClick={() => handleExport("csv")}>
             <Download className="mr-2 h-4 w-4" />
             Export as CSV
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleExport('excel')}>
+          <DropdownMenuItem onClick={() => handleExport("excel")}>
             <Download className="mr-2 h-4 w-4" />
             Export as Excel
           </DropdownMenuItem>

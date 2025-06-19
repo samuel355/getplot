@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { supabase } from "@/utils/supabase/client";
 
 export async function insertFeatures(data) {
-  console.log('Data ->', data);
+  console.log("Data ->", data);
   try {
     const transformedFeatures = data.features.map((feature) => ({
       type: "Feature Collection",

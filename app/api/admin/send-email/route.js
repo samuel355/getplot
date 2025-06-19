@@ -11,8 +11,8 @@ const transporter = nodemailer.createTransport({
   port: parseInt(process.env.SMTP_PORT || "587"),
   secure: true, // true for 465, false for other ports
   auth: {
-    user: process.env.SMTP_USER, 
-    pass: process.env.SMTP_PASS, 
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
 
@@ -23,8 +23,15 @@ const clerkClient = createClerkClient({
 export async function POST(request) {
   try {
     // Get data from request
-    const { property, userId, userRole, propertyId, propertyOwnerId, emailType, rejectionReason } =
-      await request.json();
+    const {
+      property,
+      userId,
+      userRole,
+      propertyId,
+      propertyOwnerId,
+      emailType,
+      rejectionReason,
+    } = await request.json();
 
     // Verify that the user is an admin/sysadmin
     if (!userId) {

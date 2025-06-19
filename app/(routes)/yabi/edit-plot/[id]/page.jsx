@@ -68,7 +68,7 @@ const EditPlot = () => {
     status,
     plotStatus,
   } = plotData;
-  
+
   //Fetch Plot Details From DB
   const fechPlotData = async () => {
     const { data, error } = await supabase
@@ -109,7 +109,7 @@ const EditPlot = () => {
     } else {
       router.push("/yabi");
     }
-    
+
     if (isLoaded) {
       if (!isSignedIn) {
         router.push("/");
@@ -157,7 +157,7 @@ const EditPlot = () => {
 
       if (paidAmount - plotTotalAmount > 0) {
         toast.error(
-          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot.",
+          "Please check the amounts well. The paid amount must not be greater than the total amount of the plot."
         );
         return;
       }
@@ -260,7 +260,7 @@ const EditPlot = () => {
       toast.success("Plot details updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        router.replace('/yabi');
+        router.replace("/yabi");
       }, 1500);
     }
     if (error) {
@@ -324,7 +324,7 @@ const EditPlot = () => {
       toast.success("Plot  updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        window.location.href='/yabi';
+        window.location.href = "/yabi";
       }, 1100);
     }
     if (error) {

@@ -39,7 +39,9 @@ export default function OverviewTab({ property }) {
             </div>
             <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
               <Bath className="h-5 w-5 mb-2 text-gray-500" />
-              <span className="font-medium">{property?.bathrooms} Bathrooms</span>
+              <span className="font-medium">
+                {property?.bathrooms} Bathrooms
+              </span>
             </div>
           </>
         )}
@@ -58,4 +60,4 @@ export default function OverviewTab({ property }) {
       </div>
     </div>
   );
-} 
+}

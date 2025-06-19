@@ -3,15 +3,15 @@ import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api";
 import { useEffect, useRef, useCallback, useState } from "react";
 import { ZoomIn, ZoomOut, Layers } from "lucide-react";
 
-export default function LocationTab({ 
-  property, 
-  directions, 
-  startLocation, 
-  setStartLocation, 
-  searchInputRef, 
+export default function LocationTab({
+  property,
+  directions,
+  startLocation,
+  setStartLocation,
+  searchInputRef,
   getCurrentLocation,
   calculateRoute,
-  isCalculatingRoute
+  isCalculatingRoute,
 }) {
   const [mapType, setMapType] = useState("roadmap");
   const [isMapTypeMenuOpen, setIsMapTypeMenuOpen] = useState(false);
@@ -40,7 +40,7 @@ export default function LocationTab({
     if (!searchInputRef.current || !window.google) {
       console.log("Search input ref or Google not available:", {
         hasSearchInput: !!searchInputRef.current,
-        hasGoogle: !!window.google
+        hasGoogle: !!window.google,
       });
       return;
     }
@@ -129,14 +129,18 @@ export default function LocationTab({
         <div className="absolute top-3 right-3 bg-white shadow-md rounded-lg p-2 flex flex-col gap-2 z-10">
           {/* Zoom controls */}
           <button
-            onClick={() => mapRef.current?.setZoom((mapRef.current.getZoom() || 15) + 1)}
+            onClick={() =>
+              mapRef.current?.setZoom((mapRef.current.getZoom() || 15) + 1)
+            }
             className="p-1.5 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
             title="Zoom in"
           >
             <ZoomIn size={18} />
           </button>
           <button
-            onClick={() => mapRef.current?.setZoom((mapRef.current.getZoom() || 15) - 1)}
+            onClick={() =>
+              mapRef.current?.setZoom((mapRef.current.getZoom() || 15) - 1)
+            }
             className="p-1.5 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
             title="Zoom out"
           >
@@ -224,4 +228,4 @@ export default function LocationTab({
       <p className="text-gray-600">{property?.address}</p>
     </div>
   );
-} 
+}

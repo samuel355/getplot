@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["izawjgcfbdfvixnqjqjg.supabase.co", "img.clerk.com"],
+    remotePatterns: [
+      { protocol: "https", hostname: "ydrhcpjwywtfnejjbfua.supabase.co" },
+    ],
   },
   serverRuntimeConfig: {
     // Will only be available on the server side

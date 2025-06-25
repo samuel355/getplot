@@ -99,6 +99,12 @@ const Map = () => {
 
   const { addPlot, isInCart } = useCart();
 
+  // New state for Change Status modal
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [statusPlotId, setStatusPlotId] = useState();
+  const [newStatus, setNewStatus] = useState("");
+  const [statusLoading, setStatusLoading] = useState(false);
+
   let table;
   if (pathname.includes("trabuom")) {
     table = "trabuom";
@@ -372,6 +378,11 @@ const Map = () => {
         <button style= "display: ${
           user?.publicMetadata?.role != "sysadmin" && "none"
         }" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>
+
+        <button style= "display: ${
+          user?.primaryEmailAddress?.emailAddress != "samueloseiboatenglistowell57@gmail.com" && "none"
+        }" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changeStatus">Change Status</button>
+
       </div>
     </div>
   `;
@@ -484,6 +495,20 @@ const Map = () => {
             if (openInfoWindow) {
               openInfoWindow.close();
             }
+          }
+        });
+      }
+    });
+
+    google.maps.event.addListener(infoWindow, "domready", () => {
+      const Btn = document.getElementById("changeStatus");
+      if (Btn) {
+        Btn.addEventListener("click", () => {
+          const id = Btn.getAttribute("data-id");
+          setStatusPlotId(id);
+          setIsStatusModalOpen(true);
+          if (openInfoWindow) {
+            openInfoWindow.close();
           }
         });
       }
@@ -647,6 +672,48 @@ const Map = () => {
     }
   };
 
+  // Handler to save new status to Supabase
+  const handleSaveNewStatus = async () => {
+    setStatusLoading(true);
+    let database;
+    if (path === "/nthc") {
+      database = "nthc";
+    }
+    if (path === "/dar-es-salaam") {
+      database = "dar_es_salaam";
+    }
+    if (path === "/legon-hills") {
+      database = "legon_hills";
+    }
+    if (path === "/yabi") {
+      database = "yabi";
+    }
+    if (path === "/trabuom") {
+      database = "trabuom";
+    }
+    try {
+      const { data, error } = await supabase
+        .from(database)
+        .update({ status: newStatus })
+        .eq("id", statusPlotId)
+        .select();
+      if (error) {
+        tToast.error("Error updating status");
+        setStatusLoading(false);
+        return;
+      }
+      tToast.success("Plot status updated successfully");
+      setStatusLoading(false);
+      setIsStatusModalOpen(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      setStatusLoading(false);
+      tToast.error("Unexpected error");
+    }
+  };
+
   return (
     <GoogleMapsProvider>
       <Header />
@@ -732,6 +799,42 @@ const Map = () => {
               </DialogContent>
             </Dialog>
           </form>
+
+          {/* Dialog for changing status */}
+          <Dialog open={isStatusModalOpen} onOpenChange={setIsStatusModalOpen}>
+            <DialogTrigger asChild></DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Change Plot Status</DialogTitle>
+                <DialogDescription className="flex items-center gap-4 text-gray-800 text-sm">
+                  <span className="font-semibold text-sm">Select new status for this plot.</span>
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="newStatus" className="text-right">
+                    Status
+                  </Label>
+                  <select
+                    id="newStatus"
+                    className="col-span-3 border rounded px-2 py-1"
+                    value={newStatus}
+                    onChange={e => setNewStatus(e.target.value)}
+                  >
+                    <option value="">Select status</option>
+                    <option value="Available">Available</option>
+                    <option value="Reserved">Reserved</option>
+                    <option value="Sold">Sold</option>
+                  </select>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button onClick={handleSaveNewStatus} type="button" disabled={!newStatus || statusLoading}>
+                  {statusLoading ? <Loader className="animate-spin" /> : "Save Status"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
 
           {/* Map container with additional class for fullscreen */}
           <div className="map-container relative w-full">

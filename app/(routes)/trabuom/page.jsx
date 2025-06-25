@@ -602,9 +602,10 @@ const Map = () => {
       tToast.success("Plot status updated successfully");
       setStatusLoading(false);
       setIsStatusModalOpen(false);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1000);
+      setNewStatus("")
     } catch (error) {
       setStatusLoading(false);
       tToast.error("Unexpected error");

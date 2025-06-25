@@ -3,7 +3,7 @@ import MapLegend from "./MapLegend";
 import MapControls from "./MapControls";
 
 const containerStyle = {
-  height: "80vh",
+  height: "90vh",
   width: "100%",
 };
 

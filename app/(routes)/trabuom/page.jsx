@@ -3,39 +3,22 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
 import { supabase } from "@/utils/supabase/client";
 import { usePathname, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { toast } from "react-toastify";
 import { toast as tToast } from "sonner";
-import { Loader } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import Header from "@/app/_components/Header";
 import { ExpressInterestDialog } from "@/app/_components/express-interest-dialog";
 import { useCart } from "@/store/useStore";
 
-// Additional imports for enhanced controls
-import {
-  Search,
-  ZoomIn,
-  ZoomOut,
-  Maximize,
-  MapPin,
-  Layers,
-  RefreshCw,
-  Navigation,
-  Info,
-} from "lucide-react";
 import GoogleMapsProvider from "@/providers/google-map-provider";
+import TrabuomMap from "./_components/TrabuomMap";
+import ChangePriceDialog from "./_components/ChangePriceDialog";
+import ChangeStatusDialog from "./_components/ChangeStatusDialog";
+import StatusBar from "./_components/StatusBar";
+import MobileNavBar from "./_components/MobileNavBar";
+import { calculateBoundingBox, isPolygonInBounds } from "./actions/mapUtils";
+import { fetchPolygons } from "./actions/fetchPolygons";
 
 // Updated map container style to work with the new padding
 const containerStyle = {
@@ -46,33 +29,6 @@ const containerStyle = {
 const center = {
   lat: 6.5967673180000475,
   lng: -1.7712607859999707,
-};
-
-// Function to calculate the bounding box for a polygon
-const calculateBoundingBox = (polygon) => {
-  let minLat = Infinity,
-    maxLat = -Infinity,
-    minLng = Infinity,
-    maxLng = -Infinity;
-
-  polygon.geometry.coordinates[0].forEach(([lng, lat]) => {
-    if (lat < minLat) minLat = lat;
-    if (lat > maxLat) maxLat = lat;
-    if (lng < minLng) minLng = lng;
-    if (lng > maxLng) maxLng = lng;
-  });
-
-  return { minLat, maxLat, minLng, maxLng };
-};
-
-// Check if a polygon's bounding box intersects with the map bounds
-const isPolygonInBounds = (polygonBounds, mapBounds) => {
-  return !(
-    polygonBounds.maxLat < mapBounds.south ||
-    polygonBounds.minLat > mapBounds.north ||
-    polygonBounds.maxLng < mapBounds.west ||
-    polygonBounds.minLng > mapBounds.east
-  );
 };
 
 const Map = () => {
@@ -121,7 +77,13 @@ const Map = () => {
 
   useEffect(() => {
     if (mapBounds) {
-      fetchPolygons(mapBounds);
+      fetchPolygons(
+        mapBounds,
+        setPolygons,
+        setLoading,
+        calculateBoundingBox,
+        isPolygonInBounds
+      );
     }
   }, [mapBounds]);
 
@@ -187,76 +149,6 @@ const Map = () => {
         if (map.getZoom() < 16) map.setZoom(16);
       });
     }
-  };
-
-  // Fetch all polygons and filter by map bounds
-  const fetchPolygons = async (bounds) => {
-    const cacheKey = "trabuom_polygons";
-    const cacheExpiryKey = "trabuom_polygons_expiry";
-    const cacheExpiryDuration = 0.15 * 60 * 60 * 1000; //15 mins
-
-    const currentTime = Date.now();
-
-    // Check if polygons exist in localStorage and are still valid
-    const cachedPolygons = localStorage.getItem(cacheKey);
-    const cachedExpiry = localStorage.getItem(cacheExpiryKey);
-
-    if (
-      cachedPolygons &&
-      cachedExpiry &&
-      currentTime < parseInt(cachedExpiry)
-    ) {
-      // Use cached data
-      const polygons = JSON.parse(cachedPolygons);
-
-      const visiblePolygons = polygons.filter((polygon) => {
-        const polygonBounds = calculateBoundingBox(polygon);
-        return isPolygonInBounds(polygonBounds, bounds);
-      });
-
-      setPolygons(visiblePolygons);
-      return;
-    }
-
-    let allRecords = [];
-    setLoading(true);
-
-    // Fetch from Supabase if no valid cache
-    const fetchBatch = async (start, end) => {
-      let { data, error } = await supabase
-        .from("trabuom")
-        .select("*")
-        .range(start, end);
-      if (error) {
-        console.log(error);
-        return [];
-      }
-      return data || [];
-    };
-
-    // Fetch all records in batches
-    allRecords = [
-      ...(await fetchBatch(0, 999)),
-      ...(await fetchBatch(1000, 1999)),
-      ...(await fetchBatch(2000, 2999)),
-      ...(await fetchBatch(3000, 3050)),
-    ];
-
-    if (allRecords.length > 0) {
-      // Save to localStorage
-      //localStorage.setItem(cacheKey, JSON.stringify(allRecords));
-      //localStorage.setItem(cacheExpiryKey, (currentTime + cacheExpiryDuration).toString());
-
-      // Filter polygons based on bounds
-      const visiblePolygons = allRecords.filter((polygon) => {
-        const polygonBounds = calculateBoundingBox(polygon);
-        return isPolygonInBounds(polygonBounds, bounds);
-      });
-
-      setPolygons(visiblePolygons);
-    }
-
-    setLoading(false);
   };
 
   const handleMapLoad = (mapInstance) => {
@@ -380,7 +272,8 @@ const Map = () => {
         }" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changePlotID">Change Plot Price</button>
 
         <button style= "display: ${
-          user?.primaryEmailAddress?.emailAddress != "samueloseiboatenglistowell57@gmail.com" && "none"
+          user?.primaryEmailAddress?.emailAddress !=
+            "samueloseiboatenglistowell57@gmail.com" && "none"
         }" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changeStatus">Change Status</button>
 
       </div>
@@ -415,8 +308,10 @@ const Map = () => {
         alert("Call For Info \n 0322008282 or +233 54 855 4216");
       });
 
+      //Change Price
       const Btn = document.getElementById("changePlotID");
       Btn.addEventListener("click", () => {
+        setLoading(false)
         const content = Btn.getAttribute("data-text");
         const id = Btn.getAttribute("data-id");
         const amountStr = Btn.getAttribute("amount");
@@ -440,6 +335,7 @@ const Map = () => {
           } else {
             document.getElementById("old-price").innerHTML =
               "GHS. " + amount.toLocaleString();
+              setLoading(false)
           }
 
           setPlotID(id);
@@ -500,6 +396,7 @@ const Map = () => {
       }
     });
 
+    // Change Status
     google.maps.event.addListener(infoWindow, "domready", () => {
       const Btn = document.getElementById("changeStatus");
       if (Btn) {
@@ -554,7 +451,6 @@ const Map = () => {
   };
 
   const hanldeSaveNewPrice = async () => {
-    setLoading(true);
     let newPrice = document.getElementById("newPrice").value;
     let newAmount;
     if (newPrice === undefined || newPrice === "" || newPrice === null) {
@@ -597,6 +493,7 @@ const Map = () => {
     let paidAmount;
     let remainingAmount;
     try {
+      setLoading(true)
       // Await the response from Supabase
       const response = await supabase
         .from(database)
@@ -754,325 +651,57 @@ const Map = () => {
           )}
 
           {/* Dialog form for changing price */}
-          <form>
-            <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-              <DialogTrigger asChild></DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Change Plot Price</DialogTitle>
-                  <DialogDescription className="flex items-center gap-4 text-gray-800 text-sm">
-                    <span className="font-semibold text-sm">
-                      Plot Details:{" "}
-                    </span>
-                    <p className=" text-sm" id="description"></p>
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="flex items-center gap-4 font-medium">
-                    <Label htmlFor="name" className="text-right">
-                      Old Price:
-                    </Label>
-                    <p id="old-price" className="text-base text-gray-800"></p>
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="newprice" className="text-right">
-                      New Price (GHS.)
-                    </Label>
-                    <Input
-                      className="col-span-3"
-                      type="number"
-                      id="newPrice"
-                      style={{ border: newPriceEr && "1px solid red" }}
-                      onKeyPress={handleInput}
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button onClick={hanldeSaveNewPrice} type="button">
-                    {loading ? (
-                      <Loader className="animate-spin" />
-                    ) : (
-                      "Save changes"
-                    )}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </form>
+          <ChangePriceDialog
+            modalOpen={modalOpen}
+            setModalOpen={setModalOpen}
+            onClose={onClose}
+            hanldeSaveNewPrice={hanldeSaveNewPrice}
+            loading={loading}
+            newPriceEr={newPriceEr}
+            handleInput={handleInput}
+          />
 
           {/* Dialog for changing status */}
-          <Dialog open={isStatusModalOpen} onOpenChange={setIsStatusModalOpen}>
-            <DialogTrigger asChild></DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Change Plot Status</DialogTitle>
-                <DialogDescription className="flex items-center gap-4 text-gray-800 text-sm">
-                  <span className="font-semibold text-sm">Select new status for this plot.</span>
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="newStatus" className="text-right">
-                    Status
-                  </Label>
-                  <select
-                    id="newStatus"
-                    className="col-span-3 border rounded px-2 py-1"
-                    value={newStatus}
-                    onChange={e => setNewStatus(e.target.value)}
-                  >
-                    <option value="">Select status</option>
-                    <option value="Available">Available</option>
-                    <option value="Reserved">Reserved</option>
-                    <option value="Sold">Sold</option>
-                  </select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button onClick={handleSaveNewStatus} type="button" disabled={!newStatus || statusLoading}>
-                  {statusLoading ? <Loader className="animate-spin" /> : "Save Status"}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <ChangeStatusDialog
+            isStatusModalOpen={isStatusModalOpen}
+            setIsStatusModalOpen={setIsStatusModalOpen}
+            newStatus={newStatus}
+            setNewStatus={setNewStatus}
+            handleSaveNewStatus={handleSaveNewStatus}
+            statusLoading={statusLoading}
+          />
 
           {/* Map container with additional class for fullscreen */}
-          <div className="map-container relative w-full">
-            <GoogleMap
-              className="relative"
-              key={"google-map-1"}
-              mapContainerStyle={containerStyle}
-              center={center}
-              zoom={15}
-              onLoad={handleMapLoad}
-              onBoundsChanged={handleBoundsChanged}
-              options={{
-                fullscreenControl: false,
-                streetViewControl: true,
-                mapTypeControl: false,
-                zoomControl: false,
-                scrollwheel: true,
-                gestureHandling: "greedy",
-                mapTypeId: mapType,
-              }}
-            >
-              {/* Legend for plot status */}
-              <div className="absolute w-40 top-20 left-0 bg-white/90 shadow-md rounded-md z-10 hidden md:flex md:flex-col justify-center items-center">
-                <div className="p-2 bg-gray-100 font-medium rounded-t-md w-full">
-                  Land Status
-                </div>
-                <div className="flex gap-3 w-full items-center pl-2 pt-3">
-                  <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
-                  <span>Available</span>
-                </div>
-                <div className="flex gap-3 w-full items-center pl-2 mt-2">
-                  <div className="w-4 h-4 bg-black rounded-sm"></div>
-                  <span>Reserved</span>
-                </div>
-                <div className="flex gap-3 w-full items-center pl-2 mt-2 pb-3">
-                  <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
-                  <span>Sold</span>
-                </div>
-              </div>
+          <TrabuomMap
+            map={map}
+            setMap={setMap}
+            mapType={mapType}
+            polygons={polygons}
+            handleMapLoad={handleMapLoad}
+            handleBoundsChanged={handleBoundsChanged}
+            getColorBasedOnStatus={getColorBasedOnStatus}
+            handleInfo={handleInfo}
+            isMapTypeMenuOpen={isMapTypeMenuOpen}
+            setIsMapTypeMenuOpen={setIsMapTypeMenuOpen}
+            changeMapType={changeMapType}
+            isFullscreen={isFullscreen}
+            toggleFullscreen={toggleFullscreen}
+            fitBoundsToAllParcels={fitBoundsToAllParcels}
+            tToast={tToast}
+          />
 
-              {/* Custom map controls */}
-              <div
-                id="map-controls"
-                className="absolute top-4 right-4 bg-white shadow-lg rounded-lg p-2 flex flex-col gap-2 z-10"
-              >
-                {/* Zoom controls */}
-                <button
-                  onClick={() => map && map.setZoom(map.getZoom() + 1)}
-                  className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-                  title="Zoom in"
-                >
-                  <ZoomIn size={20} />
-                </button>
-                <button
-                  onClick={() => map && map.setZoom(map.getZoom() - 1)}
-                  className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-                  title="Zoom out"
-                >
-                  <ZoomOut size={20} />
-                </button>
-
-                {/* Separator */}
-                <div className="border-t border-gray-200 my-1"></div>
-
-                {/* Map type control */}
-                <div className="relative">
-                  <button
-                    onClick={() => setIsMapTypeMenuOpen(!isMapTypeMenuOpen)}
-                    className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-                    title="Change map type"
-                  >
-                    <Layers size={20} />
-                  </button>
-
-                  {isMapTypeMenuOpen && (
-                    <div className="absolute right-full mr-2 top-0 bg-white shadow-lg rounded-lg overflow-hidden">
-                      <button
-                        onClick={() => changeMapType("roadmap")}
-                        className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
-                          mapType === "roadmap"
-                            ? "bg-blue-50 text-blue-600"
-                            : ""
-                        }`}
-                      >
-                        Road Map
-                      </button>
-                      <button
-                        onClick={() => changeMapType("satellite")}
-                        className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
-                          mapType === "satellite"
-                            ? "bg-blue-50 text-blue-600"
-                            : ""
-                        }`}
-                      >
-                        Satellite
-                      </button>
-                      <button
-                        onClick={() => changeMapType("hybrid")}
-                        className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
-                          mapType === "hybrid" ? "bg-blue-50 text-blue-600" : ""
-                        }`}
-                      >
-                        Hybrid
-                      </button>
-                      <button
-                        onClick={() => changeMapType("terrain")}
-                        className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
-                          mapType === "terrain"
-                            ? "bg-blue-50 text-blue-600"
-                            : ""
-                        }`}
-                      >
-                        Terrain
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {/* Fullscreen toggle */}
-                <button
-                  onClick={toggleFullscreen}
-                  className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-                  title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-                >
-                  <Maximize size={20} />
-                </button>
-
-                {/* Fit all parcels */}
-                <button
-                  onClick={fitBoundsToAllParcels}
-                  className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-                  title="Show all plots"
-                >
-                  <MapPin size={20} />
-                </button>
-
-                {/* Refresh map */}
-                <button
-                  onClick={() => window.location.reload()}
-                  className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-                  title="Refresh map"
-                >
-                  <RefreshCw size={20} />
-                </button>
-
-                {/* Help/Info Button */}
-                <button
-                  onClick={() =>
-                    tToast.info(
-                      "Click on any plot to see details and take actions",
-                      { duration: 5000 }
-                    )
-                  }
-                  className="p-2 bg-white rounded-full shadow hover:bg-gray-100 transition-colors"
-                  title="Help"
-                >
-                  <Info size={20} />
-                </button>
-              </div>
-
-              {/* Map polygons */}
-              {polygons.map((polygon, index) => (
-                <Polygon
-                  key={index}
-                  paths={polygon.geometry.coordinates[0].map(([lng, lat]) => ({
-                    lat,
-                    lng,
-                  }))}
-                  options={{
-                    fillColor: getColorBasedOnStatus(polygon.status),
-                    fillOpacity: 0.9,
-                    strokeWeight: 1,
-                    strokeColor: "#000000",
-                  }}
-                  onClick={() =>
-                    handleInfo(
-                      polygon.geometry?.coordinates[0],
-                      polygon.properties?.Plot_No,
-                      polygon.properties?.Street_Nam,
-                      polygon.id,
-                      polygon.plotTotalAmount,
-                      polygon.status,
-                      polygon
-                    )
-                  }
-                />
-              ))}
-            </GoogleMap>
-
-            {/* Mobile-friendly bottom navigation bar */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg z-20 flex justify-around items-center py-2 border-t">
-              <button
-                onClick={() => map && map.setZoom(map.getZoom() + 1)}
-                className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
-              >
-                <ZoomIn size={18} />
-                <span>Zoom In</span>
-              </button>
-              <button
-                onClick={() => map && map.setZoom(map.getZoom() - 1)}
-                className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
-              >
-                <ZoomOut size={18} />
-                <span>Zoom Out</span>
-              </button>
-              <button
-                onClick={() => setIsMapTypeMenuOpen(!isMapTypeMenuOpen)}
-                className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
-              >
-                <Layers size={18} />
-                <span>Map Type</span>
-              </button>
-              <button
-                onClick={fitBoundsToAllParcels}
-                className="p-2 rounded-full flex flex-col items-center text-xs text-gray-700"
-              >
-                <MapPin size={18} />
-                <span>All Plots</span>
-              </button>
-            </div>
-          </div>
-
+          {/* Mobile-friendly bottom navigation bar */}
+          <MobileNavBar
+            map={map}
+            setIsMapTypeMenuOpen={setIsMapTypeMenuOpen}
+            isMapTypeMenuOpen={isMapTypeMenuOpen}
+            fitBoundsToAllParcels={fitBoundsToAllParcels}
+          />
           {/* Status bar with properties count */}
-          <div className="w-full bg-white shadow-md rounded-md mt-2 p-2 text-sm flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Navigation size={16} className="text-gray-500" />
-              <span>Trabuom-Kumasi • {polygons.length || 0} plots shown</span>
-            </div>
-            <div>
-              <button
-                onClick={fitBoundsToAllParcels}
-                className="text-primary hover:underline flex items-center gap-1"
-              >
-                <MapPin size={14} />
-                <span>View All Plots</span>
-              </button>
-            </div>
-          </div>
+          <StatusBar
+            polygons={polygons}
+            fitBoundsToAllParcels={fitBoundsToAllParcels}
+          />
         </div>
       </div>
 

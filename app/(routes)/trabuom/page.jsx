@@ -188,8 +188,8 @@ const Map = () => {
 
   const onClose = () => {
     setModalOpen(true);
-    if (openInfoWindow) {
-      openInfoWindow.close();
+    if (openInfoWindowRef) {
+      openInfoWindowRef.close();
     }
   };
 

@@ -45,6 +45,7 @@ const Map = () => {
   const [newPriceEr, setNewPriceEr] = useState(false);
   const [loading, setLoading] = useState(false);
   const mapRef = useRef(null);
+  const openInfoWindowRef = useRef(null);
 
   // New state variables for enhanced functionality
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -193,7 +194,7 @@ const Map = () => {
   };
 
   //Add info Window
-  var openInfoWindow = null;
+
   const handleInfo = (
     coordinates,
     text1,
@@ -290,17 +291,23 @@ const Map = () => {
     polygonCoords.forEach((coord) => bounds.extend(coord));
     const centroid = bounds.getCenter();
 
-    if (openInfoWindow) {
-      openInfoWindow.close();
-    }
+    // if (openInfoWindow) {
+    //   openInfoWindow.close();
+    // }
 
     // Create a new info window
     const infoWindow = new google.maps.InfoWindow({
       position: centroid,
     });
 
+    if (openInfoWindowRef.current) {
+      openInfoWindowRef.current.close();
+    }
+    openInfoWindowRef.current = infoWindow;
+
     infoWindow.setContent(contentString);
     infoWindow.open(map);
+
 
     google.maps.event.addListener(infoWindow, "domready", () => {
       const callInfo = document.getElementById("call-for-info");
@@ -341,8 +348,8 @@ const Map = () => {
           setPlotID(id);
         }, 1000);
 
-        if (openInfoWindow) {
-          openInfoWindow.close();
+        if (openInfoWindowRef.current) {
+          openInfoWindowRef.current.close();
         }
       });
     });
@@ -404,14 +411,14 @@ const Map = () => {
           const id = Btn.getAttribute("data-id");
           setStatusPlotId(id);
           setIsStatusModalOpen(true);
-          if (openInfoWindow) {
-            openInfoWindow.close();
+          if (openInfoWindowRef.current) {
+            openInfoWindowRef.current.close();
           }
         });
       }
     });
 
-    openInfoWindow = infoWindow;
+    //openInfoWindowRef = infoWindow;
   };
 
   function getColorBasedOnStatus(status) {

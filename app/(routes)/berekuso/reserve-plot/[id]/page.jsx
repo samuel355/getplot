@@ -87,7 +87,7 @@ const ReservePlot = () => {
   }, []);
 
   let initialDepo = 0.25 * plotTotalAmount;
-  const databaseName = "legon_hills";
+  const databaseName = "berekuso";
 
   const handleStep1 = (e) => {
     e.preventDefault();
@@ -215,7 +215,7 @@ const ReservePlot = () => {
   //Fetch Plot Details From DB
   const fechPlotData = async () => {
     const { data, error } = await supabase
-      .from("legon_hills")
+      .from("berekuso")
       .select("*")
       .eq("id", id);
 
@@ -354,7 +354,7 @@ const ReservePlot = () => {
   const savePaymentDetails = async (paymentData, amount, data) => {
     const remainingAmount = plotTotalAmount - amount;
     const { data: dbData, error } = await supabase
-      .from("legon_hills")
+      .from("berekuso")
       .update({
         firstname: data.data.metadata.firstname,
         lastname: data.data.metadata.lastname,

@@ -274,7 +274,9 @@ const Map = () => {
 
         <button style= "display: ${
           user?.primaryEmailAddress?.emailAddress !=
-            "samueloseiboatenglistowell57@gmail.com" && "none"
+            "samueloseiboatenglistowell57@gmail.com" &&
+          user?.primaryEmailAddress?.emailAddress !=
+            "profpakoto@gmail.com" && "none"
         }" data-id=${id}  data-text="${text1}, ${text2}" amount="${amount}" class="bg-primary w-full py-2 mt-3 text-white" id="changeStatus">Change Status</button>
 
       </div>

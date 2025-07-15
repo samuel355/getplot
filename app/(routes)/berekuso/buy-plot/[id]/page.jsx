@@ -65,7 +65,7 @@ const BuyPlot = () => {
   const { id } = useParams();
   const router = useRouter();
   const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
-  const databaseName = "legon_hills";
+  const databaseName = "berekuso";
 
   // Errors Checks
   const [statusEr, setStatusEr] = useState(false);
@@ -187,7 +187,7 @@ const BuyPlot = () => {
   //Fetch Plot Details From DB
   const fechPlotData = async () => {
     const { data, error } = await supabase
-      .from("legon_hills")
+      .from("berekuso")
       .select("*")
       .eq("id", id);
 
@@ -324,7 +324,7 @@ const BuyPlot = () => {
 
   const savePaymentDetails = async (paymentData, amount, data) => {
     const { data: dbData, error } = await supabase
-      .from("legon_hills")
+      .from("berekuso")
       .update({
         firstname: data.data.metadata.firstname,
         lastname: data.data.metadata.lastname,

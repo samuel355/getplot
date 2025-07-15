@@ -567,6 +567,9 @@ const Map = ({ parcels, center, setCartOpen }) => {
     if (path === "/trabuom") {
       database = "trabuom";
     }
+    if (path === "/berekuso") {
+      database = "berekuso";
+    }
 
     let plotTotalAmount;
     let paidAmount;

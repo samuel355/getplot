@@ -71,7 +71,7 @@ const EditPlot = () => {
   //Fetch Plot Details From DB
   const fechPlotData = async () => {
     const { data, error } = await supabase
-      .from("legon_hills")
+      .from("berekuso")
       .select("*")
       .eq("id", id);
 
@@ -237,7 +237,7 @@ const EditPlot = () => {
     //Update plot details with plotData on Supabase
     setLoader2(true);
     const { data, error } = await supabase
-      .from("legon_hills")
+      .from("c")
       .update({
         status: plotData.status,
         firstname: plotData.firstname,
@@ -301,7 +301,7 @@ const EditPlot = () => {
     //Update plot details with plotData on Supabase
     setLoader2(true);
     const { data, error } = await supabase
-      .from("legon_hills")
+      .from("berekuso")
       .update({
         status: "Available",
         firstname: "",

@@ -544,6 +544,17 @@ const Header = () => {
                       Yabi
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/berekuso"
+                      className={cn(
+                        "w-full pl-4 py-1.5",
+                        path === "/berekuso" && "text-primary font-semibold"
+                      )}
+                    >
+                      Berekuso
+                    </Link>
+                  </DropdownMenuItem>
 
                   <DropdownMenuSeparator />
 

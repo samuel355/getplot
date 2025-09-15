@@ -92,7 +92,7 @@ const Header = () => {
                   "relative px-3 py-2 rounded-md text-sm font-medium transition-colors",
                   isLandDashboard
                     ? "text-primary font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary"
-                    : "text-gray-700 hover:text-primary hover:bg-gray-50"
+                    : "text-gray-700 hover:text-primary hover:bg-gray-50",
                 )}
               >
                 <div className="flex items-center space-x-1">
@@ -107,7 +107,7 @@ const Header = () => {
                   "relative px-3 py-2 rounded-md text-sm font-medium transition-colors",
                   isPropertiesDashboard
                     ? "text-primary font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary"
-                    : "text-gray-700 hover:text-primary hover:bg-gray-50"
+                    : "text-gray-700 hover:text-primary hover:bg-gray-50",
                 )}
               >
                 <div className="flex items-center space-x-1">
@@ -220,7 +220,7 @@ const Header = () => {
                   "flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
                   isLandDashboard
                     ? "bg-primary/10 text-primary font-bold"
-                    : "text-gray-700 hover:bg-gray-50"
+                    : "text-gray-700 hover:bg-gray-50",
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -234,7 +234,7 @@ const Header = () => {
                   "flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
                   isPropertiesDashboard
                     ? "bg-primary/10 text-primary font-bold"
-                    : "text-gray-700 hover:bg-gray-50"
+                    : "text-gray-700 hover:bg-gray-50",
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -248,7 +248,7 @@ const Header = () => {
                   "flex items-center gap-2 px-3 py-2.5 pl-8 rounded-md text-sm transition-colors",
                   path === "/properties/list"
                     ? "text-primary font-medium"
-                    : "text-gray-600 hover:bg-gray-50"
+                    : "text-gray-600 hover:bg-gray-50",
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -261,7 +261,7 @@ const Header = () => {
                   "flex items-center gap-2 px-3 py-2.5 pl-8 rounded-md text-sm transition-colors",
                   path === "/dashboard/plots"
                     ? "text-primary font-medium"
-                    : "text-gray-600 hover:bg-gray-50"
+                    : "text-gray-600 hover:bg-gray-50",
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -319,7 +319,7 @@ const Header = () => {
                     href="/"
                     className={cn(
                       "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
-                      path === "/" ? "text-primary font-bold" : "text-gray-700"
+                      path === "/" ? "text-primary font-bold" : "text-gray-700",
                     )}
                   >
                     Home
@@ -336,7 +336,7 @@ const Header = () => {
                         path === "/legon-hills" ||
                         path === "/yabi"
                         ? "text-primary font-bold"
-                        : "text-gray-700"
+                        : "text-gray-700",
                     )}
                   >
                     Our Sites
@@ -396,7 +396,7 @@ const Header = () => {
                       "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
                       path === "/market-place"
                         ? "text-primary font-bold"
-                        : "text-gray-700"
+                        : "text-gray-700",
                     )}
                   >
                     Market Place
@@ -410,7 +410,7 @@ const Header = () => {
                       "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
                       path === "/contact-us"
                         ? "text-primary font-bold"
-                        : "text-gray-700"
+                        : "text-gray-700",
                     )}
                   >
                     Contact Us
@@ -429,7 +429,7 @@ const Header = () => {
                               path.includes("/dashboard") ||
                                 path.includes("/properties")
                                 ? "text-primary font-bold"
-                                : "text-gray-700"
+                                : "text-gray-700",
                             )}
                           >
                             Dashboard
@@ -478,7 +478,7 @@ const Header = () => {
                       href="/"
                       className={cn(
                         "w-full flex items-center",
-                        path === "/" && "text-primary font-semibold"
+                        path === "/" && "text-primary font-semibold",
                       )}
                     >
                       Home
@@ -493,7 +493,7 @@ const Header = () => {
                       href="/nthc"
                       className={cn(
                         "w-full pl-4 py-1.5",
-                        path === "/nthc" && "text-primary font-semibold"
+                        path === "/nthc" && "text-primary font-semibold",
                       )}
                     >
                       NTHC (Kwadaso)
@@ -505,7 +505,7 @@ const Header = () => {
                       className={cn(
                         "w-full pl-4 py-1.5",
                         path === "/dar-es-salaam" &&
-                          "text-primary font-semibold"
+                          "text-primary font-semibold",
                       )}
                     >
                       Dar Es Salaam (Ejisu)
@@ -516,7 +516,7 @@ const Header = () => {
                       href="/trabuom"
                       className={cn(
                         "w-full pl-4 py-1.5",
-                        path === "/trabuom" && "text-primary font-semibold"
+                        path === "/trabuom" && "text-primary font-semibold",
                       )}
                     >
                       Trabuom
@@ -527,7 +527,7 @@ const Header = () => {
                       href="/legon-hills"
                       className={cn(
                         "w-full pl-4 py-1.5",
-                        path === "/legon-hills" && "text-primary font-semibold"
+                        path === "/legon-hills" && "text-primary font-semibold",
                       )}
                     >
                       East Legon Hills
@@ -538,7 +538,7 @@ const Header = () => {
                       href="/yabi"
                       className={cn(
                         "w-full pl-4 py-1.5",
-                        path === "/yabi" && "text-primary font-semibold"
+                        path === "/yabi" && "text-primary font-semibold",
                       )}
                     >
                       Yabi
@@ -549,7 +549,7 @@ const Header = () => {
                       href="/berekuso"
                       className={cn(
                         "w-full pl-4 py-1.5",
-                        path === "/berekuso" && "text-primary font-semibold"
+                        path === "/berekuso" && "text-primary font-semibold",
                       )}
                     >
                       Berekuso
@@ -563,7 +563,8 @@ const Header = () => {
                       href="/market-place"
                       className={cn(
                         "w-full flex items-center",
-                        path === "/market-place" && "text-primary font-semibold"
+                        path === "/market-place" &&
+                          "text-primary font-semibold",
                       )}
                     >
                       Market Place
@@ -575,7 +576,7 @@ const Header = () => {
                       href="/contact-us"
                       className={cn(
                         "w-full flex items-center",
-                        path === "/contact-us" && "text-primary font-semibold"
+                        path === "/contact-us" && "text-primary font-semibold",
                       )}
                     >
                       Contact Us
@@ -597,7 +598,7 @@ const Header = () => {
                               "w-full pl-4 py-1.5 flex items-center gap-2",
                               path.includes("/dashboard") &&
                                 !path.includes("/properties") &&
-                                "text-primary font-semibold"
+                                "text-primary font-semibold",
                             )}
                           >
                             <Map className="h-4 w-4" />
@@ -610,7 +611,7 @@ const Header = () => {
                             className={cn(
                               "w-full pl-4 py-1.5 flex items-center gap-2",
                               path.includes("/properties") &&
-                                "text-primary font-semibold"
+                                "text-primary font-semibold",
                             )}
                           >
                             <Building className="h-4 w-4" />

@@ -4,18 +4,18 @@ import { supabase } from "@/utils/supabase/client";
 export async function insertFeatures(data) {
   console.log("Data ->", data);
   try {
-    const transformedFeatures = data.features.map((feature) => ({
+    const transformedFeatures = data.map((feature) => ({
       type: "Feature Collection",
       geometry: feature.geometry,
       properties: feature.properties,
       //status: 'Available',
-      plotTotalAmount: 100000,
-      status: renderStatus(feature.properties.STATUS),
+      plotTotalAmount: 250000,
+      //status: renderStatus(feature.properties.STATUS),
       //owner_info: renderOwner(feature.properties.Status)
     }));
 
     const { data: result, error } = await supabase
-      .from("berekuso")
+      .from("saadi")
       .insert(transformedFeatures)
       .select("*");
 

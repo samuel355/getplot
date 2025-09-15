@@ -94,6 +94,11 @@ const Map = ({ parcels, center, setCartOpen }) => {
     location = "Yabi Kumasi";
     table_name = "yabi";
   }
+  if (pathname.includes("royal-court-estate")) {
+    table = "saadi";
+    location = "Yabi Kumasi";
+    table_name = "saadi";
+  }
   if (pathname.includes("berekuso")) {
     table = "berekuso";
     location = "Berekuso Eastern Region";
@@ -563,6 +568,9 @@ const Map = ({ parcels, center, setCartOpen }) => {
     }
     if (path === "/yabi") {
       database = "yabi";
+    }
+    if (path === "/saadi-gated-commnunity") {
+      database = "saadi";
     }
     if (path === "/trabuom") {
       database = "trabuom";

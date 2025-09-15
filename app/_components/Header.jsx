@@ -334,7 +334,9 @@ const Header = () => {
                         path === "/dar-es-salaam" ||
                         path === "/trabuom" ||
                         path === "/legon-hills" ||
-                        path === "/yabi"
+                        path === "/yabi" ||
+                        path === "/berekuso" ||
+                        path === "/royal-court-estate"
                         ? "text-primary font-bold"
                         : "text-gray-700",
                     )}
@@ -343,6 +345,13 @@ const Header = () => {
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-2 p-4  md:grid-cols-2">
+                      <ListItem
+                        href="/royal-court-estate"
+                        title="Saadi Gated Community"
+                        isActive={path === "/royal-court-estate"}
+                      >
+                        Royal Court Estate
+                      </ListItem>
                       <ListItem
                         href="/nthc"
                         title="NTHC"
@@ -487,7 +496,17 @@ const Header = () => {
 
                   <DropdownMenuSeparator />
                   <p className="ml-2 text-xs text-gray-500 py-1">Our Sites</p>
-
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/royal-court-estate"
+                      className={cn(
+                        "w-full pl-4 py-1.5",
+                        path === "/royal-court-estate" && "text-primary font-semibold",
+                      )}
+                    >
+                      Royal Court Estate
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link
                       href="/nthc"

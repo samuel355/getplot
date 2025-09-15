@@ -94,12 +94,12 @@ const EditPlot = () => {
       });
     } else {
       toast("Something went wrong fetching plot data");
-      router.replace("/saadi-gated-community");
+      router.replace("/royal-court-estate");
     }
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.replace("/saadi-gated-community");
+      router.replace("/royal-court-estate");
     }
   };
 
@@ -107,7 +107,7 @@ const EditPlot = () => {
     if (id) {
       fechPlotData();
     } else {
-      router.push("/saadi-gated-community");
+      router.push("/royal-court-estate");
     }
 
     if (isLoaded) {
@@ -260,7 +260,7 @@ const EditPlot = () => {
       toast.success("Plot details updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        router.replace("/saadi-gated-community");
+        router.replace("/royal-court-estate");
       }, 1500);
     }
     if (error) {
@@ -324,7 +324,7 @@ const EditPlot = () => {
       toast.success("Plot  updated successfully");
       setLoader2(false);
       setTimeout(() => {
-        window.location.href = "/saadi-gated-community";
+        window.location.href = "/royal-court-estate";
       }, 1100);
     }
     if (error) {

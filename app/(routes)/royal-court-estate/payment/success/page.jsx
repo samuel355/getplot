@@ -40,7 +40,7 @@ const SuccessPage = () => {
                   d="M7 16l-4-4m0 0l4-4m-4 4h18"
                 />
               </svg>
-              <Link href="/saadi-gated-community" class="text-sm font-medium text-white mt-3">
+              <Link href="/royal-court-estate" class="text-sm font-medium text-white mt-3">
                 {" "}
                 You can buy or reserve other plots{" "}
               </Link>

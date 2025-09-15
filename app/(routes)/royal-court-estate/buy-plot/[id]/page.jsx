@@ -1,8 +1,10 @@
 "use client";
 import { Input } from "@/components/ui/input";
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 
 import { Textarea } from "@/components/ui/textarea";
-import { Loader } from "lucide-react";
+import { ContactRound, Loader, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
@@ -10,9 +12,10 @@ import { toast } from "react-toastify";
 import { PaystackButton } from "react-paystack";
 import Header from "@/app/_components/Header";
 import { useUser } from "@clerk/nextjs";
-import OptGroup from "@/app/(dashboard)/dashboard/_components/OptGroup";
 import { Button } from "@/components/ui/button";
-import { reservePlot } from "@/app/_actions/reserve-plot";
+import OptGroup from "@/app/(dashboard)/dashboard/_components/OptGroup";
+import { NextResponse } from "next/server";
+import { buyPlot } from "@/app/_actions/buy-plot";
 
 const plotInfo = {
   firstname: "",
@@ -29,10 +32,9 @@ const plotInfo = {
   remarks: "",
   plotStatus: "",
   status: "",
-  initialDeposite: 0,
 };
 
-const ReservePlot = () => {
+const BuyPlot = () => {
   const [loader1, setLoader1] = useState(false);
   const [loader2, setLoader2] = useState(false);
   const [loader3, setLoader3] = useState(false);
@@ -44,7 +46,6 @@ const ReservePlot = () => {
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
   const { user } = useUser();
-
   const {
     firstname,
     lastname,
@@ -59,17 +60,16 @@ const ReservePlot = () => {
     remarks,
     status,
     plotStatus,
-    initialDeposit,
   } = plotData;
 
   const { id } = useParams();
   const router = useRouter();
   const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
+  const databaseName = "saadi";
 
   // Errors Checks
   const [statusEr, setStatusEr] = useState(false);
   const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
-  const [initialDepositEr, setInitialDepositEr] = useState(false);
   const [paidAmtEr, setPaidAmtEr] = useState(false);
   const [fnameEr, setFnameEr] = useState(false);
   const [lnameEr, setLnameEr] = useState(false);
@@ -82,12 +82,9 @@ const ReservePlot = () => {
     if (id) {
       fechPlotData();
     } else {
-      router.push("/yabi");
+      router.push("/royal-court-estate");
     }
   }, []);
-
-  let initialDepo = 0.25 * plotTotalAmount;
-  const databaseName = "yabi";
 
   const handleStep1 = (e) => {
     e.preventDefault();
@@ -103,30 +100,6 @@ const ReservePlot = () => {
       return;
     } else {
       setPlotTotalAmountEr(false);
-    }
-    if (
-      initialDeposit === null ||
-      initialDeposit === undefined ||
-      initialDeposit === 0 ||
-      initialDeposit === ""
-    ) {
-      setInitialDepositEr(true);
-      toast.error("Check the initial deposit");
-      return;
-    } else {
-      setInitialDepositEr(false);
-    }
-    if (initialDeposit < initialDepo) {
-      toast.error(
-        `Check the initial deposit. It must be at least GHS. ${initialDepo.toLocaleString()}`
-      );
-      return;
-    }
-    if (initialDeposit > plotTotalAmount) {
-      toast.error(
-        `Check the initial deposit. It must be greater than the plot amount`
-      );
-      return;
     }
 
     setStep1(false);
@@ -207,7 +180,6 @@ const ReservePlot = () => {
       setResAddressEr(false); //
     }
 
-    console.log(plotData);
     setStep3(true);
     setStep2(false);
   };
@@ -215,7 +187,7 @@ const ReservePlot = () => {
   //Fetch Plot Details From DB
   const fechPlotData = async () => {
     const { data, error } = await supabase
-      .from("yabi")
+      .from("saadi")
       .select("*")
       .eq("id", id);
 
@@ -236,15 +208,14 @@ const ReservePlot = () => {
         plotStatus: data[0].status,
         status: data[0].status,
       });
-      setCalcAmount(data[0].plotTotalAmount);
     } else {
       toast("Something went wrong fetching plot data");
-      router.push("/yabi");
+      router.replace("/royal-court-estate");
     }
     if (error) {
       console.log(error);
       toast("Something went wrong fetching plot data");
-      router.push("/yabi");
+      router.push("/royal-court-estate");
     }
   };
 
@@ -256,8 +227,9 @@ const ReservePlot = () => {
 
   let amtRemaining = 0;
   const handleCalculateAmount = () => {
-    amtRemaining = plotTotalAmount - initialDeposit;
+    amtRemaining = plotTotalAmount - paidAmount;
     setCalcAmount(amtRemaining);
+    setPlotData({ ...plotData, remainingAmount: amtRemaining });
   };
 
   const handleInput = (event) => {
@@ -273,7 +245,7 @@ const ReservePlot = () => {
     publicKey: publicKey,
     email: plotData.email,
     currency: "GHS",
-    amount: initialDeposit * 100,
+    amount: plotTotalAmount * 100,
     metadata: {
       firstname: plotData.firstname,
       lastname: plotData.lastname,
@@ -286,15 +258,15 @@ const ReservePlot = () => {
     className: "bg-primary text-white py-2 px-4 rounded-md shadow-md",
 
     text:
-      initialDeposit !== null && initialDeposit !== undefined
-        ? `Pay GHS. ${initialDeposit.toLocaleString()} `
+      plotTotalAmount !== null && plotTotalAmount !== undefined
+        ? `Pay GHS. ${plotTotalAmount.toLocaleString()} `
         : "Pay GHS. 0.00",
 
     onSuccess: (response) => {
       if (response.status === "success") {
         setVerifyLoading(true);
-        router.push("/yabi/payment/success");
         toast.success("Thank you! your payment was made");
+        router.push("/royal-court-estate/payment/success");
         verifyTransaction(response.reference);
       }
     },
@@ -326,7 +298,6 @@ const ReservePlot = () => {
             data.message === "Verification successful"
           ) {
             //Send details to email and update plot details and redirect to thank you page
-            //console.log(JSON.stringify(data.data));
             const paymentData = JSON.stringify(data.data);
             const amount = data.data.amount / 100;
             // json.parse(data.data)
@@ -335,7 +306,7 @@ const ReservePlot = () => {
             savePaymentDetails(paymentData, amount, data);
           } else {
             toast.error("Your Transaction verification was not successfull");
-            router.push("/yabi/payment/error");
+            router.push("/royal-court-estate/payment/error");
           }
         })
         .catch((error) => {
@@ -352,9 +323,8 @@ const ReservePlot = () => {
   };
 
   const savePaymentDetails = async (paymentData, amount, data) => {
-    const remainingAmount = plotTotalAmount - amount;
     const { data: dbData, error } = await supabase
-      .from("yabi")
+      .from("saadi")
       .update({
         firstname: data.data.metadata.firstname,
         lastname: data.data.metadata.lastname,
@@ -364,16 +334,17 @@ const ReservePlot = () => {
         residentialAddress: data.data.metadata.residentialAddress,
         agent: data.data.metadata.agent,
         paidAmount: amount,
-        remainingAmount: remainingAmount,
+        remainingAmount: 0,
         remarks: data.data.metadata.remarks,
         paymentDetails: paymentData,
         paymentId: data.data.id,
         paymentReference: data.data.reference,
-        status: "Reserved",
+        status: "Sold",
       })
       .eq("id", id)
       .select();
 
+    //Send Email to the customer
     if (dbData) {
       const res = await fetch("/api/send-email", {
         method: "POST",
@@ -391,7 +362,7 @@ const ReservePlot = () => {
             " " +
             allDetails.properties.Street_Nam,
           plotSize:
-            parseFloat(allDetails?.properties?.Area?.toFixed(2)) + " Acres ",
+            parseFloat(allDetails?.properties?.Area).toFixed(2) + " Acres ",
         }),
       });
       setVerifyLoading(false);
@@ -405,8 +376,9 @@ const ReservePlot = () => {
   return (
     <>
       <Header />
+
       {allDetails && (
-        <div className="w-full px-10 md:px-16 lg:px-48 xl:px-48 mb-10 pt-[7.5rem]">
+        <div className="w-full px-10 md:px-16 lg:px-48 xl:px-48 pt-[7.5rem]">
           <h2 className="font-bold text-2xl text-center mb-5">Plot Details</h2>
 
           <div className="shadow-md border rounded-sm mt-8">
@@ -443,7 +415,7 @@ const ReservePlot = () => {
                         disabled
                         name="plotSize"
                         value={
-                          parseFloat(allDetails?.properties?.Area).toFixed(2) +
+                          parseFloat(allDetails?.properties?.Area?.toFixed(5)) +
                           " Acres "
                         }
                       />
@@ -461,6 +433,7 @@ const ReservePlot = () => {
                         disabled
                         value={plotTotalAmount}
                         onKeyPress={handleInput}
+                        onKeyUp={handleCalculateAmount}
                         style={{ border: plotTotalAmountEr && `1px solid red` }}
                       />
                       {plotTotalAmountEr && (
@@ -469,29 +442,8 @@ const ReservePlot = () => {
                         </small>
                       )}
                     </div>
-
-                    <div className="flex gap-2 flex-col">
-                      <h2 className="text-gray-900 font-semibold">
-                        Initial Deposit (GHS {initialDepo.toLocaleString()})
-                      </h2>
-                      <Input
-                        name="initialDeposit"
-                        type="number"
-                        onChange={onInputChange}
-                        value={initialDeposit}
-                        onKeyPress={handleInput}
-                        onKeyUp={handleCalculateAmount}
-                        style={{ border: initialDepositEr && `1px solid red` }}
-                      />
-                      {initialDepositEr && (
-                        <small className="text-red-900">
-                          Initial deposit must be at least 25% Which is GHS.{" "}
-                          {initialDepo.toLocaleString()}
-                        </small>
-                      )}
-                    </div>
                   </div>
-                  {user?.publicMetadata?.role === "sysadmin" && (
+                  {user?.publicMetadata?.role === "role" && (
                     <div className="mt-6">
                       <h2 className="text-gray-900 font-semibold">Remarks</h2>
                       <Textarea
@@ -501,13 +453,6 @@ const ReservePlot = () => {
                       />
                     </div>
                   )}
-
-                  <p className="text-primary font-semibold my-3">
-                    You still have:
-                    <span>
-                      {`GHS. (${calcAmount.toLocaleString()}) To Pay`}{" "}
-                    </span>
-                  </p>
 
                   <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
                     <button
@@ -711,7 +656,7 @@ const ReservePlot = () => {
                       />
                       <small className="text-red-800"></small>
                     </div>
-                    <div className="flex gap-2 flex-col">
+                    <div className="flex flex-col">
                       <h2 className="text-gray-900 font-semibold">
                         Plot Amount (GHS)
                       </h2>
@@ -722,6 +667,7 @@ const ReservePlot = () => {
                         disabled
                         value={plotTotalAmount}
                         onKeyPress={handleInput}
+                        onKeyUp={handleCalculateAmount}
                         style={{ border: plotTotalAmountEr && `1px solid red` }}
                       />
                       {plotTotalAmountEr && (
@@ -734,6 +680,7 @@ const ReservePlot = () => {
 
                   <div className="flex items-center justify-center md:justify-end lg:justify-end gap-6 mt-5 pb-6">
                     <button
+                      disabled={loader3}
                       onClick={handlePrevLast}
                       className="bg-white text-primary py-2 px-4 rounded-md shadow-md border"
                     >
@@ -750,10 +697,9 @@ const ReservePlot = () => {
                       // <PaystackButton {...componentProps} />
                       <Button
                         onClick={() =>
-                          reservePlot(
+                          buyPlot(
                             allDetails,
                             plotTotalAmount,
-                            initialDeposit,
                             setLoader3,
                             router,
                             databaseName,
@@ -767,7 +713,7 @@ const ReservePlot = () => {
                           )
                         }
                       >
-                        Reserve Plot
+                        Buy Plot
                       </Button>
                     )}
                   </div>
@@ -781,4 +727,4 @@ const ReservePlot = () => {
   );
 };
 
-export default ReservePlot;
+export default BuyPlot;

@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useState, useRef, useEffect } from "react";
-import { GoogleMap, Polygon, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Polygon, Polyline, MarkerF } from "@react-google-maps/api";
 import mapboxgl from "mapbox-gl";
 import { usePathname } from "next/navigation";
 
@@ -37,6 +37,8 @@ import {
   Info,
 } from "lucide-react";
 import GoogleMapsProvider from "@/providers/google-map-provider";
+import { saadiRoad } from "@/saadi-layout/road";
+import StreetLine from "./RoadsMap";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -54,7 +56,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
   // New state variables for enhanced functionality
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [interestPlotId, setInterestPlotId] = useState();
-  const [mapType, setMapType] = useState("roadmap");
+  const [mapType, setMapType] = useState("hybrid");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMapTypeMenuOpen, setIsMapTypeMenuOpen] = useState(false);
   const { addPlot, isInCart } = useCart();
@@ -297,6 +299,8 @@ const Map = ({ parcels, center, setCartOpen }) => {
     } else if (pathname === "/yabi") {
       plot_size = feature?.properties?.Area.toFixed(2);
     } else if (pathname === "/berekuso") {
+      plot_size = feature?.properties?.Area.toFixed(2);
+    } else if (pathname === "/royal-court-estate") {
       plot_size = feature?.properties?.Area.toFixed(2);
     }
 
@@ -693,6 +697,8 @@ const Map = ({ parcels, center, setCartOpen }) => {
     }
   };
 
+
+
   return (
     <GoogleMapsProvider>
       <div className="w-full flex flex-col items-center justify-center relative px-10 md:px-14">
@@ -787,6 +793,14 @@ const Map = ({ parcels, center, setCartOpen }) => {
             }}
             className="relative"
           >
+
+            {/* Roads - Saadi  */}
+            {/* {
+              saadiRoad.map((feature,  i) => (
+                <StreetLine key={i} feature={feature} />
+              ))
+            } */}
+
             {/* Legend overlay */}
             <div className="absolute w-40 top-20 left-0 bg-white/90 shadow-md rounded-md z-10 hidden md:flex md:flex-col justify-center items-center">
               <div className="p-2 bg-gray-100 font-medium rounded-t-md w-full">
@@ -954,6 +968,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
                   )}
               </React.Fragment>
             ))}
+           
           </GoogleMap>
 
           {/* Mobile-friendly bottom navigation bar (visible on smaller screens) */}

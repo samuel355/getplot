@@ -146,6 +146,7 @@ export const columns = [
       else if (pathname.includes("dar-es-salaam")) table = "dar-es-salaam";
       else if (pathname.includes("berekuso")) table = "berekuso";
       else if (pathname.includes("yabi")) table = "yabi";
+      else if (pathname.includes("royal-court-estate")) table = "saadi";
 
       let databaseName;
       if (table && table === "nthc") {
@@ -166,6 +167,10 @@ export const columns = [
       if (table && table === "yabi") {
         databaseName = "yabi";
       }
+      if (table && table === "saadi") {
+        databaseName = "saadi";
+      }
+      
       const handleDeleteDialog = async (event) => {
         event.preventDefault();
         if (plotId !== null) {
@@ -271,6 +276,9 @@ const DeletePlotDialog = ({
   }
   if (table && table === "legon-hills") {
     databaseName = "legon_hills";
+  }
+  if (table && table === "saadi") {
+    databaseName = "saadi";
   }
 
   const handleDeletePlot = async () => {
@@ -383,6 +391,9 @@ const ViewPlotDialog = ({
   }
   if (table && table === "legon_hills") {
     databaseName = "legon_hills";
+  }
+  if (table && table === "saadi") {
+    databaseName = "saadi";
   }
 
   useEffect(() => {

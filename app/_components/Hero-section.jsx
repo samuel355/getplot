@@ -83,7 +83,7 @@ const Hero = () => {
         <div className="flex flex-wrap gap-2 sm:gap-3 mt-3">
           <Link
             className="px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg text-primary border border-blue-100 dark:border-blue-900 hover:border-primary transition-all duration-300 rounded-lg font-medium text-lg"
-            href="/saadi-gated-commnunity"
+            href="/royal-court-estate"
           >
             Royal Court Estate (Kumasi)
           </Link>

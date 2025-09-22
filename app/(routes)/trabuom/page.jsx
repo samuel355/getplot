@@ -50,7 +50,7 @@ const Map = () => {
   // New state variables for enhanced functionality
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [interestPlotId, setInterestPlotId] = useState();
-  const [mapType, setMapType] = useState("roadmap");
+  const [mapType, setMapType] = useState("hybrid");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMapTypeMenuOpen, setIsMapTypeMenuOpen] = useState(false);
 

@@ -10,15 +10,15 @@ import { saadiPlots } from "@/saadi-layout/plots";
 const page = () => {
   const [plots, setPlots] = useState([]);
   const [center, setCenter] = useState({
-    lng: -1.714042464272899,
-    lat: 6.636903573789594,
+    lng: -1.7135335931285836,
+    lat: 6.640967246477618,
   });
 
   useEffect(() => {
     getPlots();
   }, []);
   
-  // const insertCalled = useRef(false);
+  const insertCalled = useRef(false);
   
   // useEffect(() => {
   //   if (!insertCalled.current) {

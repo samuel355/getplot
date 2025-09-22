@@ -33,24 +33,36 @@ const MobileMenu = () => {
     },
     {
       id: 3,
+      href: "/dashboard/royal-court-estate",
+      title: "Royal Court Estate",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
+    },
+    {
+      id: 4,
+      href: "/dashboard/trabuom",
+      title: "Trabuom",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
+    },
+    {
+      id: 5,
       href: "/dashboard/nthc",
       title: "NTHC Kwadaso",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
-      id: 4,
+      id: 6,
       href: "/dashboard/legon-hills",
       title: "East Legon Hills",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
-      id: 5,
+      id: 7,
       href: "/dashboard/dar-es-salaam",
       title: "Dar Es Salaam",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
-      id: 6,
+      id: 8,
       href: "/dashboard/berekuso",
       title: "Berekuso",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
@@ -59,18 +71,24 @@ const MobileMenu = () => {
   const sites = [
     {
       id: 1,
+      href: "/dashboard/royal-court-estate",
+      title: "Royal Court Estate",
+      icon: <DraftingCompass className="w-4 h-4 ml-2" />,
+    },
+    {
+      id: 2,
       href: "/dashboard/nthc",
       title: "NTHC",
       icon: <DraftingCompass className="w-4 h-4 ml-2" />,
     },
     {
-      id: 2,
+      id: 3,
       href: "/dashboard/dar-es-salaam",
       title: "Dar Es Salaam",
       icon: <DraftingCompass className="w-4 h-4 ml-2" />,
     },
     {
-      id: 3,
+      id: 4,
       href: "/dashboard/trabuom",
       title: "Trabuom",
       icon: <DraftingCompass className="w-4 h-4 ml-2" />,
@@ -164,6 +182,19 @@ const MobileMenu = () => {
                     <hr className="my-2" />
                     <li
                       className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-5 ${
+                        path === "/dashboard/royal-court-interested-clients" &&
+                        "bg-gray-100"
+                      }`}
+                    >
+                      <Link
+                        href={"/dashboard/royal-court-interested-clients"}
+                        className="flex gap-2 items-center"
+                      >
+                        Royal Court Estate Interested clients
+                      </Link>
+                    </li>
+                    <li
+                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
                         path === "/dashboard/trabuom-interested-clients" &&
                         "bg-gray-100"
                       }`}

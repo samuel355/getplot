@@ -29,41 +29,48 @@ const Sidebar = () => {
     },
     {
       id: 2,
+      href: "/dashboard/royal-court-estate",
+      title: "Royal Court Estate",
+      query: "royal-court-estate",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
+    },
+    {
+      id: 3,
       href: "/dashboard/trabuom",
       title: "Trabuom",
       query: "trabuom",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
-      id: 3,
+      id: 4,
       href: "/dashboard/nthc",
       title: "NTHC Kwadaso",
       query: "nthc",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
-      id: 4,
+      id: 5,
       href: "/dashboard/legon-hills",
       title: "East Legon Hills",
       query: "legon-hills",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
-      id: 5,
+      id: 6,
       href: "/dashboard/dar-es-salaam",
       title: "Dar Es Salaam",
       query: "dar-es-salaam",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
-      id: 6,
+      id: 7,
       href: "/dashboard/yabi",
       title: "Yabi",
       query: "yabi",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
-      id: 7,
+      id: 8,
       href: "/dashboard/berekuso",
       title: "Berekuso",
       query: "berekuso",
@@ -154,6 +161,16 @@ const Sidebar = () => {
             <h2 className="mb-2 mt-4 px-1 text-xs font-semibold tracking-tight text-muted-foreground">
               Interested Clients
             </h2>
+            <Link
+              href={"/dashboard/royal-court-interested-clients"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/dashboard/royal-court-interested-clients"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Royal Court Interested clients
+            </Link>
             <Link
               href={"/dashboard/trabuom-interested-clients"}
               className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${

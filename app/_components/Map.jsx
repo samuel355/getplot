@@ -582,6 +582,10 @@ const Map = ({ parcels, center, setCartOpen }) => {
     if (path === "/berekuso") {
       database = "berekuso";
     }
+    if (path === "/royal-court-estate") {
+      database = "saadi";
+    }
+
 
     let plotTotalAmount;
     let paidAmount;

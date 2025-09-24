@@ -6,8 +6,6 @@ import React, { useState, useEffect } from "react";
 
 const SuccessPage = () => {
   const [loading, setLoading] = useState(true);
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect");
   const { clearCart } = useCart();
 
   useEffect(() => {

@@ -190,7 +190,7 @@ export const buyPlot = async (
       redirect = "/nthc";
     }
 
-    router.push(`/message?redirect=${redirect}`);
+    router.push(`/message`);
 
     //Update plot status to hold for 24 hours
     updatePlotStatus(

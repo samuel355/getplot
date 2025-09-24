@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [legonHillsPlots, setLegonHillsPlots] = useState();
   const [adensePlots, setAdensePlots] = useState();
   const [berekusoPlots, setBerekusoPlots] = useState();
+  const [saadiPlots, setSaadiPlots] = useState();
   const [usersList, setUsersList] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -23,6 +24,7 @@ const Dashboard = () => {
     fetchPlots("nthc");
     fetchPlots("legon_hills");
     fetchPlots("berekuso");
+    fetchPlots("saadi");
     fetchUsers();
   }, []);
 
@@ -54,6 +56,10 @@ const Dashboard = () => {
       }
       if (databaseName === "berekuso") {
         setBerekusoPlots(count);
+        setLoading(false);
+      }
+      if (databaseName === "saadi") {
+        setSaadiPlots(count);
         setLoading(false);
       }
     } catch (error) {
@@ -120,6 +126,12 @@ const Dashboard = () => {
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Berekuso
+          </Link>
+          <Link
+            href="/dashboard/saadi"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Saadi
           </Link>
         </nav>
       </header>
@@ -235,6 +247,29 @@ const Dashboard = () => {
               <Link
                 className="text-primary text-xs mt-2 font-medium"
                 href={"/dashboard/berekuso"}
+              >
+                View Plots
+              </Link>
+            </CardContent>
+          </Card>
+          <Card x-chunk="dashboard-01-chunk-3">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Plots at Royal Court Estate
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {loading && (
+                <div className="flex flex-col justify-center items-center">
+                  <Loader size={12} className="animate-spin" />
+                </div>
+              )}
+              <div className="text-2xl font-bold">
+                {saadiPlots?.toLocaleString()}
+              </div>
+              <Link
+                className="text-primary text-xs mt-2 font-medium"
+                href={"/dashboard/royal-court-estate"}
               >
                 View Plots
               </Link>

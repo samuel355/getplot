@@ -1,24 +1,19 @@
 "use client";
 import { useCart } from "@/store/useStore";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 const SuccessPage = () => {
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
-  const router = useRouter();
   const { clearCart } = useCart();
 
   useEffect(() => {
-    if (redirect === "" || redirect === null || redirect === undefined) {
-      router.push("/");
-    } else {
-      setLoading(false);
-      clearCart();
-    }
-  }, [redirect]);
+    clearCart();
+    setLoading(false);
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -67,7 +62,7 @@ const SuccessPage = () => {
                 />
               </svg>
               <Link
-                href={`${redirect}`}
+                href={`/`}
                 className="text-sm font-medium text-white"
               >
                 You can buy or reserve other plots{" "}

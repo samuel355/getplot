@@ -311,7 +311,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(
       43560 * plot_size
     ).toLocaleString()} Square ft </div>
-        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 8px; font-weight: bold">GHS. ${feature.plotTotalAmount.toLocaleString()} </div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 8px; font-weight: bold; display: ${(status === "Sold" || status === "Reserved") && user?.publicMetadata?.role != "sysadmin" ? "none" : "block"}">GHS. ${feature.plotTotalAmount.toLocaleString()} </div>
         <p style="display: ${
           status === "On Hold" ? "block" : "none"
         }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 

@@ -311,7 +311,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(
       43560 * plot_size
     ).toLocaleString()} Square ft </div>
-        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 8px; font-weight: bold; display: ${(status === "Sold" || status === "Reserved") && user?.publicMetadata?.role != "sysadmin" ? "none" : "block"}">GHS. ${feature.plotTotalAmount.toLocaleString()} </div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 8px; font-weight: bold; display: ${(((status === "Sold" || status === "Reserved") && user?.publicMetadata?.role != "sysadmin") || !(Number(feature.plotTotalAmount) > 0)) ? "none" : "block"}">${Number(feature.plotTotalAmount) > 0 ? ("GHS. " + Number(feature.plotTotalAmount).toLocaleString()) : ""} </div>
         <p style="display: ${
           status === "On Hold" ? "block" : "none"
         }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
@@ -324,7 +324,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
         <hr style="margin-bottom: 5px; margin-top: 5px" />
 
         <button style="display: ${
-          status === "Sold" || status === "Reserved" || status === "On Hold"
+          status === "Sold" || status === "Reserved" || status === "On Hold" || Number(feature.plotTotalAmount) === 0
             ? "none"
             : "block"
         }" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal bg-black text-white" id="add-to-cart" 
@@ -333,7 +333,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
 
         
         <a style="display: ${
-          status === "Sold" || status === "Reserved" || status === "On Hold"
+          status === "Sold" || status === "Reserved" || status === "On Hold"|| Number(feature.plotTotalAmount) === 0
             ? "none"
             : "block"
         }"  href="${path}/buy-plot/${id}" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal">
@@ -342,7 +342,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
 
 
         <a style="display: ${
-          status === "Reserved" || status === "Sold" || status === "On Hold"
+          status === "Reserved" || status === "Sold" || status === "On Hold"|| Number(feature.plotTotalAmount) === 0
             ? "none"
             : "block"
         }" href="${path}/reserve-plot/${id}" id="reserve_plot_button" class="border mb-1 px-4 py-1 my-2 rounded-md text-sm font-normal">
@@ -548,8 +548,8 @@ const Map = ({ parcels, center, setCartOpen }) => {
       return;
     } else {
       newAmount = parseFloat(newPrice);
-
-      if (isNaN(newAmount) || newAmount <= 0) {
+      //isNaN(newAmount) || newAmount <= 0
+      if (isNaN(newAmount)) {
         toast.error("Check the new Price");
         setNewPriceEr(true);
         setLoading(false);

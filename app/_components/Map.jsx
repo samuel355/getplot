@@ -323,7 +323,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
         : ""
     } </div>
 
-        <p style="margin-top: 12px; margin-bottom:12px; font-weight: bold; color: red; display: ${Number(feature.plotTotalAmount) === 0 && status === null || status === "Available" || status === undefined ? "block": "none"}">NOT READY FOR SALE YET</p>
+        <p style="margin-top: 12px; margin-bottom:12px; font-weight: bold; color: red; display: ${Number(feature.plotTotalAmount) === 0 && (status === null || status === "Available" || status === undefined) ? "block": "none"}">NOT READY FOR SALE YET</p>
         <p style="display: ${
           status === "On Hold" ? "block" : "none"
         }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
@@ -382,7 +382,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
           Call For Info
         </a>
 
-        <p id="expressInterest" style="opacity: ${Number(feature.plotTotalAmount) === 0 && status === null || status === "Available" || status === undefined ? "0": "1"}; display: ${
+        <p id="expressInterest" style="opacity: ${Number(feature.plotTotalAmount) === 0 && (status === null || status === "Available" || status === undefined) ? "0": "1"}; display: ${
           status === "Sold" || status === "Reserved" || status === "On Hold"
             ? "none"
             : "block"

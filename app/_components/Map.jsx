@@ -378,11 +378,11 @@ const Map = ({ parcels, center, setCartOpen }) => {
 
         <a style="margin-top: ${
           status === "Reserved" || status === "Sold" ? "7px" : "0"
-        }" href="tel:0248838005" id="call-for-info" class="border px-4 py-1 rounded-md text-sm font-normal">
+        }" href="tel:0548554216" id="call-for-info" class="border px-4 py-1 rounded-md text-sm font-normal">
           Call For Info
         </a>
 
-        <p id="expressInterest" style="display: ${
+        <p id="expressInterest" style="opacity: ${Number(feature.plotTotalAmount) === 0 && status === null || status === "Available" || status === undefined ? "0": "1"}; display: ${
           status === "Sold" || status === "Reserved" || status === "On Hold"
             ? "none"
             : "block"

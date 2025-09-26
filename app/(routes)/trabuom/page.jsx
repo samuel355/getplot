@@ -256,7 +256,7 @@ const Map = () => {
 
         <a style="margin-top: ${
           status === "Reserved" || status === "Sold" ? "7px" : "0"
-        }" href="tel:0248838005" id="call-for-info" class="border px-4 py-1 rounded-md text-sm font-normal">
+        }" href="tel:0548554216" id="call-for-info" class="border px-4 py-1 rounded-md text-sm font-normal">
           Call For Info
         </a>
 

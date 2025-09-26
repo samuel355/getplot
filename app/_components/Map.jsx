@@ -311,7 +311,19 @@ const Map = ({ parcels, center, setCartOpen }) => {
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(
       43560 * plot_size
     ).toLocaleString()} Square ft </div>
-        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 8px; font-weight: bold; display: ${(((status === "Sold" || status === "Reserved") && user?.publicMetadata?.role != "sysadmin") || !(Number(feature.plotTotalAmount) > 0)) ? "none" : "block"}">${Number(feature.plotTotalAmount) > 0 ? ("GHS. " + Number(feature.plotTotalAmount).toLocaleString()) : ""} </div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 8px; font-weight: bold; display: ${
+          ((status === "Sold" || status === "Reserved") &&
+            user?.publicMetadata?.role != "sysadmin") ||
+          !(Number(feature.plotTotalAmount) > 0)
+            ? "none"
+            : "block"
+        }">${
+      Number(feature.plotTotalAmount) > 0
+        ? "GHS. " + Number(feature.plotTotalAmount).toLocaleString()
+        : ""
+    } </div>
+
+        <p style="margin-top: 12px; margin-bottom:12px; font-weight: bold; color: red; display: ${Number(feature.plotTotalAmount) === 0 && status === null || status === "Available" || status === undefined ? "block": "none"}">NOT READY FOR SALE YET</p>
         <p style="display: ${
           status === "On Hold" ? "block" : "none"
         }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
@@ -324,7 +336,10 @@ const Map = ({ parcels, center, setCartOpen }) => {
         <hr style="margin-bottom: 5px; margin-top: 5px" />
 
         <button style="display: ${
-          status === "Sold" || status === "Reserved" || status === "On Hold" || Number(feature.plotTotalAmount) === 0
+          status === "Sold" ||
+          status === "Reserved" ||
+          status === "On Hold" ||
+          Number(feature.plotTotalAmount) === 0
             ? "none"
             : "block"
         }" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal bg-black text-white" id="add-to-cart" 
@@ -333,7 +348,10 @@ const Map = ({ parcels, center, setCartOpen }) => {
 
         
         <a style="display: ${
-          status === "Sold" || status === "Reserved" || status === "On Hold"|| Number(feature.plotTotalAmount) === 0
+          status === "Sold" ||
+          status === "Reserved" ||
+          status === "On Hold" ||
+          Number(feature.plotTotalAmount) === 0
             ? "none"
             : "block"
         }"  href="${path}/buy-plot/${id}" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal">
@@ -342,7 +360,10 @@ const Map = ({ parcels, center, setCartOpen }) => {
 
 
         <a style="display: ${
-          status === "Reserved" || status === "Sold" || status === "On Hold"|| Number(feature.plotTotalAmount) === 0
+          status === "Reserved" ||
+          status === "Sold" ||
+          status === "On Hold" ||
+          Number(feature.plotTotalAmount) === 0
             ? "none"
             : "block"
         }" href="${path}/reserve-plot/${id}" id="reserve_plot_button" class="border mb-1 px-4 py-1 my-2 rounded-md text-sm font-normal">
@@ -376,8 +397,8 @@ const Map = ({ parcels, center, setCartOpen }) => {
         <button style= "display: ${
           user?.primaryEmailAddress?.emailAddress !=
             "samueloseiboatenglistowell57@gmail.com" &&
-          user?.primaryEmailAddress?.emailAddress !=
-            "profpakoto@gmail.com" && "none"
+          user?.primaryEmailAddress?.emailAddress != "profpakoto@gmail.com" &&
+          "none"
         }" data-id=${id} class="bg-primary w-full py-2 mt-3 text-white" id="changeStatus">Change Status</button>
       </div>
     </div>
@@ -405,6 +426,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
     infoWindow.setContent(contentString);
     infoWindow.open(map);
 
+    //Call for info
     google.maps.event.addListener(infoWindow, "domready", () => {
       const callInfo = document.getElementById("call-for-info");
       callInfo.addEventListener("click", () => {
@@ -447,6 +469,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
       });
     });
 
+    //Express interest
     google.maps.event.addListener(infoWindow, "domready", () => {
       const Btn = document.getElementById("expressInterest");
       Btn.addEventListener("click", () => {
@@ -492,6 +515,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
       }
     });
 
+    //Change Status
     google.maps.event.addListener(infoWindow, "domready", () => {
       const Btn = document.getElementById("changeStatus");
       if (Btn) {
@@ -509,17 +533,21 @@ const Map = ({ parcels, center, setCartOpen }) => {
     openInfoWindow = infoWindow;
   };
 
-  function getColorBasedOnStatus(status) {
-    if (status === null || status === "Available" || status === undefined) {
-      return "green";
-    } else if (status === "Reserved") {
-      return "black";
-    } else if (status === "Sold") {
+  function getColorBasedOnStatus(status, amount) {
+    if (Number(amount) > 0) {
+      if (status === null || status === "Available" || status === undefined) {
+        return "green";
+      } else if (status === "Reserved") {
+        return "black";
+      } else if (status === "Sold") {
+        return "red";
+      } else if (status === "On Hold") {
+        return "grey"; // Optional: handle unexpected status values
+      }
+    } else if(Number(amount) === 0 && status === 'Sold') {
       return "red";
-    } else if (status === "On Hold") {
-      return "grey"; // Optional: handle unexpected status values
-    } else {
-      return "orange";
+    }else if (Number(amount) === 0 && status === null || status === "Available" || status === undefined){
+      return "darkblue"
     }
   }
 
@@ -585,7 +613,6 @@ const Map = ({ parcels, center, setCartOpen }) => {
     if (path === "/royal-court-estate") {
       database = "saadi";
     }
-
 
     let plotTotalAmount;
     let paidAmount;
@@ -690,18 +717,15 @@ const Map = ({ parcels, center, setCartOpen }) => {
       tToast.success("Plot status updated successfully");
       setStatusLoading(false);
       setIsStatusModalOpen(false);
-      setNewStatus("")
+      setNewStatus("");
       setTimeout(() => {
         window.location.reload();
       }, 1000);
-      
     } catch (error) {
       setStatusLoading(false);
       tToast.error("Unexpected error");
     }
   };
-
-
 
   return (
     <GoogleMapsProvider>
@@ -797,7 +821,6 @@ const Map = ({ parcels, center, setCartOpen }) => {
             }}
             className="relative"
           >
-
             {/* Roads - Saadi  */}
             {/* {
               saadiRoad.map((feature,  i) => (
@@ -946,7 +969,10 @@ const Map = ({ parcels, center, setCartOpen }) => {
                 <Polygon
                   path={asCoordinates(feature.geometry?.coordinates[0])}
                   options={{
-                    fillColor: getColorBasedOnStatus(feature.status),
+                    fillColor: getColorBasedOnStatus(
+                      feature.status,
+                      feature.plotTotalAmount
+                    ),
                     fillOpacity: 0.8,
                     strokeWeight: 1,
                     strokeColor: "#000000",
@@ -972,7 +998,6 @@ const Map = ({ parcels, center, setCartOpen }) => {
                   )}
               </React.Fragment>
             ))}
-           
           </GoogleMap>
 
           {/* Mobile-friendly bottom navigation bar (visible on smaller screens) */}
@@ -1113,7 +1138,9 @@ const Map = ({ parcels, center, setCartOpen }) => {
             <DialogHeader>
               <DialogTitle>Change Plot Status</DialogTitle>
               <DialogDescription className="flex items-center gap-4 text-gray-800 text-sm">
-                <span className="font-semibold text-sm">Select new status for this plot.</span>
+                <span className="font-semibold text-sm">
+                  Select new status for this plot.
+                </span>
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -1125,7 +1152,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
                   id="newStatus"
                   className="col-span-3 border rounded px-2 py-1"
                   value={newStatus}
-                  onChange={e => setNewStatus(e.target.value)}
+                  onChange={(e) => setNewStatus(e.target.value)}
                 >
                   <option value="">Select status</option>
                   <option value="Available">Available</option>
@@ -1140,7 +1167,11 @@ const Map = ({ parcels, center, setCartOpen }) => {
                 type="button"
                 disabled={!newStatus || statusLoading}
               >
-                {statusLoading ? <Loader className="animate-spin" /> : "Save Status"}
+                {statusLoading ? (
+                  <Loader className="animate-spin" />
+                ) : (
+                  "Save Status"
+                )}
               </Button>
             </DialogFooter>
           </DialogContent>

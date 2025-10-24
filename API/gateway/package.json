@@ -1,0 +1,31 @@
+{
+  "name": "@getplot/api-gateway",
+  "version": "1.0.0",
+  "description": "API Gateway for Get Plot API",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon src/server.js",
+    "start": "NODE_ENV=production node src/server.js",
+    "test": "jest --coverage",
+    "lint": "eslint src --ext .js --fix"
+  },
+  "dependencies": {
+    "@getplot/shared": "*",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "cors": "^2.8.5",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.4.7",
+    "redis": "^4.7.0",
+    "winston": "^3.17.0",
+    "http-proxy-middleware": "^3.0.3",
+    "express-validator": "^7.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}
+

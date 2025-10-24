@@ -1,0 +1,73 @@
+# Prometheus Configuration for Get Plot API
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'getplot-api'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Load rules
+rule_files:
+  - "alerts.yml"
+
+# Scrape configurations
+scrape_configs:
+  # API Gateway
+  - job_name: 'api-gateway'
+    static_configs:
+      - targets: ['api-gateway:3000']
+    metrics_path: '/metrics'
+    
+  # Auth Service
+  - job_name: 'auth-service'
+    static_configs:
+      - targets: ['auth-service:3001']
+    metrics_path: '/metrics'
+    
+  # Properties Service
+  - job_name: 'properties-service'
+    static_configs:
+      - targets: ['properties-service:3002']
+    metrics_path: '/metrics'
+    
+  # Transactions Service
+  - job_name: 'transactions-service'
+    static_configs:
+      - targets: ['transactions-service:3003']
+    metrics_path: '/metrics'
+    
+  # Users Service
+  - job_name: 'users-service'
+    static_configs:
+      - targets: ['users-service:3004']
+    metrics_path: '/metrics'
+    
+  # Notifications Service
+  - job_name: 'notifications-service'
+    static_configs:
+      - targets: ['notifications-service:3005']
+    metrics_path: '/metrics'
+    
+  # PostgreSQL Exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    
+  # Redis Exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    
+  # Node Exporter (system metrics)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+

@@ -68,10 +68,11 @@ const TrabuomMap = ({
             lng,
           }))}
           options={{
+            // Fill color with status-based colors and 0.4 opacity
             fillColor: getColorBasedOnStatus(polygon.status),
-            fillOpacity: 0.9,
-            strokeWeight: 1,
-            strokeColor: "#000000",
+            fillOpacity: 0.25,
+            strokeWeight: 2,
+            strokeColor: getColorBasedOnStatus(polygon.status),
           }}
           onClick={() =>
             handleInfo(

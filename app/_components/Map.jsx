@@ -258,7 +258,8 @@ const Map = ({ parcels, center, setCartOpen }) => {
       },
       label: {
         text: text?.toString(),
-        color: renderMarkerColor(status),
+        // color: renderMarkerColor(status),
+        color: 'white',
         fontSize: "11px",
         //fontWeight: "bold",
         scale: 0,
@@ -787,18 +788,23 @@ const Map = ({ parcels, center, setCartOpen }) => {
           </Dialog>
         </form>
 
-        <div className="w-full z-10 flex md:hidden flex-row items-center mb-4">
-          <div className="flex w-full items-center space-x-3">
-            <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
-            <span>Available</span>
+        <div className="w-full z-10 flex md:hidden flex-col items-center mb-4 bg-white/90 rounded-md p-3 shadow-md">
+          <div className="flex w-full flex-row items-center justify-center mb-2">
+            <div className="flex w-full items-center space-x-3">
+              <div className="w-4 h-4 bg-green-800 rounded-sm opacity-40"></div>
+              <span>Available</span>
+            </div>
+            <div className="flex w-full items-center space-x-3">
+              <div className="w-4 h-4 bg-black rounded-sm opacity-40"></div>
+              <span>Reserved</span>
+            </div>
+            <div className="flex w-full items-center space-x-3">
+              <div className="w-4 h-4 bg-red-600 rounded-sm opacity-40"></div>
+              <span>Sold</span>
+            </div>
           </div>
-          <div className="flex w-full items-center space-x-3">
-            <div className="w-4 h-4 bg-black rounded-sm"></div>
-            <span>Reserved</span>
-          </div>
-          <div className="flex w-full items-center space-x-3">
-            <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
-            <span>Sold</span>
+          <div className="text-xs text-gray-600 text-center border-t border-gray-200 pt-2 w-full">
+            Click on available plot to make purchase
           </div>
         </div>
 
@@ -829,7 +835,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
             } */}
 
             {/* Legend overlay */}
-            <div className="absolute w-40 top-20 left-0 bg-white/90 shadow-md rounded-md z-10 hidden md:flex md:flex-col justify-center items-center">
+            <div className="absolute w-48 top-20 left-0 bg-white/90 shadow-md rounded-md z-10 hidden md:flex md:flex-col justify-center items-center">
               <div className="p-2 bg-gray-100 font-medium rounded-t-md w-full">
                 Land Status
               </div>
@@ -841,9 +847,12 @@ const Map = ({ parcels, center, setCartOpen }) => {
                 <div className="w-4 h-4 bg-black rounded-sm"></div>
                 <span>Reserved</span>
               </div>
-              <div className="flex gap-3 w-full items-center pl-2 mt-2 pb-3">
+              <div className="flex gap-3 w-full items-center pl-2 mt-2">
                 <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
                 <span>Sold</span>
+              </div>
+              <div className="px-2 py-3 text-xs text-gray-600 text-center border-t border-gray-200 mt-2 w-full">
+                Click on available plot to make purchase
               </div>
             </div>
 
@@ -969,13 +978,17 @@ const Map = ({ parcels, center, setCartOpen }) => {
                 <Polygon
                   path={asCoordinates(feature.geometry?.coordinates[0])}
                   options={{
+                    // Fill color with status-based colors and 0.4 opacity
                     fillColor: getColorBasedOnStatus(
                       feature.status,
                       feature.plotTotalAmount
                     ),
-                    fillOpacity: 0.8,
-                    strokeWeight: 1,
-                    strokeColor: "#000000",
+                    fillOpacity: 0.25,
+                    strokeWeight: 2,
+                    strokeColor: getColorBasedOnStatus(
+                      feature.status,
+                      feature.plotTotalAmount
+                    ),
                   }}
                   onClick={() =>
                     handleInfo(

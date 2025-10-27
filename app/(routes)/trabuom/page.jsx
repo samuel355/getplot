@@ -629,18 +629,23 @@ const Map = () => {
         <h1 className="font-bold text-lg my-4 text-center capitalize">
           TRABOUM SITE
         </h1>
-        <div className="w-full z-10 flex md:hidden flex-row items-center mb-4">
-          <div className="flex w-full items-center space-x-3">
-            <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
-            <span>Available</span>
+        <div className="w-full z-10 flex md:hidden flex-col items-center mb-4 bg-white/90 rounded-md p-3 shadow-md">
+          <div className="flex w-full flex-row items-center justify-center mb-2">
+            <div className="flex w-full items-center space-x-3">
+              <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
+              <span>Available</span>
+            </div>
+            <div className="flex w-full items-center space-x-3">
+              <div className="w-4 h-4 bg-black rounded-sm"></div>
+              <span>Reserved</span>
+            </div>
+            <div className="flex w-full items-center space-x-3">
+              <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
+              <span>Sold</span>
+            </div>
           </div>
-          <div className="flex w-full items-center space-x-3">
-            <div className="w-4 h-4 bg-black rounded-sm"></div>
-            <span>Reserved</span>
-          </div>
-          <div className="flex w-full items-center space-x-3">
-            <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
-            <span>Sold</span>
+          <div className="text-xs text-gray-600 text-center border-t border-gray-200 pt-2 w-full">
+            Click on available plot to make purchase
           </div>
         </div>
 

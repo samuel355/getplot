@@ -336,7 +336,8 @@ const Header = () => {
                         path === "/legon-hills" ||
                         path === "/yabi" ||
                         path === "/berekuso" ||
-                        path === "/royal-court-estate"
+                        path === "/royal-court-estate" ||
+                        path === "/asokore-mampong"
                         ? "text-primary font-bold"
                         : "text-gray-700",
                     )}
@@ -393,6 +394,13 @@ const Header = () => {
                         isActive={path === "/berekuso"}
                       >
                         Berekuso
+                      </ListItem>
+                      <ListItem
+                        href="/asokore-mampong"
+                        title="Asokore Mampong"
+                        isActive={path === "/asokore-mampong"}
+                      >
+                        Asokore Mampong
                       </ListItem>
                     </ul>
                   </NavigationMenuContent>
@@ -572,6 +580,17 @@ const Header = () => {
                       )}
                     >
                       Berekuso
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/asokore-mampong"
+                      className={cn(
+                        "w-full pl-4 py-1.5",
+                        path === "/asokore-mampong" && "text-primary font-semibold",
+                      )}
+                    >
+                      Asokore Mampong
                     </Link>
                   </DropdownMenuItem>
 

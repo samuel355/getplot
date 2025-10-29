@@ -17,6 +17,7 @@ const Home = () => {
     router.prefetch("/dar-es-salaam");
     router.prefetch("/nthc");
     router.prefetch("/trabuom");
+    router.prefetch("/asokore-mampong");
   }, [router]);
 
   return (

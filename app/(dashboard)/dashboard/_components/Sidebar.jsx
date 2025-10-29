@@ -76,6 +76,13 @@ const Sidebar = () => {
       query: "berekuso",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
+    {
+      id: 9,
+      href: "/dashboard/asokore-mampong",
+      title: "Asokore Mampong",
+      query: "asokore-mampong",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
+    },
   ];
 
   const Button = ({ children, onClick, className }) => (
@@ -230,6 +237,16 @@ const Sidebar = () => {
               }`}
             >
               Berekuso Interested clients
+            </Link>
+            <Link
+              href={"/dashboard/asokore-mampong-interested-clients"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/dashboard/asokore-mampong-interested-clients"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Asokore Mampong Interested clients
             </Link>
           </div>
         </nav>

@@ -106,6 +106,11 @@ const Map = ({ parcels, center, setCartOpen }) => {
     location = "Berekuso Eastern Region";
     table_name = "berekuso";
   }
+  if (pathname.includes("asokore-mampong")) {
+    table = "asokore-mampong";
+    location = "Asokore Mampong Kumasi";
+    table_name = "asokore_mampong";
+  }
 
   const mapContainerStyle = {
     height: "94vh",
@@ -303,12 +308,14 @@ const Map = ({ parcels, center, setCartOpen }) => {
       plot_size = feature?.properties?.Area.toFixed(2);
     } else if (pathname === "/royal-court-estate") {
       plot_size = feature?.properties?.Area.toFixed(2);
+    } else if (pathname === "/asokore-mampong") {
+      plot_size = feature?.properties?.Area.toFixed(2);
     }
 
     const contentString = `
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
       <div class="px-2 py-3 flex flex-col">
-        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2}</div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2 ?? ''}</div>
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(
       43560 * plot_size
     ).toLocaleString()} Square ft </div>

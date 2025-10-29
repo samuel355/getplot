@@ -67,6 +67,12 @@ const MobileMenu = () => {
       title: "Berekuso",
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
+    {
+      id: 9,
+      href: "/dashboard/asokore-mampong",
+      title: "Asokore Mampong",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
+    },
   ];
   const sites = [
     {
@@ -256,6 +262,19 @@ const MobileMenu = () => {
                         className="flex gap-2 items-center"
                       >
                         Berekuso Interested clients
+                      </Link>
+                    </li>
+                    <li
+                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
+                        path === "/dashboard/asokore-mampong-interested-clients" &&
+                        "bg-gray-100"
+                      }`}
+                    >
+                      <Link
+                        href={"/dashboard/asokore-mampong-interested-clients"}
+                        className="flex gap-2 items-center"
+                      >
+                        Asokore Mampong Interested clients
                       </Link>
                     </li>
                   </ul>

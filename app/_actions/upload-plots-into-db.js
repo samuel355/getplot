@@ -9,13 +9,13 @@ export async function insertFeatures(data) {
       geometry: feature.geometry,
       properties: feature.properties,
       //status: 'Available',
-      plotTotalAmount: 250000,
-      //status: renderStatus(feature.properties.STATUS),
+      plotTotalAmount: 800000,
+      status: renderStatus(feature.properties.Plot_Status),
       //owner_info: renderOwner(feature.properties.Status)
     }));
 
     const { data: result, error } = await supabase
-      .from("saadi")
+      .from("asokore_mampong")
       .insert(transformedFeatures)
       .select("*");
 
@@ -49,9 +49,9 @@ function renderOwner(status) {
 }
 
 function renderStatus(status) {
-  if (status === "AVAILABLE") {
+  if (status === "Available Plot") {
     return "Available";
-  } else if (status === "SOLD") {
+  } else if (status === "Sold Plot") {
     return "Sold";
   } else if (status === "SOLD_CHIEF") {
     return "Sold";

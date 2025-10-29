@@ -21,16 +21,30 @@ const page = () => {
   const insertCalled = useRef(false);
   
   // useEffect(() => {
-  //   if (!insertCalled.current) {
-  //     insertFeatures(asokoreMampong);
-  //     insertCalled.current = true; // Prevent further inserts
-  //   }
-  // }, [asokoreMampong]);
+  //   const seedIfEmpty = async () => {
+  //     if (insertCalled.current) return;
+  //     insertCalled.current = true; // guard for StrictMode double-invoke
+
+  //     const { count, error } = await supabase
+  //       .from("asokore_mampong")
+  //       .select("id", { count: "exact", head: true });
+
+  //     if (error) {
+  //       console.log(error);
+  //       return;
+  //     }
+  //     if ((count ?? 0) === 0) {
+  //       await insertFeatures(asokoreMampong);
+  //     }
+  //   };
+
+  //   seedIfEmpty();
+  // }, []);
 
   //Fetch Plots from supabase
   const getPlots = async () => {
     const { data, error } = await supabase.from("asokore_mampong").select("*");
-    
+
     if (data) {
       setPlots(data);
 

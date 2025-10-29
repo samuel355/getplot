@@ -109,6 +109,8 @@ export const clientsColumns = [
         databaseName = "saadi_interests";
       else if (pathname.includes("asokore-mampong-interested-clients"))
         databaseName = "asokore_mampong_interests";
+      else if (pathname.includes("yabi-interested-clients"))
+        databaseName = "yabi_interests";
       
       const handleDeleteDialog = async (event) => {
         event.preventDefault();

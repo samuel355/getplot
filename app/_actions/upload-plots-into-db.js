@@ -7,7 +7,10 @@ export async function insertFeatures(data) {
     const transformedFeatures = data.map((feature) => ({
       type: "Feature Collection",
       geometry: feature.geometry,
-      properties: feature.properties,
+      properties: {
+        Street_Nam: "",
+        ...feature.properties,
+      },
       //status: 'Available',
       plotTotalAmount: 800000,
       status: renderStatus(feature.properties.Plot_Status),

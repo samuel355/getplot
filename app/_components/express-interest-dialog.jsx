@@ -75,6 +75,13 @@ export function ExpressInterestDialog({
   if (table && table === "berekuso") {
     databaseName = "berekuso";
     databaseInterest = "berekuso_interests";
+  }if (table && table === "asokore-mampong") {
+    databaseName = "asokore_mampong";
+    databaseInterest = "asokore_mampong_interests";
+  }
+  if (table && table === "saadi") {
+    databaseName = "saadi";
+    databaseInterest = "saadi_interests";
   }
 
   useEffect(() => {

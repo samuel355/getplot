@@ -124,6 +124,9 @@ const Map = ({ parcels, center, setCartOpen }) => {
   if (path === "/yabi") {
     zoom = 17.6;
   }
+  if (path === "/asokore-mampong") {
+    zoom = 17.8;
+  }
 
   // Function to handle fullscreen toggle
   const toggleFullscreen = () => {
@@ -620,6 +623,9 @@ const Map = ({ parcels, center, setCartOpen }) => {
     }
     if (path === "/royal-court-estate") {
       database = "saadi";
+    }
+    if (path === "/asokore-mampong") {
+      database = "asokore_mampong";
     }
 
     let plotTotalAmount;

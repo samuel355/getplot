@@ -35,8 +35,8 @@ const Checkout = () => {
             <div className="grid gap-8 lg:grid-cols-3">
               <div className="lg:col-span-2">
                 <div className="space-y-4 max-h-[48rem] overflow-y-scroll">
-                  {plots.map((plot) => (
-                    <CartItem plot={plot} />
+                  {plots.map((plot, i) => (
+                    <CartItem key={i} plot={plot} />
                   ))}
                 </div>
               </div>

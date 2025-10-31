@@ -142,6 +142,7 @@ const BuyPlot = () => {
       router.replace("/");
     }
   };
+ 
 
   return (
     <>

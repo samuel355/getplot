@@ -139,6 +139,10 @@ export const buyPlot = async (
       plotArea = "East Legon Hills - Accra";
     } else if (databaseName === "nthc") {
       plotArea = "Kwadaso - Kumasi";
+    }else if (databaseName === "asokore_mampong") {
+      plotArea = "Asokore Mampong - Kumasi";
+    }else if (databaseName === "saadi") {
+      plotArea = "Saadi - Kumasi";
     }
 
     const pdfBlob = doc.output("blob"); // Get PDF as a Blob
@@ -188,6 +192,10 @@ export const buyPlot = async (
       redirect = "/legon-hills";
     } else if (databaseName === "nthc") {
       redirect = "/nthc";
+    } else if (databaseName === "asokore_mampong") {
+      redirect = "/asokore-mampong";
+    } else if (databaseName === "saadi") {
+      redirect = "/royal-court-estate";
     }
 
     router.push(`/message`);

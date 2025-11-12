@@ -8,8 +8,8 @@
 7 silly config load:file:/usr/local/etc/npmrc
 8 verbose title npm install
 9 verbose argv "install"
-10 verbose logfile logs-max:10 dir:/Users/knight/Apps/get-plot/.npm-cache/_logs/2025-11-12T15_12_18_429Z-
-11 verbose logfile /Users/knight/Apps/get-plot/.npm-cache/_logs/2025-11-12T15_12_18_429Z-debug-0.log
+10 verbose logfile logs-max:10 dir:/Users/knight/Apps/get-plot/.npm-cache/_logs/2025-11-12T15_13_30_223Z-
+11 verbose logfile /Users/knight/Apps/get-plot/.npm-cache/_logs/2025-11-12T15_13_30_223Z-debug-0.log
 12 silly logfile start cleaning logs, removing 1 files
 13 silly logfile done cleaning log files
 14 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
@@ -481,5 +481,5 @@
 17 silly audit   'yocto-queue': [ '0.1.0' ],
 17 silly audit   '@getplot/shared': [ '1.0.0' ]
 17 silly audit }
-18 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 5176ms
+18 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 2676ms
 19 silly audit report {}

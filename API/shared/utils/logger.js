@@ -53,26 +53,47 @@ const transports = [
       winston.format.simple()
     ),
   }),
-  
-  // Error log file
-  new winston.transports.File({
-    filename: path.join(process.cwd(), 'logs', 'error.log'),
-    level: 'error',
-    format: winston.format.combine(
-      winston.format.uncolorize(),
-      winston.format.json()
-    ),
-  }),
-  
-  // Combined log file
-  new winston.transports.File({
-    filename: path.join(process.cwd(), 'logs', 'combined.log'),
-    format: winston.format.combine(
-      winston.format.uncolorize(),
-      winston.format.json()
-    ),
-  }),
 ];
+
+// Add file transports only in production or if logs directory exists
+const isDevelopment = process.env.NODE_ENV === 'development';
+if (!isDevelopment) {
+  const fs = require('fs');
+  const logsDir = path.join(process.cwd(), 'logs');
+  
+  // Try to create logs directory, skip if it fails
+  try {
+    if (!fs.existsSync(logsDir)) {
+      fs.mkdirSync(logsDir, { recursive: true });
+    }
+    
+    // Error log file
+    transports.push(
+      new winston.transports.File({
+        filename: path.join(logsDir, 'error.log'),
+        level: 'error',
+        format: winston.format.combine(
+          winston.format.uncolorize(),
+          winston.format.json()
+        ),
+      })
+    );
+    
+    // Combined log file
+    transports.push(
+      new winston.transports.File({
+        filename: path.join(logsDir, 'combined.log'),
+        format: winston.format.combine(
+          winston.format.uncolorize(),
+          winston.format.json()
+        ),
+      })
+    );
+  } catch (err) {
+    // Silently skip file logging if directory creation fails
+    console.warn('Could not create logs directory, using console logging only');
+  }
+}
 
 // Create logger
 const logger = winston.createLogger({

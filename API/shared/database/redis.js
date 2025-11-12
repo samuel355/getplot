@@ -12,20 +12,25 @@ class RedisClient {
    */
   async connect() {
     try {
-      const config = {
-        socket: {
-          host: process.env.REDIS_HOST || 'localhost',
-          port: parseInt(process.env.REDIS_PORT, 10) || 6379,
-        },
-      };
+      // Prefer a full connection URL if provided (e.g., Upstash rediss://)
+      const redisUrl = process.env.REDIS_URL;
+
+      const config = redisUrl
+        ? { url: redisUrl }
+        : {
+            socket: {
+              host: process.env.REDIS_HOST || 'localhost',
+              port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+            },
+          };
 
       // Add password if provided
-      if (process.env.REDIS_PASSWORD) {
+      if (!redisUrl && process.env.REDIS_PASSWORD) {
         config.password = process.env.REDIS_PASSWORD;
       }
 
       // Add database selection if provided
-      if (process.env.REDIS_DB) {
+      if (!redisUrl && process.env.REDIS_DB) {
         config.database = parseInt(process.env.REDIS_DB, 10);
       }
 

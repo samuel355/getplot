@@ -11,21 +11,21 @@
   },
   "dependencies": {
     "@getplot/shared": "*",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^7.4.1",
+    "express-validator": "^7.2.1",
     "helmet": "^8.0.0",
-    "cors": "^2.8.5",
-    "morgan": "^1.10.0",
-    "dotenv": "^16.4.7",
-    "redis": "^4.7.0",
-    "winston": "^3.17.0",
     "http-proxy-middleware": "^3.0.3",
-    "express-validator": "^7.2.1"
+    "morgan": "^1.10.0",
+    "rate-limit-redis": "^4.2.3",
+    "redis": "^4.7.0",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9",
     "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
     "supertest": "^7.0.0"
   }
 }
-

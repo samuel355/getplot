@@ -18,6 +18,9 @@ This is a **production-ready, scalable RESTful API** for the Get Plot real estat
 3. **`README.md`** - This file (complete overview)
 
 ### **📘 Technical Documentation** (`/docs` folder)
+- **`API_MANUAL.md`** ⭐ - **Complete System Manual** (NEW)
+- **`TESTING_GUIDE.md`** ⭐ - **Comprehensive Testing Guide** (NEW)
+- **`QUICK_REFERENCE.md`** - Quick command reference (NEW)
 - **`API_SPECIFICATION.md`** - All 30+ endpoints documented
 - **`ARCHITECTURE.md`** - System design & patterns
 - **`DEVELOPMENT_GUIDE.md`** - Coding standards

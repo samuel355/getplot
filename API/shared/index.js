@@ -9,7 +9,9 @@ module.exports = {
   errors: require('./utils/errors'),
   ResponseHandler: require('./utils/response'),
   JWTHelper: require('./utils/jwt'),
-  BcryptHelper: require('./utils/bcrypt'),
+  get BcryptHelper() {
+    return require('./utils/bcrypt');
+  },
   validators: require('./utils/validators'),
 
   // Middleware

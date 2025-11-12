@@ -1,60 +1,127 @@
-describe('Properties Service - Unit Tests', () => {
-  describe('Location mapping', () => {
-    const LOCATION_MAP = {
-      'yabi': 'yabi',
-      'trabuom': 'trabuom',
-      'dar-es-salaam': 'dar_es_salaam',
-      'legon-hills': 'legon_hills',
-      'nthc': 'nthc',
-      'berekuso': 'berekuso',
-      'saadi': 'saadi',
-    };
+const PropertiesService = require('../../../src/services/properties.service');
+const { errors } = require('@getplot/shared');
 
-    it('should map frontend locations to database names', () => {
-      expect(LOCATION_MAP['yabi']).toBe('yabi');
-      expect(LOCATION_MAP['dar-es-salaam']).toBe('dar_es_salaam');
-      expect(LOCATION_MAP['legon-hills']).toBe('legon_hills');
-      expect(LOCATION_MAP['saadi']).toBe('saadi');
+const { ValidationError } = errors;
+
+describe('PropertiesService - Unit Tests', () => {
+  describe('getProperties', () => {
+    it('should validate location parameter', async () => {
+      await expect(
+        PropertiesService.getProperties({ location: 'invalid-location' })
+      ).rejects.toThrow(ValidationError);
     });
 
-    it('should have all 7 locations', () => {
-      expect(Object.keys(LOCATION_MAP).length).toBe(7);
+    it('should accept valid locations', async () => {
+      const validLocations = ['yabi', 'trabuom', 'legon-hills', 'nthc', 'berekuso', 'saadi'];
+      
+      for (const location of validLocations) {
+        // Mock database query to avoid actual DB call
+        const originalQuery = require('@getplot/shared').database.query;
+        require('@getplot/shared').database.query = jest.fn().mockResolvedValue({ rows: [] });
+        
+        await expect(
+          PropertiesService.getProperties({ location })
+        ).resolves.not.toThrow();
+        
+        require('@getplot/shared').database.query = originalQuery;
+      }
+    });
+
+    it('should handle pagination parameters', async () => {
+      const { database } = require('@getplot/shared');
+      database.query = jest.fn().mockResolvedValue({ 
+        rows: [],
+        rowCount: 0 
+      });
+
+      const result = await PropertiesService.getProperties({ 
+        page: 2, 
+        limit: 10 
+      });
+
+      expect(database.query).toHaveBeenCalled();
+      expect(result).toBeDefined();
     });
   });
 
-  describe('Property formatting', () => {
-    it('should format property correctly', () => {
-      const mockRow = {
-        id: '123e4567-e89b-12d3-a456-426614174000',
-        location: 'yabi',
-        properties: {
-          Plot_No: '26A',
-          Street_Nam: 'Republic Street',
-          SHAPE_Area: 0.5,
-        },
-        status: 'available',
-        plotTotalAmount: 50000,
-        paidAmount: 0,
-        geometry: { type: 'Polygon', coordinates: [] },
-        created_at: new Date(),
-        updated_at: new Date(),
-      };
+  describe('getPropertyById', () => {
+    it('should require property ID', async () => {
+      await expect(
+        PropertiesService.getPropertyById(null)
+      ).rejects.toThrow();
+    });
 
-      const formatted = {
-        id: mockRow.id,
-        location: mockRow.location,
-        plotNo: mockRow.properties.Plot_No,
-        streetName: mockRow.properties.Street_Nam,
-        status: mockRow.status,
-        area: mockRow.properties.SHAPE_Area,
-        price: mockRow.plotTotalAmount,
-        coordinates: mockRow.geometry,
-      };
+    it('should handle non-existent property', async () => {
+      const { database } = require('@getplot/shared');
+      database.query = jest.fn().mockResolvedValue({ rows: [] });
 
-      expect(formatted.plotNo).toBe('26A');
-      expect(formatted.location).toBe('yabi');
-      expect(formatted.status).toBe('available');
+      await expect(
+        PropertiesService.getPropertyById('non-existent-id')
+      ).rejects.toThrow();
+    });
+  });
+
+  describe('getPropertiesByLocation', () => {
+    it('should validate location', async () => {
+      await expect(
+        PropertiesService.getPropertiesByLocation('invalid')
+      ).rejects.toThrow(ValidationError);
+    });
+
+    it('should accept valid location formats', async () => {
+      const validLocations = [
+        'yabi',
+        'trabuom',
+        'dar-es-salaam',
+        'dar_es_salaam',
+        'legon-hills',
+        'legon_hills'
+      ];
+
+      for (const location of validLocations) {
+        const { database } = require('@getplot/shared');
+        database.query = jest.fn().mockResolvedValue({ rows: [] });
+
+        await expect(
+          PropertiesService.getPropertiesByLocation(location)
+        ).resolves.not.toThrow();
+      }
+    });
+  });
+
+  describe('searchProperties', () => {
+    it('should handle empty filters', async () => {
+      const { database } = require('@getplot/shared');
+      database.query = jest.fn().mockResolvedValue({ rows: [] });
+
+      const result = await PropertiesService.searchProperties({});
+
+      expect(result).toBeDefined();
+      expect(result.properties).toBeDefined();
+    });
+
+    it('should handle price range filters', async () => {
+      const { database } = require('@getplot/shared');
+      database.query = jest.fn().mockResolvedValue({ rows: [] });
+
+      const result = await PropertiesService.searchProperties({
+        minPrice: 10000,
+        maxPrice: 100000
+      });
+
+      expect(result).toBeDefined();
+    });
+
+    it('should handle size range filters', async () => {
+      const { database } = require('@getplot/shared');
+      database.query = jest.fn().mockResolvedValue({ rows: [] });
+
+      const result = await PropertiesService.searchProperties({
+        minSize: 100,
+        maxSize: 1000
+      });
+
+      expect(result).toBeDefined();
     });
   });
 });
-

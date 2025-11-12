@@ -11,14 +11,24 @@ class Database {
    */
   async connect(config = {}) {
     try {
+      // Supabase requires SSL, check DATABASE_SSL or if URL contains supabase
+      const dbUrl = process.env.DATABASE_URL || '';
+      const requiresSSL = process.env.DATABASE_SSL === 'true' || dbUrl.includes('supabase');
+      
       const poolConfig = {
         connectionString: process.env.DATABASE_URL,
         max: config.max || parseInt(process.env.DATABASE_POOL_MAX, 10) || 10,
         min: config.min || parseInt(process.env.DATABASE_POOL_MIN, 10) || 2,
         idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 2000,
-        ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false,
+        connectionTimeoutMillis: 20000,
       };
+      
+      // Add SSL configuration for Supabase pooler
+      if (requiresSSL) {
+        poolConfig.ssl = {
+          rejectUnauthorized: false
+        };
+      }
 
       this.pool = new Pool(poolConfig);
 

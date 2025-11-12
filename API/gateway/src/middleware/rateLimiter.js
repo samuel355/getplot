@@ -1,14 +1,20 @@
 const rateLimit = require('express-rate-limit');
-const RedisStore = require('rate-limit-redis').default;
+const RedisStore = require('./redisStore');
 const { redis } = require('@getplot/shared');
 const config = require('../config');
 
+// Create store instances that will access the client lazily
+const createStore = (prefix, windowMs) => {
+  return new RedisStore({
+    getClient: () => redis.client, // Lazy access to client
+    prefix,
+    windowMs,
+  });
+};
+
 // General API rate limiter
 const apiLimiter = rateLimit({
-  store: new RedisStore({
-    client: redis.client,
-    prefix: 'rl:api:',
-  }),
+  store: createStore('rl:api:', config.rateLimit.windowMs),
   windowMs: config.rateLimit.windowMs,
   max: config.rateLimit.max,
   message: {
@@ -28,10 +34,7 @@ const apiLimiter = rateLimit({
 
 // Strict rate limiter for auth endpoints
 const authLimiter = rateLimit({
-  store: new RedisStore({
-    client: redis.client,
-    prefix: 'rl:auth:',
-  }),
+  store: createStore('rl:auth:', 15 * 60 * 1000),
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // 5 attempts
   message: {
@@ -48,10 +51,7 @@ const authLimiter = rateLimit({
 
 // Registration rate limiter
 const registerLimiter = rateLimit({
-  store: new RedisStore({
-    client: redis.client,
-    prefix: 'rl:register:',
-  }),
+  store: createStore('rl:register:', 60 * 60 * 1000),
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 3, // 3 registrations per hour
   message: {

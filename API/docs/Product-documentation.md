@@ -1,7 +1,7 @@
 # Land Purchase Application - Agile Project Documentation
 
 **Project Name**: Land Purchase Application - Enterprise API  
-**Project Manager**: Kojo Nhyira dey  
+**Project Manager**: Samuel Osei Adu  
 **Document Version**: 1.0  
 **Date**: October 21, 2025  
 **Status**: Complete Implementation
@@ -187,7 +187,7 @@ A user story is considered "Done" when:
 
 ### Project Team
 
-**Project Manager**: Kojo Nhyira dey  
+**Project Manager**: Samuel Osei Adu  
 **Role**: Oversee project delivery, stakeholder management, Scrum Master
 
 **Development Team**:
@@ -1492,7 +1492,7 @@ Stakeholder:     ████████████████████  1
 
 ### Project Completion
 
-**Project Manager**: Kojo Nhyira dey  
+**Project Manager**: Samuel Osei Adu  
 **Date**: October 21, 2025  
 **Status**: ✅ Complete
 
@@ -1513,7 +1513,7 @@ Stakeholder:     ████████████████████  1
 
 | Role | Name | Signature | Date |
 |------|------|-----------|------|
-| Project Manager | Kojo Nhyira dey | _____________ | Oct 21, 2025 |
+| Project Manager | Samuel Osei Adu | _____________ | Oct 21, 2025 |
 | Technical Lead | _____________ | _____________ | _____________ |
 | Security Lead | _____________ | _____________ | _____________ |
 | QA Lead | _____________ | _____________ | _____________ |
@@ -1544,7 +1544,7 @@ See: `docs/DEVELOPMENT_GUIDE.md`
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0 | Oct 21, 2025 | Kojo Nhyira dey | Initial release - Project complete |
+| 1.0 | Oct 21, 2025 | Samuel Osei Adu | Initial release - Project complete |
 
 ---
 
@@ -1553,7 +1553,7 @@ See: `docs/DEVELOPMENT_GUIDE.md`
 ---
 
 **Project**: Land Purchase Application - Enterprise API  
-**Project Manager**: Kojo Nhyira dey  
+**Project Manager**: Samuel Osei Adu  
 **Status**: ✅ COMPLETE - PRODUCTION READY  
 **Date**: October 21, 2025
 

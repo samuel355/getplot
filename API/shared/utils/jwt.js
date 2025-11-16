@@ -8,7 +8,7 @@ class JWTHelper {
   static generateAccessToken(payload) {
     return jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_ACCESS_EXPIRATION || '30m',
-      issuer: process.env.JWT_ISSUER || 'getplot-api',
+      issuer: process.env.JWT_ISSUER || 'getoneplot-api',
       audience: process.env.JWT_AUDIENCE || 'getplot-client',
     });
   }
@@ -19,8 +19,8 @@ class JWTHelper {
   static generateRefreshToken(payload) {
     return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
       expiresIn: process.env.JWT_REFRESH_EXPIRATION || '7d',
-      issuer: process.env.JWT_ISSUER || 'getplot-api',
-      audience: process.env.JWT_AUDIENCE || 'getplot-client',
+      issuer: process.env.JWT_ISSUER || 'getoneplot-api',
+      audience: process.env.JWT_AUDIENCE || 'getoneplot-client',
     });
   }
 
@@ -30,8 +30,8 @@ class JWTHelper {
   static verifyAccessToken(token) {
     try {
       return jwt.verify(token, process.env.JWT_SECRET, {
-        issuer: process.env.JWT_ISSUER || 'getplot-api',
-        audience: process.env.JWT_AUDIENCE || 'getplot-client',
+        issuer: process.env.JWT_ISSUER || 'getoneplot-api',
+        audience: process.env.JWT_AUDIENCE || 'getoneplot-client',
       });
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
@@ -47,8 +47,8 @@ class JWTHelper {
   static verifyRefreshToken(token) {
     try {
       return jwt.verify(token, process.env.JWT_REFRESH_SECRET, {
-        issuer: process.env.JWT_ISSUER || 'getplot-api',
-        audience: process.env.JWT_AUDIENCE || 'getplot-client',
+        issuer: process.env.JWT_ISSUER || 'getoneplot-api',
+        audience: process.env.JWT_AUDIENCE || 'getoneplot-client',
       });
     } catch (error) {
       if (error.name === 'TokenExpiredError') {

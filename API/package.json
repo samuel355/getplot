@@ -25,6 +25,7 @@
     "test:e2e": "jest --testPathPattern=e2e",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --coverageReporters=text-lcov | coveralls",
+    "test:database": "node test-database.js",
     "lint": "eslint . --ext .js --fix",
     "lint:check": "eslint . --ext .js",
     "format": "prettier --write \"**/*.{js,json,md}\"",

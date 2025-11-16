@@ -7,7 +7,7 @@ This guide will help you set up the Get Plot API on your local machine for devel
 Before you begin, ensure you have the following installed:
 
 - **Node.js** >= 20.0.0 ([Download](https://nodejs.org/))
-- **npm** >= 10.0.0 (comes with Node.js)
+- **yarn** >= 10.0.0 (comes with Node.js)
 - **Docker** >= 24.x ([Download](https://www.docker.com/get-started))
 - **Docker Compose** >= 2.x (comes with Docker Desktop)
 - **Git** ([Download](https://git-scm.com/))
@@ -15,7 +15,7 @@ Before you begin, ensure you have the following installed:
 Verify installations:
 ```bash
 node --version   # Should be v20.x.x or higher
-npm --version    # Should be 10.x.x or higher
+yarn --version    # Should be 10.x.x or higher
 docker --version # Should be 24.x.x or higher
 git --version
 ```
@@ -33,7 +33,7 @@ cd /Users/knight/Apps/get-plot/API
 
 ```bash
 # Install all dependencies
-npm install
+yarn 
 ```
 
 ### 3. Set Up Environment Variables
@@ -60,17 +60,17 @@ docker-compose ps
 
 ```bash
 # Run database migrations
-npm run migrate
+yarn run migrate
 
 # Seed database with sample data (optional)
-npm run seed:dev
+yarn run seed:dev
 ```
 
 ### 6. Start All Services
 
 ```bash
 # Start all microservices
-npm run dev
+yarn run dev
 ```
 
 This will start:
@@ -99,13 +99,13 @@ If you prefer to start services individually:
 ```bash
 # Terminal 1: Start Auth Service
 cd services/auth-service
-npm install
-npm run dev
+yarn
+yarn run dev
 
 # Terminal 2: Start Properties Service
 cd services/properties-service
-npm install
-npm run dev
+yarn 
+yarn run dev
 
 # ... and so on for other services
 ```
@@ -165,36 +165,36 @@ curl http://localhost:3000/api/v1/properties \
 
 ```bash
 # Run all tests
-npm test
+yarn test
 
 # Run unit tests only
-npm run test:unit
+yarn run test:unit
 
 # Run integration tests
-npm run test:integration
+yarn run test:integration
 
 # Run tests with coverage
-npm run test:coverage
+yarn run test:coverage
 ```
 
 ### Lint Code
 
 ```bash
 # Check for linting errors
-npm run lint:check
+yarn run lint:check
 
 # Fix linting errors automatically
-npm run lint
+yarn run lint
 ```
 
 ### Format Code
 
 ```bash
 # Check code formatting
-npm run format:check
+yarn run format:check
 
 # Format code automatically
-npm run format
+yarn run format
 ```
 
 ## Docker Commands
@@ -230,7 +230,7 @@ docker-compose down -v
 
 # Start fresh
 docker-compose up -d postgres redis rabbitmq
-npm run migrate
+yarn run migrate
 ```
 
 ## Common Issues & Solutions
@@ -242,7 +242,7 @@ npm run migrate
 lsof -ti:3000 | xargs kill -9
 
 # Or use different port
-PORT=3001 npm run dev
+PORT=3001 yarn run dev
 ```
 
 ### Database Connection Error

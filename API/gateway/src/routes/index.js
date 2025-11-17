@@ -6,11 +6,14 @@ const { authenticate, authorize } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Proxy options with error handling
+// Enhanced proxy with timeout configuration
 const createProxy = (target, options = {}) => {
   return createProxyMiddleware({
     target,
     changeOrigin: true,
+    logLevel: 'debug',
+    timeout: 30000, // 30 second timeout
+    proxyTimeout: 30000, // 30 second proxy timeout
     ...options,
     onError: (err, req, res) => {
       console.error(`Proxy error for ${target}:`, err.message);
@@ -19,11 +22,20 @@ const createProxy = (target, options = {}) => {
         error: {
           code: 'SERVICE_UNAVAILABLE',
           message: 'Service temporarily unavailable',
+
         },
       });
     },
+    onProxyReq: (proxyReq, req, res) => {
+      console.log(`Proxying: ${req.method} ${req.originalUrl} -> ${target}${proxyReq.path}`);
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      console.log(`Proxy response: ${proxyRes.statusCode} from ${target}`);
+    }
   });
 };
+
+
 
 // ============================================
 // AUTH SERVICE ROUTES
@@ -32,7 +44,7 @@ router.use('/auth/login', authLimiter);
 router.use('/auth/register', registerLimiter);
 router.use('/auth', createProxy(config.services.auth, {
   pathRewrite: {
-    '^/api/v1/auth': '/api/v1/auth',
+    '^/api/v1': '/api/v1',
   },
 }));
 
@@ -41,52 +53,44 @@ router.use('/auth', createProxy(config.services.auth, {
 // ============================================
 router.use('/properties', createProxy(config.services.properties, {
   pathRewrite: {
-    '^/api/v1/properties': '/api/v1/properties',
+    '^/api/v1': '/api/v1',
   },
 }));
 
 // ============================================
 // TRANSACTIONS SERVICE ROUTES
 // ============================================
-// All transaction routes require authentication
-router.use('/transactions', authenticate);
-router.use('/transactions', createProxy(config.services.transactions, {
+router.use('/transactions', authenticate, createProxy(config.services.transactions, {
   pathRewrite: {
-    '^/api/v1/transactions': '/api/v1/transactions',
+    '^/api/v1': '/api/v1',
   },
 }));
 
 // ============================================
 // USERS SERVICE ROUTES
 // ============================================
-// All user routes require authentication
-router.use('/users', authenticate);
-router.use('/users', createProxy(config.services.users, {
+router.use('/users', authenticate, createProxy(config.services.users, {
   pathRewrite: {
-    '^/api/v1/users': '/api/v1/users',
+    '^/api/v1': '/api/v1',
   },
 }));
 
 // ============================================
 // NOTIFICATIONS SERVICE ROUTES
 // ============================================
-// Service-to-service only (can add API key check)
 router.use('/notifications', createProxy(config.services.notifications, {
   pathRewrite: {
-    '^/api/v1/notifications': '/api/v1/notifications',
+    '^/api/v1': '/api/v1',
   },
 }));
 
 // ============================================
 // ANALYTICS SERVICE ROUTES
 // ============================================
-// Admin only
-router.use('/analytics', authenticate, authorize('admin', 'sysadmin'));
-router.use('/analytics', createProxy(config.services.analytics, {
+router.use('/analytics', authenticate, authorize('admin', 'sysadmin'), createProxy(config.services.analytics, {
   pathRewrite: {
-    '^/api/v1/analytics': '/api/v1/analytics',
+    '^/api/v1': '/api/v1',
   },
 }));
 
 module.exports = router;
-

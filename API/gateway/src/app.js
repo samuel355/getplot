@@ -26,13 +26,25 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 if (config.nodeEnv === 'development') {
   app.use(morgan('dev'));
 } else {
-  app.use(morgan('combined', {
-    stream: {
-      write: (message) => logger.info(message.trim()),
-    },
-  }));
+  app.use(
+    morgan('combined', {
+      stream: {
+        write: (message) => logger.info(message.trim()),
+      },
+    })
+  );
 }
 
+app.get('/', (req, res) => {
+  res
+    .status(200)
+    .json({
+      status: 'alive',
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      message: 'API Gateway is running',
+    });
+});
 // Health check endpoints
 app.get('/health', (req, res) => {
   res.json({
@@ -102,4 +114,3 @@ app.use(notFound);
 app.use(errorHandler);
 
 module.exports = app;
-

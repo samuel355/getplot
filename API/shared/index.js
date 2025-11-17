@@ -1,3 +1,5 @@
+require('./utils/loadEnv');
+
 // Shared utilities index
 module.exports = {
   // Database

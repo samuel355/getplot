@@ -5,7 +5,7 @@
  * Tests database connection and performs basic CRUD operations
  */
 
-require('dotenv').config({ path: './env.local' });
+require('./shared/utils/loadEnv');
 const database = require('./shared/database');
 const logger = require('./shared/utils/logger');
 

@@ -1,18 +1,4 @@
-const path = require('path');
-const fs = require('fs');
-// Load env from API/env.local
-// Try multiple possible paths to find env.local
-let envPath = path.join(__dirname, '../../../env.local');
-if (!fs.existsSync(envPath)) {
-  // Fallback: try from API root
-  envPath = path.join(process.cwd(), 'env.local');
-  if (!fs.existsSync(envPath) && process.cwd().includes('API')) {
-    // If we're in a service, go up to API root
-    const apiRoot = process.cwd().split('/API/')[0] + '/API';
-    envPath = path.join(apiRoot, 'env.local');
-  }
-}
-require('dotenv').config({ path: envPath });
+require('@getplot/shared/utils/loadEnv');
 
 module.exports = {
   // Server

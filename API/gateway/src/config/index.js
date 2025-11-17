@@ -1,6 +1,4 @@
-const path = require('path');
-// Load env from API/env.local (3 levels up from src/config/index.js)
-require('dotenv').config({ path: path.join(__dirname, '../../../env.local') });
+require('@getplot/shared/utils/loadEnv');
 
 module.exports = {
   // Server

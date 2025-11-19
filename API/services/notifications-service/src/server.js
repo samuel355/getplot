@@ -1,6 +1,7 @@
 const app = require('./app');
 const config = require('./config');
 const { database, logger } = require('@getplot/shared');
+require('./workers/notification.worker');
 
 process.on('uncaughtException', (error) => {
   logger.error('Uncaught Exception:', error);

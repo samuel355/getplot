@@ -1,5 +1,6 @@
-const { asyncHandler, ResponseHandler, validators } = require('@getplot/shared');
+const { asyncHandler, ResponseHandler, validators, logger } = require('@getplot/shared');
 const authService = require('../services/auth.service');
+const notificationService = require('../services/notification.service');
 
 class AuthController {
   /**
@@ -14,8 +15,16 @@ class AuthController {
     // Register user
     const result = await authService.register(data);
 
-    // TODO: Send verification email
-    // await emailService.sendVerificationEmail(result.user.email, result.verificationToken);
+    if (result.verificationToken) {
+      notificationService
+        .sendVerificationEmail(result.user.email, result.verificationToken)
+        .catch((error) =>
+          logger.error('Failed to send verification email', {
+            email: result.user.email,
+            error: error.message,
+          })
+        );
+    }
 
     // Return response without verification token
     const { verificationToken, ...response } = result;
@@ -93,8 +102,16 @@ class AuthController {
     // Request password reset
     const result = await authService.forgotPassword(data.email);
 
-    // TODO: Send password reset email
-    // await emailService.sendPasswordResetEmail(data.email, result.resetToken);
+    if (result.resetToken) {
+      notificationService
+        .sendPasswordResetEmail(data.email, result.resetToken)
+        .catch((error) =>
+          logger.error('Failed to send password reset email', {
+            email: data.email,
+            error: error.message,
+          })
+        );
+    }
 
     return ResponseHandler.success(res, null, 'If the email exists, a password reset link has been sent');
   });

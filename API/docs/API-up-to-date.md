@@ -160,7 +160,7 @@ Location: `/API/services/notifications-service/` (to be created)
 
 **What's Needed:**
 - Email service (SMTP/SendGrid)
-- SMS service (Africa's Talking)
+- SMS service (pluggable providers: Africa's Talking, Arkesel)
 - Template processing
 - Queue workers (BullMQ)
 
@@ -197,7 +197,7 @@ curl http://localhost:3000/api/v1/auth/register -X POST \
   TODO
  Not Yet Available:
 1. Reserve/buy plot transactions (service not implemented)
-2. Email/SMS notifications (service not implemented)
+2. Email/SMS notifications (notifications service)
 3. Profile management beyond auth (users service not implemented)
 4. Analytics endpoints (service not implemented)
 
@@ -252,7 +252,7 @@ curl http://localhost:3000/api/v1/auth/register -X POST \
 
 **Priority 2 - Notifications Service** (2-3 hours)
 - Email sending
-- SMS sending
+- SMS sending (email + SMS providers)
 - Template rendering
 - Queue processing
 

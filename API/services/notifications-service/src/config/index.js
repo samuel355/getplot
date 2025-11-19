@@ -21,14 +21,14 @@ module.exports = {
   
   // SMS Providers
   sms: {
-    provider: (process.env.SMS_PROVIDER || 'africastalking').toLowerCase(),
+    provider: (process.env.SMS_PROVIDER || 'arkesel').toLowerCase(),
     africastalking: {
       username: process.env.AFRICASTALKING_USERNAME,
       apiKey: process.env.AFRICASTALKING_API_KEY,
       senderId: process.env.AFRICASTALKING_SENDER_ID || 'GetPlot',
     },
     arkesel: {
-      apiKey: process.env.ARKESEL_SMS_API_KEY,
+      apiKey: process.env.ARKESEL_SMS_API || process.env.ARKESEL_SMS_API_KEY,
       senderId: process.env.ARKESEL_SMS_SENDER_ID || 'GetPlot',
     },
   },

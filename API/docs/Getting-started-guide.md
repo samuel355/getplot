@@ -350,8 +350,16 @@ SMTP_USER=your_email@gmail.com
 SMTP_PASSWORD=your_app_password
 
 # SMS (for notifications)
+SMS_PROVIDER=arkesel # or africastalking
+
+# Africa's Talking
 AFRICASTALKING_API_KEY=your_api_key
 AFRICASTALKING_USERNAME=your_username
+AFRICASTALKING_SENDER_ID=GetPlot
+
+# Arkesel
+ARKESEL_SMS_API=your_api_key
+ARKESEL_SMS_SENDER_ID=GetOnePlot
 
 # Payment (for transactions)
 PAYSTACK_SECRET_KEY=sk_test_your_key

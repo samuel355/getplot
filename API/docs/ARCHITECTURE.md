@@ -195,7 +195,7 @@ The Get Plot API follows a **microservices architecture** with the following des
 
 **Dependencies**:
 - SMTP/SendGrid
-- Twilio/Africa's Talking
+- SMS provider (Africa's Talking, Arkesel, etc.)
 - RabbitMQ (message queue)
 - Redis (rate limiting)
 

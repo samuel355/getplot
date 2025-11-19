@@ -33,6 +33,22 @@ module.exports = {
     },
   },
   
+  redis: {
+    url: process.env.REDIS_URL,
+    host: process.env.REDIS_HOST || 'localhost',
+    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+    password: process.env.REDIS_PASSWORD,
+    db: parseInt(process.env.REDIS_DB, 10) || 0,
+  },
+  
+  queue: {
+    name: process.env.NOTIFICATIONS_QUEUE_NAME || 'notifications:jobs',
+    defaultAttempts: parseInt(process.env.NOTIFICATIONS_QUEUE_ATTEMPTS, 10) || 3,
+    backoffDelay: parseInt(process.env.NOTIFICATIONS_QUEUE_BACKOFF_MS, 10) || 2000,
+    removeOnComplete: process.env.NOTIFICATIONS_QUEUE_REMOVE_ON_COMPLETE === 'false' ? false : true,
+    workerConcurrency: parseInt(process.env.NOTIFICATIONS_WORKER_CONCURRENCY, 10) || 5,
+  },
+  
   cors: {
     origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000'],
     credentials: process.env.CORS_CREDENTIALS === 'true',

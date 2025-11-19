@@ -1,8 +1,10 @@
 const { database, redis, logger, BcryptHelper, JWTHelper, errors } = require('@getplot/shared');
+const axios = require('axios');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
+const config = require('../config');
 
-const { AuthenticationError, ConflictError, NotFoundError } = errors;
+const { AuthenticationError, ConflictError, NotFoundError, ValidationError } = errors;
 
 class AuthService {
   /**
@@ -153,6 +155,67 @@ class AuthService {
       };
     } catch (error) {
       logger.error('Login error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Social login (OAuth)
+   */
+  async socialLogin({ provider, idToken, accessToken }) {
+    try {
+      const providerProfile = await this._verifyOAuthProvider(provider, { idToken, accessToken });
+
+      const email = providerProfile.email?.toLowerCase();
+      if (!email) {
+        throw new AuthenticationError('Social provider did not return an email address');
+      }
+
+      const existing = await database.query(
+        `SELECT 
+          u.id, u.email, u.email_verified,
+          p.first_name, p.last_name, p.role
+        FROM app_auth.users u
+        LEFT JOIN users.profiles p ON u.id = p.user_id
+        WHERE u.email = $1`,
+        [email]
+      );
+
+      let userRecord;
+      if (existing.rows.length === 0) {
+        userRecord = await this._createUserFromSocialProfile(providerProfile);
+      } else {
+        userRecord = existing.rows[0];
+        await this._syncProfileFromSocial(userRecord.id, providerProfile);
+      }
+
+      await this._upsertOAuthProvider(userRecord.id, provider, providerProfile.providerUserId, accessToken || null);
+
+      const role = userRecord.role || 'customer';
+
+      const tokens = JWTHelper.generateTokenPair({
+        sub: userRecord.id,
+        email: userRecord.email,
+        role,
+      });
+
+      await this._storeRefreshToken(userRecord.id, tokens.refreshToken);
+      await this._logActivity(userRecord.id, 'social_login', provider, userRecord.id);
+
+      return {
+        user: {
+          id: userRecord.id,
+          email: userRecord.email,
+          emailVerified: true,
+          firstName: userRecord.first_name || providerProfile.firstName,
+          lastName: userRecord.last_name || providerProfile.lastName,
+          role,
+        },
+        tokens,
+        providerProfile,
+      };
+    } catch (error) {
+      logger.error('Social login error:', error);
       throw error;
     }
   }
@@ -341,6 +404,125 @@ class AuthService {
       logger.error('Email verification error:', error);
       throw error;
     }
+  }
+
+  async _verifyOAuthProvider(provider, tokens) {
+    switch (provider) {
+      case 'google':
+        return this._verifyGoogleToken(tokens.idToken);
+      default:
+        throw new ValidationError(`Unsupported social provider: ${provider}`);
+    }
+  }
+
+  async _verifyGoogleToken(idToken) {
+    if (!idToken) {
+      throw new ValidationError('Google ID token is required');
+    }
+
+    try {
+      const { data } = await axios.get('https://oauth2.googleapis.com/tokeninfo', {
+        params: { id_token: idToken },
+      });
+
+      if (config.oauth?.google?.clientId && data.aud !== config.oauth.google.clientId) {
+        throw new AuthenticationError('Google token audience mismatch');
+      }
+
+      if (!data.email) {
+        throw new AuthenticationError('Google profile does not include an email address');
+      }
+
+      return {
+        provider: 'google',
+        providerUserId: data.sub,
+        email: data.email,
+        emailVerified: data.email_verified === 'true',
+        firstName: data.given_name || data.name?.split(' ')[0] || null,
+        lastName: data.family_name || data.name?.split(' ').slice(1).join(' ') || null,
+        avatar: data.picture || null,
+      };
+    } catch (error) {
+      if (error instanceof AuthenticationError || error instanceof ValidationError) {
+        throw error;
+      }
+      logger.error('Google token verification failed', error);
+      throw new AuthenticationError('Failed to verify Google token');
+    }
+  }
+
+  async _createUserFromSocialProfile(profile) {
+    const randomPassword = crypto.randomBytes(32).toString('hex');
+    const passwordHash = await BcryptHelper.hash(randomPassword);
+
+    const user = await database.transaction(async (client) => {
+      const userResult = await client.query(
+        `INSERT INTO app_auth.users (
+          email, password_hash, email_verified, email_verification_token, email_verification_expires
+        ) VALUES ($1, $2, $3, NULL, NULL)
+        RETURNING id, email, email_verified`,
+        [profile.email.toLowerCase(), passwordHash, profile.emailVerified !== false]
+      );
+
+      const createdUser = userResult.rows[0];
+
+      await client.query(
+        `INSERT INTO users.profiles (
+          user_id, first_name, last_name, role, avatar_url
+        ) VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT (user_id) DO UPDATE
+        SET first_name = COALESCE(EXCLUDED.first_name, users.profiles.first_name),
+            last_name = COALESCE(EXCLUDED.last_name, users.profiles.last_name),
+            avatar_url = COALESCE(EXCLUDED.avatar_url, users.profiles.avatar_url),
+            updated_at = CURRENT_TIMESTAMP`,
+        [createdUser.id, profile.firstName, profile.lastName, 'customer', profile.avatar]
+      );
+
+      await client.query(
+        'INSERT INTO users.preferences (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING',
+        [createdUser.id]
+      );
+
+      return {
+        ...createdUser,
+        first_name: profile.firstName,
+        last_name: profile.lastName,
+        role: 'customer',
+      };
+    });
+
+    logger.info('User created via social login', { userId: user.id, provider: profile.provider });
+    return user;
+  }
+
+  async _syncProfileFromSocial(userId, profile) {
+    if (!profile.firstName && !profile.lastName && !profile.avatar) {
+      return;
+    }
+
+    await database.query(
+      `UPDATE users.profiles 
+       SET first_name = COALESCE($1, first_name),
+           last_name = COALESCE($2, last_name),
+           avatar_url = COALESCE($3, avatar_url),
+           updated_at = CURRENT_TIMESTAMP
+       WHERE user_id = $4`,
+      [profile.firstName, profile.lastName, profile.avatar, userId]
+    );
+  }
+
+  async _upsertOAuthProvider(userId, provider, providerUserId, accessToken = null, refreshToken = null) {
+    await database.query(
+      `INSERT INTO app_auth.oauth_providers (user_id, provider, provider_user_id, access_token, refresh_token)
+       VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (provider, provider_user_id)
+       DO UPDATE SET 
+         user_id = EXCLUDED.user_id,
+         access_token = EXCLUDED.access_token,
+         refresh_token = EXCLUDED.refresh_token,
+         updated_at = CURRENT_TIMESTAMP`,
+      [userId, provider, providerUserId, accessToken, refreshToken]
+    );
   }
 
   /**

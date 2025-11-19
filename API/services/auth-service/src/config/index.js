@@ -63,5 +63,12 @@ module.exports = {
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 900000, // 15 minutes
     max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100,
   },
+
+  // OAuth providers
+  oauth: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID,
+    },
+  },
 };
 

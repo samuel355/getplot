@@ -39,6 +39,19 @@ class AuthController {
   });
 
   /**
+   * @route   POST /api/v1/auth/social/login
+   * @desc    Login or register via social provider
+   * @access  Public
+   */
+  socialLogin = asyncHandler(async (req, res) => {
+    const data = validators.validate(validators.schemas.socialLogin, req.body);
+
+    const result = await authService.socialLogin(data);
+
+    return ResponseHandler.success(res, result, 'Social login successful');
+  });
+
+  /**
    * @route   POST /api/v1/auth/refresh
    * @desc    Refresh access token
    * @access  Public

@@ -58,6 +58,17 @@ const schemas = {
     password: Joi.string().required(),
   }),
 
+  // Social login
+  socialLogin: Joi.object({
+    provider: Joi.string().valid('google').required(),
+    idToken: Joi.any().when('provider', {
+      is: 'google',
+      then: Joi.string().required(),
+      otherwise: Joi.forbidden(),
+    }),
+    accessToken: Joi.string().optional(),
+  }),
+
   // Refresh token
   refresh: Joi.object({
     refreshToken: Joi.string().required(),

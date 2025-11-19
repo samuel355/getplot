@@ -47,8 +47,8 @@ See root `.env.example` for all required variables.
 ## Database Schema
 
 Uses tables from `auth` and `users` schemas:
-- `auth.users` - User credentials
-- `auth.refresh_tokens` - Refresh token storage
+- `app_auth.users` - User credentials
+- `app_auth.refresh_tokens` - Refresh token storage
 - `users.profiles` - User profile information
 - `users.activity_logs` - User activity tracking
 

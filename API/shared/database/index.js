@@ -1,3 +1,4 @@
+// PostgreSQL connection helper shared across all services.
 const { Pool } = require('pg');
 const logger = require('../utils/logger');
 

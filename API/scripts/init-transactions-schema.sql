@@ -5,7 +5,7 @@ CREATE SCHEMA IF NOT EXISTS transactions;
 -- Transactions table
 CREATE TABLE IF NOT EXISTS transactions.transactions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    user_id UUID REFERENCES app_auth.users(id) ON DELETE SET NULL,
     property_id UUID NOT NULL,
     location VARCHAR(50) NOT NULL,
     type VARCHAR(20) NOT NULL CHECK (type IN ('reservation', 'purchase')),
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS transactions.payments (
     reference VARCHAR(255),
     status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'failed')),
     payment_proof TEXT,
-    verified_by UUID REFERENCES auth.users(id),
+    verified_by UUID REFERENCES app_auth.users(id),
     verified_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

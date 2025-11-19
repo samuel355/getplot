@@ -9,6 +9,7 @@ module.exports = {
   services: {
     auth: process.env.AUTH_SERVICE_URL || 'http://localhost:3001',
     properties: process.env.PROPERTIES_SERVICE_URL || 'http://localhost:3002',
+    plots: process.env.PLOTS_SERVICE_URL || 'http://localhost:3007',
     transactions: process.env.TRANSACTIONS_SERVICE_URL || 'http://localhost:3003',
     users: process.env.USERS_SERVICE_URL || 'http://localhost:3004',
     notifications: process.env.NOTIFICATIONS_SERVICE_URL || 'http://localhost:3005',

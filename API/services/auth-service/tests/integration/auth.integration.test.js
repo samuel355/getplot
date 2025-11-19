@@ -10,13 +10,13 @@ describe('Auth API - Integration Tests', () => {
     await database.connect();
 
     // Clean up test data
-    await database.query("DELETE FROM auth.users WHERE email LIKE '%test@example.com%'");
+    await database.query("DELETE FROM app_auth.users WHERE email LIKE '%test@example.com%'");
   });
 
   afterAll(async () => {
     // Clean up
     if (testUser) {
-      await database.query('DELETE FROM auth.users WHERE id = $1', [testUser.id]);
+      await database.query('DELETE FROM app_auth.users WHERE id = $1', [testUser.id]);
     }
     await database.disconnect();
   });

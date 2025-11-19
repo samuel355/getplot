@@ -88,11 +88,11 @@ The Get Plot API follows a **microservices architecture** with the following des
 - Role-based access control (RBAC)
 
 **Database Tables**:
-- `auth.users`
-- `auth.sessions`
-- `auth.refresh_tokens`
-- `auth.password_resets`
-- `auth.oauth_providers`
+- `app_auth.users`
+- `app_auth.sessions`
+- `app_auth.refresh_tokens`
+- `app_auth.password_resets`
+- `app_auth.oauth_providers`
 
 **Dependencies**:
 - PostgreSQL

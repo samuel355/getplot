@@ -58,6 +58,15 @@ router.use('/properties', createProxy(config.services.properties, {
 }));
 
 // ============================================
+// PLOTS SERVICE ROUTES
+// ============================================
+router.use('/plots', createProxy(config.services.plots, {
+  pathRewrite: {
+    '^/api/v1': '/api/v1',
+  },
+}));
+
+// ============================================
 // TRANSACTIONS SERVICE ROUTES
 // ============================================
 router.use('/transactions', authenticate, createProxy(config.services.transactions, {

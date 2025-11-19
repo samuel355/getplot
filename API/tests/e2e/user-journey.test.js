@@ -15,7 +15,7 @@ describe('E2E: Complete User Journey', () => {
   afterAll(async () => {
     // Cleanup test data
     if (userId) {
-      await database.query('DELETE FROM auth.users WHERE id = $1', [userId]);
+      await database.query('DELETE FROM app_auth.users WHERE id = $1', [userId]);
     }
     await database.disconnect();
   });

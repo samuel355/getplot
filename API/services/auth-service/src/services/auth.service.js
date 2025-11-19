@@ -12,7 +12,7 @@ class AuthService {
     try {
       // Check if user already exists
       const existingUser = await database.query(
-        'SELECT id FROM auth.users WHERE email = $1',
+        'SELECT id FROM app_auth.users WHERE email = $1',
         [email.toLowerCase()]
       );
 
@@ -31,7 +31,7 @@ class AuthService {
       const result = await database.transaction(async (client) => {
         // Create user in auth schema
         const userResult = await client.query(
-          `INSERT INTO auth.users (
+          `INSERT INTO app_auth.users (
             email, password_hash, email_verification_token, email_verification_expires
           ) VALUES ($1, $2, $3, $4) RETURNING id, email, email_verified, created_at`,
           [email.toLowerCase(), passwordHash, verificationToken, verificationExpires]
@@ -96,7 +96,7 @@ class AuthService {
         `SELECT 
           u.id, u.email, u.password_hash, u.email_verified, u.is_active,
           p.first_name, p.last_name, p.role
-        FROM auth.users u
+        FROM app_auth.users u
         LEFT JOIN users.profiles p ON u.id = p.user_id
         WHERE u.email = $1`,
         [email.toLowerCase()]
@@ -131,7 +131,7 @@ class AuthService {
 
       // Update last login
       await database.query(
-        'UPDATE auth.users SET last_login = CURRENT_TIMESTAMP WHERE id = $1',
+        'UPDATE app_auth.users SET last_login = CURRENT_TIMESTAMP WHERE id = $1',
         [user.id]
       );
 
@@ -168,8 +168,8 @@ class AuthService {
       // Check if token exists in database
       const result = await database.query(
         `SELECT rt.user_id, u.email, p.role
-        FROM auth.refresh_tokens rt
-        JOIN auth.users u ON rt.user_id = u.id
+        FROM app_auth.refresh_tokens rt
+        JOIN app_auth.users u ON rt.user_id = u.id
         JOIN users.profiles p ON u.id = p.user_id
         WHERE rt.token = $1 AND rt.expires_at > CURRENT_TIMESTAMP`,
         [refreshToken]
@@ -189,7 +189,7 @@ class AuthService {
       });
 
       // Delete old refresh token
-      await database.query('DELETE FROM auth.refresh_tokens WHERE token = $1', [refreshToken]);
+      await database.query('DELETE FROM app_auth.refresh_tokens WHERE token = $1', [refreshToken]);
 
       // Store new refresh token
       await this._storeRefreshToken(user_id, tokens.refreshToken);
@@ -211,12 +211,12 @@ class AuthService {
       // Delete refresh token
       if (refreshToken) {
         await database.query(
-          'DELETE FROM auth.refresh_tokens WHERE user_id = $1 AND token = $2',
+          'DELETE FROM app_auth.refresh_tokens WHERE user_id = $1 AND token = $2',
           [userId, refreshToken]
         );
       } else {
         // Delete all refresh tokens for user
-        await database.query('DELETE FROM auth.refresh_tokens WHERE user_id = $1', [userId]);
+        await database.query('DELETE FROM app_auth.refresh_tokens WHERE user_id = $1', [userId]);
       }
 
       // Log activity
@@ -236,7 +236,7 @@ class AuthService {
    */
   async forgotPassword(email) {
     try {
-      const result = await database.query('SELECT id FROM auth.users WHERE email = $1', [
+      const result = await database.query('SELECT id FROM app_auth.users WHERE email = $1', [
         email.toLowerCase(),
       ]);
 
@@ -253,7 +253,7 @@ class AuthService {
 
       // Store reset token
       await database.query(
-        'UPDATE auth.users SET password_reset_token = $1, password_reset_expires = $2 WHERE id = $3',
+        'UPDATE app_auth.users SET password_reset_token = $1, password_reset_expires = $2 WHERE id = $3',
         [resetToken, resetExpires, userId]
       );
 
@@ -275,7 +275,7 @@ class AuthService {
   async resetPassword(token, newPassword) {
     try {
       const result = await database.query(
-        'SELECT id FROM auth.users WHERE password_reset_token = $1 AND password_reset_expires > CURRENT_TIMESTAMP',
+        'SELECT id FROM app_auth.users WHERE password_reset_token = $1 AND password_reset_expires > CURRENT_TIMESTAMP',
         [token]
       );
 
@@ -290,12 +290,12 @@ class AuthService {
 
       // Update password and clear reset token
       await database.query(
-        'UPDATE auth.users SET password_hash = $1, password_reset_token = NULL, password_reset_expires = NULL WHERE id = $2',
+        'UPDATE app_auth.users SET password_hash = $1, password_reset_token = NULL, password_reset_expires = NULL WHERE id = $2',
         [passwordHash, userId]
       );
 
       // Invalidate all refresh tokens
-      await database.query('DELETE FROM auth.refresh_tokens WHERE user_id = $1', [userId]);
+      await database.query('DELETE FROM app_auth.refresh_tokens WHERE user_id = $1', [userId]);
 
       // Log activity
       await this._logActivity(userId, 'password_reset', 'auth', userId);
@@ -315,7 +315,7 @@ class AuthService {
   async verifyEmail(token) {
     try {
       const result = await database.query(
-        'SELECT id FROM auth.users WHERE email_verification_token = $1 AND email_verification_expires > CURRENT_TIMESTAMP',
+        'SELECT id FROM app_auth.users WHERE email_verification_token = $1 AND email_verification_expires > CURRENT_TIMESTAMP',
         [token]
       );
 
@@ -327,7 +327,7 @@ class AuthService {
 
       // Update user as verified
       await database.query(
-        'UPDATE auth.users SET email_verified = true, email_verification_token = NULL, email_verification_expires = NULL WHERE id = $1',
+        'UPDATE app_auth.users SET email_verified = true, email_verification_token = NULL, email_verification_expires = NULL WHERE id = $1',
         [userId]
       );
 
@@ -351,7 +351,7 @@ class AuthService {
     expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
 
     await database.query(
-      'INSERT INTO auth.refresh_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)',
+      'INSERT INTO app_auth.refresh_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)',
       [userId, token, expiresAt]
     );
   }

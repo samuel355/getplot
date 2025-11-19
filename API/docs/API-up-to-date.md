@@ -125,7 +125,7 @@ Location: `/API/scripts/`
 
 **Tables Created**:
 -  Land sites 
--  auth.users, auth.refresh_tokens, auth.oauth_providers
+-  app_auth.users, app_auth.refresh_tokens, app_auth.oauth_providers
 -  users.profiles, users.preferences, users.saved_properties, users.activity_logs
 -  properties.yabi, properties.trabuom, properties.dar_es_salaam, etc.
 -  notifications.email_logs, notifications.sms_logs, notifications.templates
@@ -239,6 +239,11 @@ curl http://localhost:3000/api/v1/auth/register -X POST \
 
 ## 📈 Next Development Session
 
+**Priority 0 - Plots Service** (new)
+- Harden dedicated plots microservice
+- Add admin CRUD for plot metadata
+- Align reservation workflows with transactions service
+
 **Priority 1 - Transactions Service** (2-3 hours)
 - Implement reserve plot
 - Implement buy plot
@@ -274,6 +279,7 @@ docker-compose up --build
 - **API Gateway**: http://localhost:3000
 - **Auth Service**: http://localhost:3001
 - **Properties Service**: http://localhost:3002
+- **Plots Service**: http://localhost:3007
 - **PostgreSQL**: localhost:5432
 - **Redis**: localhost:6379
 - **RabbitMQ Management**: http://localhost:15672

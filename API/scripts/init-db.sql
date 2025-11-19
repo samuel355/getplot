@@ -8,7 +8,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- Create schemas for different services
-CREATE SCHEMA IF NOT EXISTS auth;
+CREATE SCHEMA IF NOT EXISTS app_auth;
 CREATE SCHEMA IF NOT EXISTS users;
 CREATE SCHEMA IF NOT EXISTS properties;
 CREATE SCHEMA IF NOT EXISTS transactions;
@@ -16,14 +16,14 @@ CREATE SCHEMA IF NOT EXISTS notifications;
 CREATE SCHEMA IF NOT EXISTS analytics;
 
 -- Set search path
-SET search_path TO public, auth, users, properties, transactions, notifications, analytics;
+SET search_path TO public, app_auth, users, properties, transactions, notifications, analytics;
 
 -- ============================================
 -- AUTH SCHEMA TABLES
 -- ============================================
 
 -- Users table (auth)
-CREATE TABLE IF NOT EXISTS auth.users (
+CREATE TABLE IF NOT EXISTS app_auth.users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -39,9 +39,9 @@ CREATE TABLE IF NOT EXISTS auth.users (
 );
 
 -- Refresh tokens table
-CREATE TABLE IF NOT EXISTS auth.refresh_tokens (
+CREATE TABLE IF NOT EXISTS app_auth.refresh_tokens (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES app_auth.users(id) ON DELETE CASCADE,
     token VARCHAR(500) NOT NULL,
     expires_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -49,9 +49,9 @@ CREATE TABLE IF NOT EXISTS auth.refresh_tokens (
 );
 
 -- OAuth providers table
-CREATE TABLE IF NOT EXISTS auth.oauth_providers (
+CREATE TABLE IF NOT EXISTS app_auth.oauth_providers (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES app_auth.users(id) ON DELETE CASCADE,
     provider VARCHAR(50) NOT NULL, -- google, facebook, etc.
     provider_user_id VARCHAR(255) NOT NULL,
     access_token TEXT,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS auth.oauth_providers (
 -- User profiles table
 CREATE TABLE IF NOT EXISTS users.profiles (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID UNIQUE NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    user_id UUID UNIQUE NOT NULL REFERENCES app_auth.users(id) ON DELETE CASCADE,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     phone VARCHAR(20),
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS users.profiles (
 -- User preferences table
 CREATE TABLE IF NOT EXISTS users.preferences (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID UNIQUE NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    user_id UUID UNIQUE NOT NULL REFERENCES app_auth.users(id) ON DELETE CASCADE,
     notifications_email BOOLEAN DEFAULT TRUE,
     notifications_sms BOOLEAN DEFAULT TRUE,
     language VARCHAR(10) DEFAULT 'en',
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS users.preferences (
 -- User saved properties (favorites)
 CREATE TABLE IF NOT EXISTS users.saved_properties (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES app_auth.users(id) ON DELETE CASCADE,
     property_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, property_id)
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS users.saved_properties (
 -- Activity logs table
 CREATE TABLE IF NOT EXISTS users.activity_logs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    user_id UUID REFERENCES app_auth.users(id) ON DELETE SET NULL,
     action VARCHAR(100) NOT NULL,
     resource_type VARCHAR(50),
     resource_id UUID,
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS users.activity_logs (
 -- Email logs table
 CREATE TABLE IF NOT EXISTS notifications.email_logs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    user_id UUID REFERENCES app_auth.users(id) ON DELETE SET NULL,
     to_email VARCHAR(255) NOT NULL,
     subject VARCHAR(500),
     template VARCHAR(100),
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS notifications.email_logs (
 -- SMS logs table
 CREATE TABLE IF NOT EXISTS notifications.sms_logs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    user_id UUID REFERENCES app_auth.users(id) ON DELETE SET NULL,
     to_phone VARCHAR(20) NOT NULL,
     message TEXT NOT NULL,
     status VARCHAR(50) DEFAULT 'pending',
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS notifications.templates (
 -- Events tracking table
 CREATE TABLE IF NOT EXISTS analytics.events (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    user_id UUID REFERENCES app_auth.users(id) ON DELETE SET NULL,
     event_name VARCHAR(100) NOT NULL,
     event_category VARCHAR(50),
     properties JSONB,
@@ -177,10 +177,10 @@ CREATE TABLE IF NOT EXISTS analytics.events (
 );
 
 -- Create indexes for better performance
-CREATE INDEX IF NOT EXISTS idx_users_email ON auth.users(email);
-CREATE INDEX IF NOT EXISTS idx_users_active ON auth.users(is_active);
-CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user ON auth.refresh_tokens(user_id);
-CREATE INDEX IF NOT EXISTS idx_refresh_tokens_expires ON auth.refresh_tokens(expires_at);
+CREATE INDEX IF NOT EXISTS idx_users_email ON app_auth.users(email);
+CREATE INDEX IF NOT EXISTS idx_users_active ON app_auth.users(is_active);
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user ON app_auth.refresh_tokens(user_id);
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_expires ON app_auth.refresh_tokens(expires_at);
 
 CREATE INDEX IF NOT EXISTS idx_profiles_user ON users.profiles(user_id);
 CREATE INDEX IF NOT EXISTS idx_profiles_role ON users.profiles(role);
@@ -208,7 +208,7 @@ END;
 $$ language 'plpgsql';
 
 -- Apply trigger to tables with updated_at column
-CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON auth.users
+CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON app_auth.users
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON users.profiles

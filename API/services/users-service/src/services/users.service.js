@@ -21,7 +21,7 @@ class UsersService {
         `SELECT 
           u.id, u.email, u.email_verified, u.is_active, u.created_at,
           p.first_name, p.last_name, p.phone, p.country, p.residential_address, p.role, p.avatar_url
-        FROM auth.users u
+        FROM app_auth.users u
         LEFT JOIN users.profiles p ON u.id = p.user_id
         WHERE u.id = $1`,
         [userId]

@@ -52,6 +52,16 @@ module.exports = {
     fromName: process.env.SMTP_FROM_NAME || 'Get Plot',
   },
   
+  // Frontend
+  frontend: {
+    baseUrl: process.env.FRONTEND_URL || 'https://getplot.com',
+  },
+  
+  // External services
+  services: {
+    notifications: process.env.NOTIFICATIONS_SERVICE_URL || 'http://localhost:3005',
+  },
+  
   // CORS
   cors: {
     origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000'],

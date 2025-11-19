@@ -19,11 +19,18 @@ module.exports = {
     fromName: process.env.SMTP_FROM_NAME || 'Get Plot',
   },
   
-  // SMS (Africa's Talking)
+  // SMS Providers
   sms: {
-    username: process.env.AFRICASTALKING_USERNAME,
-    apiKey: process.env.AFRICASTALKING_API_KEY,
-    senderId: process.env.AFRICASTALKING_SENDER_ID || 'GetPlot',
+    provider: (process.env.SMS_PROVIDER || 'africastalking').toLowerCase(),
+    africastalking: {
+      username: process.env.AFRICASTALKING_USERNAME,
+      apiKey: process.env.AFRICASTALKING_API_KEY,
+      senderId: process.env.AFRICASTALKING_SENDER_ID || 'GetPlot',
+    },
+    arkesel: {
+      apiKey: process.env.ARKESEL_SMS_API_KEY,
+      senderId: process.env.ARKESEL_SMS_SENDER_ID || 'GetPlot',
+    },
   },
   
   cors: {

@@ -42,7 +42,7 @@ module.exports = {
   },
   
   queue: {
-    name: process.env.NOTIFICATIONS_QUEUE_NAME || 'notifications:jobs',
+    name: process.env.NOTIFICATIONS_QUEUE_NAME || 'notifications-jobs',
     defaultAttempts: parseInt(process.env.NOTIFICATIONS_QUEUE_ATTEMPTS, 10) || 3,
     backoffDelay: parseInt(process.env.NOTIFICATIONS_QUEUE_BACKOFF_MS, 10) || 2000,
     removeOnComplete: process.env.NOTIFICATIONS_QUEUE_REMOVE_ON_COMPLETE === 'false' ? false : true,

@@ -186,6 +186,7 @@ The Get Plot API follows a **microservices architecture** with the following des
 - Notification preferences
 - Delivery tracking
 - Bulk sending with queues
+- BullMQ workers for async processing
 
 **Database Tables**:
 - `notifications.email_logs`

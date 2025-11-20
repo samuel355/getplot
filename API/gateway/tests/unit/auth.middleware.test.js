@@ -84,7 +84,7 @@ describe('Gateway Auth Middleware - Unit Tests', () => {
 
     it('should reject request with insufficient permissions', () => {
       mockReq.user = { userId: 'user-123', role: 'user' };
-      const middleware = authorize('admin', 'sysadmin');
+      const middleware = authorize('admin', 'system_admin');
       middleware(mockReq, mockRes, mockNext);
 
       expect(ResponseHandler.forbidden).toHaveBeenCalledWith(mockRes, 'Insufficient permissions');
@@ -93,7 +93,7 @@ describe('Gateway Auth Middleware - Unit Tests', () => {
 
     it('should allow request with correct role', () => {
       mockReq.user = { userId: 'user-123', role: 'admin' };
-      const middleware = authorize('admin', 'sysadmin');
+      const middleware = authorize('admin', 'system_admin');
       middleware(mockReq, mockRes, mockNext);
 
       expect(mockNext).toHaveBeenCalled();
@@ -102,7 +102,7 @@ describe('Gateway Auth Middleware - Unit Tests', () => {
 
     it('should allow multiple roles', () => {
       mockReq.user = { userId: 'user-123', role: 'moderator' };
-      const middleware = authorize('admin', 'moderator', 'sysadmin');
+      const middleware = authorize('admin', 'moderator', 'system_admin');
       middleware(mockReq, mockRes, mockNext);
 
       expect(mockNext).toHaveBeenCalled();

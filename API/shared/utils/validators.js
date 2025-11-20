@@ -32,7 +32,9 @@ const pagination = {
   limit: Joi.number().integer().min(1).max(100).default(20),
 };
 
-const role = Joi.string().valid('customer', 'agent', 'admin', 'sysadmin').required();
+const role = Joi.string()
+  .valid('default_member', 'agent', 'admin', 'system_admin', 'chief', 'chief_assistant')
+  .required();
 
 const status = Joi.string().valid('available', 'reserved', 'sold', 'hold').required();
 

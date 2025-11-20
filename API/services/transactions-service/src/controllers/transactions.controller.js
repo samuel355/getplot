@@ -73,7 +73,7 @@ class TransactionsController {
     };
 
     // Users can only view their own transactions unless admin
-    if (req.user.sub !== userId && !['admin', 'sysadmin'].includes(req.user.role)) {
+    if (req.user.sub !== userId && !['admin', 'system_admin'].includes(req.user.role)) {
       return ResponseHandler.forbidden(res, 'Cannot access other user transactions');
     }
 
@@ -89,7 +89,7 @@ class TransactionsController {
    */
   getTransactionById = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const userId = ['admin', 'sysadmin'].includes(req.user.role) ? null : req.user.sub;
+    const userId = ['admin', 'system_admin'].includes(req.user.role) ? null : req.user.sub;
 
     const transaction = await transactionsService.getTransactionById(id, userId);
 

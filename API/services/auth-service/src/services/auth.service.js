@@ -46,7 +46,7 @@ class AuthService {
           `INSERT INTO users.profiles (
             user_id, first_name, last_name, phone, country, residential_address, role
           ) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-          [user.id, firstName, lastName, phone, country, residentialAddress || null, 'customer']
+          [user.id, firstName, lastName, phone, country, residentialAddress || null, 'default_member']
         );
 
         // Create user preferences
@@ -62,7 +62,7 @@ class AuthService {
       const tokens = JWTHelper.generateTokenPair({
         sub: result.id,
         email: result.email,
-        role: 'customer',
+        role: 'default_member',
       });
 
       // Store refresh token
@@ -77,7 +77,7 @@ class AuthService {
           emailVerified: result.email_verified,
           firstName,
           lastName,
-          role: 'customer',
+          role: 'default_member',
         },
         tokens,
         verificationToken, // To be sent via email
@@ -155,6 +155,11 @@ class AuthService {
       };
     } catch (error) {
       logger.error('Login error:', error);
+      if (error instanceof AuthenticationError) {
+        const httpError = new Error(error.message);
+        httpError.statusCode = 401; // Unauthorized
+        throw httpError;
+      }
       throw error;
     }
   }
@@ -191,7 +196,7 @@ class AuthService {
 
       await this._upsertOAuthProvider(userRecord.id, provider, providerProfile.providerUserId, accessToken || null);
 
-      const role = userRecord.role || 'customer';
+      const role = userRecord.role || 'default_member';
 
       const tokens = JWTHelper.generateTokenPair({
         sub: userRecord.id,
@@ -475,7 +480,7 @@ class AuthService {
             last_name = COALESCE(EXCLUDED.last_name, users.profiles.last_name),
             avatar_url = COALESCE(EXCLUDED.avatar_url, users.profiles.avatar_url),
             updated_at = CURRENT_TIMESTAMP`,
-        [createdUser.id, profile.firstName, profile.lastName, 'customer', profile.avatar]
+        [createdUser.id, profile.firstName, profile.lastName, 'default_member', profile.avatar]
       );
 
       await client.query(
@@ -487,7 +492,7 @@ class AuthService {
         ...createdUser,
         first_name: profile.firstName,
         last_name: profile.lastName,
-        role: 'customer',
+        role: 'default_member',
       };
     });
 

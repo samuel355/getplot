@@ -197,7 +197,7 @@ curl http://localhost:3000/api/v1/auth/register -X POST \
   TODO
  Not Yet Available:
 1. Reserve/buy plot transactions (service not implemented)
-2. Email/SMS notifications (notifications service)
+2. Email/SMS notifications (queue-backed notifications service)
 3. Profile management beyond auth (users service not implemented)
 4. Analytics endpoints (service not implemented)
 

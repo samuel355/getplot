@@ -36,7 +36,7 @@ const apiLimiter = rateLimit({
 const authLimiter = rateLimit({
   store: createStore('rl:auth:', 15 * 60 * 1000),
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 attempts
+  max: 8, // 8 attempts
   message: {
     success: false,
     error: {
@@ -44,7 +44,7 @@ const authLimiter = rateLimit({
       message: 'Too many login attempts, please try again later',
     },
   },
-  skipSuccessfulRequests: true,
+  skipSuccessfulRequests: false,
   standardHeaders: true,
   legacyHeaders: false,
 });

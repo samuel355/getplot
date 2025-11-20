@@ -96,7 +96,7 @@ router.use('/notifications', createProxy(config.services.notifications, {
 // ============================================
 // ANALYTICS SERVICE ROUTES
 // ============================================
-router.use('/analytics', authenticate, authorize('admin', 'sysadmin'), createProxy(config.services.analytics, {
+router.use('/analytics', authenticate, authorize('admin', 'system_admin'), createProxy(config.services.analytics, {
   pathRewrite: {
     '^/api/v1': '/api/v1',
   },

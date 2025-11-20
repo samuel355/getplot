@@ -591,7 +591,7 @@ As a: System Administrator
 I want to: Different permission levels for users
 So that: Access is controlled based on roles
 Acceptance Criteria:
-  - 4 roles defined (customer, agent, admin, sysadmin)
+  - Roles defined (default_member, agent, admin, system_admin, chief, chief_assistant)
   - Role assignment on registration
   - Authorization middleware
   - Role checking on protected routes

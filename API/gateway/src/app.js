@@ -96,6 +96,7 @@ app.get('/api-docs', (req, res) => {
       users: '/api/v1/users',
       notifications: '/api/v1/notifications',
       analytics: '/api/v1/analytics',
+      plots: '/api/v1/plots',
     },
     documentation: 'See /docs folder for detailed API documentation',
   });

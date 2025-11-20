@@ -74,7 +74,9 @@ CREATE TABLE IF NOT EXISTS users.profiles (
     phone VARCHAR(20),
     country VARCHAR(100),
     residential_address TEXT,
-    role VARCHAR(20) DEFAULT 'customer' CHECK (role IN ('customer', 'agent', 'admin', 'sysadmin')),
+    role VARCHAR(20) DEFAULT 'default_member' CHECK (
+        role IN ('default_member', 'agent', 'admin', 'system_admin', 'chief', 'chief_assistant')
+    ),
     avatar_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

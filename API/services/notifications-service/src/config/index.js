@@ -16,7 +16,7 @@ module.exports = {
     user: process.env.SMTP_USER,
     password: process.env.SMTP_PASSWORD,
     from: process.env.SMTP_FROM_EMAIL || 'noreply@getplot.com',
-    fromName: process.env.SMTP_FROM_NAME || 'Get Plot',
+    fromName: process.env.SMTP_FROM_NAME || 'Get One Plot',
   },
   
   // SMS Providers
@@ -25,11 +25,11 @@ module.exports = {
     africastalking: {
       username: process.env.AFRICASTALKING_USERNAME,
       apiKey: process.env.AFRICASTALKING_API_KEY,
-      senderId: process.env.AFRICASTALKING_SENDER_ID || 'GetPlot',
+      senderId: process.env.AFRICASTALKING_SENDER_ID || 'Get One Plot',
     },
     arkesel: {
       apiKey: process.env.ARKESEL_SMS_API || process.env.ARKESEL_SMS_API_KEY,
-      senderId: process.env.ARKESEL_SMS_SENDER_ID || 'GetPlot',
+      senderId: process.env.ARKESEL_SMS_SENDER_ID || 'Get One Plot',
     },
   },
   

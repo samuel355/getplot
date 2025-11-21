@@ -155,6 +155,7 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
                       <SelectItem value="admin">Admin</SelectItem>
                       <SelectItem value="sysadmin">System Admin</SelectItem>
                       <SelectItem value="None">Normal User</SelectItem>
+                      <SelectItem value="chief">Chief</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 export default function AuthCheck({
   children,
-  allowedRoles = ["admin", "sysadmin"],
+  allowedRoles = ["admin", "sysadmin", "chief"],
 }) {
   const { userId, isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();

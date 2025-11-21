@@ -35,6 +35,7 @@ export default function Sidebar() {
     user?.publicMetadata?.role === "admin" ||
     user?.publicMetadata?.role === "sysadmin";
   const isSysAdmin = user?.publicMetadata?.role === "sysadmin";
+  const isChief = user?.publicMetadata?.role === "chief";
 
   // Regular user navigation
   const navigation = [

@@ -29,6 +29,7 @@ export default function UserRoleDialog({
   const roles = [
     { value: "user", label: "Regular User" },
     { value: "admin", label: "Administrator" },
+    { value: "chief", label: "Chief" },
     ...(currentUserRole === "sysadmin"
       ? [{ value: "sysadmin", label: "System Administrator" }]
       : []),

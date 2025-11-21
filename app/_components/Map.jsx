@@ -294,7 +294,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
     status,
     feature
   ) => {
-    let plot_size;
+    let plot_size, legon_hills_price=0;
 
     if (pathname === "/trabuom") {
       plot_size = feature?.properties?.Area.toFixed(2);
@@ -319,20 +319,23 @@ const Map = ({ parcels, center, setCartOpen }) => {
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
       <div class="px-2 py-3 flex flex-col">
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2 ?? ''}</div>
-        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(
-      43560 * plot_size
-    ).toLocaleString()} Square ft </div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(43560 * plot_size).toLocaleString()} Square ft </div>
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 8px; font-weight: bold; display: ${
-          ((status === "Sold" || status === "Reserved") &&
-            user?.publicMetadata?.role != "sysadmin") ||
-          !(Number(feature.plotTotalAmount) > 0)
-            ? "none"
-            : "block"
-        }">${
-      Number(feature.plotTotalAmount) > 0
-        ? "GHS. " + Number(feature.plotTotalAmount).toLocaleString()
-        : ""
-    } </div>
+            ((status === "Sold" || status === "Reserved") &&
+              user?.publicMetadata?.role != "sysadmin") ||
+            !(Number(feature.plotTotalAmount) > 0)
+              ? "none"
+              : "block"
+          }">
+           
+          ${
+            pathname === '/legon-hills' && feature.plotTotalAmount > 0 
+              ? "$" + (43560 * plot_size * 8.5).toLocaleString()
+              : Number(feature.plotTotalAmount) > 0
+                ? "GHS. " + Number(feature.plotTotalAmount).toLocaleString()
+                : ""
+          }
+        </div>
 
         <p style="margin-top: 12px; margin-bottom:12px; font-weight: bold; color: red; display: ${Number(feature.plotTotalAmount) === 0 && (status === null || status === "Available" || status === undefined) ? "block": "none"}">NOT READY FOR SALE YET</p>
         <p style="display: ${

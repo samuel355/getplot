@@ -1,6 +1,7 @@
-const { asyncHandler, ResponseHandler, validators, logger } = require('@getplot/shared');
+const { asyncHandler, ResponseHandler, validators, logger, database } = require('@getplot/shared');
 const authService = require('../services/auth.service');
-const notificationService = require('../services/notification.service');
+//const notificationService = require('../services/notification.service');
+const emailService = require('@getplot/notifications-service/src/services/email.service');
 
 class AuthController {
   /**
@@ -29,7 +30,11 @@ class AuthController {
     // Return response without verification token
     const { verificationToken, ...response } = result;
 
-    return ResponseHandler.created(res, response, 'Registration successful. Please check your email to verify your account.');
+    return ResponseHandler.created(
+      res,
+      response,
+      'Registration successful. Please check your email to verify your account.'
+    );
   });
 
   /**
@@ -103,17 +108,23 @@ class AuthController {
     const result = await authService.forgotPassword(data.email);
 
     if (result.resetToken) {
-      notificationService
-        .sendPasswordResetEmail(data.email, result.resetToken)
-        .catch((error) =>
+      const user = await database.query('SELECT firstname, lastname FROM app_auth.users WHERE email = $1', [data.email]);
+      if (user.rows.length > 0) {
+        const fullname = `${user.rows[0].firstname} ${user.rows[0].lastname}`;
+        emailService.sendPasswordResetEmail(data.email, fullname, result.resetToken).catch((error) =>
           logger.error('Failed to send password reset email', {
             email: data.email,
             error: error.message,
           })
         );
+      }
     }
 
-    return ResponseHandler.success(res, null, 'If the email exists, a password reset link has been sent');
+    return ResponseHandler.success(
+      res,
+      null,
+      'If the email exists, a password reset link has been sent'
+    );
   });
 
   /**
@@ -128,7 +139,11 @@ class AuthController {
     // Reset password
     await authService.resetPassword(data.token, data.newPassword);
 
-    return ResponseHandler.success(res, null, 'Password reset successful. Please login with your new password.');
+    return ResponseHandler.success(
+      res,
+      null,
+      'Password reset successful. Please login with your new password.'
+    );
   });
 
   /**
@@ -161,4 +176,3 @@ class AuthController {
 }
 
 module.exports = new AuthController();
-

@@ -281,7 +281,7 @@ function renderProperties(viewMode, properties, loading) {
                         </svg>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    {/* <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem asChild>
                         <Link href={`/properties/property/${property.id}`}>
@@ -296,7 +296,7 @@ function renderProperties(viewMode, properties, loading) {
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                    </DropdownMenuContent>
+                    </DropdownMenuContent> */}
                   </DropdownMenu>
                 </TableCell>
               </TableRow>

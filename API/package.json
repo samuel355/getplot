@@ -1,0 +1,94 @@
+{
+  "name": "getplot-api",
+  "version": "1.0.0",
+  "description": "Get Plot - Production-Ready Microservices API",
+  "author": "Get Plot Engineering Team",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev:gateway\" \"npm run dev:auth\" \"npm run dev:properties\" \"npm run dev:plots\" \"npm run dev:transactions\" \"npm run dev:users\" \"npm run dev:notifications\" \"npm run dev:analytics\"",
+    "dev:gateway": "cd gateway && npm run dev",
+    "dev:auth": "cd services/auth-service && npm run dev",
+    "dev:properties": "cd services/properties-service && npm run dev",
+    "dev:plots": "cd services/plots-service && npm run dev",
+    "dev:transactions": "cd services/transactions-service && npm run dev",
+    "dev:users": "cd services/users-service && npm run dev",
+    "dev:notifications": "cd services/notifications-service && npm run dev",
+    "dev:analytics": "cd services/analytics-service && npm run dev",
+    "start": "node scripts/start-all.js",
+    "test": "jest --coverage",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:e2e": "jest --testPathPattern=e2e",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage --coverageReporters=text-lcov | coveralls",
+    "test:database": "node test-database.js",
+    "lint": "eslint . --ext .js --fix",
+    "lint:check": "eslint . --ext .js",
+    "format": "prettier --write \"**/*.{js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{js,json,md}\"",
+    "migrate": "node scripts/migrate.js",
+    "migrate:rollback": "node scripts/migrate-rollback.js",
+    "seed": "node scripts/seed.js",
+    "seed:dev": "node scripts/seed-dev.js",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:prod:build": "docker-compose -f docker-compose.prod.yml build",
+    "docker:prod:up": "docker-compose -f docker-compose.prod.yml up -d",
+    "docker:prod:down": "docker-compose -f docker-compose.prod.yml down",
+    "prepare": "husky install",
+    "postinstall": "node scripts/install-services.js"
+  },
+  "workspaces": [
+    "gateway",
+    "services/*",
+    "shared"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "concurrently": "^9.1.0",
+    "coveralls": "^3.1.1",
+    "eslint": "^9.15.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jest": "^28.9.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-security": "^3.0.1",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.11",
+    "prettier": "^3.4.2",
+    "supertest": "^7.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "keywords": [
+    "api",
+    "microservices",
+    "real-estate",
+    "nodejs",
+    "express",
+    "postgresql",
+    "redis",
+    "docker",
+    "kubernetes"
+  ]
+}
+

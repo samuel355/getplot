@@ -12,6 +12,17 @@ const protectedRoutes = {
 
 export default clerkMiddleware({
   publicRoutes: ["/"],
+  afterAuth(auth, req) {
+    // Handle users who aren't authenticated
+    if (!auth.userId && !auth.isPublicRoute) {
+      return Response.redirect(new URL("/sign-in", req.url));
+    }
+    
+    // Redirect signed-in users to approval page
+    if (auth.userId && req.nextUrl.pathname === "/") {
+      return Response.redirect(new URL("/approval", req.url));
+    }
+  },
 });
 
 export const config = {

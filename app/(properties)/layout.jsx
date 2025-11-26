@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }) {
   const { user, isSignedIn, isLoaded } = useUser();
   useEffect(() => {
     if (isLoaded && !user) {
-      window.location.href = "/market-place";
+      window.location.href = "/";
     }
   }, [isLoaded, isSignedIn, user]);
 

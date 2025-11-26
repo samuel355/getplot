@@ -19,7 +19,8 @@ export default function RootLayout({ children }) {
       <ClerkProvider
         signOutUrl="/"
         signInUrl="/sign-in"
-        afterSignInUrl="/properties/list"
+        signInForceRedirectUrl="/approval"
+        signUpForceRedirectUrl="/approval"
         afterSignOutUrl="/"
       >
         <html lang="en">

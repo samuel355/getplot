@@ -2,8 +2,6 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import Header from "@/app/_components/Header";
-import Footer from "@/app/_components/Footer";
 import { HomeIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 export default function NotFound() {

@@ -44,6 +44,7 @@ const Header = () => {
   const { user, isSignedIn } = useUser();
   const [cartOpen, setCartOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  console.log(user)
 
   const { plots } = useCart();
 
@@ -434,6 +435,25 @@ const Header = () => {
                   </Link>
                 </NavigationMenuItem>
 
+                {isSignedIn &&
+                  (Object.keys(user.publicMetadata || {}).length === 0||
+                    user?.publicMetadata?.role === "" ||
+                    user?.publicMetadata?.role === "member") && (
+                    <NavigationMenuItem>
+                      <Link
+                        href="/approval"
+                        className={cn(
+                          "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
+                          path === "/approval"
+                            ? "text-primary font-bold"
+                            : "text-gray-700"
+                        )}
+                      >
+                        Check Approval
+                      </Link>
+                    </NavigationMenuItem>
+                  )}
+
                 <NavigationMenuItem>
                   {!isSignedIn && (
                     <Link
@@ -652,6 +672,23 @@ const Header = () => {
                       Contact Us
                     </Link>
                   </DropdownMenuItem>
+
+                  {isSignedIn &&
+                  (Object.keys(user.publicMetadata || {}).length === 0 ||
+                    user?.publicMetadata?.role === "" ||
+                    user?.publicMetadata?.role === "member") && (
+                    <DropdownMenuItem asChild>
+                    <Link
+                      href="/approval"
+                      className={cn(
+                        "w-full flex items-center",
+                        path === "/approval" && "text-primary font-semibold"
+                      )}
+                    >
+                      Check Approval
+                    </Link>
+                  </DropdownMenuItem>
+                  )}
                   {!isSignedIn && (
                     <>
                       <DropdownMenuItem asChild>

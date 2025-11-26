@@ -1,13 +1,12 @@
 "use client";
 
-import Footer from "@/app/_components/Footer";
-import Invests from "@/app/_components/Invests";
-import Speciality from "@/app/_components/Specialty";
+
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Header from "@/app/_components/Header";
 import Hero from "./_components/Hero-section";
 import PropertyCarousel from "@/app/_components/PropertyCarousel";
+import Footer from "./_components/Footer";
 
 const Home = () => {
   const router = useRouter();

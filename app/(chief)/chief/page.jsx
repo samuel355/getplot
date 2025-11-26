@@ -48,6 +48,7 @@ export default function PropertiesDashboard() {
       try {
         const userId = user.id;
         const isChief = user?.publicMetadata?.role === "chief";
+        //save chief area in public metdatadata in clerk and use it to fetch from supabase when user signs in 
 
         let query = supabase.from("saadi");
 

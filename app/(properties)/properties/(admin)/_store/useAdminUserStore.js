@@ -144,14 +144,14 @@ const useAdminUserStore = create((set, get) => ({
   },
 
   // Update user role
-  updateUserRole: async (userId, newRole) => {
+  updateUserRole: async (userId, newRole, area) => {
     try {
       const response = await fetch(`/api/admin/update-user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId, newRole }),
+        body: JSON.stringify({ userId, newRole, area }),
       });
 
       if (!response.ok) {
@@ -160,7 +160,7 @@ const useAdminUserStore = create((set, get) => ({
 
       // Update local state
       const updatedUsers = get().users.map((user) =>
-        user.id === userId ? { ...user, role: newRole } : user
+        user.id === userId ? { ...user, role: newRole, area: area } : user
       );
 
       // Update stats
@@ -168,7 +168,9 @@ const useAdminUserStore = create((set, get) => ({
         total: updatedUsers.length,
         admins: updatedUsers.filter((u) => u.role === "admin").length,
         sysadmins: updatedUsers.filter((u) => u.role === "sysadmin").length,
-        regularUsers: updatedUsers.filter((u) => u.role === "user").length,
+        chiefs: updatedUsers.filter((u) => u.role === "chief").length,
+        property_agents: updatedUsers.filter((u) => u.role === "property_agent").length,
+        regularUsers: updatedUsers.filter((u) => u.role === "member").length,
         banned: updatedUsers.filter((u) => u.status === "banned").length,
       };
 

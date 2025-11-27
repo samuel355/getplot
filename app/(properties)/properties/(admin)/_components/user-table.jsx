@@ -52,11 +52,32 @@ export default function UserTable({
             Admin
           </Badge>
         );
+      case "chief":
+        return (
+          <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-200">
+            <UserCheck className="h-3 w-3 mr-1" />
+            Chief/Owner
+          </Badge>
+        );
+      case "chief_asst":
+        return (
+          <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-200">
+            <UserCheck className="h-3 w-3 mr-1" />
+            Chief/Owner Assistant
+          </Badge>
+        );
+      case "property_agent":
+        return (
+          <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-200">
+            <UserCheck className="h-3 w-3 mr-1" />
+            Property Agent
+          </Badge>
+        );
       default:
         return (
           <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
             <User className="h-3 w-3 mr-1" />
-            User
+            Member
           </Badge>
         );
     }

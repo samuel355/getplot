@@ -5,11 +5,33 @@ const clerkClient = createClerkClient({
 
 export async function POST(request) {
   try {
-    const { userId, role } = await request.json();
+    const { userId, newRole, area } = await request.json();
+    //console.log(userId, newRole, area)
+
+    // Validate required fields
+    if (!userId || !newRole) {
+      return new Response(
+        JSON.stringify({ error: "User ID and role are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // For chief roles, area is required
+    if ((newRole === "chief" || newRole === "chief_asst") && !area) {
+      return new Response(
+        JSON.stringify({ error: "Area is required for chief roles" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Determine area based on role - CLEAR area for non-chief roles
+    const finalArea =
+      newRole === "chief" || newRole === "chief_asst" ? area : "";
 
     const user = await clerkClient.users.updateUser(userId, {
       publicMetadata: {
-        role: role,
+        role: newRole,
+        area: finalArea,
       },
     });
 
@@ -20,7 +42,7 @@ export async function POST(request) {
       },
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error updating user role:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: {

@@ -40,6 +40,7 @@ export default function AdminUsersPage() {
   const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
   const [isBanDialogOpen, setIsBanDialogOpen] = useState(false);
   const [newRole, setNewRole] = useState("");
+  const [area, setArea] = useState('')
   const { toast } = useToast();
 
   // Fetch users on mount
@@ -51,13 +52,14 @@ export default function AdminUsersPage() {
   const handleOpenRoleDialog = (user) => {
     setSelectedUser(user);
     setNewRole(user.role);
+    setArea(user.area)
     setIsRoleDialogOpen(true);
   };
 
   const handleRoleUpdate = async () => {
     if (!selectedUser || !newRole) return;
 
-    const result = await updateUserRole(selectedUser.id, newRole);
+    const result = await updateUserRole(selectedUser.id, newRole, area);
 
     if (result.success) {
       toast({
@@ -231,9 +233,14 @@ export default function AdminUsersPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Roles</SelectItem>
-                  <SelectItem value="user">Regular Users</SelectItem>
-                  <SelectItem value="admin">Administrators</SelectItem>
-                  <SelectItem value="sysadmin">System Admins</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="sysadmin">System Admin</SelectItem>
+                  <SelectItem value="member">Normal User</SelectItem>
+                  <SelectItem value="chief">Chief</SelectItem>
+                  <SelectItem value="chief_asst">
+                    Chief/Owner Assitant
+                  </SelectItem>
+                  <SelectItem value="property_agent">Property Agent</SelectItem>
                 </SelectContent>
               </Select>
               <Select defaultValue="newest" onValueChange={setSortOrder}>
@@ -268,6 +275,8 @@ export default function AdminUsersPage() {
             setIsOpen={setIsRoleDialogOpen}
             selectedUser={selectedUser}
             newRole={newRole}
+            area={area}
+            setArea={setArea}
             setNewRole={setNewRole}
             onUpdateRole={handleRoleUpdate}
             currentUserRole={user?.publicMetadata?.role}

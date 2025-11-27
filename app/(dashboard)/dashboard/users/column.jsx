@@ -32,7 +32,9 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
   const [error, setError] = useState(null);
   const [userLoading, setUserLoading] = useState(true);
   const [role, setRole] = useState();
+  const [area, setArea] = useState("");
   const [roleError, setRoleError] = useState(false);
+  const [areaError, setAreaError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -66,29 +68,49 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
   const handleForm = async (event) => {
     event.preventDefault();
     setLoading(true);
+    setRoleError(false);
+    setAreaError(false);
+
+    // Validation checks with early returns
     if (role === undefined || role === null) {
       setRoleError(true);
       toast.error("Choose Role");
       setLoading(false);
-    } else {
-      setRoleError(false);
+      return;
+    }
+
+    if ((role === "chief" || role === "chief_asst") && !area) {
+      setAreaError(true);
+      toast.error("Select Area");
+      setLoading(false);
+      return;
+    }
+
+    // If validation passes, proceed with API call
+    try {
       const response = await fetch(`/api/edit-user-role`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId, role }),
+        body: JSON.stringify({ userId, role, area }),
       });
+
       if (!response.ok) {
-        setLoading(false);
         throw new Error("Failed to edit user role");
       }
-      setLoading(false);
-      setDialogOpen(false);
+
       tToast("Role edited successfully");
+      setDialogOpen(false);
+
       setTimeout(() => {
         window.location.reload();
       }, 1050);
+    } catch (error) {
+      console.error("Error editing user role:", error);
+      toast.error(error.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -154,15 +176,49 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
                       <SelectLabel>Roles</SelectLabel>
                       <SelectItem value="admin">Admin</SelectItem>
                       <SelectItem value="sysadmin">System Admin</SelectItem>
-                      <SelectItem value="None">Normal User</SelectItem>
+                      <SelectItem value="member">Normal User</SelectItem>
                       <SelectItem value="chief">Chief</SelectItem>
+                      <SelectItem value="chief_asst">
+                        Chief/Owner Assitant
+                      </SelectItem>
+                      <SelectItem value="property_agent">
+                        Property Agent
+                      </SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+                {roleError && (
+                  <span className="text-red-600 text-xs"> Choose Role</span>
+                )}
               </div>
-              {roleError && (
-                <span className="text-red-600 text-xs"> Choose Role</span>
+              {(role === "chief" || role === "chief_asst") && (
+                <div className="w-full flex items-center gap-4 mt-3">
+                  <Label htmlFor="area" className="text-right">
+                    Area
+                  </Label>
+                  <Select onValueChange={(event) => setArea(event)}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select Area" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Areas</SelectLabel>
+                        <SelectItem value="asokore_mampong">
+                          Asokore Mampong
+                        </SelectItem>
+                        <SelectItem value="royal_court_estate">
+                          Royal Court Estate
+                        </SelectItem>
+                        <SelectItem value="legon_hills">Legon Hills</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {areaError && (
+                    <span className="text-red-600 text-xs"> Assign Area</span>
+                  )}
+                </div>
               )}
+
               <DialogFooter className={"mt-3"}>
                 <Button type="submit">
                   {loading ? (

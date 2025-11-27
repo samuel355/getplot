@@ -13,9 +13,12 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectLabel,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function UserRoleDialog({
   isOpen,
@@ -25,15 +28,58 @@ export default function UserRoleDialog({
   setNewRole,
   onUpdateRole,
   currentUserRole,
+  area,
+  setArea
 }) {
+  const [roleError, setRoleError] = useState(false);
+  const [areaError, setAreaError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const roles = [
-    { value: "user", label: "Regular User" },
+    { value: "member", label: "Regular User" },
     { value: "admin", label: "Administrator" },
     { value: "chief", label: "Chief" },
-    ...(currentUserRole === "sysadmin"
+    { value: "chief_asst", label: "Chief/Owner Assistant" },
+    { value: "property_agent", label: "Property Agent" },
+    ...(currentUserRole === "sysadmin" || currentUserRole?.role === "sysadmin"
       ? [{ value: "sysadmin", label: "System Administrator" }]
       : []),
   ];
+
+  const handleSubmit = async () => {
+    // Reset errors
+    setRoleError(false);
+    setAreaError(false);
+    setLoading(true);
+
+    try {
+      // Validation
+      if (!newRole) {
+        setRoleError(true);
+        toast.error("Choose Role");
+        return;
+      }else{
+        setRoleError(false);
+      }
+
+      if ((newRole === "chief" || newRole === "chief_asst") && !area) {
+        setAreaError(true);
+        toast.error("Select Area");
+        return;
+      }else{
+        setRoleError(false);
+      }
+
+      // Call the update function
+      await onUpdateRole();
+      
+    } catch (error) {
+      console.error("Error updating role:", error);
+      toast.error("Failed to update role");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -65,7 +111,7 @@ export default function UserRoleDialog({
           </div>
         )}
 
-        <div className="py-4">
+        <div className="mt-4">
           <Label htmlFor="role">Select Role</Label>
           <Select value={newRole} onValueChange={setNewRole}>
             <SelectTrigger className="w-full mt-2">
@@ -80,8 +126,9 @@ export default function UserRoleDialog({
                     disabled={
                       // Prevent changing own role or assigning sysadmin if not sysadmin
                       selectedUser?.id === currentUserRole?.id ||
-                      (role.value === "sysadmin" &&
-                        currentUserRole !== "sysadmin")
+                      (role.value === "sysadmin" && 
+                       currentUserRole !== "sysadmin" && 
+                       currentUserRole?.role !== "sysadmin")
                     }
                   >
                     {role.label}
@@ -90,17 +137,50 @@ export default function UserRoleDialog({
               </SelectGroup>
             </SelectContent>
           </Select>
+          {roleError && (
+            <span className="text-red-600 text-xs mt-1 block">Choose a role</span>
+          )}
         </div>
+
+        {(newRole === "chief" || newRole === "chief_asst") && (
+          <div className="mt-2">
+            <Label htmlFor="area" className="text-right whitespace-nowrap">
+              Area
+            </Label>
+            <div className="flex-1">
+              <Select value={area} onValueChange={setArea}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Area" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Areas</SelectLabel>
+                    <SelectItem value="asokore_mampong">
+                      Asokore Mampong
+                    </SelectItem>
+                    <SelectItem value="royal_court_estate">
+                      Royal Court Estate
+                    </SelectItem>
+                    <SelectItem value="legon_hills">Legon Hills</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {areaError && (
+                <span className="text-red-600 text-xs mt-1 block">Assign Area</span>
+              )}
+            </div>
+          </div>
+        )}
 
         <DialogFooter>
           <Button variant="outline" onClick={() => setIsOpen(false)}>
             Cancel
           </Button>
           <Button
-            onClick={onUpdateRole}
-            disabled={!newRole || newRole === selectedUser?.role}
+            onClick={handleSubmit}
+            disabled={loading || !newRole || newRole === selectedUser?.role}
           >
-            Update Role
+            {loading ? "Updating..." : "Update Role"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -43,10 +43,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import AuthCheckChief from "../components/AuthCheckChief";
 
 export default function PropertyListPage() {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState("table");
@@ -57,143 +57,177 @@ export default function PropertyListPage() {
 
   useEffect(() => {
     if (!isSignedIn) return;
-  
-    const fetchProperties = async () => {
-      setLoading(true);
-      try {
-        // First, get the total count
-        let countQuery = supabase
-          .from("saadi")
-          .select("*", { count: "exact", head: true })
-  
-        if (statusFilter !== "all") {
-          if (statusFilter === "Available") {
-            // For Available, include both "Available" and null values
-            countQuery = countQuery.or('status.eq.Available,status.is.null');
-          } else {
-            countQuery = countQuery.eq("status", statusFilter);
+
+    if(isLoaded){
+      console.log(user.publicMetadata)
+      const fetchProperties = async () => {
+        setLoading(true);
+        try {
+          const userId = user.id;
+          const isChief = user?.publicMetadata?.role === "chief";
+          const isChiefAsst = user?.publicMetadata?.role === 'chief_asst'
+          const chief_area = user?.publicMetadata.area
+          let database_name;
+          if(!chief_area){
+            toast.error("Failed to fetch properties");
+            return;
           }
-        }
-  
-        const { count } = await countQuery;
-        setTotalCount(count || 0);
-  
-        // Then fetch the paginated data
-        let query = supabase
-          .from("saadi")
-          .select("*")
-          .range(
-            (currentPage - 1) * itemsPerPage,
-            currentPage * itemsPerPage - 1
-          );
-  
-        if (statusFilter !== "all") {
-          if (statusFilter === "Available") {
-            // For Available, include both "Available" and null values
-            query = query.or('status.eq.Available,status.is.null');
-          } else {
-            query = query.eq("status", statusFilter);
+          
+          if(chief_area === 'asokore_mampong'){
+            database_name = 'asokore_mampong'
           }
+          if(chief_area === 'legon_hills'){
+            database_name = 'legon_hills'
+          }
+          if(chief_area === 'royal_court_estate'){
+            database_name = 'saadi'
+          }
+          // First, get the total count
+          let countQuery = supabase
+            .from(database_name)
+            .select("*", { count: "exact", head: true });
+  
+          if (statusFilter !== "all") {
+            if (statusFilter === "Available") {
+              // For Available, include both "Available" and null values
+              countQuery = countQuery.or("status.eq.Available,status.is.null");
+            } else {
+              countQuery = countQuery.eq("status", statusFilter);
+            }
+          }
+  
+          const { count } = await countQuery;
+          setTotalCount(count || 0);
+  
+          // Then fetch the paginated data
+          let query = supabase
+            .from(database_name)
+            .select("*")
+            .range(
+              (currentPage - 1) * itemsPerPage,
+              currentPage * itemsPerPage - 1
+            );
+  
+          if (statusFilter !== "all") {
+            if (statusFilter === "Available") {
+              // For Available, include both "Available" and null values
+              query = query.or("status.eq.Available,status.is.null");
+            } else {
+              query = query.eq("status", statusFilter);
+            }
+          }
+  
+          const { data, error } = await query;
+  
+          if (error) throw error;
+  
+          setProperties(data || []);
+        } catch (error) {
+          console.error("Error fetching properties:", error);
+          toast.error("Failed to load properties");
+        } finally {
+          setLoading(false);
         }
-  
-        const { data, error } = await query;
-  
-        if (error) throw error;
-  
-        setProperties(data || []);
-      } catch (error) {
-        console.error("Error fetching properties:", error);
-        toast.error("Failed to load properties");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchProperties();
+      };
+      fetchProperties();
+    }
+
   }, [isSignedIn, user, statusFilter, currentPage]);
+  
   if (!isSignedIn) {
     return <div>Please sign in to view this page</div>;
   }
 
   return (
-    <div>
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold tracking-tight mb-2 md:mb-0">
-          My Properties
-        </h1>
+    <AuthCheckChief>
+      <div>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold tracking-tight mb-2 md:mb-0">
+            My Properties
+          </h1>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="Available">Available</SelectItem>
-              <SelectItem value="Reserved">Pending</SelectItem>
-              <SelectItem value="Sold">Sold</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex flex-wrap items-center gap-2">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="Available">Available</SelectItem>
+                <SelectItem value="Reserved">Pending</SelectItem>
+                <SelectItem value="Sold">Sold</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </div>
 
-      <Tabs defaultValue="all" className="mt-6" value={statusFilter} onValueChange={setStatusFilter}>
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="Available">Available</TabsTrigger>
-          <TabsTrigger value="Reserved">Reserved</TabsTrigger>
-          <TabsTrigger value="Sold">Sold</TabsTrigger>
-        </TabsList>
-        <TabsContent value="all">
-          {renderProperties(viewMode, properties, loading)}
-          {renderPagination(
-            totalCount,
-            currentPage,
-            setCurrentPage,
-            itemsPerPage
-          )}
-        </TabsContent>
-        <TabsContent value="Sold">
-          {renderProperties(
-            viewMode,
-            properties.filter((p) => p.status === "Sold" || p.status === 'sold'),
-            loading,
-          )}
-          {renderPagination(
-            totalCount,
-            currentPage,
-            setCurrentPage,
-            itemsPerPage
-          )}
-        </TabsContent>
-        <TabsContent value="Available">
-          {renderProperties(
-            viewMode,
-            properties.filter((p) => p.status === "Available" || p.status === null),
-            loading,
-          )}
-          {renderPagination(
-            totalCount,
-            currentPage,
-            setCurrentPage,
-            itemsPerPage
-          )}
-        </TabsContent>
-        <TabsContent value="Reserved">
-          {renderProperties(
-            viewMode,
-            properties.filter((p) => p.status === "Reserved"),
-            loading
-          )}
-          {renderPagination(
-            totalCount,
-            currentPage,
-            setCurrentPage,
-            itemsPerPage
-          )}
-        </TabsContent>
-      </Tabs>
-    </div>
+        <Tabs
+          defaultValue="all"
+          className="mt-6"
+          value={statusFilter}
+          onValueChange={setStatusFilter}
+        >
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="Available">Available</TabsTrigger>
+            <TabsTrigger value="Reserved">Reserved</TabsTrigger>
+            <TabsTrigger value="Sold">Sold</TabsTrigger>
+          </TabsList>
+          <TabsContent value="all">
+            {renderProperties(viewMode, properties, loading)}
+            {renderPagination(
+              totalCount,
+              currentPage,
+              setCurrentPage,
+              itemsPerPage
+            )}
+          </TabsContent>
+          <TabsContent value="Sold">
+            {renderProperties(
+              viewMode,
+              properties.filter(
+                (p) => p.status === "Sold" || p.status === "sold"
+              ),
+              loading
+            )}
+            {renderPagination(
+              totalCount,
+              currentPage,
+              setCurrentPage,
+              itemsPerPage
+            )}
+          </TabsContent>
+          <TabsContent value="Available">
+            {renderProperties(
+              viewMode,
+              properties.filter(
+                (p) => p.status === "Available" || p.status === null
+              ),
+              loading
+            )}
+            {renderPagination(
+              totalCount,
+              currentPage,
+              setCurrentPage,
+              itemsPerPage
+            )}
+          </TabsContent>
+          <TabsContent value="Reserved">
+            {renderProperties(
+              viewMode,
+              properties.filter((p) => p.status === "Reserved"),
+              loading
+            )}
+            {renderPagination(
+              totalCount,
+              currentPage,
+              setCurrentPage,
+              itemsPerPage
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
+    </AuthCheckChief>
   );
 }
 
@@ -237,7 +271,9 @@ function renderProperties(viewMode, properties, loading) {
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-3">
                     <div>
-                      <div className="font-medium">{property.properties.Plot_No}</div>
+                      <div className="font-medium">
+                        {property.properties.Plot_No}
+                      </div>
                     </div>
                   </div>
                 </TableCell>
@@ -246,15 +282,11 @@ function renderProperties(viewMode, properties, loading) {
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span>
-                      {property.properties.Area}
-                    </span>
+                    <span>{property.properties.Area}</span>
                   </div>
                 </TableCell>
                 <TableCell>{property.properties.LANDUSE}</TableCell>
-                <TableCell>
-                  {property.status ?? 'Available'}
-                </TableCell>
+                <TableCell>{property.status ?? "Available"}</TableCell>
                 <TableCell>
                   {property.plotTotalAmount.toLocaleString()}
                 </TableCell>

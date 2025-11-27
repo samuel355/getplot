@@ -44,7 +44,6 @@ const Header = () => {
   const { user, isSignedIn } = useUser();
   const [cartOpen, setCartOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  console.log(user)
 
   const { plots } = useCart();
 
@@ -436,7 +435,7 @@ const Header = () => {
                 </NavigationMenuItem>
 
                 {isSignedIn &&
-                  (Object.keys(user.publicMetadata || {}).length === 0||
+                  (Object.keys(user.publicMetadata || {}).length === 0 ||
                     user?.publicMetadata?.role === "" ||
                     user?.publicMetadata?.role === "member") && (
                     <NavigationMenuItem>
@@ -469,6 +468,41 @@ const Header = () => {
                     </Link>
                   )}
                 </NavigationMenuItem>
+
+                {isSignedIn &&
+                  (user.publicMetadata?.role === "chief" ||
+                    user.publicMetadata?.role === "chief_asst") && (
+                    <NavigationMenuItem>
+                      <Link
+                        href="/chief/my-dashboard"
+                        className={cn(
+                          "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
+                          path === "/chief/my-dashboard"
+                            ? "text-primary font-bold"
+                            : "text-gray-700"
+                        )}
+                      >
+                        Dashboard
+                      </Link>
+                    </NavigationMenuItem>
+                  )}
+
+                {isSignedIn &&
+                  user.publicMetadata?.role === "property_agent" && (
+                    <NavigationMenuItem>
+                      <Link
+                        href="/properties/my-dashboard"
+                        className={cn(
+                          "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
+                          path === "/properties/my-dashboard"
+                            ? "text-primary font-bold"
+                            : "text-gray-700"
+                        )}
+                      >
+                        Dashboard
+                      </Link>
+                    </NavigationMenuItem>
+                  )}
 
                 {isSignedIn &&
                   (user?.publicMetadata?.role === "sysadmin" ||
@@ -515,10 +549,10 @@ const Header = () => {
                 {isSignedIn && user?.publicMetadata?.role === "chief" && (
                   <NavigationMenuItem>
                     <Link
-                      href="/chief"
+                      href="/chief/my-dashboard"
                       className={cn(
                         "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
-                        path === "/chief"
+                        path === "/chief/my-dashboard"
                           ? "text-primary font-bold"
                           : "text-gray-700"
                       )}
@@ -674,21 +708,22 @@ const Header = () => {
                   </DropdownMenuItem>
 
                   {isSignedIn &&
-                  (Object.keys(user.publicMetadata || {}).length === 0 ||
-                    user?.publicMetadata?.role === "" ||
-                    user?.publicMetadata?.role === "member") && (
-                    <DropdownMenuItem asChild>
-                    <Link
-                      href="/approval"
-                      className={cn(
-                        "w-full flex items-center",
-                        path === "/approval" && "text-primary font-semibold"
-                      )}
-                    >
-                      Check Approval
-                    </Link>
-                  </DropdownMenuItem>
-                  )}
+                    (Object.keys(user.publicMetadata || {}).length === 0 ||
+                      user?.publicMetadata?.role === "" ||
+                      user?.publicMetadata?.role === "member") && (
+                      <DropdownMenuItem asChild>
+                        <Link
+                          href="/approval"
+                          className={cn(
+                            "w-full flex items-center",
+                            path === "/approval" && "text-primary font-semibold"
+                          )}
+                        >
+                          Check Approval
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+
                   {!isSignedIn && (
                     <>
                       <DropdownMenuItem asChild>
@@ -704,6 +739,42 @@ const Header = () => {
                       </DropdownMenuItem>
                     </>
                   )}
+
+                  {isSignedIn &&
+                    (user.publicMetadata?.role === "chief" ||
+                      user.publicMetadata?.role === "chief_asst") && (
+                      <DropdownMenuItem>
+                        <Link
+                          href="/chief/my-dashboard"
+                          className={cn(
+                            "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
+                            path === "/chief/my-dashboard"
+                              ? "text-primary font-bold"
+                              : "text-gray-700"
+                          )}
+                        >
+                          Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+
+                  {isSignedIn &&
+                    user.publicMetadata?.role === "property_agent" && (
+                      <DropdownMenuItem>
+                        <Link
+                          href="/properties/my-dashboard"
+                          className={cn(
+                            "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
+                            path === "/properties/my-dashboard"
+                              ? "text-primary font-bold"
+                              : "text-gray-700"
+                          )}
+                        >
+                          Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+
                   {isSignedIn &&
                     (user?.publicMetadata?.role === "sysadmin" ||
                       user?.publicMetadata?.role === "admin") && (
@@ -744,10 +815,10 @@ const Header = () => {
                   {isSignedIn && user?.publicMetadata?.role === "chief" && (
                     <NavigationMenuItem className="w-full bg-primary">
                       <Link
-                        href="/chief"
+                        href="/chief/my-dashboard"
                         className={cn(
                           "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary",
-                          path === "/chief"
+                          path === "/chief/my-dashboard"
                             ? "text-white font-bold"
                             : "text-gray-100"
                         )}

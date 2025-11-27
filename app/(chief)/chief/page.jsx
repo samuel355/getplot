@@ -10,15 +10,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Building,
-  CheckCircle,
-  Clock,
-  Plus,
-} from "lucide-react";
+import { Building, CheckCircle, Clock, Plus } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import AuthCheck from "@/app/_components/AuthCheck";
 import {
   Table,
   TableBody,
@@ -27,9 +21,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import AuthCheckChief from "./components/AuthCheckChief";
 
 export default function PropertiesDashboard() {
-  const { user, isSignedIn } = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     total: 0,
@@ -45,59 +40,72 @@ export default function PropertiesDashboard() {
 
     const fetchDashboardData = async () => {
       setLoading(true);
-      try {
-        const userId = user.id;
-        const isChief = user?.publicMetadata?.role === "chief";
-        //save chief area in public metdatadata in clerk and use it to fetch from supabase when user signs in 
+      if (isLoaded) {
+        try {
+          const userId = user.id;
+          const isChief = user?.publicMetadata?.role === "chief";
+          const isChiefAsst = user?.publicMetadata?.role === 'chief_asst'
+          const chief_area = user?.publicMetadata.area
+          let database_name;
+          if(!chief_area){
+            toast.error("Failed to fetch properties");
+            return;
+          }
+          
+          if(chief_area === 'asokore_mampong'){
+            database_name = 'asokore_mampong'
+          }
+          if(chief_area === 'legon_hills'){
+            database_name = 'legon_hills'
+          }
+          if(chief_area === 'royal_court_estate'){
+            database_name = 'saadi'
+          }
 
-        let query = supabase.from("saadi");
+          let query = supabase.from(database_name);
 
-        // If not admin, only show user's properties
-        if (!isChief) {
-          query = query.eq("user_id", userId);
+          const { data: properties, error } = await query.select("*");
+
+          if (error) throw error;
+
+          // Calculate stats
+          const available = properties.filter(
+            (p) => p.status === "available" || p.status === null
+          ).length;
+          const reserved = properties.filter(
+            (p) => p.status === "reserved"
+          ).length;
+          const rejected = properties.filter(
+            (p) => p.status === "rejected"
+          ).length;
+          const sold = properties.filter((p) => p.status === "Sold").length;
+
+          setStats({
+            total: properties.length,
+            available,
+            reserved,
+            rejected,
+            sold,
+          });
+
+          // Get sold plots
+          let soldPlots = supabase
+            .from(database_name)
+            .select("*")
+            .eq("status", "Sold")
+            .limit(10);
+
+          const { data: soldparcels, error: soldError } = await soldPlots;
+
+          if (soldError) throw soldError;
+
+          setSoldParcels(soldparcels);
+        } catch (error) {
+          console.error("Error fetching dashboard data:", error);
+          toast.error("Failed to load dashboard data");
+        } finally {
+          setLoading(false);
         }
-
-        const { data: properties, error } = await query.select("*");
-
-        if (error) throw error;
-
-        // Calculate stats
-        const available = properties.filter(
-          (p) => p.status === "available" || p.status === null
-        ).length;
-        const reserved = properties.filter(
-          (p) => p.status === "reserved"
-        ).length;
-        const rejected = properties.filter(
-          (p) => p.status === "rejected"
-        ).length;
-        const sold = properties.filter((p) => p.status === "Sold").length;
-
-        setStats({
-          total: properties.length,
-          available,
-          reserved,
-          rejected,
-          sold,
-        });
-
-        // Get sold plots
-        let soldPlots = supabase
-          .from("saadi")
-          .select("*")
-          .eq("status", "Sold")
-          .limit(10);
-
-        const { data: soldparcels, error: soldError } = await soldPlots;
-
-        if (soldError) throw soldError;
-
-        setSoldParcels(soldparcels);
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-        toast.error("Failed to load dashboard data");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -109,16 +117,10 @@ export default function PropertiesDashboard() {
   }
 
   return (
-    <AuthCheck>
+    <AuthCheckChief>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-          <Link href="/properties/add-listing">
-            <Button className="flex gap-2">
-              <Plus className="h-4 w-4" />
-              Add Property
-            </Button>
-          </Link>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -227,7 +229,6 @@ export default function PropertiesDashboard() {
                 </div>
               ) : soldParcels.length > 0 ? (
                 <div className="space-y-4">
-
                   <div className="rounded-md border mt-4">
                     <Table>
                       <TableHeader>
@@ -260,7 +261,9 @@ export default function PropertiesDashboard() {
                               <div>{parcel.status}</div>
                             </TableCell>
                             <TableCell>
-                              <div>{parcel.plotTotalAmount.toLocaleString()}</div>
+                              <div>
+                                {parcel.plotTotalAmount.toLocaleString()}
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -281,7 +284,7 @@ export default function PropertiesDashboard() {
           </Card>
         </div>
       </div>
-    </AuthCheck>
+    </AuthCheckChief>
   );
 }
 

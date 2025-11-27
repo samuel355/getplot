@@ -28,19 +28,22 @@ export default function Header() {
   const isAdmin =
     user?.publicMetadata?.role === "admin" ||
     user?.publicMetadata?.role === "sysadmin";
-  const isChief = user?.publicMetadata.role === 'chief'
+  const isChief = user?.publicMetadata.role === 'chief';
+  const isChiefAsst = user?.publicMetadata.role === 'chief_asst'
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       if (isAdmin) {
+        return
         // Admins go to advanced search
-        router.push(`/properties/search?q=${encodeURIComponent(searchQuery)}`);
+        //router.push(`/properties/search?q=${encodeURIComponent(searchQuery)}`);
       } else {
+        return
         // Regular users search their properties
-        router.push(
-          `/properties/list?search=${encodeURIComponent(searchQuery)}`
-        );
+        // router.push(
+        //   `/properties/list?search=${encodeURIComponent(searchQuery)}`
+        // );
       }
     }
   };
@@ -200,7 +203,7 @@ function NotificationButton({ isAdmin }) {
         <div className="absolute right-0 mt-2 w-96 rounded-md shadow-lg bg-white z-50 border animate-in fade-in-0 zoom-in-95">
           <div className="p-3 border-b flex justify-between items-center">
             <h3 className="text-sm font-medium">Notifications</h3>
-            <Button
+            {/* <Button
               variant="link"
               size="sm"
               className="text-xs"
@@ -210,7 +213,7 @@ function NotificationButton({ isAdmin }) {
               }}
             >
               View all
-            </Button>
+            </Button> */}
           </div>
           <div className="max-h-[480px] overflow-y-auto">
             {notifications.length > 0 ? (

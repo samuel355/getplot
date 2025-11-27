@@ -52,7 +52,7 @@ export default function WaitForApprovalPage() {
       console.log('status Data', statusData)
       const status = {
         isApproved: statusData.isApproved,
-        userArea: statusData.area,
+        userArea: statusData?.area,
         role: statusData.role,
         lastChecked: new Date(statusData.lastChecked)
       };
@@ -64,10 +64,20 @@ export default function WaitForApprovalPage() {
         console.log('User approved! Redirecting to dashboard...', statusData);
         setIsRedirecting(true);
         toast.success("You've been approved! Redirecting to dashboard...");
-        // Use window.location.href for more reliable redirect
+        const userRole = user.publicMetadata?.role
+        let page;
+        if(userRole === 'chief' || userRole === 'chief_asst'){
+          page = 'chief/my-dashboard'
+        }
+        if(userRole=== 'admin' || userRole === 'sysadmin'){
+          page = 'dashboard'
+        }
+        if(userRole === 'property_agent'){
+          page = 'properties/my-dashboard'
+        }
         setTimeout(() => {
-          window.location.href = "/dashboard";
-        }, 1500);
+          window.location.href = `/${page}`;
+        }, 1050);
       } else if (!statusData.isApproved) {
         console.log('User not approved yet:', statusData);
       }
@@ -162,7 +172,11 @@ export default function WaitForApprovalPage() {
                   <span className="font-medium">Approval Details</span>
                 </div>
                 <div className="mt-2 text-sm text-green-600 dark:text-green-400 space-y-1">
-                  <p><strong>Area:</strong> {userStatus.area}</p>
+                  {
+                    userStatus?.userArea && (
+                      <p><strong>Area:</strong> {userStatus.userArea}</p>
+                    )
+                  }
                   <p><strong>Role:</strong> {userStatus.role}</p>
                 </div>
               </div>

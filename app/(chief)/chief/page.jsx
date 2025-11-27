@@ -34,87 +34,117 @@ export default function PropertiesDashboard() {
     sold: 0,
   });
   const [soldParcels, setSoldParcels] = useState([]);
+  const [chiefPlots, setChiefPlots] = useState([]);
 
   useEffect(() => {
-    if (!isSignedIn) return;
+    if (!isSignedIn || !isLoaded) return;
 
     const fetchDashboardData = async () => {
       setLoading(true);
-      if (isLoaded) {
-        try {
-          const userId = user.id;
-          const isChief = user?.publicMetadata?.role === "chief";
-          const isChiefAsst = user?.publicMetadata?.role === 'chief_asst'
-          const chief_area = user?.publicMetadata.area
-          let database_name;
-          if(!chief_area){
-            toast.error("Failed to fetch properties");
-            return;
-          }
-          
-          if(chief_area === 'asokore_mampong'){
-            database_name = 'asokore_mampong'
-          }
-          if(chief_area === 'legon_hills'){
-            database_name = 'legon_hills'
-          }
-          if(chief_area === 'royal_court_estate'){
-            database_name = 'saadi'
-          }
+      try {
+        const userId = user.id;
+        const isChief = user?.publicMetadata?.role === "chief";
+        const isChiefAsst = user?.publicMetadata?.role === "chief_asst";
+        const chief_area = user?.publicMetadata?.area;
 
-          let query = supabase.from(database_name);
-
-          const { data: properties, error } = await query.select("*");
-
-          if (error) throw error;
-
-          // Calculate stats
-          const available = properties.filter(
-            (p) => p.status === "available" || p.status === null
-          ).length;
-          const reserved = properties.filter(
-            (p) => p.status === "reserved"
-          ).length;
-          const rejected = properties.filter(
-            (p) => p.status === "rejected"
-          ).length;
-          const sold = properties.filter((p) => p.status === "Sold").length;
-
-          setStats({
-            total: properties.length,
-            available,
-            reserved,
-            rejected,
-            sold,
-          });
-
-          // Get sold plots
-          let soldPlots = supabase
-            .from(database_name)
-            .select("*")
-            .eq("status", "Sold")
-            .limit(10);
-
-          const { data: soldparcels, error: soldError } = await soldPlots;
-
-          if (soldError) throw soldError;
-
-          setSoldParcels(soldparcels);
-        } catch (error) {
-          console.error("Error fetching dashboard data:", error);
-          toast.error("Failed to load dashboard data");
-        } finally {
-          setLoading(false);
+        if (!chief_area) {
+          toast.error("Area not specified in user metadata");
+          return;
         }
+
+        // Map area to database name
+        const areaToDbMap = {
+          asokore_mampong: "asokore_mampong",
+          legon_hills: "legon_hills",
+          royal_court_estate: "saadi",
+        };
+
+        const database_name = areaToDbMap[chief_area];
+
+        if (!database_name) {
+          toast.error("Invalid area specified");
+          return;
+        }
+
+        // Fetch all properties
+        const { data: properties, error } = await supabase
+          .from(database_name)
+          .select("*");
+
+        if (error) throw error;
+
+        // Calculate stats
+        const available = properties.filter(
+          (p) => p.status === "available" || p.status === null
+        ).length;
+        const reserved = properties.filter(
+          (p) => p.status === "reserved"
+        ).length;
+        const rejected = properties.filter(
+          (p) => p.status === "rejected"
+        ).length;
+        const sold = properties.filter((p) => p.status === "Sold").length;
+
+        setStats({
+          total: properties.length,
+          available,
+          reserved,
+          rejected,
+          sold,
+        });
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+        toast.error("Failed to load dashboard data");
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchDashboardData();
-  }, [isSignedIn, user]);
+    fetchProperties();
+  }, [isSignedIn, isLoaded, user]);
+
+  const fetchProperties = async () => {
+    setLoading(true);
+    try {
+      const userId = user.id;
+      const isChief = user?.publicMetadata?.role === "chief";
+      const isChiefAsst = user?.publicMetadata?.role === "chief_asst";
+      const chief_area = user?.publicMetadata.area;
+      let database_name;
+      if (!chief_area) {
+        toast.error("Failed to fetch properties");
+        return;
+      }
+
+      if (chief_area === "asokore_mampong") {
+        database_name = "asokore_mampong";
+      }
+      if (chief_area === "legon_hills") {
+        database_name = "legon_hills";
+      }
+      if (chief_area === "royal_court_estate") {
+        database_name = "saadi";
+      }
+
+      const { data, error } = await supabase
+        .from(database_name)
+        .select("*");
+
+      if (error) throw error;
+
+      setChiefPlots(data);
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+      toast.error("Failed to load properties");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!isSignedIn) {
     return <div>Please sign in to view this page</div>;
   }
+
 
   return (
     <AuthCheckChief>
@@ -227,7 +257,7 @@ export default function PropertiesDashboard() {
                     </div>
                   ))}
                 </div>
-              ) : soldParcels.length > 0 ? (
+              ) : chiefPlots.length > 0 ? (
                 <div className="space-y-4">
                   <div className="rounded-md border mt-4">
                     <Table>
@@ -243,7 +273,7 @@ export default function PropertiesDashboard() {
                       </TableHeader>
 
                       <TableBody>
-                        {soldParcels.map((parcel) => (
+                        {chiefPlots.slice(0, 10).map((parcel) => (
                           <TableRow key={parcel.id}>
                             <TableCell>
                               <div>{parcel.properties.Plot_No}</div>

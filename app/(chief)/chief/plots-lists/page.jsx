@@ -44,6 +44,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import AuthCheckChief from "../components/AuthCheckChief";
+import ViewPlotDialog from "../components/ViewPlotDialog";
 
 export default function PropertyListPage() {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -55,38 +56,40 @@ export default function PropertyListPage() {
   const [totalCount, setTotalCount] = useState(0);
   const itemsPerPage = 10;
 
+  const [viewDialog, setViewDialog] = useState(false);
+  const [plotId, setPlotId] = useState()
+
   useEffect(() => {
     if (!isSignedIn) return;
 
-    if(isLoaded){
-      console.log(user.publicMetadata)
+    if (isLoaded) {
       const fetchProperties = async () => {
         setLoading(true);
         try {
           const userId = user.id;
           const isChief = user?.publicMetadata?.role === "chief";
-          const isChiefAsst = user?.publicMetadata?.role === 'chief_asst'
-          const chief_area = user?.publicMetadata.area
+          const isChiefAsst = user?.publicMetadata?.role === "chief_asst";
+          const chief_area = user?.publicMetadata.area;
           let database_name;
-          if(!chief_area){
+          if (!chief_area) {
             toast.error("Failed to fetch properties");
             return;
           }
-          
-          if(chief_area === 'asokore_mampong'){
-            database_name = 'asokore_mampong'
+
+          if (chief_area === "asokore_mampong") {
+            database_name = "asokore_mampong";
           }
-          if(chief_area === 'legon_hills'){
-            database_name = 'legon_hills'
+          if (chief_area === "legon_hills") {
+            database_name = "legon_hills";
           }
-          if(chief_area === 'royal_court_estate'){
-            database_name = 'saadi'
+          if (chief_area === "royal_court_estate") {
+            database_name = "saadi";
           }
           // First, get the total count
           let countQuery = supabase
             .from(database_name)
             .select("*", { count: "exact", head: true });
-  
+
           if (statusFilter !== "all") {
             if (statusFilter === "Available") {
               // For Available, include both "Available" and null values
@@ -95,10 +98,10 @@ export default function PropertyListPage() {
               countQuery = countQuery.eq("status", statusFilter);
             }
           }
-  
+
           const { count } = await countQuery;
           setTotalCount(count || 0);
-  
+
           // Then fetch the paginated data
           let query = supabase
             .from(database_name)
@@ -107,7 +110,7 @@ export default function PropertyListPage() {
               (currentPage - 1) * itemsPerPage,
               currentPage * itemsPerPage - 1
             );
-  
+
           if (statusFilter !== "all") {
             if (statusFilter === "Available") {
               // For Available, include both "Available" and null values
@@ -116,11 +119,11 @@ export default function PropertyListPage() {
               query = query.eq("status", statusFilter);
             }
           }
-  
+
           const { data, error } = await query;
-  
+
           if (error) throw error;
-  
+
           setProperties(data || []);
         } catch (error) {
           console.error("Error fetching properties:", error);
@@ -131,9 +134,8 @@ export default function PropertyListPage() {
       };
       fetchProperties();
     }
-
   }, [isSignedIn, user, statusFilter, currentPage]);
-  
+
   if (!isSignedIn) {
     return <div>Please sign in to view this page</div>;
   }
@@ -174,7 +176,15 @@ export default function PropertyListPage() {
             <TabsTrigger value="Sold">Sold</TabsTrigger>
           </TabsList>
           <TabsContent value="all">
-            {renderProperties(viewMode, properties, loading)}
+            {renderProperties(
+              viewMode,
+              properties,
+              loading,
+              viewDialog,
+              setViewDialog,
+              plotId,
+              setPlotId
+            )}
             {renderPagination(
               totalCount,
               currentPage,
@@ -227,11 +237,28 @@ export default function PropertyListPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {viewDialog && (
+        <ViewPlotDialog
+          open={viewDialog}
+          onOpenChange={setViewDialog}
+          setViewDialog={setViewDialog}
+          plotId = {plotId}
+        />
+      )}
     </AuthCheckChief>
   );
 }
 
-function renderProperties(viewMode, properties, loading) {
+function renderProperties(
+  viewMode,
+  properties,
+  loading,
+  viewDialog,
+  setViewDialog,
+  plotId, 
+  setPlotId
+) {
   if (loading) {
     return (
       <div className="space-y-4 mt-4">
@@ -313,22 +340,27 @@ function renderProperties(viewMode, properties, loading) {
                         </svg>
                       </Button>
                     </DropdownMenuTrigger>
-                    {/* <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuItem asChild>
-                        <Link href={`/properties/property/${property.id}`}>
+                        <p
+                          onClick={() => {
+                            setViewDialog((prevState) => !prevState);
+                            setPlotId(property.id);
+                          }}
+                        >
                           <Eye className="mr-2 h-4 w-4" />
                           View
-                        </Link>
+                        </p>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href={`/properties/edit-property/${property.id}`}>
+                        <p>
                           <Pencil className="mr-2 h-4 w-4" />
                           Edit
-                        </Link>
+                        </p>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                    </DropdownMenuContent> */}
+                    </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
               </TableRow>

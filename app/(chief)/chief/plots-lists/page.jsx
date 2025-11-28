@@ -45,6 +45,7 @@ import {
 } from "@/components/ui/select";
 import AuthCheckChief from "../components/AuthCheckChief";
 import ViewPlotDialog from "../components/ViewPlotDialog";
+import EditPlotDialog from "../components/EditPlotDialog";
 
 export default function PropertyListPage() {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -57,7 +58,9 @@ export default function PropertyListPage() {
   const itemsPerPage = 10;
 
   const [viewDialog, setViewDialog] = useState(false);
-  const [plotId, setPlotId] = useState()
+  const [plotId, setPlotId] = useState();
+
+  const [editDialog, setEditDialog] = useState(false);
 
   useEffect(() => {
     if (!isSignedIn) return;
@@ -183,7 +186,9 @@ export default function PropertyListPage() {
               viewDialog,
               setViewDialog,
               plotId,
-              setPlotId
+              setPlotId,
+              editDialog,
+              setEditDialog
             )}
             {renderPagination(
               totalCount,
@@ -243,7 +248,16 @@ export default function PropertyListPage() {
           open={viewDialog}
           onOpenChange={setViewDialog}
           setViewDialog={setViewDialog}
-          plotId = {plotId}
+          plotId={plotId}
+        />
+      )}
+
+      {editDialog && (
+        <EditPlotDialog
+          open={editDialog}
+          onOpenChange={setEditDialog}
+          setEditDialog={setEditDialog}
+          plotId={plotId}
         />
       )}
     </AuthCheckChief>
@@ -256,8 +270,10 @@ function renderProperties(
   loading,
   viewDialog,
   setViewDialog,
-  plotId, 
-  setPlotId
+  plotId,
+  setPlotId,
+  editDialog,
+  setEditDialog
 ) {
   if (loading) {
     return (
@@ -354,7 +370,12 @@ function renderProperties(
                         </p>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <p>
+                        <p
+                          onClick={() => {
+                            setEditDialog((prevState) => !prevState);
+                            setPlotId(property.id);
+                          }}
+                        >
                           <Pencil className="mr-2 h-4 w-4" />
                           Edit
                         </p>

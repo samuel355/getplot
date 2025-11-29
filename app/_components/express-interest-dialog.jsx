@@ -258,7 +258,7 @@ export function ExpressInterestDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[90vw]">
+      <DialogContent className="sm:max-w-[520px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-bold">Express Interest</DialogTitle>
         </DialogHeader>

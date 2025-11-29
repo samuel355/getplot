@@ -39,6 +39,7 @@ import {
 import GoogleMapsProvider from "@/providers/google-map-provider";
 import { saadiRoad } from "@/saadi-layout/road";
 import StreetLine from "./RoadsMap";
+import BuyPlotDialog from "./buy-plot-dialog";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -66,6 +67,10 @@ const Map = ({ parcels, center, setCartOpen }) => {
   const [statusPlotId, setStatusPlotId] = useState();
   const [newStatus, setNewStatus] = useState("");
   const [statusLoading, setStatusLoading] = useState(false);
+
+  //Buy Plot Dialog State
+  const [buyPlotDialog, setBuyPlotDialog] = useState(false);
+  const [buyPlotId, setBuyPlotId] = useState();
 
   // Location determination logic
   let table;
@@ -267,7 +272,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
       label: {
         text: text?.toString(),
         // color: renderMarkerColor(status),
-        color: 'white',
+        color: "white",
         fontSize: "11px",
         //fontWeight: "bold",
         scale: 0,
@@ -294,7 +299,8 @@ const Map = ({ parcels, center, setCartOpen }) => {
     status,
     feature
   ) => {
-    let plot_size, legon_hills_price=0;
+    let plot_size,
+      legon_hills_price = 0;
 
     if (pathname === "/trabuom") {
       plot_size = feature?.properties?.Area.toFixed(2);
@@ -318,26 +324,35 @@ const Map = ({ parcels, center, setCartOpen }) => {
     const contentString = `
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
       <div class="px-2 py-3 flex flex-col">
-        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${text2 ?? ''}</div>
-        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(43560 * plot_size).toLocaleString()} Square ft </div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-bottom: 5px; font-weight: bold">Plot Number ${text1}, ${
+      text2 ?? ""
+    }</div>
+        <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">Size:  ${plot_size} Acres / ${(
+      43560 * plot_size
+    ).toLocaleString()} Square ft </div>
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 8px; font-weight: bold; display: ${
-            ((status === "Sold" || status === "Reserved") &&
-              user?.publicMetadata?.role != "sysadmin") ||
-            !(Number(feature.plotTotalAmount) > 0)
-              ? "none"
-              : "block"
-          }">
+          ((status === "Sold" || status === "Reserved") &&
+            user?.publicMetadata?.role != "sysadmin") ||
+          !(Number(feature.plotTotalAmount) > 0)
+            ? "none"
+            : "block"
+        }">
            
           ${
-            pathname === '/legon-hills' && feature.plotTotalAmount > 0 
+            pathname === "/legon-hills" && feature.plotTotalAmount > 0
               ? "$" + (43560 * plot_size * 8.5).toLocaleString()
               : Number(feature.plotTotalAmount) > 0
-                ? "GHS. " + Number(feature.plotTotalAmount).toLocaleString()
-                : ""
+              ? "GHS. " + Number(feature.plotTotalAmount).toLocaleString()
+              : ""
           }
         </div>
 
-        <p style="margin-top: 12px; margin-bottom:12px; font-weight: bold; color: red; display: ${Number(feature.plotTotalAmount) === 0 && (status === null || status === "Available" || status === undefined) ? "block": "none"}">NOT READY FOR SALE YET</p>
+        <p style="margin-top: 12px; margin-bottom:12px; font-weight: bold; color: red; display: ${
+          Number(feature.plotTotalAmount) === 0 &&
+          (status === null || status === "Available" || status === undefined)
+            ? "block"
+            : "none"
+        }">NOT READY FOR SALE YET</p>
         <p style="display: ${
           status === "On Hold" ? "block" : "none"
         }; margin-top: 5px; margin-bottom: 5px"> This plot is on hold for a client for 48 hours 
@@ -361,16 +376,16 @@ const Map = ({ parcels, center, setCartOpen }) => {
         >Add to Cart</button>
 
         
-        <a style="display: ${
+        <p id="buyPlot" data-id=${id} style="display: ${
           status === "Sold" ||
           status === "Reserved" ||
           status === "On Hold" ||
           Number(feature.plotTotalAmount) === 0
             ? "none"
             : "block"
-        }"  href="${path}/buy-plot/${id}" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal">
+        }" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal cursor-pointer">
           Buy Plot
-        </a>
+        </p>
 
 
         <a style="display: ${
@@ -396,11 +411,16 @@ const Map = ({ parcels, center, setCartOpen }) => {
           Call For Info
         </a>
 
-        <p id="expressInterest" style="opacity: ${Number(feature.plotTotalAmount) === 0 && (status === null || status === "Available" || status === undefined) ? "0": "1"}; display: ${
-          status === "Sold" || status === "Reserved" || status === "On Hold"
-            ? "none"
-            : "block"
-        }" data-id=${id} class="border px-4 cursor-pointer py-1 rounded-md text-sm font-normal mt-1">
+        <p id="expressInterest" style="opacity: ${
+          Number(feature.plotTotalAmount) === 0 &&
+          (status === null || status === "Available" || status === undefined)
+            ? "0"
+            : "1"
+        }; display: ${
+        status === "Sold" || status === "Reserved" || status === "On Hold"
+        ? "none"
+        : "block"
+          }" data-id=${id} class="border px-4 cursor-pointer py-1 rounded-md text-sm font-normal mt-1">
           Express Interest
         </p>
 
@@ -440,13 +460,14 @@ const Map = ({ parcels, center, setCartOpen }) => {
     infoWindow.setContent(contentString);
     infoWindow.open(map);
 
-    //Call for info
     google.maps.event.addListener(infoWindow, "domready", () => {
+      //Call for info
       const callInfo = document.getElementById("call-for-info");
       callInfo.addEventListener("click", () => {
         alert("Call For Info \n 0322008282 or +233 54 855 4216");
       });
 
+      // Change Plot Price
       const Btn = document.getElementById("changePlotID");
       Btn.addEventListener("click", () => {
         const content = Btn.getAttribute("data-text");
@@ -490,6 +511,20 @@ const Map = ({ parcels, center, setCartOpen }) => {
         const id = Btn.getAttribute("data-id");
         setIsDialogOpen(true);
         setInterestPlotId(id);
+
+        if (openInfoWindow) {
+          openInfoWindow.close();
+        }
+      });
+    });
+
+    //Buy Plot
+    google.maps.event.addListener(infoWindow, "domready", () => {
+      const Btn = document.getElementById("buyPlot");
+      Btn.addEventListener("click", () => {
+        const id = Btn.getAttribute("data-id");
+        setBuyPlotDialog(true);
+        setBuyPlotId(id);
 
         if (openInfoWindow) {
           openInfoWindow.close();
@@ -558,10 +593,14 @@ const Map = ({ parcels, center, setCartOpen }) => {
       } else if (status === "On Hold") {
         return "grey"; // Optional: handle unexpected status values
       }
-    } else if(Number(amount) === 0 && status === 'Sold') {
+    } else if (Number(amount) === 0 && status === "Sold") {
       return "red";
-    }else if (Number(amount) === 0 && status === null || status === "Available" || status === undefined){
-      return "darkblue"
+    } else if (
+      (Number(amount) === 0 && status === null) ||
+      status === "Available" ||
+      status === undefined
+    ) {
+      return "darkblue";
     }
   }
 
@@ -1156,6 +1195,17 @@ const Map = ({ parcels, center, setCartOpen }) => {
             onOpenChange={setIsDialogOpen}
             plotId={interestPlotId}
             setIsDialogOpen={setIsDialogOpen}
+            table={table}
+          />
+        )}
+
+        {/* Buy Plot Dialog */}
+        {buyPlotDialog && (
+          <BuyPlotDialog
+            open={buyPlotDialog}
+            onOpenChange={setBuyPlotDialog}
+            setBuyPlotDialog={setBuyPlotDialog}
+            plotId={buyPlotId}
             table={table}
           />
         )}

@@ -2,7 +2,7 @@ import { supabase } from "@/utils/supabase/client";
 
 export const updatePlotStatus = async (
   databaseName,
-  id,
+  plotId,
   firstname,
   lastname,
   email,
@@ -22,7 +22,7 @@ export const updatePlotStatus = async (
       country: country,
       residentialAddress: residentialAddress,
     })
-    .eq("id", id);
+    .eq("id", plotId);
   if (error) {
     console.log("changing reserve plot status error:", error);
   }

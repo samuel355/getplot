@@ -443,7 +443,8 @@ const BuyPlot = () => {
                       )}
                     </div>
                   </div>
-                  {user?.publicMetadata?.role === "role" && (
+                  {(user?.publicMetadata?.role === "syadmin" ||
+                    user?.publicMetadata?.role === "admin") && (
                     <div className="mt-6">
                       <h2 className="text-gray-900 font-semibold">Remarks</h2>
                       <Textarea

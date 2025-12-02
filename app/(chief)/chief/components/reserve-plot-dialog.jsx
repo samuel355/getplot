@@ -12,9 +12,8 @@ import { useUser } from "@clerk/nextjs";
 import { Loader } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import OptGroup from "../(dashboard)/dashboard/_components/OptGroup";
 import { Button } from "@/components/ui/button";
-import { buyPlotNew } from "../_actions/buy-plot-new";
+import OptGroup from "@/app/(dashboard)/dashboard/_components/OptGroup";
 
 const plotInfo = {
   firstname: "",
@@ -31,61 +30,22 @@ const plotInfo = {
   remarks: "",
   plotStatus: "",
   status: "",
+  initialDeposite: 0,
 };
 
-const BuyPlotDialog = ({
+const ReservePlotDialog = ({
   open,
   onOpenChange,
   plotId,
-  setBuyPlotDialog,
-  table,
+  setReservePlotDialog,
+  database,
 }) => {
-  let databaseName;
-  let databaseInterest;
-  if (table && table === "nthc") {
-    databaseName = "nthc";
-    databaseInterest = "nthc_interests";
-  }
-  if (table && table === "dar-es-salaam") {
-    databaseName = "dar_es_salaam";
-    databaseInterest = "dar_es_salaam_interests";
-  }
-  if (table && table === "trabuom") {
-    databaseName = "trabuom";
-    databaseInterest = "trabuom_interests";
-  }
-  if (table && table === "legon-hills") {
-    databaseName = "legon_hills";
-    databaseInterest = "legon_hills_interests";
-  }
-  if (table && table === "yabi") {
-    databaseName = "yabi";
-    databaseInterest = "yabi_interests";
-  }
-  if (table && table === "berekuso") {
-    databaseName = "berekuso";
-    databaseInterest = "berekuso_interests";
-  }
-  if (table && table === "asokore-mampong") {
-    databaseName = "asokore_mampong";
-    databaseInterest = "asokore_mampong_interests";
-  }
-  if (table && table === "saadi") {
-    databaseName = "saadi";
-    databaseInterest = "saadi_interests";
-  }
-
   const [loading, setLoading] = useState(false);
-  const [loader2, setLoader2] = useState(false);
-  const [loader3, setLoader3] = useState(false);
-  const [verifyLoading, setVerifyLoading] = useState(false);
-  const [step1, setStep1] = useState(true);
-  const [step2, setStep2] = useState(false);
-  const [step3, setStep3] = useState(false);
   const [plotData, setPlotData] = useState(plotInfo);
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
   const { user } = useUser();
+  const userId = user?.id;
   const {
     firstname,
     lastname,
@@ -100,11 +60,13 @@ const BuyPlotDialog = ({
     remarks,
     status,
     plotStatus,
+    initialDeposit,
   } = plotData;
 
   // Errors Checks
   const [statusEr, setStatusEr] = useState(false);
   const [plotTotalAmountEr, setPlotTotalAmountEr] = useState(false);
+  const [initialDepositEr, setInitialDepositEr] = useState(false);
   const [paidAmtEr, setPaidAmtEr] = useState(false);
   const [fnameEr, setFnameEr] = useState(false);
   const [lnameEr, setLnameEr] = useState(false);
@@ -114,17 +76,17 @@ const BuyPlotDialog = ({
   const [resAddressEr, setResAddressEr] = useState(false);
 
   useEffect(() => {
-    if (plotId && databaseName) {
+    if (plotId && database) {
       fetchPlotData();
     }
-  }, [plotId, databaseName]);
+  }, [plotId, database]);
 
   //Fetch Plot Details From DB
   const fetchPlotData = async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from(databaseName)
+        .from(database)
         .select("*")
         .eq("id", plotId);
 
@@ -155,38 +117,18 @@ const BuyPlotDialog = ({
         setLoading(false);
         console.log(error);
         toast("Something went wrong fetching plot data");
-        setBuyPlotDialog(false);
+        setSellPlotDialog(false);
         return;
       }
     } catch (error) {
       setLoading(false);
       console.log(error);
       toast("Something went wrong fetching plot data");
-      setBuyPlotDialog(false);
+      setSellPlotDialog(false);
     }
   };
 
-  const onInputChange = (e) => {
-    e.preventDefault();
-    const { name, value } = e.target;
-    setPlotData({ ...plotData, [name]: value });
-  };
-
-  let amtRemaining = 0;
-  const handleCalculateAmount = () => {
-    amtRemaining = plotTotalAmount - paidAmount;
-    setCalcAmount(amtRemaining);
-    setPlotData({ ...plotData, remainingAmount: amtRemaining });
-  };
-
-  const handleInput = (event) => {
-    const charCode = event.which ? event.which : event.keyCode;
-    // Prevent input if the key is not a number (0-9)
-    if (charCode < 48 || charCode > 57) {
-      event.preventDefault();
-    }
-  };
-
+  let initialDepo = 0.25 * plotTotalAmount;
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
@@ -201,6 +143,31 @@ const BuyPlotDialog = ({
       return;
     } else {
       setPlotTotalAmountEr(false);
+    }
+    if (
+      initialDeposit === null ||
+      initialDeposit === undefined ||
+      initialDeposit === 0 ||
+      initialDeposit === ""
+    ) {
+      setInitialDepositEr(true);
+      toast.error("Check the initial deposit");
+      return;
+    } else {
+      setInitialDepositEr(false);
+    }
+
+    if (initialDeposit < initialDepo) {
+      toast.error(
+        `Check the initial deposit. It must be at least GHS. ${initialDepo.toLocaleString()}`
+      );
+      return;
+    }
+    if (initialDeposit > plotTotalAmount) {
+      toast.error(
+        `Check the initial deposit. It must not be greater than the plot amount`
+      );
+      return;
     }
 
     if (firstname === null || firstname === undefined || firstname === "") {
@@ -263,31 +230,68 @@ const BuyPlotDialog = ({
       setResAddressEr(false); //
     }
 
-    buyPlotNew(
-      loading,
-      setLoading,
-      allDetails,
-      plotTotalAmount,
-      databaseName,
-      plotId,
-      email,
-      firstname,
-      lastname,
-      phone,
-      country,
-      residentialAddress,
-      table,
-      toast,
-      setBuyPlotDialog
-    );
+    setLoading(true);
+    const { data, error } = await supabase
+      .from(database)
+      .update({
+        status: "Reserved",
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        phone: phone,
+        country: country,
+        residentialAddress: residentialAddress,
+        updated_by: userId,
+        paidAmount: initialDeposit
+      })
+      .eq("id", plotId)
+      .select(); // Add this line to get the updated row back
+
+    if (error) {
+      setReservePlotDialog(false);
+      setLoading(false);
+      console.log("error occured selling land", error);
+      toast.error("Sorry Error occured selling plot to a client");
+      return; // Add return to prevent further execution
+    }
+
+    if (data) {
+      setLoading(false);
+      toast.success("Plot Details saved Successfully");
+      setReservePlotDialog(false);
+      window.location.reload();
+    }
+  };
+
+  const onInputChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setPlotData({ ...plotData, [name]: value });
+  };
+
+  let amtRemaining = 0;
+  const handleCalculateAmount = () => {
+    amtRemaining = plotTotalAmount - initialDeposit;
+    setCalcAmount(amtRemaining);
+    setPlotData({ ...plotData, remainingAmount: amtRemaining });
+  };
+
+  const handleInput = (event) => {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Prevent input if the key is not a number (0-9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[520px] max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Buy Plot</DialogTitle>
-          <DialogDescription>Fill in the details to buy plot</DialogDescription>
+        <DialogHeader className={"items-center"}>
+          <DialogTitle>Sell Plot</DialogTitle>
+          <DialogDescription>
+            Fill in the details to sell plot to client
+          </DialogDescription>
         </DialogHeader>
 
         {loading ? (
@@ -411,7 +415,7 @@ const BuyPlotDialog = ({
                   <h2 className="text-gray-900 font-semibold">Country</h2>
                   <select
                     onChange={onInputChange}
-                    className="bg-white rounded-md text-dark border w-full py-4"
+                    className="bg-white rounded-md text-dark border w-full py-2"
                     name="country"
                     id="countryCode"
                     value={country}
@@ -462,6 +466,27 @@ const BuyPlotDialog = ({
                   <small className="text-red-800"></small>
                 </div>
 
+                <div className="">
+                  <h2 className="text-gray-900 font-semibold">
+                    Initial Deposit (GHS {initialDepo.toLocaleString()})
+                  </h2>
+                  <Input
+                    name="initialDeposit"
+                    type="number"
+                    onChange={onInputChange}
+                    value={initialDeposit}
+                    onKeyPress={handleInput}
+                    onKeyUp={handleCalculateAmount}
+                    style={{ border: initialDepositEr && `1px solid red` }}
+                  />
+                  {initialDepositEr && (
+                    <small className="text-red-900">
+                      Initial deposit must be at least 25% Which is GHS.{" "}
+                      {initialDepo.toLocaleString()}
+                    </small>
+                  )}
+                </div>
+
                 {(user?.publicMetadata?.role === "syadmin" ||
                   user?.publicMetadata?.role === "admin") && (
                   <div className="">
@@ -477,10 +502,15 @@ const BuyPlotDialog = ({
                 )}
               </div>
 
+              <p className="text-primary text-sm font-semibold my-3 text-right">
+                The client have:
+                <span> {` GHS. (${calcAmount.toLocaleString()}) To Pay`} </span>
+              </p>
+
               {loading ? (
                 <Loader className="animate-spin" />
               ) : (
-                <Button className="mt-4">Buy Plot</Button>
+                <Button className="mt-4">Reserve Plot</Button>
               )}
             </div>
           </form>
@@ -494,4 +524,4 @@ const BuyPlotDialog = ({
   );
 };
 
-export default BuyPlotDialog;
+export default ReservePlotDialog;

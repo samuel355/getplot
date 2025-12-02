@@ -12,9 +12,8 @@ import { useUser } from "@clerk/nextjs";
 import { Loader } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import OptGroup from "../(dashboard)/dashboard/_components/OptGroup";
 import { Button } from "@/components/ui/button";
-import { buyPlotNew } from "../_actions/buy-plot-new";
+import OptGroup from "@/app/(dashboard)/dashboard/_components/OptGroup";
 
 const plotInfo = {
   firstname: "",
@@ -33,59 +32,19 @@ const plotInfo = {
   status: "",
 };
 
-const BuyPlotDialog = ({
+const SellPlotDialog = ({
   open,
   onOpenChange,
   plotId,
-  setBuyPlotDialog,
-  table,
+  setSellPlotDialog,
+  database,
 }) => {
-  let databaseName;
-  let databaseInterest;
-  if (table && table === "nthc") {
-    databaseName = "nthc";
-    databaseInterest = "nthc_interests";
-  }
-  if (table && table === "dar-es-salaam") {
-    databaseName = "dar_es_salaam";
-    databaseInterest = "dar_es_salaam_interests";
-  }
-  if (table && table === "trabuom") {
-    databaseName = "trabuom";
-    databaseInterest = "trabuom_interests";
-  }
-  if (table && table === "legon-hills") {
-    databaseName = "legon_hills";
-    databaseInterest = "legon_hills_interests";
-  }
-  if (table && table === "yabi") {
-    databaseName = "yabi";
-    databaseInterest = "yabi_interests";
-  }
-  if (table && table === "berekuso") {
-    databaseName = "berekuso";
-    databaseInterest = "berekuso_interests";
-  }
-  if (table && table === "asokore-mampong") {
-    databaseName = "asokore_mampong";
-    databaseInterest = "asokore_mampong_interests";
-  }
-  if (table && table === "saadi") {
-    databaseName = "saadi";
-    databaseInterest = "saadi_interests";
-  }
-
   const [loading, setLoading] = useState(false);
-  const [loader2, setLoader2] = useState(false);
-  const [loader3, setLoader3] = useState(false);
-  const [verifyLoading, setVerifyLoading] = useState(false);
-  const [step1, setStep1] = useState(true);
-  const [step2, setStep2] = useState(false);
-  const [step3, setStep3] = useState(false);
   const [plotData, setPlotData] = useState(plotInfo);
   const [allDetails, setAllDetails] = useState();
   const [calcAmount, setCalcAmount] = useState(0);
   const { user } = useUser();
+  const userId = user?.id;
   const {
     firstname,
     lastname,
@@ -114,17 +73,17 @@ const BuyPlotDialog = ({
   const [resAddressEr, setResAddressEr] = useState(false);
 
   useEffect(() => {
-    if (plotId && databaseName) {
+    if (plotId && database) {
       fetchPlotData();
     }
-  }, [plotId, databaseName]);
+  }, [plotId, database]);
 
   //Fetch Plot Details From DB
   const fetchPlotData = async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from(databaseName)
+        .from(database)
         .select("*")
         .eq("id", plotId);
 
@@ -155,14 +114,14 @@ const BuyPlotDialog = ({
         setLoading(false);
         console.log(error);
         toast("Something went wrong fetching plot data");
-        setBuyPlotDialog(false);
+        setSellPlotDialog(false);
         return;
       }
     } catch (error) {
       setLoading(false);
       console.log(error);
       toast("Something went wrong fetching plot data");
-      setBuyPlotDialog(false);
+      setSellPlotDialog(false);
     }
   };
 
@@ -263,31 +222,46 @@ const BuyPlotDialog = ({
       setResAddressEr(false); //
     }
 
-    buyPlotNew(
-      loading,
-      setLoading,
-      allDetails,
-      plotTotalAmount,
-      databaseName,
-      plotId,
-      email,
-      firstname,
-      lastname,
-      phone,
-      country,
-      residentialAddress,
-      table,
-      toast,
-      setBuyPlotDialog
-    );
+    setLoading(true);
+    const { data, error } = await supabase
+      .from(database)
+      .update({
+        status: "Sold",
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        phone: phone,
+        country: country,
+        residentialAddress: residentialAddress,
+        updated_by: userId,
+      })
+      .eq("id", plotId)
+      .select(); // Add this line to get the updated row back
+    
+    if (error) {
+      setSellPlotDialog(false);
+      setLoading(false);
+      console.log("error occured selling land", error);
+      toast.error("Sorry Error occured selling plot to a client");
+      return; // Add return to prevent further execution
+    }
+    
+    if (data) {
+      setLoading(false);
+      toast.success("Plot Details saved Successfully");
+      setSellPlotDialog(false);
+      window.location.reload();
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[520px] max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Buy Plot</DialogTitle>
-          <DialogDescription>Fill in the details to buy plot</DialogDescription>
+        <DialogHeader className={"items-center"}>
+          <DialogTitle>Reserve Plot</DialogTitle>
+          <DialogDescription>
+            Fill in the details to Reserve the plot to client
+          </DialogDescription>
         </DialogHeader>
 
         {loading ? (
@@ -411,7 +385,7 @@ const BuyPlotDialog = ({
                   <h2 className="text-gray-900 font-semibold">Country</h2>
                   <select
                     onChange={onInputChange}
-                    className="bg-white rounded-md text-dark border w-full py-4"
+                    className="bg-white rounded-md text-dark border w-full py-2"
                     name="country"
                     id="countryCode"
                     value={country}
@@ -480,7 +454,7 @@ const BuyPlotDialog = ({
               {loading ? (
                 <Loader className="animate-spin" />
               ) : (
-                <Button className="mt-4">Buy Plot</Button>
+                <Button className="mt-4">Sell Plot</Button>
               )}
             </div>
           </form>
@@ -494,4 +468,4 @@ const BuyPlotDialog = ({
   );
 };
 
-export default BuyPlotDialog;
+export default SellPlotDialog;

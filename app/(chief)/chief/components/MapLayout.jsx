@@ -1,6 +1,6 @@
 "use client";
-import React, { useCallback, useState, useRef} from "react";
-import { GoogleMap, Polygon} from "@react-google-maps/api";
+import React, { useCallback, useState, useRef } from "react";
+import { GoogleMap, Polygon } from "@react-google-maps/api";
 import mapboxgl from "mapbox-gl";
 import { usePathname } from "next/navigation";
 
@@ -34,10 +34,12 @@ import {
   Info,
 } from "lucide-react";
 import GoogleMapsProvider from "@/providers/google-map-provider";
+import SellPlotDialog from "./sell-plot-dialog";
+import ReservePlotDialog from "./reserve-plot-dialog";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-const MapLayout = ({ parcels, center}) => {
+const MapLayout = ({ parcels, center, database }) => {
   const [map, setMap] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [plotID, setPlotID] = useState();
@@ -51,6 +53,11 @@ const MapLayout = ({ parcels, center}) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMapTypeMenuOpen, setIsMapTypeMenuOpen] = useState(false);
 
+  const [sellPlotDialog, setSellPlotDialog] = useState(false);
+  const [sellPlotId, setSellPlotId] = useState();
+
+  const [reservePlotDialog, setReservePlotDialog] = useState(false);
+  const [reservePlotId, setReservePlotId] = useState();
 
   const mapContainerStyle = {
     height: "98vh",
@@ -244,16 +251,19 @@ const MapLayout = ({ parcels, center}) => {
           Plot Number ${text1}, ${text2 ?? ""}
         </div>
         <div className="font-bold md:text-lg lg:text-lg text-sm mb-2" style="margin-top: 2px; font-weight: bold">
-          Size:  ${plot_size} Acres / ${(43560 * plot_size).toLocaleString()} Square ft 
+          Size:  ${plot_size} Acres / ${(
+      43560 * plot_size
+    ).toLocaleString()} Square ft 
         </div>
         <div 
           className="font-bold md:text-lg lg:text-lg text-sm mb-2" 
           style="margin-top: 8px; font-weight: bold; display: 
-          ${((status === "Sold" || status === "Reserved") &&
-            user?.publicMetadata?.role != "sysadmin") ||
+          ${
+            ((status === "Sold" || status === "Reserved") &&
+              user?.publicMetadata?.role != "sysadmin") ||
             !(Number(feature.plotTotalAmount) > 0)
-            ? "none"
-            : "block"
+              ? "none"
+              : "block"
           }"
           >
            
@@ -269,9 +279,17 @@ const MapLayout = ({ parcels, center}) => {
           (status === null || status === "Available" || status === undefined)
             ? "block"
             : "none"
-          }"
+        }"
         >
           NOT READY FOR SALE YET
+        </p>
+
+        <p id="sell-plot" data-id=${id} class="cursor-pointer border px-4 mt-3 bg-primary text-white text-center py-1 mb-2 rounded-md text-sm font-normal">
+          Sell Plot
+        </p>
+
+        <p id="reserve-plot" data-id=${id} class="cursor-pointer border px-4 bg-primary text-white text-center py-1 mb-2 rounded-md text-sm font-normal">
+          Reserve
         </p>
       </div>
     </div>
@@ -298,6 +316,34 @@ const MapLayout = ({ parcels, center}) => {
 
     infoWindow.setContent(contentString);
     infoWindow.open(map);
+
+    //Buy Plot
+    google.maps.event.addListener(infoWindow, "domready", () => {
+      const Btn = document.getElementById("sell-plot");
+      Btn.addEventListener("click", () => {
+        const id = Btn.getAttribute("data-id");
+        setSellPlotDialog(true);
+        setSellPlotId(id);
+
+        if (openInfoWindow) {
+          openInfoWindow.close();
+        }
+      });
+    });
+
+    //Reserve Plot
+    google.maps.event.addListener(infoWindow, "domready", () => {
+      const Btn = document.getElementById("reserve-plot");
+      Btn.addEventListener("click", () => {
+        const id = Btn.getAttribute("data-id");
+        setReservePlotDialog(true);
+        setReservePlotId(id);
+
+        if (openInfoWindow) {
+          openInfoWindow.close();
+        }
+      });
+    });
     openInfoWindow = infoWindow;
   };
 
@@ -428,7 +474,6 @@ const MapLayout = ({ parcels, center}) => {
     saveInfo(remainingAmount, newAmount, paidAmount, database);
   };
 
-
   const handleInput = (event) => {
     const charCode = event.which ? event.which : event.keyCode;
     // Prevent input if the key is not a number (0-9)
@@ -540,7 +585,6 @@ const MapLayout = ({ parcels, center}) => {
             }}
             className="relative"
           >
-
             {/* Legend overlay */}
             <div className="absolute w-36 top-20 left-0 bg-white/90 shadow-md rounded-md z-10 hidden md:flex md:flex-col justify-center items-center">
               <div className="p-2 bg-gray-100 font-medium rounded-t-md w-full">
@@ -830,7 +874,7 @@ const MapLayout = ({ parcels, center}) => {
           <div className="flex items-center gap-2">
             <Navigation size={16} className="text-gray-500" />
             <span>
-              {'Yabi'} • {parcels?.length || 0} plots available
+              {"Yabi"} • {parcels?.length || 0} plots available
             </span>
           </div>
           <div>
@@ -843,6 +887,26 @@ const MapLayout = ({ parcels, center}) => {
             </button>
           </div>
         </div>
+
+        {sellPlotDialog && (
+          <SellPlotDialog
+            open={sellPlotId}
+            onOpenChange={setSellPlotDialog}
+            setSellPlotDialog={setSellPlotDialog}
+            plotId={sellPlotId}
+            database={database}
+          />
+        )}
+
+        {reservePlotDialog && (
+          <ReservePlotDialog
+            open={reservePlotId}
+            onOpenChange={setReservePlotDialog}
+            setReservePlotDialog={setReservePlotDialog}
+            plotId={reservePlotId}
+            database={database}
+          />
+        )}
       </div>
     </GoogleMapsProvider>
   );

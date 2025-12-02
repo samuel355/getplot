@@ -16,31 +16,31 @@ const Page = () => {
     lat: 6.640967246477618,
   });
 
+  const isChief = user?.publicMetadata?.role === "chief";
+  const isChiefAsst = user?.publicMetadata?.role === "chief_asst";
+  const chief_area = user?.publicMetadata?.area;
+
+  // Determine database name
+  let database_name;
+  if (chief_area === "asokore_mampong") {
+    database_name = "asokore_mampong";
+  } else if (chief_area === "legon_hills") {
+    database_name = "legon_hills";
+  } else if (chief_area === "royal_court_estate") {
+    database_name = "saadi";
+  } else {
+    toast.error("Unknown area specified");
+    return;
+  }
+
   useEffect(() => {
     if (!isSignedIn || !isLoaded) return;
 
     const fetchPlots = async () => {
       setLoading(true);
       try {
-        const isChief = user?.publicMetadata?.role === "chief";
-        const isChiefAsst = user?.publicMetadata?.role === "chief_asst";
-        const chief_area = user?.publicMetadata?.area;
-        
         if (!chief_area) {
           toast.error("Failed to fetch properties - area not specified");
-          return;
-        }
-
-        // Determine database name
-        let database_name;
-        if (chief_area === "asokore_mampong") {
-          database_name = "asokore_mampong";
-        } else if (chief_area === "legon_hills") {
-          database_name = "legon_hills";
-        } else if (chief_area === "royal_court_estate") {
-          database_name = "saadi";
-        } else {
-          toast.error("Unknown area specified");
           return;
         }
 
@@ -54,7 +54,7 @@ const Page = () => {
 
         if (data && data.length > 0) {
           setPlots(data);
-          
+
           // Calculate center based on the first plot's coordinates
           const firstPlot = data[0];
           if (firstPlot?.geometry?.coordinates?.[0]?.[0]) {
@@ -96,7 +96,12 @@ const Page = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           </div>
         ) : (
-          <MapLayout geoJsonData={plots} parcels={plots} center={center} />
+          <MapLayout
+            geoJsonData={plots}
+            parcels={plots}
+            center={center}
+            database={database_name}
+          />
         )}
       </div>
     </AuthCheckChief>

@@ -262,6 +262,24 @@ const BuyPlotDialog = ({
     } else {
       setResAddressEr(false); //
     }
+
+    buyPlotNew(
+      loading,
+      setLoading,
+      allDetails,
+      plotTotalAmount,
+      databaseName,
+      plotId,
+      email,
+      firstname,
+      lastname,
+      phone,
+      country,
+      residentialAddress,
+      table,
+      toast,
+      setBuyPlotDialog
+    );
   };
 
   return (
@@ -444,45 +462,25 @@ const BuyPlotDialog = ({
                   <small className="text-red-800"></small>
                 </div>
 
-                <div className="">
-                  <h2 className="text-gray-900 font-semibold">Agent</h2>
-                  <Input
-                    placeholder="Agent"
-                    name="agent"
-                    type="text"
-                    onChange={onInputChange}
-                    value={agent}
-                  />
-                </div>
+                {(user?.publicMetadata?.role === "syadmin" ||
+                  user?.publicMetadata?.role === "admin") && (
+                  <div className="">
+                    <h2 className="text-gray-900 font-semibold">Agent</h2>
+                    <Input
+                      placeholder="Agent"
+                      name="agent"
+                      type="text"
+                      onChange={onInputChange}
+                      value={agent}
+                    />
+                  </div>
+                )}
               </div>
 
               {loading ? (
                 <Loader className="animate-spin" />
               ) : (
-                <Button
-                  className="mt-4"
-                  onClick={() =>
-                    buyPlotNew(
-                      loading,
-                      setLoading,
-                      allDetails,
-                      plotTotalAmount,
-                      databaseName,
-                      plotId,
-                      email,
-                      firstname,
-                      lastname,
-                      phone,
-                      country,
-                      residentialAddress,
-                      table,
-                      toast,
-                      setBuyPlotDialog
-                    )
-                  }
-                >
-                  Buy Plot
-                </Button>
+                <Button className="mt-4">Buy Plot</Button>
               )}
             </div>
           </form>

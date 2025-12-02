@@ -40,6 +40,7 @@ import GoogleMapsProvider from "@/providers/google-map-provider";
 import { saadiRoad } from "@/saadi-layout/road";
 import StreetLine from "./RoadsMap";
 import BuyPlotDialog from "./buy-plot-dialog";
+import ReservePlotDialog from "./reserve-plot-dialog";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -71,6 +72,10 @@ const Map = ({ parcels, center, setCartOpen }) => {
   //Buy Plot Dialog State
   const [buyPlotDialog, setBuyPlotDialog] = useState(false);
   const [buyPlotId, setBuyPlotId] = useState();
+
+  //Reserve Plot Dialog State
+  const [reservePlotDialog, setReservePlotDialog] = useState(false);
+  const [reservePlotId, setReservePlotId] = useState()
 
   // Location determination logic
   let table;
@@ -388,16 +393,16 @@ const Map = ({ parcels, center, setCartOpen }) => {
         </p>
 
 
-        <a style="display: ${
+        <p style="display: ${
           status === "Reserved" ||
           status === "Sold" ||
           status === "On Hold" ||
           Number(feature.plotTotalAmount) === 0
             ? "none"
             : "block"
-        }" href="${path}/reserve-plot/${id}" id="reserve_plot_button" class="border mb-1 px-4 py-1 my-2 rounded-md text-sm font-normal">
+        }" id="reservePlot" data-id=${id} class="border cursor-pointer mb-1 px-4 py-1 my-2 rounded-md text-sm font-normal">
           Reserve Plot
-        </a>
+        </p>
 
         <a style= "display: ${
           user?.publicMetadata?.role != "sysadmin" && "none"
@@ -525,6 +530,20 @@ const Map = ({ parcels, center, setCartOpen }) => {
         const id = Btn.getAttribute("data-id");
         setBuyPlotDialog(true);
         setBuyPlotId(id);
+
+        if (openInfoWindow) {
+          openInfoWindow.close();
+        }
+      });
+    });
+
+    //Reserve Plot
+    google.maps.event.addListener(infoWindow, "domready", () => {
+      const Btn = document.getElementById("reservePlot");
+      Btn.addEventListener("click", () => {
+        const id = Btn.getAttribute("data-id");
+        setReservePlotDialog(true);
+        setReservePlotId(id);
 
         if (openInfoWindow) {
           openInfoWindow.close();
@@ -1209,6 +1228,19 @@ const Map = ({ parcels, center, setCartOpen }) => {
             table={table}
           />
         )}
+
+        {/* Reserve Plot Dialog */}
+        {
+          reservePlotDialog && (
+            <ReservePlotDialog
+              open={reservePlotDialog}
+              onOpenChange={setReservePlotDialog}
+              setReservePlotDialog={setReservePlotDialog}
+              plotId = {reservePlotId}
+              table={table}
+            />
+          )
+        }
 
         {/* Status Dialog */}
         <Dialog open={isStatusModalOpen} onOpenChange={setIsStatusModalOpen}>

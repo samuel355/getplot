@@ -13,7 +13,7 @@ const MapControls = ({
 }) => (
   <div
     id="map-controls"
-    className="absolute top-4 right-4 bg-white shadow-lg rounded-lg p-2 flex flex-col gap-2 z-10"
+    className="absolute hidden top-4 right-4 bg-white shadow-lg rounded-lg p-2 md:flex flex-col gap-2 z-10"
   >
     {/* Zoom controls */}
     <button

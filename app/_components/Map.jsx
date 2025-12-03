@@ -804,7 +804,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
 
   return (
     <GoogleMapsProvider>
-      <div className="w-full flex flex-col items-center justify-center relative px-10 md:px-14">
+      <div className="w-full flex flex-col items-center justify-center relative">
         {modalOpen && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-6 rounded shadow-lg">
@@ -862,18 +862,18 @@ const Map = ({ parcels, center, setCartOpen }) => {
           </Dialog>
         </form>
 
-        <div className="w-full z-10 flex md:hidden flex-col items-center mb-4 bg-white/90 rounded-md p-3 shadow-md">
+        <div className="w-full z-10 flex md:hidden flex-col items-center mb-4 bg-white/90 rounded-md p-3 px-2 md:px-14 shadow-md">
           <div className="flex w-full flex-row items-center justify-center mb-2">
             <div className="flex w-full items-center space-x-3">
-              <div className="w-4 h-4 bg-green-800 rounded-sm opacity-40"></div>
+              <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
               <span>Available</span>
             </div>
             <div className="flex w-full items-center space-x-3">
-              <div className="w-4 h-4 bg-black rounded-sm opacity-40"></div>
+              <div className="w-4 h-4 bg-black rounded-sm"></div>
               <span>Reserved</span>
             </div>
             <div className="flex w-full items-center space-x-3">
-              <div className="w-4 h-4 bg-red-600 rounded-sm opacity-40"></div>
+              <div className="w-4 h-4 bg-red-600 rounded-sm"></div>
               <span>Sold</span>
             </div>
           </div>
@@ -883,7 +883,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
         </div>
 
         {/* Main map container with the map-container class for fullscreen functionality */}
-        <div className="map-container relative w-full">
+        <div className="map-container relative w-full px-2 md:px-14">
           <GoogleMap
             mapContainerStyle={mapContainerStyle}
             center={center}
@@ -894,7 +894,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
               fullscreenControl: false, // We'll implement our own
               streetViewControl: true,
               mapTypeControl: false, // We'll implement our own
-              zoomControl: false, // We'll implement our own
+              zoomControl: false, // We'll implement our ow
               scrollwheel: true,
               gestureHandling: "greedy", // Makes the map easier to use on mobile
               mapTypeId: mapType,

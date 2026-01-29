@@ -891,12 +891,13 @@ const Map = ({ parcels, center, setCartOpen }) => {
             onLoad={onLoad}
             onUnmount={onUnmount}
             options={{
-              fullscreenControl: false, // We'll implement our own
+              fullscreenControl: false, 
               streetViewControl: true,
-              mapTypeControl: false, // We'll implement our own
-              zoomControl: false, // We'll implement our ow
+              mapTypeControl: false,
+
+              zoomControl: false, 
               scrollwheel: true,
-              gestureHandling: "greedy", // Makes the map easier to use on mobile
+              gestureHandling: "greedy", 
               mapTypeId: mapType,
             }}
             className="relative"

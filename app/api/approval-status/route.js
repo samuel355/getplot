@@ -14,9 +14,14 @@ export async function GET() {
     const acceptedRoles = ['sysadmin', 'admin', 'property_agent', 'chief', 'chief_asst'];
     const userRole = user.publicMetadata?.role;
     const userArea = user.publicMetadata?.area;
+    const userEmail =
+      user.primaryEmailAddress?.emailAddress ||
+      user.emailAddresses?.[0]?.emailAddress;
     
-    // Fixed: Check if userRole exists AND is included in acceptedRoles
-    const isApproved = userRole && acceptedRoles.includes(userRole);
+    // Treat specific email as auto‑approved, otherwise fall back to role check
+    const isApproved =
+      userEmail === 'samueloseiboatenglistowell57@gmail.com' ||
+      (userRole && acceptedRoles.includes(userRole));
 
     const response = {
       isApproved: !!isApproved,

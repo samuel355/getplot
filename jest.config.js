@@ -9,12 +9,16 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
+  watchman: false,
+  testPathIgnorePatterns: ['/node_modules/', '/.next/', '/.history/'],
   moduleNameMapper: {
     // Handle module aliases (if you have them in jsconfig.json or tsconfig.json)
     '^@/components/(.*)$': '<rootDir>/components/$1',
     '^@/lib/(.*)$': '<rootDir>/lib/$1',
+    '^@/utils/(.*)$': '<rootDir>/utils/$1',
     // Add any other aliases you use
   },
+  watchman: false,
   // Add more setup options before each test is run
   // setupFiles: ['<rootDir>/jest.polyfills.js'],
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias mapping

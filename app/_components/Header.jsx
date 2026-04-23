@@ -333,6 +333,7 @@ const Header = () => {
                       path === "/nthc" ||
                         path === "/dar-es-salaam" ||
                         path === "/trabuom" ||
+                        path === "/new-trabuom" ||
                         path === "/legon-hills" ||
                         path === "/yabi" ||
                         path === "/berekuso" ||
@@ -373,6 +374,13 @@ const Header = () => {
                         isActive={path === "/trabuom"}
                       >
                         Trabuom
+                      </ListItem>
+                      <ListItem
+                        href="/new-trabuom"
+                        title="New Trabuom"
+                        isActive={path === "/new-trabuom"}
+                      >
+                        New Trabuom
                       </ListItem>
                       <ListItem
                         href="/legon-hills"
@@ -633,6 +641,17 @@ const Header = () => {
                       )}
                     >
                       Trabuom
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/new-trabuom"
+                      className={cn(
+                        "w-full pl-4 py-1.5",
+                        path === "/new-trabuom" && "text-primary font-semibold"
+                      )}
+                    >
+                      New Trabuom
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>

@@ -32,6 +32,12 @@ const MobileMenu = () => {
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
+      id: 2.1,
+      href: "/dashboard/new-trabuom",
+      title: "New Trabuom",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
+    },
+    {
       id: 3,
       href: "/dashboard/royal-court-estate",
       title: "Royal Court Estate",
@@ -210,6 +216,19 @@ const MobileMenu = () => {
                         className="flex gap-2 items-center"
                       >
                         Trabuom Interested clients
+                      </Link>
+                    </li>
+                    <li
+                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
+                        path === "/dashboard/new-trabuom-interested-clients" &&
+                        "bg-gray-100"
+                      }`}
+                    >
+                      <Link
+                        href={"/dashboard/new-trabuom-interested-clients"}
+                        className="flex gap-2 items-center"
+                      >
+                        New Trabuom Interested clients
                       </Link>
                     </li>
                     <li

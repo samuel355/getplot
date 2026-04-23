@@ -42,6 +42,13 @@ const Sidebar = () => {
       icon: <LandPlot className="w-4 h-4 ml-2" />,
     },
     {
+      id: 3.1,
+      href: "/dashboard/new-trabuom",
+      title: "New Trabuom",
+      query: "new-trabuom",
+      icon: <LandPlot className="w-4 h-4 ml-2" />,
+    },
+    {
       id: 4,
       href: "/dashboard/nthc",
       title: "NTHC Kwadaso",
@@ -187,6 +194,16 @@ const Sidebar = () => {
               }`}
             >
               Trabuom Interested clients
+            </Link>
+            <Link
+              href={"/dashboard/new-trabuom-interested-clients"}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                path === "/dashboard/new-trabuom-interested-clients"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              New Trabuom Interested clients
             </Link>
             <Link
               href={"/dashboard/kwadaso-interested-clients"}

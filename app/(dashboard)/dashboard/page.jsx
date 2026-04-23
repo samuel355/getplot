@@ -110,6 +110,12 @@ const Dashboard = () => {
             Trabuom
           </Link>
           <Link
+            href="/dashboard/new-trabuom"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            New Trabuom
+          </Link>
+          <Link
             href="/dashboard/nthc"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >

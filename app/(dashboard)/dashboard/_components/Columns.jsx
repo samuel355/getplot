@@ -258,7 +258,8 @@ export const columns = [
 
       // Determine table from pathname
       let table = "";
-      if (pathname === "/dashboard/trabuom") table = "trabuom";
+      if (pathname === "/dashboard/trabuom" || pathname === "/dashboard/new-trabuom")
+        table = "trabuom";
       else if (pathname === "/dashboard/nthc") table = "nthc";
       else if (pathname === "/dashboard/legon-hills") table = "legon-hills";
       else if (pathname === "/dashboard/dar-es-salaam") table = "dar-es-salaam";
@@ -604,7 +605,8 @@ const ViewPlotDialog = ({
                         className="w-3/4"
                         name="plotSize"
                         value={
-                          pathname === "/dashboard/trabuom"
+                          pathname === "/dashboard/trabuom" ||
+                          pathname === "/dashboard/new-trabuom"
                             ? `${(allDetails?.properties?.Area || 0).toFixed(
                                 2
                               )} Acres`

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import nodemailer from "nodemailer";
 import ejs from "ejs";
 import path from "path";
@@ -29,14 +29,14 @@ export async function POST(request) {
     if (!properties || !action) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Get template path based on action
     const templatePath = path.join(
       process.cwd(),
-      `app/api/admin/email-templates/property-${action}.ejs`
+      `app/api/admin/email-templates/property-${action}.ejs`,
     );
 
     // Read template file
@@ -66,7 +66,7 @@ export async function POST(request) {
                 : "Your Property Has Been Rejected",
             html,
           });
-        })
+        }),
       );
 
       // Add a small delay between batches to prevent rate limiting
@@ -80,7 +80,7 @@ export async function POST(request) {
     console.error("Error sending bulk emails:", error);
     return NextResponse.json(
       { error: "Failed to send emails" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -62,13 +62,19 @@ const schemas = {
 
   // Social login
   socialLogin: Joi.object({
-    provider: Joi.string().valid('google').required(),
+    provider: Joi.string().valid('google', 'facebook', 'github').required(),
     idToken: Joi.any().when('provider', {
       is: 'google',
       then: Joi.string().required(),
       otherwise: Joi.forbidden(),
     }),
-    accessToken: Joi.string().optional(),
+    accessToken: Joi.any().when('provider', {
+      switch: [
+        { is: 'facebook', then: Joi.string().required() },
+        { is: 'github', then: Joi.string().required() },
+      ],
+      default: Joi.string().optional(),
+    }),
   }),
 
   // Refresh token
@@ -97,7 +103,9 @@ const schemas = {
 
   // Property search
   propertySearch: Joi.object({
-    location: Joi.string().valid('yabi', 'trabuom', 'dar_es_salaam', 'legon_hills', 'nthc', 'berekuso', 'saadi').optional(),
+    location: Joi.string()
+      .valid('yabi', 'trabuom', 'dar_es_salaam', 'legon_hills', 'nthc', 'berekuso', 'saadi')
+      .optional(),
     status: Joi.string().valid('available', 'reserved', 'sold').optional(),
     minPrice: Joi.number().min(0).optional(),
     maxPrice: Joi.number().min(0).optional(),
@@ -112,7 +120,9 @@ const schemas = {
   createProperty: Joi.object({
     plotNo: Joi.string().required(),
     streetName: Joi.string().required(),
-    location: Joi.string().valid('yabi', 'trabuom', 'dar_es_salaam', 'legon_hills', 'nthc', 'berekuso', 'saadi').required(),
+    location: Joi.string()
+      .valid('yabi', 'trabuom', 'dar_es_salaam', 'legon_hills', 'nthc', 'berekuso', 'saadi')
+      .required(),
     area: Joi.number().positive().required(),
     areaUnit: Joi.string().valid('acres', 'sqm', 'sqft').default('acres'),
     price: Joi.number().positive().required(),
@@ -139,7 +149,9 @@ const schemas = {
   buyPlot: Joi.object({
     propertyId: uuid,
     amount: Joi.number().positive().required(),
-    paymentMethod: Joi.string().valid('bank_transfer', 'mobile_money', 'paystack', 'stripe').required(),
+    paymentMethod: Joi.string()
+      .valid('bank_transfer', 'mobile_money', 'paystack', 'stripe')
+      .required(),
     customerDetails: Joi.object({
       firstName: name,
       lastName: name,
@@ -155,10 +167,14 @@ const schemas = {
     to: email,
     template: Joi.string().required(),
     data: Joi.object().required(),
-    attachments: Joi.array().items(Joi.object({
-      filename: Joi.string().required(),
-      content: Joi.string().required(),
-    })).optional(),
+    attachments: Joi.array()
+      .items(
+        Joi.object({
+          filename: Joi.string().required(),
+          content: Joi.string().required(),
+        })
+      )
+      .optional(),
   }),
 
   // Send SMS
@@ -188,7 +204,7 @@ function validate(schema, data, options = {}) {
       field: detail.path.join('.'),
       message: detail.message,
     }));
-    
+
     throw {
       name: 'ValidationError',
       message: 'Validation failed',
@@ -212,4 +228,3 @@ module.exports = {
   status,
   pagination,
 };
-

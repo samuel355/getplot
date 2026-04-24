@@ -13,10 +13,9 @@ class AuthService {
   async register({ email, password, firstName, lastName, phone, country, residentialAddress }) {
     try {
       // Check if user already exists
-      const existingUser = await database.query(
-        'SELECT id FROM app_auth.users WHERE email = $1',
-        [email.toLowerCase()]
-      );
+      const existingUser = await database.query('SELECT id FROM app_auth.users WHERE email = $1', [
+        email.toLowerCase(),
+      ]);
 
       if (existingUser.rows.length > 0) {
         throw new ConflictError('Email already registered');
@@ -46,14 +45,19 @@ class AuthService {
           `INSERT INTO users.profiles (
             user_id, first_name, last_name, phone, country, residential_address, role
           ) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-          [user.id, firstName, lastName, phone, country, residentialAddress || null, 'default_member']
+          [
+            user.id,
+            firstName,
+            lastName,
+            phone,
+            country,
+            residentialAddress || null,
+            'default_member',
+          ]
         );
 
         // Create user preferences
-        await client.query(
-          `INSERT INTO users.preferences (user_id) VALUES ($1)`,
-          [user.id]
-        );
+        await client.query(`INSERT INTO users.preferences (user_id) VALUES ($1)`, [user.id]);
 
         return user;
       });
@@ -95,7 +99,7 @@ class AuthService {
     try {
       // Get user with profile
       const result = await database.query(
-        `SELECT 
+        `SELECT
           u.id, u.email, u.password_hash, u.email_verified, u.is_active,
           p.first_name, p.last_name, p.role
         FROM app_auth.users u
@@ -177,7 +181,7 @@ class AuthService {
       }
 
       const existing = await database.query(
-        `SELECT 
+        `SELECT
           u.id, u.email, u.email_verified,
           p.first_name, p.last_name, p.role
         FROM app_auth.users u
@@ -194,7 +198,12 @@ class AuthService {
         await this._syncProfileFromSocial(userRecord.id, providerProfile);
       }
 
-      await this._upsertOAuthProvider(userRecord.id, provider, providerProfile.providerUserId, accessToken || null);
+      await this._upsertOAuthProvider(
+        userRecord.id,
+        provider,
+        providerProfile.providerUserId,
+        accessToken || null
+      );
 
       const role = userRecord.role || 'default_member';
 
@@ -415,6 +424,10 @@ class AuthService {
     switch (provider) {
       case 'google':
         return this._verifyGoogleToken(tokens.idToken);
+      case 'facebook':
+        return this._verifyFacebookToken(tokens.accessToken);
+      case 'github':
+        return this._verifyGitHubToken(tokens.accessToken);
       default:
         throw new ValidationError(`Unsupported social provider: ${provider}`);
     }
@@ -453,6 +466,101 @@ class AuthService {
       }
       logger.error('Google token verification failed', error);
       throw new AuthenticationError('Failed to verify Google token');
+    }
+  }
+
+  async _verifyFacebookToken(accessToken) {
+    if (!accessToken) {
+      throw new ValidationError('Facebook access token is required');
+    }
+
+    try {
+      const { data } = await axios.get('https://graph.facebook.com/me', {
+        params: {
+          access_token: accessToken,
+          fields: 'id,email,first_name,last_name,picture.width(500).height(500)',
+        },
+      });
+
+      if (!data.email) {
+        throw new AuthenticationError('Facebook profile does not include an email address');
+      }
+
+      return {
+        provider: 'facebook',
+        providerUserId: data.id,
+        email: data.email,
+        emailVerified: true, // Facebook verified emails are trusted
+        firstName: data.first_name || null,
+        lastName: data.last_name || null,
+        avatar: data.picture?.data?.url || null,
+      };
+    } catch (error) {
+      if (error instanceof AuthenticationError || error instanceof ValidationError) {
+        throw error;
+      }
+      logger.error('Facebook token verification failed', error);
+      throw new AuthenticationError('Failed to verify Facebook token');
+    }
+  }
+
+  async _verifyGitHubToken(accessToken) {
+    if (!accessToken) {
+      throw new ValidationError('GitHub access token is required');
+    }
+
+    try {
+      const { data } = await axios.get('https://api.github.com/user', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'application/vnd.github.v3+json',
+        },
+      });
+
+      // GitHub doesn't always return email in /user endpoint, fetch separately
+      let email = data.email;
+      if (!email) {
+        const emailResponse = await axios.get('https://api.github.com/user/emails', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'application/vnd.github.v3+json',
+          },
+        });
+
+        const primaryEmail = emailResponse.data.find((e) => e.primary);
+        email = primaryEmail?.email || emailResponse.data[0]?.email;
+      }
+
+      if (!email) {
+        throw new AuthenticationError('GitHub profile does not include an email address');
+      }
+
+      // Extract first and last name from GitHub name or login
+      let firstName = null;
+      let lastName = null;
+      if (data.name) {
+        const nameParts = data.name.split(' ');
+        firstName = nameParts[0];
+        lastName = nameParts.slice(1).join(' ') || null;
+      } else {
+        firstName = data.login || null;
+      }
+
+      return {
+        provider: 'github',
+        providerUserId: data.id.toString(),
+        email: email.toLowerCase(),
+        emailVerified: true, // GitHub verified emails are trusted
+        firstName: firstName,
+        lastName: lastName,
+        avatar: data.avatar_url || null,
+      };
+    } catch (error) {
+      if (error instanceof AuthenticationError || error instanceof ValidationError) {
+        throw error;
+      }
+      logger.error('GitHub token verification failed', error);
+      throw new AuthenticationError('Failed to verify GitHub token');
     }
   }
 
@@ -506,7 +614,7 @@ class AuthService {
     }
 
     await database.query(
-      `UPDATE users.profiles 
+      `UPDATE users.profiles
        SET first_name = COALESCE($1, first_name),
            last_name = COALESCE($2, last_name),
            avatar_url = COALESCE($3, avatar_url),
@@ -516,12 +624,18 @@ class AuthService {
     );
   }
 
-  async _upsertOAuthProvider(userId, provider, providerUserId, accessToken = null, refreshToken = null) {
+  async _upsertOAuthProvider(
+    userId,
+    provider,
+    providerUserId,
+    accessToken = null,
+    refreshToken = null
+  ) {
     await database.query(
       `INSERT INTO app_auth.oauth_providers (user_id, provider, provider_user_id, access_token, refresh_token)
        VALUES ($1, $2, $3, $4, $5)
        ON CONFLICT (provider, provider_user_id)
-       DO UPDATE SET 
+       DO UPDATE SET
          user_id = EXCLUDED.user_id,
          access_token = EXCLUDED.access_token,
          refresh_token = EXCLUDED.refresh_token,
@@ -560,4 +674,3 @@ class AuthService {
 }
 
 module.exports = new AuthService();
-

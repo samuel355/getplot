@@ -10,7 +10,7 @@
     "npm": ">=10.0.0"
   },
   "scripts": {
-    "dev": "concurrently \"npm run dev:gateway\" \"npm run dev:auth\" \"npm run dev:properties\" \"npm run dev:plots\" \"npm run dev:transactions\" \"npm run dev:users\" \"npm run dev:notifications\" \"npm run dev:analytics\"",
+    "dev": "concurrently \"npm run dev:gateway\" \"npm run dev:auth\" \"npm run dev:properties\" \"npm run dev:plots\" \"npm run dev:transactions\" \"npm run dev:users\" \"npm run dev:notifications\"",
     "dev:gateway": "cd gateway && npm run dev",
     "dev:auth": "cd services/auth-service && npm run dev",
     "dev:properties": "cd services/properties-service && npm run dev",
@@ -18,7 +18,6 @@
     "dev:transactions": "cd services/transactions-service && npm run dev",
     "dev:users": "cd services/users-service && npm run dev",
     "dev:notifications": "cd services/notifications-service && npm run dev",
-    "dev:analytics": "cd services/analytics-service && npm run dev",
     "start": "node scripts/start-all.js",
     "test": "jest --coverage",
     "test:unit": "jest --testPathPattern=unit",
@@ -91,4 +90,3 @@
     "kubernetes"
   ]
 }
-

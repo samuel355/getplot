@@ -934,7 +934,7 @@ const Map = ({ parcels, center, setCartOpen }) => {
             {/* Custom map controls */}
             <div
               id="map-controls"
-              className="absolute hidden top-4 right-4 bg-white shadow-lg rounded-lg p-2 md:flex flex-col gap-2 z-10"
+              className="absolute hidden top-4 right-4 p-2 md:flex flex-col gap-2 z-10"
             >
               {/* Zoom controls */}
               <button
@@ -966,20 +966,20 @@ const Map = ({ parcels, center, setCartOpen }) => {
                 </button>
 
                 {isMapTypeMenuOpen && (
-                  <div className="absolute right-full mr-2 top-0 bg-white shadow-lg rounded-lg overflow-hidden">
+                  <div className="absolute right-full mr-2 top-0 shadow-lg rounded-lg overflow-hidden">
                     <button
                       onClick={() => changeMapType("roadmap")}
-                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
-                        mapType === "roadmap" ? "bg-blue-50 text-blue-600" : ""
+                      className={`px-3 py-2 w-full text-left hover:bg-black/10 ${
+                        mapType === "roadmap" ? "bg-blue-900/20 text-blue-200" : ""
                       }`}
                     >
                       Road Map
                     </button>
                     <button
                       onClick={() => changeMapType("satellite")}
-                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
+                      className={`px-3 py-2 w-full text-left hover:bg-black/10 ${
                         mapType === "satellite"
-                          ? "bg-blue-50 text-blue-600"
+                          ? "bg-blue-900/20 text-blue-200"
                           : ""
                       }`}
                     >
@@ -987,16 +987,16 @@ const Map = ({ parcels, center, setCartOpen }) => {
                     </button>
                     <button
                       onClick={() => changeMapType("hybrid")}
-                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
-                        mapType === "hybrid" ? "bg-blue-50 text-blue-600" : ""
+                      className={`px-3 py-2 w-full text-left hover:bg-black/10 ${
+                        mapType === "hybrid" ? "bg-blue-900/20 text-blue-200" : ""
                       }`}
                     >
                       Hybrid
                     </button>
                     <button
                       onClick={() => changeMapType("terrain")}
-                      className={`px-3 py-2 w-full text-left hover:bg-gray-100 ${
-                        mapType === "terrain" ? "bg-blue-50 text-blue-600" : ""
+                      className={`px-3 py-2 w-full text-left hover:bg-black/10 ${
+                        mapType === "terrain" ? "bg-blue-900/20 text-blue-200" : ""
                       }`}
                     >
                       Terrain

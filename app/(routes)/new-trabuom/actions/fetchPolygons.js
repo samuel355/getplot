@@ -36,7 +36,7 @@ export const fetchPolygons = async (bounds, setPolygons, setLoading) => {
   // Fetch from Supabase if no valid cache
   const fetchBatch = async (start, end) => {
     let { data, error } = await supabase
-      .from("trabuom")
+      .from("new_trabuom")
       .select("*")
       .range(start, end);
     if (error) {

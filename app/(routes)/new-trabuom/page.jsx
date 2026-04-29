@@ -18,7 +18,9 @@ import ChangeStatusDialog from "../trabuom/_components/ChangeStatusDialog";
 import StatusBar from "../trabuom/_components/StatusBar";
 import MobileNavBar from "../trabuom/_components/MobileNavBar";
 import { calculateBoundingBox, isPolygonInBounds } from "../trabuom/actions/mapUtils";
-import { fetchPolygons } from "../trabuom/actions/fetchPolygons";
+import { fetchPolygons } from "./actions/fetchPolygons";
+import { insertFeatures } from "@/app/_actions/upload-plots-into-db";
+import { new_trabuom_site } from "./TRABUOM_Utm-2";
 
 // Updated map container style to work with the new padding
 const containerStyle = {
@@ -27,8 +29,8 @@ const containerStyle = {
 };
 
 const center = {
-  lat: 6.5967673180000475,
-  lng: -1.7712607859999707,
+  lat: 6.603883529753654,
+  lng: -1.760068167054189,
 };
 
 function pad2(n) {
@@ -47,6 +49,7 @@ function formatCountdown(msLeft) {
 }
 
 const Map = () => {
+
   const pathname = usePathname();
 
   const [polygons, setPolygons] = useState([]);
@@ -81,8 +84,8 @@ const Map = () => {
   const [nowMs, setNowMs] = useState(() => Date.now());
 
   let table;
-  if (pathname.includes("trabuom")) {
-    table = "trabuom";
+  if (pathname.includes("new-trabuom")) {
+    table = "new_trabuom";
   }
   if (pathname.includes("nthc")) {
     table = "nthc";
@@ -93,6 +96,32 @@ const Map = () => {
   if (pathname.includes("dar-es-salaam")) {
     table = "dar-es-salaam";
   }
+
+  const insertCalled = useRef(false);
+
+  // useEffect(() => {
+  //   const seedIfEmpty = async () => {
+  //     if (insertCalled.current) return;
+  //     insertCalled.current = true; // guard for StrictMode double-invoke
+
+  //     const { count, error } = await supabase
+  //       .from("new_trabuom")
+  //       .select("id", { count: "exact", head: true });
+
+  //     if (error) {
+  //       console.log(error);
+  //       return;
+  //     }
+  //     if ((count ?? 0) === 0) {
+  //       await insertFeatures(new_trabuom_site);
+  //     }
+  //   };
+
+  //   seedIfEmpty();
+  // }, []);
+
+  
+
 
   useEffect(() => {
     // Persist a 72-hour countdown per browser so it doesn't reset on refresh.
@@ -240,7 +269,7 @@ const Map = () => {
     status,
     polygon
   ) => {
-    let plot_size = polygon?.properties?.Area.toFixed(2);
+    let plot_size = polygon?.properties?.AREA.toFixed(2);
     const contentString = `
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
       <div class="px-2 py-3 flex flex-col">
@@ -531,7 +560,7 @@ const Map = () => {
       database = "yabi";
     }
     if (path === "/new-trabuom") {
-      database = "trabuom";
+      database = "new_trabuom";
     }
 
     let plotTotalAmount;
@@ -631,7 +660,7 @@ const Map = () => {
       database = "yabi";
     }
     if (path === "/trabuom" || path === "/new-trabuom") {
-      database = "trabuom";
+      database = "new_trabuom";
     }
     try {
       const { data, error } = await supabase
@@ -663,10 +692,10 @@ const Map = () => {
       {/* Updated container with px-10 and md:px-14 padding */}
       <div className="w-full px-10 md:px-14 overflow-x-hidden mb-8 pt-[7.5rem]">
         <h1 className="font-bold text-lg my-4 text-center capitalize">
-          TRABOUM SITE
+          TRABOUM NEW SITE
         </h1>
 
-        <div className="w-full max-w-3xl mx-auto mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        {/* <div className="w-full max-w-3xl mx-auto mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <div className="flex flex-col gap-2">
             <p className="text-base font-semibold text-gray-900 text-center">
               New Trabuom site will be ready soon
@@ -711,7 +740,7 @@ const Map = () => {
               );
             })()}
           </div>
-        </div>
+        </div> */}
 
         {/* <div className="w-full z-10 flex md:hidden flex-col items-center mb-4 bg-white/90 rounded-md p-3 shadow-md">
           <div className="flex w-full flex-row items-center justify-center mb-2">
@@ -769,7 +798,7 @@ const Map = () => {
             handleSaveNewStatus={handleSaveNewStatus}
             statusLoading={statusLoading}
           />
-{/* 
+
           <TrabuomMap
             map={map}
             setMap={setMap}
@@ -786,9 +815,9 @@ const Map = () => {
             toggleFullscreen={toggleFullscreen}
             fitBoundsToAllParcels={fitBoundsToAllParcels}
             tToast={tToast}
-          /> */}
+          />
 
-          {/* <MobileNavBar
+          <MobileNavBar
             map={map}
             setIsMapTypeMenuOpen={setIsMapTypeMenuOpen}
             isMapTypeMenuOpen={isMapTypeMenuOpen}
@@ -798,7 +827,7 @@ const Map = () => {
           <StatusBar
             polygons={polygons}
             fitBoundsToAllParcels={fitBoundsToAllParcels}
-          /> */}
+          />
         </div>
       </div>
 

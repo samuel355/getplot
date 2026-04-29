@@ -8,17 +8,16 @@ export async function insertFeatures(data) {
       type: "Feature Collection",
       geometry: feature.geometry,
       properties: {
-        Street_Nam: "",
         ...feature.properties,
       },
       //status: 'Available',
-      plotTotalAmount: 800000,
-      status: renderStatus(feature.properties.Plot_Status),
+      plotTotalAmount: 40000,
+      status: renderStatus(feature.properties.landUse),
       //owner_info: renderOwner(feature.properties.Status)
     }));
 
     const { data: result, error } = await supabase
-      .from("asokore_mampong")
+      .from("new_trabuom")
       .insert(transformedFeatures)
       .select("*");
 
@@ -52,28 +51,28 @@ function renderOwner(status) {
 }
 
 function renderStatus(status) {
-  if (status === "Available Plot") {
+  if (
+    status === "Residential" ||
+    status === "Agriculture" ||
+    status === "Mixed Use" ||
+    status === "School" ||
+    status === "Commercial" ||
+    status === "Church" ||
+    status === "Education" ||
+    status === ""
+  ) {
     return "Available";
-  } else if (status === "Sold Plot") {
-    return "Sold";
-  } else if (status === "SOLD_CHIEF") {
-    return "Sold";
-  } else if (status === "CHIEF") {
-    return "Sold";
-  } else if (status === "RESERVED") {
+  } else if (
+    status === "Nature Reserve" ||
+    status === "Palace Ground" ||
+    status === "Sanitation" ||
+    status === "Public Utility" ||
+    status === "Civic and Culture" ||
+    status === "Police"
+  ) {
     return "Reserved";
-  } else if (status === "AVAILABLE_CHIEF") {
-    return "Available";
   } else {
-    return null;
+    return 'Unspecified';
   }
 }
 
-// const insertCalled = useRef(false);
-
-// useEffect(() => {
-//   if (!insertCalled.current) {
-//     insertFeatures(trabuomShapeFile);
-//     insertCalled.current = true; // Prevent further inserts
-//   }
-// }, [trabuomShapeFile]);

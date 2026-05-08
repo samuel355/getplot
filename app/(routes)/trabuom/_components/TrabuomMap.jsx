@@ -7,10 +7,10 @@ const containerStyle = {
   width: "100%",
 };
 
-const center = {
-  lat: 6.5967673180000475,
-  lng: -1.7712607859999707,
-};
+// const center = {
+//   lat: 6.5967673180000475,
+//   lng: -1.7712607859999707,
+// };
 
 const TrabuomMap = ({
   map,
@@ -28,6 +28,7 @@ const TrabuomMap = ({
   toggleFullscreen,
   fitBoundsToAllParcels,
   tToast,
+  center
 }) => (
   <div className="map-container relative w-full">
     <GoogleMap

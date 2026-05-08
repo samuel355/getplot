@@ -58,8 +58,7 @@ function renderStatus(status) {
     status === "School" ||
     status === "Commercial" ||
     status === "Church" ||
-    status === "Education" ||
-    status === ""
+    status === "Education"
   ) {
     return "Available";
   } else if (
@@ -68,7 +67,7 @@ function renderStatus(status) {
     status === "Sanitation" ||
     status === "Public Utility" ||
     status === "Civic and Culture" ||
-    status === "Police"
+    status === "Police" || status === 'Open Space'
   ) {
     return "Reserved";
   } else {

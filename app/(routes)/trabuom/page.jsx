@@ -703,6 +703,7 @@ const Map = () => {
             toggleFullscreen={toggleFullscreen}
             fitBoundsToAllParcels={fitBoundsToAllParcels}
             tToast={tToast}
+            center={center}
           />
 
           {/* Mobile-friendly bottom navigation bar */}

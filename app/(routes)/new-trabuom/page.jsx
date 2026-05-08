@@ -29,8 +29,8 @@ const containerStyle = {
 };
 
 const center = {
-  lat: 6.603883529753654,
-  lng: -1.760068167054189,
+  lat: 6.612039192152931,
+  lng: -1.7591129219934791,
 };
 
 function pad2(n) {
@@ -288,13 +288,15 @@ const Map = () => {
           </span> 
         </p>
         <hr style="margin-bottom: 5px; margin-top: 5px" />
+        <p style="font-weight:500; text-align: right"> ${ 'This land is for ' + polygon?.properties?.landUse}</p>
+        <hr style="margin-bottom: 5px; margin-top: 5px" />
 
-          <button style="display: ${
+        <button style="display: ${
             status === "Sold" || status === "Reserved" || status === "On Hold"
               ? "none"
               : "block"
           }" class="border px-4 py-1 mt-3 mb-1 rounded-md text-sm font-normal bg-black text-white" id="add-to-cart" 
-        data-cart='${encodeURIComponent(JSON.stringify(polygon))}'
+          data-cart='${encodeURIComponent(JSON.stringify(polygon))}'
         >Add to Cart</button>
         
         <a style="display: ${
@@ -815,6 +817,7 @@ const Map = () => {
             toggleFullscreen={toggleFullscreen}
             fitBoundsToAllParcels={fitBoundsToAllParcels}
             tToast={tToast}
+            center={center}
           />
 
           <MobileNavBar

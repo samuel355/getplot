@@ -1,3 +1,4 @@
+import { useAuth } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { Button } from '../../src/components/ui/Button';
@@ -7,6 +8,7 @@ import { useCartStore } from '../../src/stores/cartStore';
 
 export default function CartScreen() {
   const router = useRouter();
+  const { isSignedIn } = useAuth();
   const { plots, removePlot, getTotal, clearCart } = useCartStore();
   const total = getTotal();
 
@@ -46,7 +48,14 @@ export default function CartScreen() {
       <View style={styles.summary}>
         <Text style={styles.totalLabel}>Total ({plots.length} plots)</Text>
         <Text style={styles.total}>{formatGhs(total)}</Text>
-        <Button title="Proceed to Checkout" onPress={() => router.push('/checkout')} />
+        <Button
+          title="Proceed to Checkout"
+          onPress={() =>
+            isSignedIn
+              ? router.push('/checkout')
+              : router.push('/(auth)/sign-in')
+          }
+        />
         <Button title="Clear Cart" variant="outline" onPress={clearCart} />
       </View>
     </View>

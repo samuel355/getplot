@@ -2,11 +2,11 @@ import { useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { Button } from '../../src/components/ui/Button';
-import { Loading } from '../../src/components/ui/Loading';
-import { DEVELOPMENTS } from '../../src/constants/developments';
-import { colors, fontSize, spacing } from '../../src/constants/theme';
-import { supabase } from '../../src/lib/supabase';
+import { Button } from '../../../src/components/ui/Button';
+import { Loading } from '../../../src/components/ui/Loading';
+import { DEVELOPMENTS } from '../../../src/constants/developments';
+import { colors, fontSize, spacing } from '../../../src/constants/theme';
+import { supabase } from '../../../src/lib/supabase';
 
 type SiteStat = { slug: string; title: string; available: number; sold: number; total: number };
 

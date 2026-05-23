@@ -2,13 +2,13 @@ import { useUser } from '@clerk/clerk-expo';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { PaystackCheckout } from '../../src/components/PaystackCheckout';
-import { Button } from '../../src/components/ui/Button';
-import { Input } from '../../src/components/ui/Input';
-import { Loading } from '../../src/components/ui/Loading';
-import { colors, fontSize, spacing } from '../../src/constants/theme';
-import { formatGhs, getPlotById, updatePlotOnHold } from '../../src/lib/plotService';
-import type { BuyerInfo, PlotFeature } from '../../src/types/plot';
+import { PaystackCheckout } from '../../../src/components/PaystackCheckout';
+import { Button } from '../../../src/components/ui/Button';
+import { Input } from '../../../src/components/ui/Input';
+import { Loading } from '../../../src/components/ui/Loading';
+import { colors, fontSize, spacing } from '../../../src/constants/theme';
+import { formatGhs, getPlotById, updatePlotOnHold } from '../../../src/lib/plotService';
+import type { BuyerInfo, PlotFeature } from '../../../src/types/plot';
 
 export default function BuyPlotScreen() {
   const { id, table } = useLocalSearchParams<{ id: string; table: string; slug: string }>();

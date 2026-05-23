@@ -14,9 +14,16 @@ import type { Property } from "../../src/types/property";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
   const [featured, setFeatured] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Same as web middleware: signed-in users on home go to approval
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      router.replace("/approval");
+    }
+  }, [isLoaded, isSignedIn, router]);
 
   useEffect(() => {
     (async () => {

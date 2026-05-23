@@ -2,12 +2,12 @@ import { useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
-import { PaystackCheckout } from '../src/components/PaystackCheckout';
-import { Button } from '../src/components/ui/Button';
-import { Input } from '../src/components/ui/Input';
-import { colors, fontSize, spacing } from '../src/constants/theme';
-import { formatGhs } from '../src/lib/plotService';
-import { useCartStore } from '../src/stores/cartStore';
+import { PaystackCheckout } from '../../src/components/PaystackCheckout';
+import { Button } from '../../src/components/ui/Button';
+import { Input } from '../../src/components/ui/Input';
+import { colors, fontSize, spacing } from '../../src/constants/theme';
+import { formatGhs } from '../../src/lib/plotService';
+import { useCartStore } from '../../src/stores/cartStore';
 
 export default function CheckoutScreen() {
   const { plots, getTotal, clearCart } = useCartStore();

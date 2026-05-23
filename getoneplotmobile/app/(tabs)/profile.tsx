@@ -50,7 +50,10 @@ export default function ProfileScreen() {
           <Button
             title="Sign Out"
             variant="outline"
-            onPress={() => signOut()}
+            onPress={async () => {
+              await signOut();
+              router.replace('/(tabs)');
+            }}
           />
         </>
       ) : (

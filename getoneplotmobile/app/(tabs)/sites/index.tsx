@@ -1,8 +1,8 @@
 import { useRouter } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import { DEVELOPMENTS } from '../../src/constants/developments';
-import { colors, fontSize, spacing } from '../../src/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
+import { DEVELOPMENTS } from '../../../src/constants/developments';
+import { colors, fontSize, spacing } from '../../../src/constants/theme';
 
 export default function SitesScreen() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export default function SitesScreen() {
       renderItem={({ item }) => (
         <Pressable
           style={styles.card}
-          onPress={() => router.push(`/development/${item.slug}`)}
+          onPress={() => router.push(`/(tabs)/sites/${item.slug}`)}
         >
           <View style={styles.iconWrap}>
             <Ionicons name="map" size={28} color={colors.primary} />

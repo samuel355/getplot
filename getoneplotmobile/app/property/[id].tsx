@@ -16,6 +16,7 @@ import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
 import { Loading } from '../../src/components/ui/Loading';
 import { colors, fontSize, spacing } from '../../src/constants/theme';
+import { resolveImageUrl } from '../../src/lib/images';
 import { formatGhs } from '../../src/lib/plotService';
 import { notifyPropertyInterest } from '../../src/lib/api';
 import { usePropertyStore } from '../../src/stores/propertyStore';
@@ -82,14 +83,17 @@ export default function PropertyDetailScreen() {
   return (
     <ScrollView style={styles.container}>
       <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
-        {(property.images?.length ? property.images : ['']).map((uri, i) => (
+        {(property.images?.length ? property.images : [null]).map((img, i) => {
+          const uri = resolveImageUrl(img);
+          return (
           <Image
             key={i}
             source={uri ? { uri } : undefined}
             style={{ width, height: 260 }}
             contentFit="cover"
           />
-        ))}
+          );
+        })}
       </ScrollView>
 
       <Pressable style={styles.favBtn} onPress={onFavorite}>

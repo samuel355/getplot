@@ -1,0 +1,176 @@
+import { useAuth } from '@clerk/clerk-expo';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { Alert, StyleSheet, Text, View } from 'react-native';
+import { colors, fontSize, spacing } from '../../../src/constants/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { MapLegend } from '../../../src/components/MapLegend';
+import { PlotDetailSheet } from '../../../src/components/PlotDetailSheet';
+import { PlotMap } from '../../../src/components/PlotMap';
+import { getDevelopment } from '../../../src/constants/developments';
+import { fetchPlotsForTable } from '../../../src/lib/mapUtils';
+import type { PlotFeature } from '../../../src/types/plot';
+import { useCartStore } from '../../../src/stores/cartStore';
+
+export default function SiteMapScreen() {
+  const params = useLocalSearchParams<{ slug: string }>();
+  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  const router = useRouter();
+  const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+  const { isSignedIn } = useAuth();
+  const development = getDevelopment(slug || '');
+  const [plots, setPlots] = useState<PlotFeature[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<PlotFeature | null>(null);
+  const { addPlot, isInCart } = useCartStore();
+
+  useLayoutEffect(() => {
+    const tabNav = navigation.getParent();
+    tabNav?.setOptions({ tabBarStyle: { display: 'none' } });
+    return () => {
+      tabNav?.setOptions({ tabBarStyle: undefined });
+    };
+  }, [navigation]);
+
+  useLayoutEffect(() => {
+    if (development) {
+      navigation.setOptions({ title: development.title });
+    }
+  }, [development, navigation]);
+
+  useEffect(() => {
+    if (!development) {
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      setFetchError(null);
+      try {
+        const data = await fetchPlotsForTable(development.table);
+        if (!cancelled) {
+          setPlots(data);
+          if (data.length === 0) {
+            setFetchError(`No plot polygons found in "${development.table}".`);
+          }
+        }
+      } catch (e) {
+        if (!cancelled) {
+          setFetchError(e instanceof Error ? e.message : 'Failed to load plots');
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [development?.table]);
+
+  if (!development) {
+    return null;
+  }
+
+  const requireAuth = (action: () => void) => {
+    if (!isSignedIn) {
+      Alert.alert('Sign in required', 'Please sign in to continue.', [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Sign In', onPress: () => router.push('/(auth)/sign-in') },
+      ]);
+      return;
+    }
+    action();
+  };
+
+  return (
+    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+      <PlotMap
+        development={development}
+        plots={plots}
+        loading={loading}
+        onPlotPress={setSelected}
+      />
+      <MapLegend />
+      {fetchError && !loading ? (
+        <View style={styles.errorBanner}>
+          <Text style={styles.errorText}>{fetchError}</Text>
+        </View>
+      ) : null}
+      <PlotDetailSheet
+        visible={!!selected}
+        plot={selected}
+        development={development}
+        inCart={selected ? isInCart(selected.id) : false}
+        onClose={() => setSelected(null)}
+        onAddToCart={() => {
+          if (!selected) return;
+          requireAuth(() => {
+            addPlot(selected);
+            Alert.alert('Added', 'Plot added to cart');
+          });
+        }}
+        onBuy={() => {
+          if (!selected) return;
+          requireAuth(() => {
+            setSelected(null);
+            router.push({
+              pathname: '/plot/buy',
+              params: {
+                id: selected.id,
+                slug: development.slug,
+                table: development.table,
+              },
+            });
+          });
+        }}
+        onReserve={() => {
+          if (!selected) return;
+          requireAuth(() => {
+            setSelected(null);
+            router.push({
+              pathname: '/plot/reserve',
+              params: {
+                id: selected.id,
+                slug: development.slug,
+                table: development.table,
+              },
+            });
+          });
+        }}
+        onExpressInterest={() => {
+          if (!selected) return;
+          setSelected(null);
+          router.push({
+            pathname: '/plot/interest',
+            params: {
+              id: selected.id,
+              slug: development.slug,
+              table: development.table,
+              interestTable: development.interestTable,
+            },
+          });
+        }}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  errorBanner: {
+    position: 'absolute',
+    bottom: 24,
+    left: spacing.lg,
+    right: spacing.lg,
+    backgroundColor: '#fef2f2',
+    borderWidth: 1,
+    borderColor: '#fecaca',
+    borderRadius: 10,
+    padding: spacing.md,
+    zIndex: 10,
+  },
+  errorText: { color: colors.error, fontSize: fontSize.sm, textAlign: 'center' },
+});

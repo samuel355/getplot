@@ -30,7 +30,6 @@ export default function RootLayout() {
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
               <Stack.Screen name="approval" options={{ title: 'Approval', headerShown: false }} />
-              <Stack.Screen name="development/[slug]" options={{ title: 'Site Map' }} />
               <Stack.Screen name="plot/buy" options={{ title: 'Buy Plot' }} />
               <Stack.Screen name="plot/reserve" options={{ title: 'Reserve Plot' }} />
               <Stack.Screen name="plot/interest" options={{ title: 'Express Interest' }} />

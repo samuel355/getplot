@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { DEVELOPMENTS } from '../../src/constants/developments';
-import { colors, fontSize, spacing } from '../../src/constants/theme';
+import { DEVELOPMENTS } from '../../../src/constants/developments';
+import { colors, fontSize, spacing } from '../../../src/constants/theme';
 
 export default function AdminPlotsScreen() {
   return (

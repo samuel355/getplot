@@ -1,8 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { normalizePropertyImages } from '../lib/images';
 import { supabase } from '../lib/supabase';
 import type { Property, PropertyFilters } from '../types/property';
+
+function mapProperty(row: Record<string, unknown>): Property {
+  const p = row as Property;
+  return {
+    ...p,
+    images: normalizePropertyImages(p.images),
+  };
+}
 
 type PropertyState = {
   properties: Property[];
@@ -115,9 +124,10 @@ export const usePropertyStore = create<PropertyState>()(
           if (error) throw error;
 
           const total = count || 0;
+          const mapped = (data || []).map((row) => mapProperty(row as Record<string, unknown>));
           set({
-            properties: (data as Property[]) || [],
-            filteredProperties: (data as Property[]) || [],
+            properties: mapped,
+            filteredProperties: mapped,
             totalProperties: total,
             totalPages: Math.max(1, Math.ceil(total / propertiesPerPage)),
             currentPage: page,
@@ -140,7 +150,7 @@ export const usePropertyStore = create<PropertyState>()(
             .eq('id', id)
             .single();
           if (error) throw error;
-          const property = data as Property;
+          const property = mapProperty(data as Record<string, unknown>);
           set({ selectedProperty: property, loading: false });
           return property;
         } catch (e) {
@@ -167,7 +177,8 @@ export const usePropertyStore = create<PropertyState>()(
               : row.properties;
             return p;
           })
-          .filter(Boolean) as Property[];
+          .filter(Boolean)
+          .map((p) => mapProperty(p as Record<string, unknown>));
         set({ favorites });
       },
 

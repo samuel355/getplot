@@ -1,15 +1,12 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import MapView, { Polygon, type Region } from 'react-native-maps';
+import Constants from 'expo-constants';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
+import MapView, { Polygon, PROVIDER_DEFAULT, PROVIDER_GOOGLE, type Region } from 'react-native-maps';
 import { Loading } from './ui/Loading';
-import {
-  calculateBoundingBox,
-  getPlotFillColor,
-  getPlotStrokeColor,
-  isPolygonInBounds,
-} from '../lib/mapUtils';
+import { getPlotFillColor, getPlotStrokeColor, getPolygonRing } from '../lib/mapUtils';
 import type { PlotFeature } from '../types/plot';
 import type { Development } from '../constants/developments';
+import { colors, fontSize, spacing } from '../constants/theme';
 
 type Props = {
   development: Development;
@@ -18,74 +15,129 @@ type Props = {
   onPlotPress: (plot: PlotFeature) => void;
 };
 
+const googleMapsKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+/** Google Maps native SDK is NOT in Expo Go — using it there shows a blank map. */
+function canUseGoogleProvider() {
+  if (Platform.OS === 'web' || !googleMapsKey) return false;
+  // Expo Go = "expo", dev client / standalone = "guest" or null
+  if (Constants.appOwnership === 'expo') return false;
+  return true;
+}
+
+function regionFromPlots(plots: PlotFeature[], fallback: Development): Region {
+  const coords = plots.flatMap((p) => getPolygonRing(p));
+  if (!coords.length) {
+    return {
+      latitude: fallback.center.latitude,
+      longitude: fallback.center.longitude,
+      latitudeDelta: 0.025,
+      longitudeDelta: 0.025,
+    };
+  }
+  let minLat = Infinity;
+  let maxLat = -Infinity;
+  let minLng = Infinity;
+  let maxLng = -Infinity;
+  coords.forEach(({ latitude, longitude }) => {
+    minLat = Math.min(minLat, latitude);
+    maxLat = Math.max(maxLat, latitude);
+    minLng = Math.min(minLng, longitude);
+    maxLng = Math.max(maxLng, longitude);
+  });
+  const pad = 0.004;
+  return {
+    latitude: (minLat + maxLat) / 2,
+    longitude: (minLng + maxLng) / 2,
+    latitudeDelta: Math.max(maxLat - minLat + pad, 0.008),
+    longitudeDelta: Math.max(maxLng - minLng + pad, 0.008),
+  };
+}
+
 export function PlotMap({ development, plots, loading, onPlotPress }: Props) {
   const mapRef = useRef<MapView>(null);
-  const [region, setRegion] = useState<Region>({
-    latitude: development.center.latitude,
-    longitude: development.center.longitude,
-    latitudeDelta: 0.02,
-    longitudeDelta: 0.02,
-  });
+  const useGoogle = canUseGoogleProvider();
+  const [mapReady, setMapReady] = useState(false);
 
-  const visiblePlots = useMemo(() => {
-    const bounds = {
-      south: region.latitude - region.latitudeDelta / 2,
-      north: region.latitude + region.latitudeDelta / 2,
-      west: region.longitude - region.longitudeDelta / 2,
-      east: region.longitude + region.longitudeDelta / 2,
-    };
-    return plots.filter((p) => {
-      if (!p.geometry?.coordinates?.[0]) return false;
-      const box = calculateBoundingBox(p);
-      return isPolygonInBounds(box, bounds);
-    });
-  }, [plots, region]);
+  const initialRegion = useMemo(
+    () => regionFromPlots(plots, development),
+    [plots, development]
+  );
 
   const fitAll = useCallback(() => {
     if (!plots.length || !mapRef.current) return;
-    const coords = plots.flatMap((p) =>
-      (p.geometry.coordinates[0] || []).map(([lng, lat]) => ({
-        latitude: lat,
-        longitude: lng,
-      }))
-    );
-    if (coords.length)
+    const coords = plots.flatMap((p) => getPolygonRing(p));
+    if (coords.length < 1) return;
+    try {
       mapRef.current.fitToCoordinates(coords, {
-        edgePadding: { top: 48, right: 48, bottom: 48, left: 48 },
+        edgePadding: { top: 100, right: 40, bottom: 140, left: 40 },
         animated: true,
       });
-  }, [plots]);
+    } catch {
+      mapRef.current.animateToRegion(regionFromPlots(plots, development), 500);
+    }
+  }, [plots, development]);
+
+  useEffect(() => {
+    if (mapReady && plots.length > 0) {
+      const t = setTimeout(fitAll, 300);
+      return () => clearTimeout(t);
+    }
+  }, [mapReady, plots, fitAll]);
+
+  const mapProvider = useGoogle ? PROVIDER_GOOGLE : PROVIDER_DEFAULT;
+  const mapType = useGoogle ? 'hybrid' : 'satellite';
 
   return (
     <View style={styles.container}>
-      {loading && plots.length === 0 ? <Loading fullScreen={false} /> : null}
+      {loading && plots.length === 0 ? (
+        <View style={styles.loadingOverlay}>
+          <Loading fullScreen={false} />
+          <Text style={styles.loadingText}>Loading plots from Supabase…</Text>
+        </View>
+      ) : null}
+
+      {!loading && plots.length === 0 ? (
+        <View style={styles.emptyOverlay}>
+          <Text style={styles.emptyTitle}>No plots loaded</Text>
+          <Text style={styles.emptySub}>
+            Table: {development.table}. Check network and Supabase access.
+          </Text>
+        </View>
+      ) : null}
+
+      {!loading && plots.length > 0 ? (
+        <View style={styles.countBadge} pointerEvents="none">
+          <Text style={styles.countText}>{plots.length} plots</Text>
+        </View>
+      ) : null}
+
       <MapView
         ref={mapRef}
         style={styles.map}
-        mapType="hybrid"
-        initialRegion={{
-          latitude: development.center.latitude,
-          longitude: development.center.longitude,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02,
+        provider={mapProvider}
+        mapType={mapType}
+        initialRegion={initialRegion}
+        showsUserLocation={false}
+        onMapReady={() => {
+          setMapReady(true);
+          fitAll();
         }}
-        onRegionChangeComplete={setRegion}
-        onMapReady={fitAll}
       >
-        {visiblePlots.map((plot) => {
-          const coords = plot.geometry.coordinates[0].map(([lng, lat]) => ({
-            latitude: lat,
-            longitude: lng,
-          }));
+        {plots.map((plot) => {
+          const coords = getPolygonRing(plot);
+          if (coords.length < 3) return null;
+
           const amount = plot.plotTotalAmount || 0;
           const status = plot.status ?? null;
+
           return (
             <Polygon
               key={plot.id}
               coordinates={coords}
               fillColor={getPlotFillColor(status, amount)}
               strokeColor={getPlotStrokeColor(status, amount)}
-              strokeWidth={1.5}
+              strokeWidth={2}
               tappable
               onPress={() => onPlotPress(plot)}
             />
@@ -97,6 +149,43 @@ export function PlotMap({ development, plots, loading, onPlotPress }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, minHeight: 400 },
-  map: { ...StyleSheet.absoluteFill },
+  container: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: '#e5e7eb',
+  },
+  map: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 2,
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: { marginTop: spacing.md, color: colors.textMuted, fontSize: fontSize.sm },
+  emptyOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.lg,
+    backgroundColor: colors.surface,
+  },
+  emptyTitle: { fontWeight: '700', fontSize: fontSize.lg, color: colors.primary },
+  emptySub: { marginTop: 8, color: colors.textMuted, fontSize: fontSize.sm, textAlign: 'center' },
+  countBadge: {
+    position: 'absolute',
+    top: spacing.md,
+    right: spacing.md,
+    zIndex: 10,
+    backgroundColor: colors.primary,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  countText: { color: colors.white, fontSize: fontSize.xs, fontWeight: '600' },
 });

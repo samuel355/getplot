@@ -8,6 +8,7 @@ import { Card } from "../../src/components/ui/Card";
 import { Loading } from "../../src/components/ui/Loading";
 import { DEVELOPMENTS } from "../../src/constants/developments";
 import { colors, fontSize, spacing, fontWeight, borderRadius } from "../../src/constants/theme";
+import { normalizePropertyImages } from "../../src/lib/images";
 import { supabase } from "../../src/lib/supabase";
 import type { Property } from "../../src/types/property";
 
@@ -27,7 +28,11 @@ export default function HomeScreen() {
         .eq("status", "approved")
         .order("created_at", { ascending: false })
         .limit(6);
-      setFeatured((data as Property[]) || []);
+      const rows = (data || []).map((row) => ({
+        ...(row as Property),
+        images: normalizePropertyImages((row as Property).images),
+      }));
+      setFeatured(rows);
       setLoading(false);
     })();
   }, []);
@@ -79,7 +84,7 @@ export default function HomeScreen() {
             <Pressable
               key={d.slug}
               style={styles.devCard}
-              onPress={() => router.push(`/development/${d.slug}`)}
+              onPress={() => router.push(`/(tabs)/sites/${d.slug}`)}
             >
               <Text style={styles.devTitle}>{d.title}</Text>
               <Text style={styles.devSub}>{d.subtitle}</Text>

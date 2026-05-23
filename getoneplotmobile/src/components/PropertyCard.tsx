@@ -1,6 +1,7 @@
 import { Image } from "expo-image";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors, fontSize, spacing, fontWeight, borderRadius, shadows } from "../constants/theme";
+import { resolveImageUrl } from "../lib/images";
 import { formatGhs } from "../lib/plotService";
 import { Badge } from "./ui/Badge";
 import type { Property } from "../types/property";
@@ -14,7 +15,7 @@ type Props = {
 };
 
 export function PropertyCard({ property, onPress, compact, favorited, onFavoritPress }: Props) {
-  const image = property.images?.[0];
+  const image = resolveImageUrl(property.images?.[0]);
   const price =
     property.listing_type === "rent" || property.listing_type === "airbnb"
       ? property.rental_price

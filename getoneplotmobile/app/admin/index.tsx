@@ -73,7 +73,7 @@ export default function AdminScreen() {
               title="View Map"
               variant="outline"
               size="sm"
-              onPress={() => router.push(`/development/${item.slug}`)}
+              onPress={() => router.push(`/(tabs)/sites/${item.slug}`)}
             />
           </View>
         )}

@@ -1,13 +1,17 @@
 import { useColorScheme } from "react-native";
 import { useAppStore } from "../stores/appStore";
 
+// Brand colors extracted from logo
+const BRAND_NAVY = "#191347";
+const BRAND_TEAL = "#68c9cd";
+
 // Modern, mobile-optimized color palette
 const lightColors = {
   // Primary brand colors
-  primary: "#05014c",
-  primaryLight: "#1a1870",
-  primaryDark: "#030027",
-  primaryAccent: "#6366f1", // Indigo for highlights
+  primary: BRAND_NAVY,
+  primaryLight: "#2d2475",
+  primaryDark: "#0d0a2b",
+  primaryAccent: BRAND_TEAL,
 
   // Semantic colors
   success: "#10b981", // Emerald
@@ -45,10 +49,10 @@ const lightColors = {
 
 const darkColors = {
   // Primary brand colors
-  primary: "#cbd5e1", // Lighter for dark mode
-  primaryLight: "#e2e8f0",
-  primaryDark: "#0f172a",
-  primaryAccent: "#818cf8", // Brighter Indigo
+  primary: "#a5b4fc", // Lighter lavender-blue for dark mode
+  primaryLight: "#c7d2fe",
+  primaryDark: BRAND_NAVY,
+  primaryAccent: BRAND_TEAL,
 
   // Semantic colors
   success: "#34d399",

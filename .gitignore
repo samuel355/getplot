@@ -41,3 +41,8 @@ next-env.d.ts
 **/.history/
 .next
 
+getoneplotmobile/node_modules
+getoneplotmobile/.expo
+getoneplotmobile/.claude
+getoneplotmobile/.env
+getoneplotmobile/.env.local

@@ -178,8 +178,14 @@ export function PlotDetailSheet({
                   style={styles.handle}
                   {...(panRef.current ? panRef.current.panHandlers : {})}
                 />
-                <Pressable onPress={onClose} style={styles.closeBtn} accessibilityRole="button">
-                  <Ionicons name="close" size={20} color={colors.textMuted} />
+                <Pressable
+                  onPress={onClose}
+                  style={styles.closeBtn}
+                  hitSlop={8}
+                  accessibilityRole="button"
+                  accessibilityLabel="Close"
+                >
+                  <Ionicons name="close" size={22} color={colors.error} />
                 </Pressable>
               </View>
 
@@ -321,9 +327,11 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   handleRow: {
-    paddingTop: spacing.sm,
-    paddingBottom: spacing.xs,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.sm,
+    paddingHorizontal: spacing.lg,
     alignItems: "center",
+    minHeight: 52,
   },
   handle: {
     width: 44,
@@ -333,9 +341,14 @@ const styles = StyleSheet.create({
   },
   closeBtn: {
     position: "absolute",
-    right: spacing.md,
-    top: spacing.xs,
-    padding: spacing.xs,
+    right: spacing.lg,
+    top: spacing.md,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: `${colors.error}18`,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   header: {

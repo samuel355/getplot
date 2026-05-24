@@ -1,54 +1,41 @@
-import { useAuth } from '@clerk/clerk-expo';
-import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import {
-  FlatList,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { PropertyCard } from '../../src/components/PropertyCard';
-import { Button } from '../../src/components/ui/Button';
-import { Loading } from '../../src/components/ui/Loading';
-import { DEVELOPMENTS } from '../../src/constants/developments';
-import {
-  borderRadius,
-  colors,
-  fontSize,
-  fontWeight,
-  spacing,
-} from '../../src/constants/theme';
-import { normalizePropertyImages } from '../../src/lib/images';
-import { supabase } from '../../src/lib/supabase';
-import type { Property } from '../../src/types/property';
+import { useAuth } from "@clerk/clerk-expo";
+import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { PropertyCard } from "../../src/components/PropertyCard";
+import { Button } from "../../src/components/ui/Button";
+import { Loading } from "../../src/components/ui/Loading";
+import { DEVELOPMENTS } from "../../src/constants/developments";
+import { borderRadius, colors, fontSize, fontWeight, spacing } from "../../src/constants/theme";
+import { normalizePropertyImages } from "../../src/lib/images";
+import { supabase } from "../../src/lib/supabase";
+import type { Property } from "../../src/types/property";
 
 const HERO_FEATURES = [
-  'Verified land sites',
-  'Affordable prices',
-  'Flexible payment plans',
-  'Expert consultation',
+  "Verified land sites",
+  "Affordable prices",
+  "Flexible payment plans",
+  "Expert consultation",
 ] as const;
 
 const FEATURED_SITE_SLUGS = [
-  'royal-court-estate',
-  'legon-hills',
-  'trabuom',
-  'yabi',
-  'berekuso',
-  'asokore-mampong',
+  "royal-court-estate",
+  "legon-hills",
+  "trabuom",
+  "yabi",
+  "berekuso",
+  "asokore-mampong",
 ] as const;
 
 const heroSites = FEATURED_SITE_SLUGS.map((slug) =>
-  DEVELOPMENTS.find((d) => d.slug === slug)
+  DEVELOPMENTS.find((d) => d.slug === slug),
 ).filter(Boolean);
 
 const siteImageBase =
-  process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, '') || 'https://getoneplot.com';
+  process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, "") || "https://www.getoneplot.com";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -59,19 +46,19 @@ export default function HomeScreen() {
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
-      router.replace('/approval');
+      router.replace("/approval");
     }
   }, [isLoaded, isSignedIn, router]);
 
   useEffect(() => {
     (async () => {
       const { data } = await supabase
-        .from('properties')
+        .from("properties")
         .select(
-          'id, title, type, price, location, images, bedrooms, bathrooms, listing_type, rental_price'
+          "id, title, type, price, location, images, bedrooms, bathrooms, listing_type, rental_price",
         )
-        .eq('status', 'approved')
-        .order('created_at', { ascending: false })
+        .eq("status", "approved")
+        .order("created_at", { ascending: false })
         .limit(6);
       const rows = (data || []).map((row) => ({
         ...(row as Property),
@@ -99,21 +86,20 @@ export default function HomeScreen() {
         </View>
 
         <Text style={styles.heroTitle}>
-          Find Your Perfect{'\n'}
+          Find Your Perfect{"\n"}
           <Text style={styles.heroTitleAccent}>Land in Ghana</Text>
         </Text>
 
         <View style={styles.quoteBlock}>
           <Text style={styles.heroSub}>
-            Explore verified listings across all regions. Whether you are seeking
-            residential, commercial, or investment land, we connect you with the
-            right plot to build your dreams.
+            Explore verified listings across all regions. Whether you are seeking residential,
+            commercial, or investment land, we connect you with the right plot to build your dreams.
           </Text>
         </View>
 
         <Button
           title="Browse Listed Properties"
-          onPress={() => router.push('/(tabs)/marketplace')}
+          onPress={() => router.push("/(tabs)/marketplace")}
           fullWidth
           size="lg"
         />
@@ -153,6 +139,7 @@ export default function HomeScreen() {
             style={styles.heroImage}
             contentFit="cover"
             transition={300}
+            cachePolicy="memory-disk"
           />
           <View style={styles.imageOverlay}>
             <View>
@@ -196,11 +183,11 @@ export default function HomeScreen() {
                 <Text style={styles.chipTitle}>{d.title}</Text>
                 <Text style={styles.chipSub}>{d.subtitle}</Text>
               </Pressable>
-            ) : null
+            ) : null,
           )}
           <Pressable
             style={[styles.chip, styles.chipOutline]}
-            onPress={() => router.push('/(tabs)/sites')}
+            onPress={() => router.push("/(tabs)/sites")}
           >
             <Text style={styles.chipTitle}>All sites</Text>
             <Text style={styles.chipSub}>View full list →</Text>
@@ -237,7 +224,7 @@ export default function HomeScreen() {
       <View style={styles.section}>
         <View style={styles.sectionRow}>
           <Text style={styles.sectionTitle}>Featured properties</Text>
-          <Pressable onPress={() => router.push('/(tabs)/marketplace')}>
+          <Pressable onPress={() => router.push("/(tabs)/marketplace")}>
             <Text style={styles.seeAll}>View all</Text>
           </Pressable>
         </View>
@@ -273,15 +260,11 @@ export default function HomeScreen() {
           <Text style={styles.ctaText}>
             Sign in to save favorites, buy plots, and manage your account.
           </Text>
-          <Button
-            title="Sign In"
-            onPress={() => router.push('/(auth)/sign-in')}
-            fullWidth
-          />
+          <Button title="Sign In" onPress={() => router.push("/(auth)/sign-in")} fullWidth />
           <Button
             title="Create Account"
             variant="outline"
-            onPress={() => router.push('/(auth)/sign-up')}
+            onPress={() => router.push("/(auth)/sign-up")}
             fullWidth
           />
         </View>
@@ -299,31 +282,31 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.xl,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   heroGlowBlue: {
-    position: 'absolute',
+    position: "absolute",
     top: -40,
     right: -20,
     width: 160,
     height: 160,
     borderRadius: 80,
-    backgroundColor: 'rgba(4, 167, 255, 0.18)',
+    backgroundColor: "rgba(4, 167, 255, 0.18)",
   },
   heroGlowPrimary: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     left: -30,
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: 'rgba(5, 1, 76, 0.08)',
+    backgroundColor: "rgba(5, 1, 76, 0.08)",
   },
   badge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    backgroundColor: 'rgba(4, 167, 255, 0.1)',
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    backgroundColor: "rgba(4, 167, 255, 0.1)",
     paddingHorizontal: spacing.md,
     paddingVertical: 6,
     borderRadius: borderRadius.full,
@@ -363,24 +346,24 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   featuresGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     marginTop: spacing.lg,
     gap: spacing.sm,
   },
   featureRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '48%',
+    flexDirection: "row",
+    alignItems: "center",
+    width: "48%",
     gap: 8,
   },
   featureIcon: {
     width: 22,
     height: 22,
     borderRadius: 11,
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "rgba(16, 185, 129, 0.15)",
+    alignItems: "center",
+    justifyContent: "center",
   },
   featureText: {
     flex: 1,
@@ -389,7 +372,7 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.medium,
   },
   statsRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: spacing.md,
     marginTop: spacing.lg,
   },
@@ -400,7 +383,7 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     borderWidth: 1,
     borderColor: colors.border,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.06,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
@@ -426,28 +409,28 @@ const styles = StyleSheet.create({
   },
   imageCard: {
     borderRadius: borderRadius.xl,
-    overflow: 'hidden',
+    overflow: "hidden",
     backgroundColor: colors.primary,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 8 },
     shadowRadius: 16,
     elevation: 6,
   },
   heroImage: {
-    width: '100%',
+    width: "100%",
     aspectRatio: 16 / 10,
   },
   imageOverlay: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
     padding: spacing.md,
-    backgroundColor: 'rgba(0,0,0,0.55)',
+    backgroundColor: "rgba(0,0,0,0.55)",
   },
   imageTitle: {
     color: colors.white,
@@ -455,7 +438,7 @@ const styles = StyleSheet.create({
     fontSize: fontSize.lg,
   },
   imageLocation: {
-    color: 'rgba(255,255,255,0.85)',
+    color: "rgba(255,255,255,0.85)",
     fontSize: fontSize.sm,
     marginTop: 2,
   },
@@ -471,17 +454,17 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
   },
   verifiedFloat: {
-    position: 'absolute',
+    position: "absolute",
     top: spacing.md,
     right: spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
     backgroundColor: colors.white,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
     borderRadius: borderRadius.lg,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 3,
@@ -490,9 +473,9 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "rgba(16, 185, 129, 0.15)",
+    alignItems: "center",
+    justifyContent: "center",
   },
   verifiedTitle: {
     fontSize: fontSize.xs,
@@ -507,16 +490,16 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
     paddingHorizontal: spacing.lg,
     marginBottom: spacing.md,
   },
   sectionRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: spacing.lg,
     marginBottom: spacing.md,
   },
@@ -544,12 +527,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     minWidth: 140,
     borderWidth: 1,
-    borderColor: 'rgba(4, 167, 255, 0.25)',
+    borderColor: "rgba(4, 167, 255, 0.25)",
     marginRight: spacing.sm,
   },
   chipOutline: {
     borderColor: colors.border,
-    borderStyle: 'dashed',
+    borderStyle: "dashed",
   },
   chipTitle: {
     fontWeight: fontWeight.bold,
@@ -578,9 +561,9 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 10,
-    backgroundColor: 'rgba(5, 1, 76, 0.06)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "rgba(5, 1, 76, 0.06)",
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: spacing.sm,
   },
   devTitle: {
@@ -611,7 +594,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   emptyText: {
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.textMuted,
   },
   cta: {

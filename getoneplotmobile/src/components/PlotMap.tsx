@@ -1,7 +1,13 @@
 import Constants from 'expo-constants';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import MapView, { Polygon, PROVIDER_DEFAULT, PROVIDER_GOOGLE, type Region } from 'react-native-maps';
+import MapView, {
+  Polygon,
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+  type Region,
+} from 'react-native-maps';
+import { MapControls, type MapTypeOption } from './MapControls';
 import { Loading } from './ui/Loading';
 import { getPlotFillColor, getPlotStrokeColor, getPolygonRing } from '../lib/mapUtils';
 import type { PlotFeature } from '../types/plot';
@@ -13,14 +19,13 @@ type Props = {
   plots: PlotFeature[];
   loading?: boolean;
   onPlotPress: (plot: PlotFeature) => void;
+  onRefresh?: () => void;
 };
 
 const googleMapsKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-/** Google Maps native SDK is NOT in Expo Go — using it there shows a blank map. */
 function canUseGoogleProvider() {
   if (Platform.OS === 'web' || !googleMapsKey) return false;
-  // Expo Go = "expo", dev client / standalone = "guest" or null
   if (Constants.appOwnership === 'expo') return false;
   return true;
 }
@@ -54,15 +59,31 @@ function regionFromPlots(plots: PlotFeature[], fallback: Development): Region {
   };
 }
 
-export function PlotMap({ development, plots, loading, onPlotPress }: Props) {
+function zoomRegion(region: Region, factor: number): Region {
+  return {
+    ...region,
+    latitudeDelta: Math.max(region.latitudeDelta * factor, 0.0008),
+    longitudeDelta: Math.max(region.longitudeDelta * factor, 0.0008),
+  };
+}
+
+export function PlotMap({ development, plots, loading, onPlotPress, onRefresh }: Props) {
   const mapRef = useRef<MapView>(null);
   const useGoogle = canUseGoogleProvider();
   const [mapReady, setMapReady] = useState(false);
+  const [mapType, setMapType] = useState<MapTypeOption>(useGoogle ? 'hybrid' : 'satellite');
+  const regionRef = useRef<Region>(regionFromPlots(plots, development));
 
   const initialRegion = useMemo(
     () => regionFromPlots(plots, development),
     [plots, development]
   );
+
+  useEffect(() => {
+    if (plots.length > 0) {
+      regionRef.current = regionFromPlots(plots, development);
+    }
+  }, [plots, development]);
 
   const fitAll = useCallback(() => {
     if (!plots.length || !mapRef.current) return;
@@ -70,11 +91,13 @@ export function PlotMap({ development, plots, loading, onPlotPress }: Props) {
     if (coords.length < 1) return;
     try {
       mapRef.current.fitToCoordinates(coords, {
-        edgePadding: { top: 100, right: 40, bottom: 140, left: 40 },
+        edgePadding: { top: 120, right: 56, bottom: 180, left: 56 },
         animated: true,
       });
     } catch {
-      mapRef.current.animateToRegion(regionFromPlots(plots, development), 500);
+      const next = regionFromPlots(plots, development);
+      regionRef.current = next;
+      mapRef.current.animateToRegion(next, 500);
     }
   }, [plots, development]);
 
@@ -86,22 +109,35 @@ export function PlotMap({ development, plots, loading, onPlotPress }: Props) {
   }, [mapReady, plots, fitAll]);
 
   const mapProvider = useGoogle ? PROVIDER_GOOGLE : PROVIDER_DEFAULT;
-  const mapType = useGoogle ? 'hybrid' : 'satellite';
+  const effectiveMapType =
+    !useGoogle && (mapType === 'hybrid' || mapType === 'terrain') ? 'satellite' : mapType;
+
+  const zoomIn = () => {
+    const next = zoomRegion(regionRef.current, 0.5);
+    regionRef.current = next;
+    mapRef.current?.animateToRegion(next, 250);
+  };
+
+  const zoomOut = () => {
+    const next = zoomRegion(regionRef.current, 2);
+    regionRef.current = next;
+    mapRef.current?.animateToRegion(next, 250);
+  };
 
   return (
     <View style={styles.container}>
       {loading && plots.length === 0 ? (
         <View style={styles.loadingOverlay}>
           <Loading fullScreen={false} />
-          <Text style={styles.loadingText}>Loading plots from Supabase…</Text>
+          <Text style={styles.loadingText}>Loading plots…</Text>
         </View>
       ) : null}
 
       {!loading && plots.length === 0 ? (
         <View style={styles.emptyOverlay}>
-          <Text style={styles.emptyTitle}>No plots loaded</Text>
+          <Text style={styles.emptyTitle}>No plots to display</Text>
           <Text style={styles.emptySub}>
-            Table: {development.table}. Check network and Supabase access.
+            Plots for this site could not be loaded. Check your connection and try again.
           </Text>
         </View>
       ) : null}
@@ -116,9 +152,14 @@ export function PlotMap({ development, plots, loading, onPlotPress }: Props) {
         ref={mapRef}
         style={styles.map}
         provider={mapProvider}
-        mapType={mapType}
+        mapType={effectiveMapType}
         initialRegion={initialRegion}
+        onRegionChangeComplete={(r) => {
+          regionRef.current = r;
+        }}
         showsUserLocation={false}
+        showsCompass
+        showsScale
         onMapReady={() => {
           setMapReady(true);
           fitAll();
@@ -137,13 +178,25 @@ export function PlotMap({ development, plots, loading, onPlotPress }: Props) {
               coordinates={coords}
               fillColor={getPlotFillColor(status, amount)}
               strokeColor={getPlotStrokeColor(status, amount)}
-              strokeWidth={2}
+              strokeWidth={2.5}
               tappable
               onPress={() => onPlotPress(plot)}
             />
           );
         })}
       </MapView>
+
+      {!loading && plots.length > 0 ? (
+        <MapControls
+          mapType={mapType}
+          onMapTypeChange={setMapType}
+          onZoomIn={zoomIn}
+          onZoomOut={zoomOut}
+          onFitAll={fitAll}
+          onRefresh={onRefresh}
+          style={styles.controls}
+        />
+      ) : null}
     </View>
   );
 }
@@ -159,10 +212,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  controls: {
+    top: 56,
+  },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 2,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    backgroundColor: 'rgba(255,255,255,0.92)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -180,12 +236,12 @@ const styles = StyleSheet.create({
   countBadge: {
     position: 'absolute',
     top: spacing.md,
-    right: spacing.md,
+    alignSelf: 'center',
     zIndex: 10,
     backgroundColor: colors.primary,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 20,
   },
   countText: { color: colors.white, fontSize: fontSize.xs, fontWeight: '600' },
 });

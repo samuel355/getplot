@@ -12,12 +12,13 @@ export const colors = {
   warning: "#f59e0b", // Amber
   info: "#3b82f6", // Blue
 
-  // Plot status colors
-  plotAvailable: "#10b981",
-  plotReserved: "#f59e0b",
-  plotSold: "#ef4444",
-  plotOnHold: "#94a3b8",
-  plotUnpriced: "#6366f1",
+  // Plot status (legend / UI — matches plotStatus.ts)
+  plotAvailable: "#166534",
+  plotReserved: "#171717",
+  plotSold: "#dc2626",
+  plotOnHold: "#6b7280",
+  plotUnpriced: "#1e3a8a",
+  accentBlue: "#04a7ff",
 
   // Neutral palette
   white: "#ffffff",

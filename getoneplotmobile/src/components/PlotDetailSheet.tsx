@@ -10,6 +10,8 @@ import {
   TouchableWithoutFeedback,
   Pressable,
   Share,
+  Linking,
+  Alert,
 } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,6 +22,10 @@ import type { Development } from "../constants/developments";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  getPlotActionVisibility,
+  PLOT_SUPPORT_PHONE,
+} from "../constants/plotStatus";
 
 type Props = {
   visible: boolean;
@@ -110,8 +116,8 @@ export function PlotDetailSheet({
   const plotNo = props.Plot_No ?? "—";
   const street = formatStreet(props.Street_Nam);
   const amount = plot.plotTotalAmount || 0;
-  const status = plot.status || "Available";
-  const canPurchase = (!status || status === "Available") && amount > 0;
+  const status = plot.status ?? "Available";
+  const actions = getPlotActionVisibility(plot.status);
 
   if (!panRef.current) {
     panRef.current = PanResponder.create({
@@ -141,6 +147,20 @@ export function PlotDetailSheet({
       },
     });
   }
+
+  const handleCallForInfo = async () => {
+    const url = `tel:${PLOT_SUPPORT_PHONE}`;
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (!supported) {
+        Alert.alert("Call", PLOT_SUPPORT_PHONE);
+        return;
+      }
+      await Linking.openURL(url);
+    } catch {
+      Alert.alert("Call", PLOT_SUPPORT_PHONE);
+    }
+  };
 
   const handleShare = async () => {
     try {
@@ -214,6 +234,15 @@ export function PlotDetailSheet({
                   </View>
                 </View>
 
+                {actions.showOnHoldMessage ? (
+                  <View style={styles.statusBanner}>
+                    <Text style={styles.statusBannerText}>
+                      This plot is on hold for a client for 48 hours.
+                      {isAdmin ? " You can edit this plot and change the status on the web dashboard." : ""}
+                    </Text>
+                  </View>
+                ) : null}
+
                 {detailRows.length > 0 ? (
                   <View style={styles.detailsSection}>
                     {detailRows.map((row, index) => {
@@ -271,15 +300,17 @@ export function PlotDetailSheet({
                     <Ionicons name="share-social-outline" size={20} color={colors.primary} />
                   </Pressable>
 
-                  <Pressable
-                    onPress={onAddToCart}
-                    style={[styles.cartBtn, inCart && styles.cartBtnDisabled]}
-                    disabled={inCart}
-                    accessibilityRole="button"
-                  >
-                    <Ionicons name="cart-outline" size={18} color={colors.white} />
-                    <Text style={styles.cartBtnText}>{inCart ? "In cart" : "Add to cart"}</Text>
-                  </Pressable>
+                  {actions.showAddToCart ? (
+                    <Pressable
+                      onPress={onAddToCart}
+                      style={[styles.cartBtn, inCart && styles.cartBtnDisabled]}
+                      disabled={inCart}
+                      accessibilityRole="button"
+                    >
+                      <Ionicons name="cart-outline" size={18} color={colors.white} />
+                      <Text style={styles.cartBtnText}>{inCart ? "In cart" : "Add to cart"}</Text>
+                    </Pressable>
+                  ) : null}
                 </View>
 
                 {isAdmin ? (
@@ -290,20 +321,33 @@ export function PlotDetailSheet({
               </ScrollView>
 
               <View style={[styles.footer, { paddingBottom: 12 + (insets.bottom ?? 0) }]}>
-                <View style={styles.footerSecondary}>
-                  <Button title="Reserve" variant="outline" onPress={onReserve} style={styles.footerHalf} />
-                  <Button
-                    title="Express interest"
-                    variant="ghost"
-                    onPress={onExpressInterest}
-                    style={styles.footerHalf}
-                  />
-                </View>
-                <Button
-                  title={canPurchase ? "Buy now" : "Contact to buy"}
-                  fullWidth
-                  onPress={canPurchase ? onBuy : onExpressInterest}
-                />
+                {actions.isAvailable ? (
+                  <>
+                    <View style={styles.footerSecondary}>
+                      {actions.showReserve ? (
+                        <Button
+                          title="Reserve plot"
+                          variant="outline"
+                          onPress={onReserve}
+                          style={styles.footerHalf}
+                        />
+                      ) : null}
+                      {actions.showExpressInterest ? (
+                        <Button
+                          title="Express interest"
+                          variant="ghost"
+                          onPress={onExpressInterest}
+                          style={styles.footerHalf}
+                        />
+                      ) : null}
+                    </View>
+                    {actions.showBuy ? (
+                      <Button title="Buy plot" fullWidth onPress={onBuy} />
+                    ) : null}
+                  </>
+                ) : actions.showCallForInfo ? (
+                  <Button title="Call for info" fullWidth onPress={handleCallForInfo} />
+                ) : null}
               </View>
             </Animated.View>
           </TouchableWithoutFeedback>
@@ -383,6 +427,21 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
   },
   price: { fontSize: fontSize.lg, fontWeight: "800", color: colors.primary },
+
+  statusBanner: {
+    marginHorizontal: spacing.lg,
+    marginBottom: spacing.md,
+    padding: spacing.md,
+    backgroundColor: colors.surface,
+    borderRadius: 10,
+    borderLeftWidth: 3,
+    borderLeftColor: colors.warning,
+  },
+  statusBannerText: {
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+    lineHeight: 20,
+  },
 
   detailsSection: {
     marginHorizontal: spacing.lg,

@@ -41,3 +41,29 @@ export const PLOT_LEGEND_ITEMS = [
   PLOT_STATUS.onHold,
   PLOT_STATUS.unpriced,
 ] as const;
+
+/** Same number as web map popup “Call For Info” (trabuom/page.jsx, dar-es-salaam, etc.) */
+export const PLOT_SUPPORT_PHONE = '0548554216';
+
+export type PlotListingStatus = string | null | undefined;
+
+/**
+ * Whether purchase actions are shown — mirrors web map info window:
+ * Add to cart, Buy, Reserve, and Express interest are hidden for Sold, Reserved, and On Hold.
+ */
+export function isPlotAvailableForActions(status: PlotListingStatus): boolean {
+  return status == null || status === undefined || status === 'Available';
+}
+
+export function getPlotActionVisibility(status: PlotListingStatus) {
+  const isAvailable = isPlotAvailableForActions(status);
+  return {
+    isAvailable,
+    showAddToCart: isAvailable,
+    showBuy: isAvailable,
+    showReserve: isAvailable,
+    showExpressInterest: isAvailable,
+    showCallForInfo: !isAvailable,
+    showOnHoldMessage: status === 'On Hold',
+  };
+}

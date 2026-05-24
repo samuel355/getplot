@@ -1,7 +1,8 @@
 import { useAuth } from '@clerk/clerk-expo';
+import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, fontSize, spacing } from '../../../src/constants/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MapLegend } from '../../../src/components/MapLegend';
@@ -13,8 +14,9 @@ import type { PlotFeature } from '../../../src/types/plot';
 import { useCartStore } from '../../../src/stores/cartStore';
 
 export default function SiteMapScreen() {
-  const params = useLocalSearchParams<{ slug: string }>();
+  const params = useLocalSearchParams<{ slug: string; returnTo?: string }>();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  const returnTo = Array.isArray(params.returnTo) ? params.returnTo[0] : params.returnTo;
   const router = useRouter();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -26,6 +28,18 @@ export default function SiteMapScreen() {
   const [selected, setSelected] = useState<PlotFeature | null>(null);
   const { addPlot, isInCart } = useCartStore();
 
+  const goBack = useCallback(() => {
+    if (returnTo === 'admin-plots') {
+      router.replace('/admin/plots');
+      return;
+    }
+    if (router.canGoBack()) {
+      router.back();
+      return;
+    }
+    router.push('/admin/plots');
+  }, [returnTo, router]);
+
   useLayoutEffect(() => {
     const tabNav = navigation.getParent();
     tabNav?.setOptions({ tabBarStyle: { display: 'none' } });
@@ -36,9 +50,17 @@ export default function SiteMapScreen() {
 
   useLayoutEffect(() => {
     if (development) {
-      navigation.setOptions({ title: development.title });
+      navigation.setOptions({
+        title: development.title,
+        headerLeft: () => (
+          <Pressable style={styles.headerBackButton} onPress={goBack}>
+            <Ionicons name="chevron-back" size={24} color={colors.primary} />
+            <Text style={styles.headerBackText}>Back</Text>
+          </Pressable>
+        ),
+      });
     }
-  }, [development, navigation]);
+  }, [development, goBack, navigation]);
 
   const loadPlots = useCallback(async () => {
     if (!development) {
@@ -155,6 +177,16 @@ export default function SiteMapScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  headerBackButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: spacing.sm,
+  },
+  headerBackText: {
+    color: colors.primary,
+    fontSize: fontSize.md,
+    fontWeight: '700',
+  },
   errorBanner: {
     position: 'absolute',
     bottom: 24,

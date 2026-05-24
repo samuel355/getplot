@@ -150,7 +150,12 @@ export default function AdminPlotsScreen() {
       renderItem={({ item }) => (
         <Pressable
           style={({ pressed }) => [styles.siteCard, pressed && styles.pressed]}
-          onPress={() => router.push(`/(tabs)/sites/${item.slug}`)}
+          onPress={() =>
+            router.push({
+              pathname: '/(tabs)/sites/[slug]',
+              params: { slug: item.slug, returnTo: 'admin-plots' },
+            })
+          }
           android_ripple={{ color: 'rgba(15, 23, 42, 0.06)' }}
         >
           <View style={styles.siteTop}>

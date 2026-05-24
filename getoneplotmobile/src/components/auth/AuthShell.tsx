@@ -1,9 +1,10 @@
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -34,6 +35,7 @@ export function AuthShell({
   compact = false,
 }: Props) {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
 
   return (
     <View style={viewStyles.root}>
@@ -55,6 +57,16 @@ export function AuthShell({
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
+          {!embedded ? (
+            <Pressable
+              style={viewStyles.homeButton}
+              onPress={() => router.replace('/(tabs)')}
+              android_ripple={{ color: 'rgba(255,255,255,0.12)', borderless: true }}
+            >
+              <Text style={textStyles.homeButtonText}>Home</Text>
+            </Pressable>
+          ) : null}
+
           <View
             style={[
               viewStyles.brandBlock,
@@ -137,6 +149,18 @@ const viewStyles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
   },
+  homeButton: {
+    alignSelf: 'flex-start',
+    minHeight: 38,
+    paddingHorizontal: spacing.md,
+    borderRadius: borderRadius.full,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.24)',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.lg,
+  },
   brandBlock: {
     alignItems: 'center',
     marginBottom: spacing.xl,
@@ -208,5 +232,10 @@ const textStyles = StyleSheet.create({
     color: colors.textMuted,
     fontSize: fontSize.sm,
     fontWeight: '600',
+  },
+  homeButtonText: {
+    color: colors.white,
+    fontSize: fontSize.sm,
+    fontWeight: '700',
   },
 });

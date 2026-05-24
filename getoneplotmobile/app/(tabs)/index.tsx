@@ -35,8 +35,7 @@ const heroSites = FEATURED_SITE_SLUGS.map((slug) =>
   DEVELOPMENTS.find((d) => d.slug === slug),
 ).filter(Boolean);
 
-const siteImageBase =
-  process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, "") || "https://www.getoneplot.com";
+const servicedLandImage = require("../../assets/images/trabuom-lt.jpg");
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -144,7 +143,7 @@ export default function HomeScreen() {
       <View style={styles.imageSection}>
         <View style={styles.imageCard}>
           <Image
-            source={{ uri: `${siteImageBase}/images/trabuom-lt.jpg` }}
+            source={servicedLandImage}
             style={styles.heroImage}
             contentFit="cover"
             transition={300}
@@ -156,7 +155,7 @@ export default function HomeScreen() {
               <Text style={styles.imageLocation}>Kumasi — Ghana</Text>
             </View>
             <View style={styles.priceTag}>
-              <Text style={styles.priceTagText}>From GHS 30,000</Text>
+              <Text style={styles.priceTagText}>From GHS 50,000</Text>
             </View>
           </View>
           <View style={styles.verifiedFloat}>

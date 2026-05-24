@@ -12,13 +12,14 @@ import {
   Share,
 } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
+import { Ionicons } from "@expo/vector-icons";
 import { colors, fontSize, spacing } from "../constants/theme";
 import { formatGhs } from "../lib/plotService";
-import type { PlotFeature } from "../types/plot";
+import type { PlotFeature, PlotProperties } from "../types/plot";
 import type { Development } from "../constants/developments";
 import { Button } from "./ui/Button";
+import { Badge } from "./ui/Badge";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
 
 type Props = {
   visible: boolean;
@@ -31,6 +32,51 @@ type Props = {
   onReserve: () => void;
   onExpressInterest: () => void;
 };
+
+type DetailRow = { label: string; value: string };
+
+function formatSize(size: unknown): string {
+  if (size === undefined || size === null || size === "") return "";
+  const num = Number(size);
+  return Number.isNaN(num) ? "" : num.toFixed(2);
+}
+
+function formatStreet(street: unknown): string {
+  if (!street) return "";
+  return String(street).replace(/\r/g, "").trim();
+}
+
+function buildDetailRows(props: PlotProperties): DetailRow[] {
+  const rows: DetailRow[] = [];
+
+  const size = formatSize(props.Area);
+  if (size) rows.push({ label: "Size", value: `${size} acres` });
+
+  const useType = props.For;
+  if (useType && String(useType).trim()) {
+    rows.push({ label: "Use", value: String(useType).trim() });
+  }
+
+  const agent = props.Agent;
+  if (agent && String(agent).trim()) {
+    rows.push({ label: "Agent", value: String(agent).trim() });
+  }
+
+  const description = props.allDetails;
+  if (description && String(description).trim()) {
+    rows.push({ label: "Description", value: String(description).trim() });
+  }
+
+  return rows;
+}
+
+function statusBadgeVariant(status: string): "success" | "error" | "warning" | "info" | "default" {
+  if (status === "Sold") return "error";
+  if (status === "On Hold") return "warning";
+  if (status === "Available") return "success";
+  if (status === "Reserved") return "default";
+  return "info";
+}
 
 export function PlotDetailSheet({
   visible,
@@ -48,55 +94,35 @@ export function PlotDetailSheet({
   const isAdmin = ["admin", "sysadmin", "chief", "chief_asst"].includes(role);
   const insets = useSafeAreaInsets();
 
-  // Keep hooks and derived values consistent even when `plot` is null
   const props = plot?.properties || {};
-  const details = useMemo(() => {
-    const rows: { key: string; label: string; value: string }[] = [];
-    if (props.Plot_No) rows.push({ key: "plot_no", label: "Plot", value: String(props.Plot_No) });
-    if (props.Street_Nam)
-      rows.push({ key: "street", label: "Street", value: String(props.Street_Nam) });
-    if (props.Area) rows.push({ key: "area", label: "Size", value: String(props.Area) + " acres" });
-    const extras = Object.keys(props).filter((k) => !["Plot_No", "Street_Nam", "Area"].includes(k));
-    extras.slice(0, 6).forEach((k) => {
-      const v = props[k];
-      if (v !== undefined && v !== null && typeof v !== "object")
-        rows.push({ key: k, label: k.replace(/_/g, " "), value: String(v) });
-    });
-    return rows;
-  }, [props]);
+  const detailRows = useMemo(() => buildDetailRows(props), [props]);
 
-  // local UI state
   const [favorite, setFavorite] = useState(false);
-
-  // animated drag-to-close
   const translateY = useRef(new Animated.Value(0)).current;
-  const panRef = useRef<any>(null);
+  const panRef = useRef<ReturnType<typeof PanResponder.create> | null>(null);
 
   useEffect(() => {
-    // reset translate when modal opens
     if (visible) translateY.setValue(0);
   }, [visible, translateY]);
 
   if (!plot) return null;
 
   const plotNo = props.Plot_No ?? "—";
-  const street = props.Street_Nam ?? "—";
-  const area = props.Area ?? "—";
+  const street = formatStreet(props.Street_Nam);
   const amount = plot.plotTotalAmount || 0;
   const status = plot.status || "Available";
   const canPurchase = (!status || status === "Available") && amount > 0;
 
-  // configure pan responder for the handle (dragging from the handle will drag the sheet)
   if (!panRef.current) {
     panRef.current = PanResponder.create({
       onStartShouldSetPanResponder: () => false,
-      onMoveShouldSetPanResponder: (evt, gs) =>
+      onMoveShouldSetPanResponder: (_evt, gs) =>
         Math.abs(gs.dy) > Math.abs(gs.dx) && Math.abs(gs.dy) > 4,
-      onPanResponderMove: (evt, gs) => {
+      onPanResponderMove: (_evt, gs) => {
         if (gs.dy > 0) translateY.setValue(gs.dy);
       },
-      onPanResponderRelease: (evt, gs) => {
-        const shouldClose = gs.dy > 120 || gs.vy > 1.0;
+      onPanResponderRelease: (_evt, gs) => {
+        const shouldClose = gs.dy > 120 || gs.vy > 1.2;
         if (shouldClose) {
           Animated.timing(translateY, {
             toValue: 1000,
@@ -118,12 +144,23 @@ export function PlotDetailSheet({
 
   const handleShare = async () => {
     try {
-      const text = `${development.title} — Plot ${plotNo}\nPrice: ${formatGhs(amount)}\nLocation: ${street}`;
-      await Share.share({ message: text });
-    } catch (e) {
+      const lines = [
+        `${development.title} — Plot ${plotNo}`,
+        `Price: ${formatGhs(amount)}`,
+        street ? `Street: ${street}` : null,
+      ].filter(Boolean);
+      await Share.share({ message: lines.join("\n") });
+    } catch {
       // ignore
     }
   };
+
+  const initials = (development.title || "")
+    .split(" ")
+    .map((s) => s[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
@@ -136,42 +173,132 @@ export function PlotDetailSheet({
                 { paddingBottom: 20 + (insets.bottom ?? 0), transform: [{ translateY }] },
               ]}
             >
-              {/* handle (users can drag this to close) */}
-              <View style={styles.handle} {...(panRef.current ? panRef.current.panHandlers : {})} />
+              <View style={styles.handleRow}>
+                <View
+                  style={styles.handle}
+                  {...(panRef.current ? panRef.current.panHandlers : {})}
+                />
+                <Pressable onPress={onClose} style={styles.closeBtn} accessibilityRole="button">
+                  <Ionicons name="close" size={20} color={colors.textMuted} />
+                </Pressable>
+              </View>
 
-              <ScrollView showsVerticalScrollIndicator={false}>
-                <Text style={styles.site}>{development.title}</Text>
-                <Text style={styles.plotNo}>Plot {plotNo}</Text>
-                <Text style={styles.meta}>{street}</Text>
-                <Text style={styles.meta}>Size: {area} acres</Text>
-                <Text style={styles.price}>{formatGhs(amount)}</Text>
-                <View style={[styles.badge, statusStyle(status)]}>
-                  <Text style={styles.badgeText}>{status}</Text>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 140 }}
+              >
+                <View style={styles.header}>
+                  <View style={[styles.thumb, { backgroundColor: colors.primaryAccent }]}>
+                    <Text style={styles.thumbText}>{initials}</Text>
+                  </View>
+
+                  <View style={styles.headerBody}>
+                    <Text style={styles.site}>{development.title}</Text>
+                    <Text style={styles.plotNo}>Plot {plotNo}</Text>
+                    {street ? (
+                      <Text style={styles.street} numberOfLines={2}>
+                        {street}
+                      </Text>
+                    ) : null}
+                  </View>
+
+                  <View style={styles.headerMeta}>
+                    <Badge label={status} variant={statusBadgeVariant(status)} size="md" />
+                    <Text style={styles.price}>{formatGhs(amount)}</Text>
+                  </View>
                 </View>
 
-                <View style={styles.actions}>
-                  {canPurchase && (
-                    <>
-                      <Button title="Buy Plot" onPress={onBuy} />
-                      <Button title="Reserve Plot" variant="outline" onPress={onReserve} />
-                      <Button
-                        title={inCart ? "In Cart" : "Add to Cart"}
-                        variant="secondary"
-                        onPress={onAddToCart}
-                        disabled={inCart}
-                      />
-                    </>
-                  )}
+                {detailRows.length > 0 ? (
+                  <View style={styles.detailsSection}>
+                    {detailRows.map((row, index) => {
+                      const isDescription = row.label === "Description";
+                      return (
+                        <View
+                          key={row.label}
+                          style={[
+                            isDescription ? styles.detailRowStacked : styles.detailRow,
+                            index < detailRows.length - 1 && styles.detailRowBorder,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.detailLabel,
+                              isDescription && styles.detailLabelStacked,
+                            ]}
+                          >
+                            {row.label}
+                          </Text>
+                          <Text
+                            style={[
+                              styles.detailValue,
+                              isDescription && styles.detailValueMultiline,
+                            ]}
+                          >
+                            {row.value}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+                ) : null}
 
-                  <Button title="Express Interest" variant="ghost" onPress={onExpressInterest} />
-                  {isAdmin && (
-                    <Text style={styles.adminHint}>
-                      Admin: use web dashboard for price/status edits, or contact support.
-                    </Text>
-                  )}
-                  <Button title="Close" variant="outline" onPress={onClose} />
+                <View style={styles.toolbar}>
+                  <Pressable
+                    onPress={() => setFavorite((v) => !v)}
+                    style={styles.iconBtn}
+                    accessibilityRole="button"
+                    accessibilityLabel={favorite ? "Remove from favorites" : "Add to favorites"}
+                  >
+                    <Ionicons
+                      name={favorite ? "heart" : "heart-outline"}
+                      size={20}
+                      color={favorite ? colors.error : colors.primary}
+                    />
+                  </Pressable>
+
+                  <Pressable
+                    onPress={handleShare}
+                    style={styles.iconBtn}
+                    accessibilityRole="button"
+                    accessibilityLabel="Share plot"
+                  >
+                    <Ionicons name="share-social-outline" size={20} color={colors.primary} />
+                  </Pressable>
+
+                  <Pressable
+                    onPress={onAddToCart}
+                    style={[styles.cartBtn, inCart && styles.cartBtnDisabled]}
+                    disabled={inCart}
+                    accessibilityRole="button"
+                  >
+                    <Ionicons name="cart-outline" size={18} color={colors.white} />
+                    <Text style={styles.cartBtnText}>{inCart ? "In cart" : "Add to cart"}</Text>
+                  </Pressable>
                 </View>
+
+                {isAdmin ? (
+                  <Text style={styles.adminHint}>
+                    Admin: use web dashboard for price/status edits, or contact support.
+                  </Text>
+                ) : null}
               </ScrollView>
+
+              <View style={[styles.footer, { paddingBottom: 12 + (insets.bottom ?? 0) }]}>
+                <View style={styles.footerSecondary}>
+                  <Button title="Reserve" variant="outline" onPress={onReserve} style={styles.footerHalf} />
+                  <Button
+                    title="Express interest"
+                    variant="ghost"
+                    onPress={onExpressInterest}
+                    style={styles.footerHalf}
+                  />
+                </View>
+                <Button
+                  title={canPurchase ? "Buy now" : "Contact to buy"}
+                  fullWidth
+                  onPress={canPurchase ? onBuy : onExpressInterest}
+                />
+              </View>
             </Animated.View>
           </TouchableWithoutFeedback>
         </View>
@@ -180,51 +307,166 @@ export function PlotDetailSheet({
   );
 }
 
-function statusStyle(status: string) {
-  if (status === "Sold") return { backgroundColor: "#fee2e2" };
-  if (status === "Reserved") return { backgroundColor: "#f3f4f6" };
-  if (status === "On Hold") return { backgroundColor: "#e5e7eb" };
-  return { backgroundColor: "#dcfce7" };
-}
-
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "rgba(0,0,0,0.4)",
+    backgroundColor: "rgba(0,0,0,0.45)",
   },
   sheet: {
     backgroundColor: colors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    maxHeight: "75%",
-    padding: spacing.lg,
+    maxHeight: "82%",
+    overflow: "hidden",
+  },
+  handleRow: {
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.xs,
+    alignItems: "center",
   },
   handle: {
-    width: 40,
-    height: 6,
+    width: 44,
+    height: 5,
     backgroundColor: colors.border,
     borderRadius: 3,
-    alignSelf: "center",
-    marginBottom: spacing.md,
   },
-  site: { fontSize: fontSize.sm, color: colors.textMuted },
-  plotNo: { fontSize: fontSize.xxl, fontWeight: "800", color: colors.primary },
-  meta: { fontSize: fontSize.md, color: colors.textMuted, marginTop: 4 },
-  price: {
-    fontSize: fontSize.xl,
-    fontWeight: "700",
+  closeBtn: {
+    position: "absolute",
+    right: spacing.md,
+    top: spacing.xs,
+    padding: spacing.xs,
+  },
+
+  header: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.md,
+    gap: spacing.md,
+  },
+  thumb: {
+    width: 52,
+    height: 52,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  thumbText: { color: colors.white, fontSize: fontSize.lg, fontWeight: "800" },
+  headerBody: { flex: 1, minWidth: 0 },
+  headerMeta: { alignItems: "flex-end", gap: spacing.sm },
+  site: { fontSize: fontSize.sm, color: colors.textMuted, fontWeight: "600" },
+  plotNo: {
+    fontSize: fontSize.xxl,
+    fontWeight: "800",
     color: colors.primary,
-    marginVertical: spacing.md,
+    marginTop: 2,
   },
-  badge: {
-    alignSelf: "flex-start",
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 20,
-    marginBottom: spacing.lg,
+  street: {
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+    marginTop: 4,
+    textTransform: "capitalize",
   },
-  badgeText: { fontWeight: "600", fontSize: fontSize.sm },
-  actions: { gap: spacing.sm, paddingBottom: spacing.xl },
-  adminHint: { fontSize: fontSize.xs, color: colors.textMuted, textAlign: "center" },
+  price: { fontSize: fontSize.lg, fontWeight: "800", color: colors.primary },
+
+  detailsSection: {
+    marginHorizontal: spacing.lg,
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+  detailRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    gap: spacing.md,
+  },
+  detailRowStacked: {
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    gap: spacing.xs,
+  },
+  detailRowBorder: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
+  },
+  detailLabel: {
+    color: colors.textMuted,
+    fontSize: fontSize.sm,
+    fontWeight: "600",
+    width: 96,
+  },
+  detailLabelStacked: { width: undefined },
+  detailValue: {
+    flex: 1,
+    color: colors.text,
+    fontSize: fontSize.sm,
+    fontWeight: "600",
+    textAlign: "right",
+  },
+  detailValueMultiline: {
+    width: "100%",
+    textAlign: "left",
+    lineHeight: 20,
+  },
+
+  toolbar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    gap: spacing.sm,
+  },
+  iconBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 10,
+    backgroundColor: colors.surface,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cartBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: spacing.sm,
+    backgroundColor: colors.primary,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    borderRadius: 10,
+    minHeight: 44,
+  },
+  cartBtnDisabled: { opacity: 0.55 },
+  cartBtnText: { color: colors.white, fontWeight: "700", fontSize: fontSize.sm },
+
+  footer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    backgroundColor: colors.white,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
+    gap: spacing.sm,
+  },
+  footerSecondary: {
+    flexDirection: "row",
+    gap: spacing.sm,
+  },
+  footerHalf: { flex: 1 },
+
+  adminHint: {
+    fontSize: fontSize.xs,
+    color: colors.textMuted,
+    textAlign: "center",
+    marginTop: spacing.lg,
+    paddingHorizontal: spacing.lg,
+  },
 });

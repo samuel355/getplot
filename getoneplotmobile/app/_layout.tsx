@@ -59,6 +59,14 @@ export default function RootLayout() {
                 name="property/[id]"
                 options={{ title: "Property", headerBackTitle: "Back" }}
               />
+              <Stack.Screen
+                name="property/manage"
+                options={{ title: "Manage Property", headerBackTitle: "Back" }}
+              />
+              <Stack.Screen
+                name="property/my-listings"
+                options={{ title: "My Listings", headerBackTitle: "Back" }}
+              />
               <Stack.Screen name="contact" options={{ title: "Contact Us" }} />
               <Stack.Screen
                 name="payment-success"

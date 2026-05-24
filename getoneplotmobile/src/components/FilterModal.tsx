@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Modal,
   StyleSheet,
@@ -8,12 +8,12 @@ import {
   Pressable,
   TouchableOpacity,
   Dimensions,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { colors, fontSize, spacing, fontWeight, borderRadius } from '../constants/theme';
-import { Button } from './ui/Button';
-import { Input } from './ui/Input';
-import type { PropertyFilters } from '../types/property';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { colors, fontSize, spacing, fontWeight, borderRadius } from "../constants/theme";
+import { Button } from "./ui/Button";
+import { Input } from "./ui/Input";
+import type { PropertyFilters } from "../types/property";
 
 type Props = {
   visible: boolean;
@@ -23,37 +23,46 @@ type Props = {
 };
 
 const PROPERTY_TYPES = [
-  { label: 'All', value: 'all' },
-  { label: 'House', value: 'house' },
-  { label: 'Land', value: 'land' },
-  { label: 'Apartment', value: 'apartment' },
+  { label: "All", value: "all" },
+  { label: "House", value: "house" },
+  { label: "Land", value: "land" },
+  { label: "Apartment", value: "apartment" },
 ];
 
 const LISTING_TYPES = [
-  { label: 'All', value: 'all' },
-  { label: 'For Sale', value: 'sale' },
-  { label: 'For Rent', value: 'rent' },
-  { label: 'Short-term', value: 'airbnb' },
+  { label: "All", value: "all" },
+  { label: "For Sale", value: "sale" },
+  { label: "For Rent", value: "rent" },
+  { label: "Short-term", value: "airbnb" },
 ];
 
 const REGIONS = [
-  { label: 'All Regions', value: 'all' },
-  { label: 'Greater Accra', value: 'Greater Accra' },
-  { label: 'Ashanti', value: 'Ashanti' },
-  { label: 'Central', value: 'Central' },
-  { label: 'Eastern', value: 'Eastern' },
-  { label: 'Western', value: 'Western' },
-  { label: 'Northern', value: 'Northern' },
-  { label: 'Volta', value: 'Volta' },
+  { label: "All Regions", value: "all" },
+  { label: "Ahafo", value: "Ahafo" },
+  { label: "Ashanti", value: "Ashanti" },
+  { label: "Bono", value: "Bono" },
+  { label: "Bono East", value: "Bono East" },
+  { label: "Central", value: "Central" },
+  { label: "Eastern", value: "Eastern" },
+  { label: "Greater Accra", value: "Greater Accra" },
+  { label: "North East", value: "North East" },
+  { label: "Northern", value: "Northern" },
+  { label: "Oti", value: "Oti" },
+  { label: "Savannah", value: "Savannah" },
+  { label: "Upper East", value: "Upper East" },
+  { label: "Upper West", value: "Upper West" },
+  { label: "Volta", value: "Volta" },
+  { label: "Western", value: "Western" },
+  { label: "Western North", value: "Western North" },
 ];
 
 const ROOM_OPTIONS = [
-  { label: 'Any', value: 'any' },
-  { label: '1+', value: '1' },
-  { label: '2+', value: '2' },
-  { label: '3+', value: '3' },
-  { label: '4+', value: '4' },
-  { label: '5+', value: '5' },
+  { label: "Any", value: "any" },
+  { label: "1+", value: "1" },
+  { label: "2+", value: "2" },
+  { label: "3+", value: "3" },
+  { label: "4+", value: "4" },
+  { label: "5+", value: "5" },
 ];
 
 export function FilterModal({ visible, onClose, onApply, initialFilters }: Props) {
@@ -70,13 +79,13 @@ export function FilterModal({ visible, onClose, onApply, initialFilters }: Props
 
   const handleReset = () => {
     const resetFilters: PropertyFilters = {
-      propertyType: 'all',
+      propertyType: "all",
       priceRange: [0, 10000000],
-      location: 'all',
-      bedrooms: 'any',
-      bathrooms: 'any',
+      location: "all",
+      bedrooms: "any",
+      bathrooms: "any",
       sortBy: initialFilters.sortBy,
-      property_type: 'all',
+      property_type: "all",
     };
     setFilters(resetFilters);
   };
@@ -104,11 +113,8 @@ export function FilterModal({ visible, onClose, onApply, initialFilters }: Props
                 {PROPERTY_TYPES.map((item) => (
                   <TouchableOpacity
                     key={item.value}
-                    style={[
-                      styles.chip,
-                      filters.propertyType === item.value && styles.chipActive,
-                    ]}
-                    onPress={() => updateFilter('propertyType', item.value)}
+                    style={[styles.chip, filters.propertyType === item.value && styles.chipActive]}
+                    onPress={() => updateFilter("propertyType", item.value)}
                   >
                     <Text
                       style={[
@@ -130,11 +136,8 @@ export function FilterModal({ visible, onClose, onApply, initialFilters }: Props
                 {LISTING_TYPES.map((item) => (
                   <TouchableOpacity
                     key={item.value}
-                    style={[
-                      styles.chip,
-                      filters.property_type === item.value && styles.chipActive,
-                    ]}
-                    onPress={() => updateFilter('property_type', item.value)}
+                    style={[styles.chip, filters.property_type === item.value && styles.chipActive]}
+                    onPress={() => updateFilter("property_type", item.value)}
                   >
                     <Text
                       style={[
@@ -152,16 +155,20 @@ export function FilterModal({ visible, onClose, onApply, initialFilters }: Props
             {/* Region */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Region</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.horizontalScroll}
+              >
                 {REGIONS.map((item) => (
                   <TouchableOpacity
                     key={item.value}
                     style={[
                       styles.chip,
                       filters.location === item.value && styles.chipActive,
-                      { marginRight: spacing.sm }
+                      { marginRight: spacing.sm },
                     ]}
-                    onPress={() => updateFilter('location', item.value)}
+                    onPress={() => updateFilter("location", item.value)}
                   >
                     <Text
                       style={[
@@ -177,7 +184,7 @@ export function FilterModal({ visible, onClose, onApply, initialFilters }: Props
             </View>
 
             {/* Rooms - Only show if not Land */}
-            {filters.propertyType !== 'land' && (
+            {filters.propertyType !== "land" && (
               <>
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Bedrooms</Text>
@@ -185,11 +192,8 @@ export function FilterModal({ visible, onClose, onApply, initialFilters }: Props
                     {ROOM_OPTIONS.map((item) => (
                       <TouchableOpacity
                         key={item.value}
-                        style={[
-                          styles.chip,
-                          filters.bedrooms === item.value && styles.chipActive,
-                        ]}
-                        onPress={() => updateFilter('bedrooms', item.value)}
+                        style={[styles.chip, filters.bedrooms === item.value && styles.chipActive]}
+                        onPress={() => updateFilter("bedrooms", item.value)}
                       >
                         <Text
                           style={[
@@ -210,11 +214,8 @@ export function FilterModal({ visible, onClose, onApply, initialFilters }: Props
                     {ROOM_OPTIONS.map((item) => (
                       <TouchableOpacity
                         key={item.value}
-                        style={[
-                          styles.chip,
-                          filters.bathrooms === item.value && styles.chipActive,
-                        ]}
-                        onPress={() => updateFilter('bathrooms', item.value)}
+                        style={[styles.chip, filters.bathrooms === item.value && styles.chipActive]}
+                        onPress={() => updateFilter("bathrooms", item.value)}
                       >
                         <Text
                           style={[
@@ -242,7 +243,7 @@ export function FilterModal({ visible, onClose, onApply, initialFilters }: Props
                     value={filters.priceRange[0].toString()}
                     onChangeText={(v) => {
                       const min = parseInt(v) || 0;
-                      updateFilter('priceRange', [min, filters.priceRange[1]]);
+                      updateFilter("priceRange", [min, filters.priceRange[1]]);
                     }}
                   />
                 </View>
@@ -254,7 +255,7 @@ export function FilterModal({ visible, onClose, onApply, initialFilters }: Props
                     value={filters.priceRange[1].toString()}
                     onChangeText={(v) => {
                       const max = parseInt(v) || 10000000;
-                      updateFilter('priceRange', [filters.priceRange[0], max]);
+                      updateFilter("priceRange", [filters.priceRange[0], max]);
                     }}
                   />
                 </View>
@@ -275,19 +276,19 @@ export function FilterModal({ visible, onClose, onApply, initialFilters }: Props
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'flex-end',
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "flex-end",
   },
   content: {
     backgroundColor: colors.white,
     borderTopLeftRadius: borderRadius.xl,
     borderTopRightRadius: borderRadius.xl,
-    height: '90%',
+    height: "90%",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     padding: spacing.lg,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
@@ -321,12 +322,12 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   chipGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: spacing.sm,
   },
   horizontalScroll: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   chip: {
     paddingHorizontal: 16,
@@ -350,8 +351,8 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.semibold,
   },
   priceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.md,
   },
   priceDash: {

@@ -1,18 +1,19 @@
-import Constants from 'expo-constants';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import Constants from "expo-constants";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import MapView, {
   Polygon,
   PROVIDER_DEFAULT,
   PROVIDER_GOOGLE,
   type Region,
-} from 'react-native-maps';
-import { MapControls, type MapTypeOption } from './MapControls';
-import { Loading } from './ui/Loading';
-import { getPlotFillColor, getPlotStrokeColor, getPolygonRing } from '../lib/mapUtils';
-import type { PlotFeature } from '../types/plot';
-import type { Development } from '../constants/developments';
-import { colors, fontSize, spacing } from '../constants/theme';
+} from "react-native-maps";
+import { MapControls, type MapTypeOption } from "./MapControls";
+import { Loading } from "./ui/Loading";
+import { getPlotFillColor, getPlotStrokeColor, getPolygonRing } from "../lib/mapUtils";
+import type { PlotFeature } from "../types/plot";
+import type { Development } from "../constants/developments";
+import { colors, fontSize, spacing } from "../constants/theme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Props = {
   development: Development;
@@ -25,8 +26,8 @@ type Props = {
 const googleMapsKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 function canUseGoogleProvider() {
-  if (Platform.OS === 'web' || !googleMapsKey) return false;
-  if (Constants.appOwnership === 'expo') return false;
+  if (Platform.OS === "web" || !googleMapsKey) return false;
+  if (Constants.appOwnership === "expo") return false;
   return true;
 }
 
@@ -71,13 +72,11 @@ export function PlotMap({ development, plots, loading, onPlotPress, onRefresh }:
   const mapRef = useRef<MapView>(null);
   const useGoogle = canUseGoogleProvider();
   const [mapReady, setMapReady] = useState(false);
-  const [mapType, setMapType] = useState<MapTypeOption>(useGoogle ? 'hybrid' : 'satellite');
+  const [mapType, setMapType] = useState<MapTypeOption>(useGoogle ? "hybrid" : "satellite");
   const regionRef = useRef<Region>(regionFromPlots(plots, development));
+  const insets = useSafeAreaInsets();
 
-  const initialRegion = useMemo(
-    () => regionFromPlots(plots, development),
-    [plots, development]
-  );
+  const initialRegion = useMemo(() => regionFromPlots(plots, development), [plots, development]);
 
   useEffect(() => {
     if (plots.length > 0) {
@@ -110,7 +109,7 @@ export function PlotMap({ development, plots, loading, onPlotPress, onRefresh }:
 
   const mapProvider = useGoogle ? PROVIDER_GOOGLE : PROVIDER_DEFAULT;
   const effectiveMapType =
-    !useGoogle && (mapType === 'hybrid' || mapType === 'terrain') ? 'satellite' : mapType;
+    !useGoogle && (mapType === "hybrid" || mapType === "terrain") ? "satellite" : mapType;
 
   const zoomIn = () => {
     const next = zoomRegion(regionRef.current, 0.5);
@@ -143,7 +142,10 @@ export function PlotMap({ development, plots, loading, onPlotPress, onRefresh }:
       ) : null}
 
       {!loading && plots.length > 0 ? (
-        <View style={styles.countBadge} pointerEvents="none">
+        <View
+          style={[styles.countBadge, { top: (insets.top ?? spacing.md) + 8 }]}
+          pointerEvents="none"
+        >
           <Text style={styles.countText}>{plots.length} plots</Text>
         </View>
       ) : null}
@@ -194,7 +196,7 @@ export function PlotMap({ development, plots, loading, onPlotPress, onRefresh }:
           onZoomOut={zoomOut}
           onFitAll={fitAll}
           onRefresh={onRefresh}
-          style={styles.controls}
+          style={[styles.controls, { top: (insets.top ?? spacing.md) + 12 }]}
         />
       ) : null}
     </View>
@@ -204,44 +206,43 @@ export function PlotMap({ development, plots, loading, onPlotPress, onRefresh }:
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
-    backgroundColor: '#e5e7eb',
+    width: "100%",
+    backgroundColor: "#e5e7eb",
   },
   map: {
     flex: 1,
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   controls: {
-    top: 56,
+    right: spacing.md,
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 2,
-    backgroundColor: 'rgba(255,255,255,0.92)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(255,255,255,0.92)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   loadingText: { marginTop: spacing.md, color: colors.textMuted, fontSize: fontSize.sm },
   emptyOverlay: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: spacing.lg,
     backgroundColor: colors.surface,
   },
-  emptyTitle: { fontWeight: '700', fontSize: fontSize.lg, color: colors.primary },
-  emptySub: { marginTop: 8, color: colors.textMuted, fontSize: fontSize.sm, textAlign: 'center' },
+  emptyTitle: { fontWeight: "700", fontSize: fontSize.lg, color: colors.primary },
+  emptySub: { marginTop: 8, color: colors.textMuted, fontSize: fontSize.sm, textAlign: "center" },
   countBadge: {
-    position: 'absolute',
-    top: spacing.md,
-    alignSelf: 'center',
+    position: "absolute",
+    alignSelf: "center",
     zIndex: 10,
     backgroundColor: colors.primary,
     paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 20,
   },
-  countText: { color: colors.white, fontSize: fontSize.xs, fontWeight: '600' },
+  countText: { color: colors.white, fontSize: fontSize.xs, fontWeight: "600" },
 });

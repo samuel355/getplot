@@ -21,7 +21,8 @@ export default function ProtectedLayout() {
         <Stack.Screen name="plot/buy" options={{ title: 'Buy Plot' }} />
         <Stack.Screen name="plot/reserve" options={{ title: 'Reserve Plot' }} />
         <Stack.Screen name="admin/index" options={{ title: 'Admin' }} />
-        <Stack.Screen name="admin/plots" options={{ title: 'Plot Overview' }} />
+        <Stack.Screen name="admin/properties" options={{ title: 'Properties Dashboard' }} />
+        <Stack.Screen name="admin/plots" options={{ title: 'Land Sites Dashboard' }} />
       </Stack>
     </RequireAuth>
   );

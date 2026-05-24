@@ -1,5 +1,8 @@
+import { useColorScheme } from "react-native";
+import { useAppStore } from "../stores/appStore";
+
 // Modern, mobile-optimized color palette
-export const colors = {
+const lightColors = {
   // Primary brand colors
   primary: "#05014c",
   primaryLight: "#1a1870",
@@ -12,7 +15,7 @@ export const colors = {
   warning: "#f59e0b", // Amber
   info: "#3b82f6", // Blue
 
-  // Plot status (legend / UI — matches plotStatus.ts)
+  // Plot status
   plotAvailable: "#166534",
   plotReserved: "#171717",
   plotSold: "#dc2626",
@@ -40,7 +43,71 @@ export const colors = {
   shadow: "rgba(0, 0, 0, 0.1)",
 };
 
-// Responsive spacing system (8px base)
+const darkColors = {
+  // Primary brand colors
+  primary: "#cbd5e1", // Lighter for dark mode
+  primaryLight: "#e2e8f0",
+  primaryDark: "#0f172a",
+  primaryAccent: "#818cf8", // Brighter Indigo
+
+  // Semantic colors
+  success: "#34d399",
+  error: "#f87171",
+  warning: "#fbbf24",
+  info: "#60a5fa",
+
+  // Plot status
+  plotAvailable: "#22c55e",
+  plotReserved: "#e5e7eb",
+  plotSold: "#ef4444",
+  plotOnHold: "#9ca3af",
+  plotUnpriced: "#3b82f6",
+  accentBlue: "#60a5fa",
+
+  // Neutral palette
+  white: "#ffffff",
+  black: "#000000",
+  background: "#0f172a",
+  surface: "#1e293b",
+  surfaceAlt: "#334155",
+  border: "#334155",
+  borderLight: "#1e293b",
+
+  // Text hierarchy
+  text: "#f8fafc",
+  textSecondary: "#cbd5e1",
+  textMuted: "#94a3b8",
+  textLight: "#475569",
+  textInverse: "#0f172a",
+
+  // Shadow
+  shadow: "rgba(0, 0, 0, 0.3)",
+};
+
+export const colors = lightColors; // Default for static usage, but prefer useTheme hook
+
+export function useTheme() {
+  const systemColorScheme = useColorScheme();
+  const themePreference = useAppStore((state) => state.theme);
+
+  const isDark =
+    themePreference === "system" ? systemColorScheme === "dark" : themePreference === "dark";
+
+  const themeColors = isDark ? darkColors : lightColors;
+
+  return {
+    colors: themeColors,
+    isDark,
+    themePreference,
+    spacing,
+    fontSize,
+    fontWeight,
+    borderRadius,
+    shadows,
+  };
+}
+
+// Static values that don't change between themes
 export const spacing = {
   xs: 4,
   sm: 8,
@@ -51,7 +118,6 @@ export const spacing = {
   xxxl: 40,
 };
 
-// Mobile-optimized typography
 export const fontSize = {
   xs: 11,
   sm: 12,
@@ -64,7 +130,6 @@ export const fontSize = {
   display: 32,
 };
 
-// Font weights
 export const fontWeight = {
   regular: "400",
   medium: "500",
@@ -73,7 +138,6 @@ export const fontWeight = {
   extrabold: "800",
 };
 
-// Border radius system
 export const borderRadius = {
   none: 0,
   sm: 4,
@@ -83,7 +147,6 @@ export const borderRadius = {
   full: 9999,
 };
 
-// Shadow system
 export const shadows = {
   none: "none",
   sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",

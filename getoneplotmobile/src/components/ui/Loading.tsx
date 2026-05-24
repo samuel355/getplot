@@ -1,24 +1,20 @@
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { colors } from "../../constants/theme";
+import { useTheme } from "../../constants/theme";
 
-type Props = {
-  fullScreen?: boolean;
-  size?: "small" | "large";
-};
+export function Loading() {
+  const { colors } = useTheme();
 
-export function Loading({ fullScreen = true, size = "large" }: Props) {
   return (
-    <View style={[styles.container, fullScreen && styles.full]}>
-      <ActivityIndicator size={size} color={colors.primary} />
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <ActivityIndicator size="large" color={colors.primary} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
+    flex: 1,
     justifyContent: "center",
-    padding: 24,
+    alignItems: "center",
   },
-  full: { flex: 1 },
 });

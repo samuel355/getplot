@@ -86,9 +86,9 @@ export default function AdminScreen() {
         />
       </View>
 
-      <Pressable style={styles.secondaryButton} onPress={() => router.replace('/(tabs)')}>
+      <Pressable style={styles.secondaryButton} onPress={() => router.replace('/(tabs)/profile')}>
         <Ionicons name="arrow-back" size={18} color={colors.primary} />
-        <Text style={text.secondaryButton}>Back to app</Text>
+        <Text style={text.secondaryButton}>Back to profile</Text>
       </Pressable>
     </ScrollView>
   );

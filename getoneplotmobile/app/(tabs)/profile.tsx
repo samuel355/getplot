@@ -227,6 +227,7 @@ export default function ProfileScreen() {
           tone="danger"
           onPress={async () => {
             await signOut();
+            router.replace('/(tabs)');
           }}
         />
       </View>

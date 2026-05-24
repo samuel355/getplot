@@ -9,16 +9,16 @@
     "scheme": "getoneplot",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "cover",
+      "image": "./assets/splash-logo.png",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.getoneplot.app",
       "splash": {
-        "image": "./assets/splash.png",
-        "resizeMode": "cover",
+        "image": "./assets/splash-logo.png",
+        "resizeMode": "contain",
         "backgroundColor": "#ffffff"
       },
       "config": {
@@ -28,8 +28,8 @@
     "android": {
       "package": "com.getoneplot.app",
       "splash": {
-        "image": "./assets/splash.png",
-        "resizeMode": "cover",
+        "image": "./assets/splash-logo.png",
+        "resizeMode": "contain",
         "backgroundColor": "#ffffff"
       },
       "adaptiveIcon": {

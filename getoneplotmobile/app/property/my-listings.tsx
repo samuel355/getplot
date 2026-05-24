@@ -61,7 +61,7 @@ export default function MyListingsScreen() {
   };
 
   const renderItem = ({ item }: { item: Property }) => (
-    <View style={styles.card}>
+    <Pressable style={styles.card} onPress={() => router.push(`/property/${item.id}`)}>
       <View style={styles.row}>
         <Image
           source={item.images?.[0] ? { uri: item.images[0] } : undefined}
@@ -80,21 +80,34 @@ export default function MyListingsScreen() {
       </View>
       <View style={styles.actions}>
         <Pressable
+          style={[styles.actionBtn, styles.viewBtn]}
+          onPress={() => router.push(`/property/${item.id}`)}
+        >
+          <Ionicons name="eye-outline" size={18} color={colors.primaryAccent} />
+          <Text style={styles.viewBtnText}>View</Text>
+        </Pressable>
+        <Pressable
           style={[styles.actionBtn, styles.editBtn]}
-          onPress={() => router.push({ pathname: "/property/manage", params: { id: item.id } })}
+          onPress={(e) => {
+            e.stopPropagation();
+            router.push({ pathname: "/property/manage", params: { id: item.id } });
+          }}
         >
           <Ionicons name="create-outline" size={18} color={colors.primary} />
           <Text style={styles.editBtnText}>Edit</Text>
         </Pressable>
         <Pressable
           style={[styles.actionBtn, styles.deleteBtn]}
-          onPress={() => handleDelete(item.id)}
+          onPress={(e) => {
+            e.stopPropagation();
+            handleDelete(item.id);
+          }}
         >
           <Ionicons name="trash-outline" size={18} color={colors.error} />
           <Text style={styles.deleteBtnText}>Delete</Text>
         </Pressable>
       </View>
-    </View>
+    </Pressable>
   );
 
   const getStatusColor = (status?: string) => {
@@ -229,6 +242,7 @@ const styles = StyleSheet.create({
   editBtn: {},
   deleteBtn: {},
   editBtnText: { color: colors.primary, fontWeight: fontWeight.medium },
+  viewBtnText: { color: colors.primaryAccent, fontWeight: fontWeight.medium },
   deleteBtnText: { color: colors.error, fontWeight: fontWeight.medium },
   empty: { alignItems: "center", paddingVertical: spacing.xxxl, marginTop: spacing.xxl },
   emptyText: { color: colors.textMuted, marginTop: spacing.md, textAlign: "center" },

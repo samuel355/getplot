@@ -164,6 +164,11 @@ export default function ManagePropertyScreen() {
       };
 
       await saveProperty(propertyToSave, user?.id || "");
+
+      // Refresh global store data
+      usePropertyStore.getState().fetchProperties(1);
+      if (user?.id) usePropertyStore.getState().fetchFavorites(user.id);
+
       Alert.alert("Success", "Property saved successfully.", [
         { text: "OK", onPress: () => router.back() },
       ]);

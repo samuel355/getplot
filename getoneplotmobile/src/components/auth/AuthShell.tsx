@@ -10,107 +10,165 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, fontSize, spacing } from '../../constants/theme';
+import { colors, fontSize, spacing, borderRadius } from '../../constants/theme';
 
 type Props = {
   children: ReactNode;
   title?: string;
   subtitle?: string;
   footer?: ReactNode;
+  headerExtra?: ReactNode;
 };
 
-export function AuthShell({ children, title, subtitle, footer }: Props) {
+export function AuthShell({ children, title, subtitle, footer, headerExtra }: Props) {
   const insets = useSafeAreaInsets();
 
   return (
-    <KeyboardAvoidingView
-      style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView
-        contentContainerStyle={[
-          styles.scroll,
-          { paddingTop: insets.top + spacing.md, paddingBottom: insets.bottom + spacing.lg },
-        ]}
-        keyboardShouldPersistTaps="handled"
+    <View style={viewStyles.root}>
+      <View style={viewStyles.blobTop} />
+      <View style={viewStyles.blobBottom} />
+
+      <KeyboardAvoidingView
+        style={viewStyles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <View style={styles.hero}>
-          <Image
-            source={require('../../../assets/splash-icon.png')}
-            style={styles.heroImage}
-            contentFit="cover"
-          />
-          <View style={styles.heroOverlay}>
-            <Text style={styles.heroBrand}>Get One Plot</Text>
-            <Text style={styles.heroTagline}>
+        <ScrollView
+          contentContainerStyle={[
+            viewStyles.scroll,
+            {
+              paddingTop: insets.top + spacing.lg,
+              paddingBottom: insets.bottom + spacing.xl,
+            },
+          ]}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={viewStyles.brandBlock}>
+            <View style={viewStyles.logoRing}>
+              <Image
+                source={require('../../../assets/icon.png')}
+                style={viewStyles.logo}
+                contentFit="contain"
+              />
+            </View>
+            <Text style={textStyles.brand}>Get One Plot</Text>
+            <Text style={textStyles.tagline}>
               Where listing of properties and land purchase is made easy
             </Text>
           </View>
-        </View>
 
-        <View style={styles.card}>
-          {title ? <Text style={styles.title}>{title}</Text> : null}
-          {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
-          {children}
-          {footer}
-          <Link href="/(tabs)" style={styles.guestLink}>
-            <Text style={styles.guestText}>Continue browsing as guest</Text>
-          </Link>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          <View style={[viewStyles.card, cardShadow]}>
+            {headerExtra}
+            {title ? <Text style={textStyles.title}>{title}</Text> : null}
+            {subtitle ? <Text style={textStyles.subtitle}>{subtitle}</Text> : null}
+            {children}
+            {footer}
+            <Link href="/(tabs)">
+              <Text style={textStyles.guestText}>Continue browsing as guest →</Text>
+            </Link>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: colors.surface },
-  scroll: { flexGrow: 1 },
-  hero: {
-    height: 200,
-    marginHorizontal: spacing.md,
-    borderRadius: 16,
-    overflow: 'hidden',
-    backgroundColor: colors.primary,
+const cardShadow = Platform.select({
+  ios: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.2,
+    shadowRadius: 24,
   },
-  heroImage: { ...StyleSheet.absoluteFillObject, opacity: 0.35 },
-  heroOverlay: {
+  android: { elevation: 12 },
+});
+
+const viewStyles = StyleSheet.create({
+  root: {
     flex: 1,
-    justifyContent: 'flex-end',
-    padding: spacing.lg,
-    backgroundColor: 'rgba(5, 1, 76, 0.55)',
+    backgroundColor: colors.primaryDark,
   },
-  heroBrand: {
+  flex: { flex: 1 },
+  blobTop: {
+    position: 'absolute',
+    top: -80,
+    right: -60,
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+    backgroundColor: colors.primaryAccent,
+    opacity: 0.35,
+  },
+  blobBottom: {
+    position: 'absolute',
+    bottom: 120,
+    left: -90,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: colors.primaryLight,
+    opacity: 0.25,
+  },
+  scroll: {
+    flexGrow: 1,
+    paddingHorizontal: spacing.lg,
+  },
+  brandBlock: {
+    alignItems: 'center',
+    marginBottom: spacing.xl,
+  },
+  logoRing: {
+    width: 72,
+    height: 72,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.md,
+  },
+  logo: { width: 48, height: 48 },
+  card: {
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.xl,
+    padding: spacing.xl,
+  },
+});
+
+const textStyles = StyleSheet.create({
+  brand: {
     fontSize: fontSize.xxl,
     fontWeight: '800',
     color: colors.white,
+    letterSpacing: -0.5,
   },
-  heroTagline: {
+  tagline: {
     marginTop: spacing.sm,
     fontSize: fontSize.sm,
-    color: 'rgba(255,255,255,0.9)',
+    color: 'rgba(255,255,255,0.75)',
+    textAlign: 'center',
     lineHeight: 20,
-  },
-  card: {
-    margin: spacing.md,
-    marginTop: spacing.lg,
-    padding: spacing.lg,
-    backgroundColor: colors.white,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
+    maxWidth: 280,
   },
   title: {
-    fontSize: fontSize.xl,
+    fontSize: fontSize.xxl,
     fontWeight: '800',
     color: colors.primary,
     marginBottom: spacing.xs,
+    letterSpacing: -0.3,
   },
   subtitle: {
-    fontSize: fontSize.md,
-    color: colors.textMuted,
+    fontSize: fontSize.base,
+    color: colors.textSecondary,
     marginBottom: spacing.lg,
     lineHeight: 22,
   },
-  guestLink: { marginTop: spacing.lg, alignSelf: 'center' },
-  guestText: { color: colors.textMuted, fontSize: fontSize.sm },
+  guestText: {
+    marginTop: spacing.xl,
+    textAlign: 'center',
+    color: colors.textMuted,
+    fontSize: fontSize.sm,
+    fontWeight: '600',
+  },
 });

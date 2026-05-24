@@ -2,7 +2,8 @@ import { useAuth } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useApprovalStatus } from "../../src/hooks/useApprovalStatus";
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PropertyCard } from "../../src/components/PropertyCard";
@@ -41,14 +42,22 @@ export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { isLoaded, isSignedIn } = useAuth();
+  const { status, initialLoading } = useApprovalStatus({
+    enabled: isLoaded && isSignedIn,
+    poll: false,
+  });
   const [featured, setFeatured] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const sentToApproval = useRef(false);
 
+  // Only unapproved signed-in users go to approval (avoids loop with post-approval redirect)
   useEffect(() => {
-    if (isLoaded && isSignedIn) {
+    if (!isLoaded || !isSignedIn || initialLoading || !status) return;
+    if (!status.isApproved && !sentToApproval.current) {
+      sentToApproval.current = true;
       router.replace("/approval");
     }
-  }, [isLoaded, isSignedIn, router]);
+  }, [isLoaded, isSignedIn, initialLoading, status, router]);
 
   useEffect(() => {
     (async () => {

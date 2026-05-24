@@ -12,7 +12,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '../src/components/ui/Button';
-import { Loading } from '../src/components/ui/Loading';
 import { useApprovalStatus } from '../src/hooks/useApprovalStatus';
 import { getPostApprovalRoute, SUPPORT_EMAIL } from '../src/lib/auth';
 import {
@@ -22,13 +21,17 @@ import {
   borderRadius,
 } from '../src/constants/theme';
 
+type Phase = 'loading' | 'pending' | 'redirecting';
+
 export default function ApprovalScreen() {
   const { isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { status, checking, refresh, user } = useApprovalStatus({ poll: true });
-  const [redirecting, setRedirecting] = useState(false);
-  const redirected = useRef(false);
+  const { status, initialLoading, isRefreshing, refresh, stopPolling, user } =
+    useApprovalStatus({ poll: true });
+
+  const [phase, setPhase] = useState<Phase>('loading');
+  const redirectStarted = useRef(false);
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -37,21 +40,38 @@ export default function ApprovalScreen() {
   }, [isLoaded, isSignedIn, router]);
 
   useEffect(() => {
-    if (!status?.isApproved || redirected.current) return;
-    redirected.current = true;
-    setRedirecting(true);
-    const role = status.role || (user?.publicMetadata?.role as string);
-    const destination = getPostApprovalRoute(role);
-    const t = setTimeout(() => {
-      router.replace(destination as '/admin');
-    }, 1100);
-    return () => clearTimeout(t);
-  }, [status?.isApproved, status?.role, user, router]);
+    if (initialLoading || !status) return;
 
-  if (!isLoaded || (!status && checking)) return <Loading />;
+    if (status.isApproved) {
+      if (redirectStarted.current) return;
+      redirectStarted.current = true;
+      setPhase('redirecting');
+      stopPolling();
 
-  const approved = status?.isApproved;
-  const role = status?.role;
+      const role = status.role || (user?.publicMetadata?.role as string | undefined);
+      const destination = getPostApprovalRoute(role);
+
+      // Brief success state, then one clean navigation (matches web ~1s delay)
+      const timer = setTimeout(() => {
+        router.replace(destination as '/(tabs)');
+      }, 800);
+
+      return () => clearTimeout(timer);
+    }
+
+    setPhase('pending');
+  }, [initialLoading, status, user, router, stopPolling]);
+
+  const showSpinner = phase === 'loading' || (phase === 'pending' && initialLoading);
+  const isApprovedView = phase === 'redirecting';
+  const isPending = phase === 'pending';
+
+  const title = isApprovedView ? 'Approved!' : isPending ? 'Pending approval' : 'Checking status';
+  const message = isApprovedView
+    ? "You're all set. Opening your dashboard…"
+    : isPending
+      ? 'Your account is awaiting approval by a system administrator.'
+      : 'Verifying your account…';
 
   return (
     <View style={[viewStyles.root, { paddingTop: insets.top + spacing.lg }]}>
@@ -61,76 +81,83 @@ export default function ApprovalScreen() {
         <View
           style={[
             viewStyles.iconRing,
-            approved ? viewStyles.iconRingSuccess : viewStyles.iconRingPending,
+            isApprovedView ? viewStyles.iconRingSuccess : viewStyles.iconRingPending,
           ]}
         >
-          {checking ? (
+          {showSpinner ? (
             <ActivityIndicator size="large" color={colors.primary} />
           ) : (
             <Ionicons
-              name={approved ? 'checkmark-circle' : 'time'}
+              name={isApprovedView ? 'checkmark-circle' : 'time-outline'}
               size={48}
-              color={approved ? colors.success : colors.primaryAccent}
+              color={isApprovedView ? colors.success : colors.primaryAccent}
             />
           )}
         </View>
 
-        <Text style={textStyles.title}>{approved ? 'You’re approved' : 'Pending approval'}</Text>
-        <Text style={textStyles.message}>
-          {checking
-            ? 'Checking your approval status…'
-            : approved
-              ? 'Your account is ready. Taking you to your dashboard.'
-              : 'Your account is awaiting approval by a system administrator.'}
-        </Text>
+        <Text style={textStyles.title}>{title}</Text>
+        <Text style={textStyles.message}>{message}</Text>
 
-        {!approved && (
+        {isPending && (
           <View style={viewStyles.infoBox}>
             <Ionicons name="information-circle-outline" size={20} color={colors.info} />
             <Text style={textStyles.infoText}>
-              Please wait while an administrator assigns you to your area. Once assigned,
-              you’ll get full access to the app.
+              Please wait while a system administrator assigns you to your area. Once
+              assigned, you will gain access to the dashboard.
             </Text>
           </View>
         )}
 
-        {approved && (status?.area || role) ? (
+        {isApprovedView && (status?.area || status?.role) ? (
           <View style={viewStyles.approvedBox}>
-            <Text style={textStyles.approvedTitle}>Account details</Text>
+            <View style={viewStyles.approvedHeader}>
+              <Ionicons name="checkmark-circle" size={18} color="#166534" />
+              <Text style={textStyles.approvedTitle}>Approval details</Text>
+            </View>
             {status?.area ? (
               <Text style={textStyles.approvedLine}>
                 <Text style={textStyles.bold}>Area: </Text>
                 {status.area}
               </Text>
             ) : null}
-            {role ? (
+            {status?.role ? (
               <Text style={textStyles.approvedLine}>
                 <Text style={textStyles.bold}>Role: </Text>
-                {role}
+                {status.role}
               </Text>
             ) : null}
           </View>
         ) : null}
 
-        <Text style={textStyles.polling}>
-          {redirecting ? 'Redirecting…' : 'Status refreshes every 30 seconds'}
-        </Text>
+        <View style={viewStyles.statusRow}>
+          <View style={[viewStyles.dot, isApprovedView && viewStyles.dotSuccess]} />
+          <Text style={textStyles.polling}>
+            {isApprovedView
+              ? 'Redirecting…'
+              : isRefreshing
+                ? 'Checking status…'
+                : 'Status updates every 30 seconds'}
+          </Text>
+        </View>
 
-        <Button
-          title="Check now"
-          variant="outline"
-          onPress={refresh}
-          loading={checking}
-          disabled={redirecting}
-          fullWidth
-        />
-        <Button
-          title="Browse as guest"
-          variant="ghost"
-          onPress={() => router.replace('/(tabs)')}
-          disabled={redirecting}
-          fullWidth
-        />
+        {isPending && (
+          <>
+            <Button
+              title="Check now"
+              variant="outline"
+              onPress={() => refresh()}
+              loading={isRefreshing}
+              disabled={isRefreshing}
+              fullWidth
+            />
+            <Button
+              title="Go home"
+              variant="ghost"
+              onPress={() => router.replace('/(tabs)')}
+              fullWidth
+            />
+          </>
+        )}
 
         <Text
           style={textStyles.help}
@@ -205,6 +232,28 @@ const viewStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#bbf7d0',
   },
+  approvedHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
+  },
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    marginBottom: spacing.lg,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.primaryAccent,
+  },
+  dotSuccess: {
+    backgroundColor: colors.success,
+  },
 });
 
 const textStyles = StyleSheet.create({
@@ -231,7 +280,6 @@ const textStyles = StyleSheet.create({
   approvedTitle: {
     fontWeight: '700',
     color: '#166534',
-    marginBottom: spacing.sm,
     fontSize: fontSize.sm,
   },
   approvedLine: { color: '#15803d', marginBottom: 4, fontSize: fontSize.sm },
@@ -240,7 +288,6 @@ const textStyles = StyleSheet.create({
     textAlign: 'center',
     color: colors.textMuted,
     fontSize: fontSize.xs,
-    marginBottom: spacing.lg,
   },
   help: {
     textAlign: 'center',

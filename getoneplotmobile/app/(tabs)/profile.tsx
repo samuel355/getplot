@@ -1,7 +1,7 @@
-import { useAuth, useUser } from '@clerk/clerk-expo';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRouter } from 'expo-router';
-import { useLayoutEffect } from 'react';
+import { useAuth, useUser } from "@clerk/clerk-expo";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRouter } from "expo-router";
+import { useLayoutEffect } from "react";
 import {
   Pressable,
   ScrollView,
@@ -10,66 +10,60 @@ import {
   View,
   type TextStyle,
   type ViewStyle,
-} from 'react-native';
-import { ProfileGuestAuth } from '../../src/components/auth/ProfileGuestAuth';
-import {
-  colors,
-  fontSize,
-  spacing,
-  borderRadius,
-  fontWeight,
-} from '../../src/constants/theme';
-import { formatGhs } from '../../src/lib/plotService';
-import { usePropertyStore } from '../../src/stores/propertyStore';
-import type { Property } from '../../src/types/property';
+} from "react-native";
+import { ProfileGuestAuth } from "../../src/components/auth/ProfileGuestAuth";
+import { colors, fontSize, spacing, borderRadius, fontWeight } from "../../src/constants/theme";
+import { formatGhs } from "../../src/lib/plotService";
+import { usePropertyStore } from "../../src/stores/propertyStore";
+import type { Property } from "../../src/types/property";
 
-const weights = fontWeight as Record<keyof typeof fontWeight, TextStyle['fontWeight']>;
+const weights = fontWeight as Record<keyof typeof fontWeight, TextStyle["fontWeight"]>;
 
 type ActionRowProps = {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   detail?: string;
-  tone?: 'default' | 'danger' | 'accent';
+  tone?: "default" | "danger" | "accent";
   onPress: () => void;
 };
 
 function formatRole(role: string) {
-  return role.replace(/_/g, ' ');
+  return role.replace(/_/g, " ");
 }
 
-function getInitial(user: ReturnType<typeof useUser>['user']) {
+function getInitial(user: ReturnType<typeof useUser>["user"]) {
   return (
     user?.firstName?.[0] ||
     user?.lastName?.[0] ||
     user?.primaryEmailAddress?.emailAddress?.[0] ||
     user?.emailAddresses?.[0]?.emailAddress?.[0] ||
-    'U'
+    "U"
   ).toUpperCase();
 }
 
 function getPropertyPrice(property: Property) {
   const amount =
-    property.listing_type === 'rent' || property.listing_type === 'airbnb'
+    property.listing_type === "rent" || property.listing_type === "airbnb"
       ? property.rental_price
       : property.price;
   return formatGhs(amount || 0);
 }
 
-function ActionRow({ icon, label, detail, tone = 'default', onPress }: ActionRowProps) {
+function ActionRow({ icon, label, detail, tone = "default", onPress }: ActionRowProps) {
   const iconColor =
-    tone === 'danger' ? colors.error : tone === 'accent' ? colors.primaryAccent : colors.primary;
+    tone === "danger" ? colors.error : tone === "accent" ? colors.primaryAccent : colors.primary;
 
   return (
     <Pressable
       style={({ pressed }) => [viewStyles.actionRow, pressed && viewStyles.pressed]}
       onPress={onPress}
-      android_ripple={{ color: 'rgba(15, 23, 42, 0.06)' }}
+      android_ripple={{ color: "rgba(15, 23, 42, 0.06)" }}
     >
-      <View style={[viewStyles.actionIcon, tone === 'danger' && viewStyles.actionIconDanger]}>
+      <View style={[viewStyles.actionIcon, tone === "danger" && viewStyles.actionIconDanger]}>
         <Ionicons name={icon} size={20} color={iconColor} />
       </View>
       <View style={viewStyles.actionCopy}>
-        <Text style={[textStyles.actionLabel, tone === 'danger' && textStyles.dangerText]}>
+        <Text style={[textStyles.actionLabel, tone === "danger" && textStyles.dangerText]}>
           {label}
         </Text>
         {detail ? <Text style={textStyles.actionDetail}>{detail}</Text> : null}
@@ -86,17 +80,17 @@ export default function ProfileScreen() {
   const navigation = useNavigation();
   const favorites = usePropertyStore((s) => s.favorites);
 
-  const role = (user?.publicMetadata?.role as string) || 'guest';
-  const area = (user?.publicMetadata?.area as string) || 'Not assigned';
+  const role = (user?.publicMetadata?.role as string) || "guest";
+  const area = (user?.publicMetadata?.area as string) || "Not assigned";
   const email = user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress;
-  const displayName = user?.fullName || user?.firstName || 'Account holder';
-  const isAdmin = ['admin', 'sysadmin', 'chief', 'chief_asst'].includes(role);
+  const displayName = user?.fullName || user?.firstName || "Account holder";
+  const isAdmin = ["admin", "sysadmin", "chief", "chief_asst"].includes(role);
   const visibleFavorites = favorites.slice(0, 4);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: isSignedIn,
-      title: 'Profile',
+      title: "Profile",
     });
   }, [isSignedIn, navigation]);
 
@@ -145,7 +139,7 @@ export default function ProfileScreen() {
           <Text style={textStyles.statLabel}>Saved</Text>
         </View>
         <View style={viewStyles.statBox}>
-          <Text style={textStyles.statValue}>{isAdmin ? 'Yes' : 'No'}</Text>
+          <Text style={textStyles.statValue}>{isAdmin ? "Yes" : "No"}</Text>
           <Text style={textStyles.statLabel}>Admin access</Text>
         </View>
       </View>
@@ -167,7 +161,7 @@ export default function ProfileScreen() {
             </Text>
             <Pressable
               style={({ pressed }) => [viewStyles.marketplaceButton, pressed && viewStyles.pressed]}
-              onPress={() => router.push('/(tabs)/marketplace')}
+              onPress={() => router.push("/(tabs)/marketplace")}
             >
               <Text style={textStyles.marketplaceButton}>Browse marketplace</Text>
             </Pressable>
@@ -205,20 +199,32 @@ export default function ProfileScreen() {
       </View>
 
       <View style={viewStyles.sectionCard}>
+        <ActionRow
+          icon="list-outline"
+          label="My Listings"
+          detail="Manage your property listings"
+          onPress={() => router.push("/property/my-listings")}
+        />
+        <ActionRow
+          icon="add-circle-outline"
+          label="Add Property"
+          detail="List a new property for sale or rent"
+          onPress={() => router.push("/property/manage")}
+        />
         {isAdmin ? (
           <ActionRow
             icon="speedometer-outline"
             label="Admin dashboard"
             detail="Review listings and manage operations"
             tone="accent"
-            onPress={() => router.push('/admin')}
+            onPress={() => router.push("/admin")}
           />
         ) : null}
         <ActionRow
           icon="mail-outline"
           label="Contact support"
           detail="Questions about plots, payments, or approvals"
-          onPress={() => router.push('/contact')}
+          onPress={() => router.push("/contact")}
         />
         <ActionRow
           icon="log-out-outline"
@@ -227,7 +233,7 @@ export default function ProfileScreen() {
           tone="danger"
           onPress={async () => {
             await signOut();
-            router.replace('/(tabs)');
+            router.replace("/(tabs)");
           }}
         />
       </View>
@@ -249,40 +255,40 @@ const viewStyles = StyleSheet.create<Record<string, ViewStyle>>({
     elevation: 5,
   },
   headerTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.md,
   },
   avatar: {
     width: 58,
     height: 58,
     borderRadius: 29,
-    backgroundColor: 'rgba(255,255,255,0.16)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "rgba(255,255,255,0.16)",
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.24)',
+    borderColor: "rgba(255,255,255,0.24)",
   },
   identity: { flex: 1 },
   metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.sm,
     marginTop: spacing.xl,
   },
   rolePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.xs,
     paddingHorizontal: spacing.sm,
     paddingVertical: 7,
     borderRadius: borderRadius.full,
-    backgroundColor: 'rgba(255,255,255,0.16)',
+    backgroundColor: "rgba(255,255,255,0.16)",
   },
   areaPill: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.xs,
     paddingHorizontal: spacing.sm,
     paddingVertical: 7,
@@ -290,7 +296,7 @@ const viewStyles = StyleSheet.create<Record<string, ViewStyle>>({
     backgroundColor: colors.white,
   },
   statsRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: spacing.md,
   },
   statBox: {
@@ -302,9 +308,9 @@ const viewStyles = StyleSheet.create<Record<string, ViewStyle>>({
     padding: spacing.lg,
   },
   sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginTop: spacing.xs,
   },
   sectionCard: {
@@ -312,10 +318,10 @@ const viewStyles = StyleSheet.create<Record<string, ViewStyle>>({
     borderRadius: borderRadius.lg,
     borderWidth: 1,
     borderColor: colors.border,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   emptyState: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.xxl,
   },
@@ -323,9 +329,9 @@ const viewStyles = StyleSheet.create<Record<string, ViewStyle>>({
     width: 52,
     height: 52,
     borderRadius: 26,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#eef2ff',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#eef2ff",
     marginBottom: spacing.md,
   },
   marketplaceButton: {
@@ -337,8 +343,8 @@ const viewStyles = StyleSheet.create<Record<string, ViewStyle>>({
   },
   propertyRow: {
     minHeight: 74,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
     gap: spacing.md,
@@ -351,15 +357,15 @@ const viewStyles = StyleSheet.create<Record<string, ViewStyle>>({
     width: 42,
     height: 42,
     borderRadius: borderRadius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.surfaceAlt,
   },
   propertyCopy: { flex: 1 },
   actionRow: {
     minHeight: 72,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
     gap: spacing.md,
@@ -370,11 +376,11 @@ const viewStyles = StyleSheet.create<Record<string, ViewStyle>>({
     width: 42,
     height: 42,
     borderRadius: borderRadius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.surfaceAlt,
   },
-  actionIconDanger: { backgroundColor: '#fef2f2' },
+  actionIconDanger: { backgroundColor: "#fef2f2" },
   actionCopy: { flex: 1 },
   pressed: { opacity: 0.72 },
 });
@@ -391,7 +397,7 @@ const textStyles = StyleSheet.create<Record<string, TextStyle>>({
     color: colors.white,
   },
   email: {
-    color: 'rgba(255,255,255,0.78)',
+    color: "rgba(255,255,255,0.78)",
     marginTop: spacing.xs,
     fontSize: fontSize.sm,
   },
@@ -399,7 +405,7 @@ const textStyles = StyleSheet.create<Record<string, TextStyle>>({
     color: colors.white,
     fontSize: fontSize.xs,
     fontWeight: weights.semibold,
-    textTransform: 'capitalize',
+    textTransform: "capitalize",
   },
   area: {
     flex: 1,
@@ -437,7 +443,7 @@ const textStyles = StyleSheet.create<Record<string, TextStyle>>({
   emptyMessage: {
     color: colors.textMuted,
     fontSize: fontSize.sm,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 19,
   },
   marketplaceButton: {

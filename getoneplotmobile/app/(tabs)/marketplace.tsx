@@ -3,11 +3,13 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { PropertyCard } from "../../src/components/PropertyCard";
+import { FilterModal } from "../../src/components/FilterModal";
 import { Badge } from "../../src/components/ui/Badge";
-import { Card } from "../../src/components/ui/Card";
+import { Button } from "../../src/components/ui/Button";
 import { Loading } from "../../src/components/ui/Loading";
 import { colors, fontSize, spacing, fontWeight, borderRadius } from "../../src/constants/theme";
 import { usePropertyStore } from "../../src/stores/propertyStore";
+import { Ionicons } from "@expo/vector-icons";
 
 const SORT_OPTIONS = [
   { id: "newest", label: "Newest", emoji: "✨" },
@@ -18,6 +20,7 @@ const SORT_OPTIONS = [
 export default function MarketplaceScreen() {
   const router = useRouter();
   const { user } = useUser();
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
   const {
     filteredProperties,
     loading,
@@ -36,37 +39,56 @@ export default function MarketplaceScreen() {
     if (user?.id) fetchFavorites(user.id);
   }, [user?.id]);
 
+  const handleApplyFilters = (newFilters: any) => {
+    setFilters(newFilters);
+    fetchProperties(1);
+  };
+
+  const handleToggleFavorite = async (propertyId: string) => {
+    await usePropertyStore.getState().toggleFavorite(propertyId, user?.id);
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Marketplace</Text>
-        <Text style={styles.subtitle}>Find your perfect property</Text>
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={styles.title}>Marketplace</Text>
+            <Text style={styles.subtitle}>Find your perfect property</Text>
+          </View>
+          <Pressable style={styles.filterBtn} onPress={() => setFilterModalVisible(true)}>
+            <Ionicons name="filter" size={20} color={colors.white} />
+            <Text style={styles.filterBtnText}>Filters</Text>
+          </Pressable>
+        </View>
       </View>
 
       {/* Sort Filters */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.filters}
-        contentContainerStyle={styles.filtersContent}
-      >
-        {SORT_OPTIONS.map((opt) => (
-          <Pressable
-            key={opt.id}
-            style={[styles.chip, filters.sortBy === opt.id && styles.chipActive]}
-            onPress={() => {
-              setFilters({ sortBy: opt.id });
-              fetchProperties(1);
-            }}
-          >
-            <Text style={styles.chipEmoji}>{opt.emoji}</Text>
-            <Text style={[styles.chipText, filters.sortBy === opt.id && styles.chipTextActive]}>
-              {opt.label}
-            </Text>
-          </Pressable>
-        ))}
-      </ScrollView>
+      <View style={styles.filtersWrapper}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.filters}
+          contentContainerStyle={styles.filtersContent}
+        >
+          {SORT_OPTIONS.map((opt) => (
+            <Pressable
+              key={opt.id}
+              style={[styles.chip, filters.sortBy === opt.id && styles.chipActive]}
+              onPress={() => {
+                setFilters({ sortBy: opt.id });
+                fetchProperties(1);
+              }}
+            >
+              <Text style={styles.chipEmoji}>{opt.emoji}</Text>
+              <Text style={[styles.chipText, filters.sortBy === opt.id && styles.chipTextActive]}>
+                {opt.label}
+              </Text>
+            </Pressable>
+          ))}
+        </ScrollView>
+      </View>
 
       {/* Properties List */}
       {loading && !filteredProperties.length ? (
@@ -88,11 +110,8 @@ export default function MarketplaceScreen() {
               <PropertyCard
                 property={item}
                 onPress={() => router.push(`/property/${item.id}`)}
-                favorited={favorites?.includes(item.id)}
-                onFavoritPress={() => {
-                  // Toggle favorite logic here
-                  console.log("Toggle favorite for:", item.id);
-                }}
+                favorited={favorites?.some((f) => f.id === item.id)}
+                onFavoritPress={() => handleToggleFavorite(item.id)}
               />
             </View>
           )}
@@ -101,6 +120,22 @@ export default function MarketplaceScreen() {
               <Text style={styles.emptyEmoji}>🔍</Text>
               <Text style={styles.emptyText}>No properties match your filters.</Text>
               <Text style={styles.emptySubText}>Try adjusting your search</Text>
+              <Button
+                title="Clear All Filters"
+                onPress={() => {
+                  setFilters({
+                    propertyType: "all",
+                    property_type: "all",
+                    location: "all",
+                    bedrooms: "any",
+                    bathrooms: "any",
+                    priceRange: [0, 10000000],
+                  });
+                  fetchProperties(1);
+                }}
+                variant="outline"
+                style={{ marginTop: spacing.lg }}
+              />
             </View>
           }
           ListFooterComponent={
@@ -147,6 +182,13 @@ export default function MarketplaceScreen() {
           }
         />
       )}
+
+      <FilterModal
+        visible={filterModalVisible}
+        onClose={() => setFilterModalVisible(false)}
+        onApply={handleApplyFilters}
+        initialFilters={filters}
+      />
     </View>
   );
 }
@@ -166,6 +208,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
+  headerTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   title: {
     fontSize: fontSize.xl,
     fontWeight: fontWeight.bold,
@@ -176,14 +223,30 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
     color: colors.textMuted,
   },
+  filterBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.primary,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.md,
+    gap: spacing.xs,
+  },
+  filterBtnText: {
+    color: colors.white,
+    fontWeight: fontWeight.semibold,
+    fontSize: fontSize.sm,
+  },
 
   // Filters
-  filters: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+  filtersWrapper: {
     backgroundColor: colors.white,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+  },
+  filters: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
   },
   filtersContent: {
     gap: spacing.sm,

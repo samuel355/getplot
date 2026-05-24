@@ -1,3 +1,4 @@
+import { PLOT_STATUS } from '../constants/plotStatus';
 import type { PlotFeature } from '../types/plot';
 
 export type MapBounds = {
@@ -104,23 +105,23 @@ export const isPolygonInBounds = (
 
 export function getPlotFillColor(status: string | null, amount: number): string {
   if (Number(amount) > 0) {
-    if (!status || status === 'Available') return 'rgba(22, 101, 52, 0.55)';
-    if (status === 'Reserved') return 'rgba(0, 0, 0, 0.55)';
-    if (status === 'Sold') return 'rgba(220, 38, 38, 0.55)';
-    if (status === 'On Hold') return 'rgba(156, 163, 175, 0.55)';
+    if (!status || status === 'Available') return PLOT_STATUS.available.fill;
+    if (status === 'Reserved') return PLOT_STATUS.reserved.fill;
+    if (status === 'Sold') return PLOT_STATUS.sold.fill;
+    if (status === 'On Hold') return PLOT_STATUS.onHold.fill;
   }
-  if (Number(amount) === 0 && status === 'Sold') return 'rgba(220, 38, 38, 0.55)';
-  return 'rgba(30, 58, 138, 0.55)';
+  if (Number(amount) === 0 && status === 'Sold') return PLOT_STATUS.sold.fill;
+  return PLOT_STATUS.unpriced.fill;
 }
 
 export function getPlotStrokeColor(status: string | null, amount: number): string {
   if (Number(amount) > 0) {
-    if (!status || status === 'Available') return '#166534';
-    if (status === 'Reserved') return '#000000';
-    if (status === 'Sold') return '#dc2626';
-    if (status === 'On Hold') return '#9ca3af';
+    if (!status || status === 'Available') return PLOT_STATUS.available.stroke;
+    if (status === 'Reserved') return PLOT_STATUS.reserved.stroke;
+    if (status === 'Sold') return PLOT_STATUS.sold.stroke;
+    if (status === 'On Hold') return PLOT_STATUS.onHold.stroke;
   }
-  return '#1e3a8a';
+  return PLOT_STATUS.unpriced.stroke;
 }
 
 /** Batch-fetch plot rows from Supabase (same ranges as web fetchPolygons). */

@@ -1,6 +1,6 @@
 import { useAuth } from '@clerk/clerk-expo';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { colors, fontSize, spacing } from '../../../src/constants/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -40,35 +40,29 @@ export default function SiteMapScreen() {
     }
   }, [development, navigation]);
 
-  useEffect(() => {
+  const loadPlots = useCallback(async () => {
     if (!development) {
       setLoading(false);
       return;
     }
-    let cancelled = false;
-    (async () => {
-      setLoading(true);
-      setFetchError(null);
-      try {
-        const data = await fetchPlotsForTable(development.table);
-        if (!cancelled) {
-          setPlots(data);
-          if (data.length === 0) {
-            setFetchError(`No plot polygons found in "${development.table}".`);
-          }
-        }
-      } catch (e) {
-        if (!cancelled) {
-          setFetchError(e instanceof Error ? e.message : 'Failed to load plots');
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
+    setLoading(true);
+    setFetchError(null);
+    try {
+      const data = await fetchPlotsForTable(development.table);
+      setPlots(data);
+      if (data.length === 0) {
+        setFetchError('No plots found for this development.');
       }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [development?.table]);
+    } catch (e) {
+      setFetchError(e instanceof Error ? e.message : 'Failed to load plots');
+    } finally {
+      setLoading(false);
+    }
+  }, [development]);
+
+  useEffect(() => {
+    loadPlots();
+  }, [loadPlots]);
 
   if (!development) {
     return null;
@@ -92,6 +86,7 @@ export default function SiteMapScreen() {
         plots={plots}
         loading={loading}
         onPlotPress={setSelected}
+        onRefresh={loadPlots}
       />
       <MapLegend />
       {fetchError && !loading ? (

@@ -1,39 +1,77 @@
-import { useAuth } from "@clerk/clerk-expo";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { PropertyCard } from "../../src/components/PropertyCard";
-import { Button } from "../../src/components/ui/Button";
-import { Card } from "../../src/components/ui/Card";
-import { Loading } from "../../src/components/ui/Loading";
-import { DEVELOPMENTS } from "../../src/constants/developments";
-import { colors, fontSize, spacing, fontWeight, borderRadius } from "../../src/constants/theme";
-import { normalizePropertyImages } from "../../src/lib/images";
-import { supabase } from "../../src/lib/supabase";
-import type { Property } from "../../src/types/property";
+import { useAuth } from '@clerk/clerk-expo';
+import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { PropertyCard } from '../../src/components/PropertyCard';
+import { Button } from '../../src/components/ui/Button';
+import { Loading } from '../../src/components/ui/Loading';
+import { DEVELOPMENTS } from '../../src/constants/developments';
+import {
+  borderRadius,
+  colors,
+  fontSize,
+  fontWeight,
+  spacing,
+} from '../../src/constants/theme';
+import { normalizePropertyImages } from '../../src/lib/images';
+import { supabase } from '../../src/lib/supabase';
+import type { Property } from '../../src/types/property';
+
+const HERO_FEATURES = [
+  'Verified land sites',
+  'Affordable prices',
+  'Flexible payment plans',
+  'Expert consultation',
+] as const;
+
+const FEATURED_SITE_SLUGS = [
+  'royal-court-estate',
+  'legon-hills',
+  'trabuom',
+  'yabi',
+  'berekuso',
+  'asokore-mampong',
+] as const;
+
+const heroSites = FEATURED_SITE_SLUGS.map((slug) =>
+  DEVELOPMENTS.find((d) => d.slug === slug)
+).filter(Boolean);
+
+const siteImageBase =
+  process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, '') || 'https://getoneplot.com';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { isLoaded, isSignedIn } = useAuth();
   const [featured, setFeatured] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Same as web middleware: signed-in users on home go to approval
   useEffect(() => {
     if (isLoaded && isSignedIn) {
-      router.replace("/approval");
+      router.replace('/approval');
     }
   }, [isLoaded, isSignedIn, router]);
 
   useEffect(() => {
     (async () => {
       const { data } = await supabase
-        .from("properties")
+        .from('properties')
         .select(
-          "id, title, type, price, location, images, bedrooms, bathrooms, listing_type, rental_price",
+          'id, title, type, price, location, images, bedrooms, bathrooms, listing_type, rental_price'
         )
-        .eq("status", "approved")
-        .order("created_at", { ascending: false })
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false })
         .limit(6);
       const rows = (data || []).map((row) => ({
         ...(row as Property),
@@ -45,70 +83,162 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Hero Section */}
-      <View style={styles.hero}>
-        <Text style={styles.heroTitle}>Get One Plot</Text>
-        <Text style={styles.heroSub}>Find and invest in properties effortlessly</Text>
+    <ScrollView
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ paddingBottom: insets.bottom + spacing.xl }}
+    >
+      {/* Hero — mirrors getoneplot.com Hero-section */}
+      <View style={[styles.hero, { paddingTop: insets.top + spacing.lg }]}>
+        <View style={styles.heroGlowBlue} />
+        <View style={styles.heroGlowPrimary} />
 
-        <View style={styles.heroActions}>
-          <Button
-            title="Browse Properties"
-            onPress={() => router.push("/(tabs)/marketplace")}
-            fullWidth
-          />
-          <Button
-            title="Explore Sites"
-            variant="outline"
-            onPress={() => router.push("/(tabs)/sites")}
-            fullWidth
-          />
+        <View style={styles.badge}>
+          <View style={styles.badgeDot} />
+          <Text style={styles.badgeText}>Premier Land Marketplace</Text>
+        </View>
+
+        <Text style={styles.heroTitle}>
+          Find Your Perfect{'\n'}
+          <Text style={styles.heroTitleAccent}>Land in Ghana</Text>
+        </Text>
+
+        <View style={styles.quoteBlock}>
+          <Text style={styles.heroSub}>
+            Explore verified listings across all regions. Whether you are seeking
+            residential, commercial, or investment land, we connect you with the
+            right plot to build your dreams.
+          </Text>
+        </View>
+
+        <Button
+          title="Browse Listed Properties"
+          onPress={() => router.push('/(tabs)/marketplace')}
+          fullWidth
+          size="lg"
+        />
+
+        <View style={styles.featuresGrid}>
+          {HERO_FEATURES.map((label) => (
+            <View key={label} style={styles.featureRow}>
+              <View style={styles.featureIcon}>
+                <Ionicons name="checkmark" size={12} color={colors.success} />
+              </View>
+              <Text style={styles.featureText}>{label}</Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.statsRow}>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>
+              12k<Text style={styles.statPlus}>+</Text>
+            </Text>
+            <Text style={styles.statLabel}>Satisfied clients</Text>
+          </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>
+              5k<Text style={styles.statPlus}>+</Text>
+            </Text>
+            <Text style={styles.statLabel}>Available lands</Text>
+          </View>
         </View>
       </View>
 
-      {/* Quick Stats */}
-      <View style={styles.statsGrid}>
-        <Card variant="outlined" style={styles.statCard}>
-          <Text style={styles.statNumber}>500+</Text>
-          <Text style={styles.statLabel}>Properties</Text>
-        </Card>
-        <Card variant="outlined" style={styles.statCard}>
-          <Text style={styles.statNumber}>50K+</Text>
-          <Text style={styles.statLabel}>Happy Clients</Text>
-        </Card>
+      {/* Hero image card */}
+      <View style={styles.imageSection}>
+        <View style={styles.imageCard}>
+          <Image
+            source={{ uri: `${siteImageBase}/images/trabuom-lt.jpg` }}
+            style={styles.heroImage}
+            contentFit="cover"
+            transition={300}
+          />
+          <View style={styles.imageOverlay}>
+            <View>
+              <Text style={styles.imageTitle}>Serviced lands</Text>
+              <Text style={styles.imageLocation}>Kumasi — Ghana</Text>
+            </View>
+            <View style={styles.priceTag}>
+              <Text style={styles.priceTagText}>From GHS 30,000</Text>
+            </View>
+          </View>
+          <View style={styles.verifiedFloat}>
+            <View style={styles.verifiedIcon}>
+              <Ionicons name="shield-checkmark" size={14} color={colors.success} />
+            </View>
+            <View>
+              <Text style={styles.verifiedTitle}>Verified</Text>
+              <Text style={styles.verifiedSub}>Land sites</Text>
+            </View>
+          </View>
+        </View>
       </View>
 
-      {/* Developments */}
-      <View>
-        <Text style={styles.section}>Our Developments</Text>
+      {/* Land locations */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Browse our land locations</Text>
+          <Ionicons name="chevron-down" size={18} color={colors.primary} />
+        </View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={styles.hScroll}
-          contentContainerStyle={styles.hScrollContent}
+          contentContainerStyle={styles.chipsScroll}
         >
-          {DEVELOPMENTS.slice(0, 5).map((d) => (
+          {heroSites.map((d) =>
+            d ? (
+              <Pressable
+                key={d.slug}
+                style={styles.chip}
+                onPress={() => router.push(`/(tabs)/sites/${d.slug}`)}
+              >
+                <Text style={styles.chipTitle}>{d.title}</Text>
+                <Text style={styles.chipSub}>{d.subtitle}</Text>
+              </Pressable>
+            ) : null
+          )}
+          <Pressable
+            style={[styles.chip, styles.chipOutline]}
+            onPress={() => router.push('/(tabs)/sites')}
+          >
+            <Text style={styles.chipTitle}>All sites</Text>
+            <Text style={styles.chipSub}>View full list →</Text>
+          </Pressable>
+        </ScrollView>
+      </View>
+
+      {/* Developments grid */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Our developments</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.devScroll}
+        >
+          {DEVELOPMENTS.map((d) => (
             <Pressable
               key={d.slug}
               style={styles.devCard}
               onPress={() => router.push(`/(tabs)/sites/${d.slug}`)}
             >
+              <View style={styles.devIcon}>
+                <Ionicons name="map-outline" size={20} color={colors.primary} />
+              </View>
               <Text style={styles.devTitle}>{d.title}</Text>
               <Text style={styles.devSub}>{d.subtitle}</Text>
-              <View style={styles.devFooter}>
-                <Text style={styles.devFooterText}>Explore →</Text>
-              </View>
+              <Text style={styles.devLink}>Explore map →</Text>
             </Pressable>
           ))}
         </ScrollView>
       </View>
 
-      {/* Featured Properties */}
-      <View>
+      {/* Featured properties */}
+      <View style={styles.section}>
         <View style={styles.sectionRow}>
-          <Text style={styles.section}>Featured Properties</Text>
-          <Pressable onPress={() => router.push("/(tabs)/marketplace")}>
-            <Text style={styles.seeAll}>View all →</Text>
+          <Text style={styles.sectionTitle}>Featured properties</Text>
+          <Pressable onPress={() => router.push('/(tabs)/marketplace')}>
+            <Text style={styles.seeAll}>View all</Text>
           </Pressable>
         </View>
 
@@ -131,37 +261,31 @@ export default function HomeScreen() {
             scrollEnabled={false}
           />
         ) : (
-          <Card variant="outlined" style={styles.emptyState}>
-            <Text style={styles.empty}>No featured properties yet.</Text>
-          </Card>
+          <View style={styles.emptyCard}>
+            <Text style={styles.emptyText}>No featured properties yet.</Text>
+          </View>
         )}
       </View>
 
-      {/* CTA for Non-Signed Users */}
       {!isSignedIn && (
-        <Card variant="elevated" style={styles.cta}>
+        <View style={styles.cta}>
           <Text style={styles.ctaTitle}>Ready to invest?</Text>
-          <Text style={styles.ctaText}>Sign in to save favorites and make purchases</Text>
-          <View style={styles.ctaActions}>
-            <Button
-              title="Sign In"
-              onPress={() => router.push("/(auth)/sign-in")}
-              fullWidth
-              size="md"
-            />
-            <Button
-              title="Create Account"
-              variant="outline"
-              onPress={() => router.push("/(auth)/sign-up")}
-              fullWidth
-              size="md"
-            />
-          </View>
-        </Card>
+          <Text style={styles.ctaText}>
+            Sign in to save favorites, buy plots, and manage your account.
+          </Text>
+          <Button
+            title="Sign In"
+            onPress={() => router.push('/(auth)/sign-in')}
+            fullWidth
+          />
+          <Button
+            title="Create Account"
+            variant="outline"
+            onPress={() => router.push('/(auth)/sign-up')}
+            fullWidth
+          />
+        </View>
       )}
-
-      {/* Footer Spacing */}
-      <View style={styles.footer} />
     </ScrollView>
   );
 }
@@ -171,166 +295,343 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.surface,
   },
-
-  // Hero Section
   hero: {
+    backgroundColor: colors.white,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.xl,
+    overflow: 'hidden',
+  },
+  heroGlowBlue: {
+    position: 'absolute',
+    top: -40,
+    right: -20,
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    backgroundColor: 'rgba(4, 167, 255, 0.18)',
+  },
+  heroGlowPrimary: {
+    position: 'absolute',
+    bottom: 20,
+    left: -30,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: 'rgba(5, 1, 76, 0.08)',
+  },
+  badge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: 'rgba(4, 167, 255, 0.1)',
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
+    borderRadius: borderRadius.full,
+    marginBottom: spacing.md,
+    gap: 8,
+  },
+  badgeDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     backgroundColor: colors.primary,
-    padding: spacing.lg,
-    paddingTop: spacing.xl,
-    paddingBottom: spacing.xxl,
-    borderBottomLeftRadius: borderRadius.xl,
-    borderBottomRightRadius: borderRadius.xl,
+  },
+  badgeText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+    color: colors.primary,
   },
   heroTitle: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: fontWeight.extrabold,
-    color: colors.white,
-    marginBottom: spacing.sm,
+    color: colors.text,
+    lineHeight: 38,
+    marginBottom: spacing.md,
+  },
+  heroTitleAccent: {
+    color: colors.primary,
+  },
+  quoteBlock: {
+    borderLeftWidth: 4,
+    borderLeftColor: colors.primary,
+    paddingLeft: spacing.md,
+    marginBottom: spacing.lg,
   },
   heroSub: {
     fontSize: fontSize.md,
-    color: "rgba(255,255,255,0.90)",
-    marginBottom: spacing.lg,
-    lineHeight: 22,
+    color: colors.textSecondary,
+    lineHeight: 24,
   },
-  heroActions: {
-    gap: spacing.md,
+  featuresGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: spacing.lg,
+    gap: spacing.sm,
   },
-
-  // Stats Grid
-  statsGrid: {
-    flexDirection: "row",
+  featureRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '48%',
+    gap: 8,
+  },
+  featureIcon: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  featureText: {
+    flex: 1,
+    fontSize: fontSize.sm,
+    color: colors.text,
+    fontWeight: fontWeight.medium,
+  },
+  statsRow: {
+    flexDirection: 'row',
     gap: spacing.md,
-    paddingHorizontal: spacing.lg,
-    marginTop: -32,
-    marginBottom: spacing.xl,
-    zIndex: 10,
+    marginTop: spacing.lg,
   },
   statCard: {
     flex: 1,
-    alignItems: "center",
-    paddingVertical: spacing.md,
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.lg,
+    padding: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 2,
   },
   statNumber: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: fontWeight.extrabold,
+    color: colors.text,
+  },
+  statPlus: {
     color: colors.primary,
-    marginBottom: spacing.xs,
   },
   statLabel: {
-    fontSize: fontSize.sm,
+    fontSize: fontSize.xs,
     color: colors.textMuted,
-    fontWeight: fontWeight.medium,
+    marginTop: 4,
   },
-
-  // Sections
-  section: {
-    fontSize: fontSize.xl,
+  imageSection: {
+    paddingHorizontal: spacing.lg,
+    marginTop: -spacing.md,
+    marginBottom: spacing.lg,
+  },
+  imageCard: {
+    borderRadius: borderRadius.xl,
+    overflow: 'hidden',
+    backgroundColor: colors.primary,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 16,
+    elevation: 6,
+  },
+  heroImage: {
+    width: '100%',
+    aspectRatio: 16 / 10,
+  },
+  imageOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    padding: spacing.md,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+  },
+  imageTitle: {
+    color: colors.white,
+    fontWeight: fontWeight.bold,
+    fontSize: fontSize.lg,
+  },
+  imageLocation: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: fontSize.sm,
+    marginTop: 2,
+  },
+  priceTag: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 6,
+    borderRadius: borderRadius.md,
+  },
+  priceTagText: {
+    color: colors.white,
+    fontWeight: fontWeight.bold,
+    fontSize: fontSize.sm,
+  },
+  verifiedFloat: {
+    position: 'absolute',
+    top: spacing.md,
+    right: spacing.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.white,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.lg,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  verifiedIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  verifiedTitle: {
+    fontSize: fontSize.xs,
     fontWeight: fontWeight.bold,
     color: colors.text,
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
+  },
+  verifiedSub: {
+    fontSize: 10,
+    color: colors.textMuted,
+  },
+  section: {
+    marginBottom: spacing.lg,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: spacing.lg,
     marginBottom: spacing.md,
   },
   sectionRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: spacing.lg,
-    marginTop: spacing.lg,
+    marginBottom: spacing.md,
+  },
+  sectionTitle: {
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
+    color: colors.text,
+    paddingHorizontal: spacing.lg,
     marginBottom: spacing.md,
   },
   seeAll: {
     color: colors.primary,
     fontWeight: fontWeight.semibold,
     fontSize: fontSize.sm,
+    paddingRight: spacing.lg,
   },
-
-  // Horizontal Scroll
-  hScroll: {
+  chipsScroll: {
     paddingHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
+    gap: spacing.sm,
   },
-  hScrollContent: {
+  chip: {
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.lg,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    minWidth: 140,
+    borderWidth: 1,
+    borderColor: 'rgba(4, 167, 255, 0.25)',
+    marginRight: spacing.sm,
+  },
+  chipOutline: {
+    borderColor: colors.border,
+    borderStyle: 'dashed',
+  },
+  chipTitle: {
+    fontWeight: fontWeight.bold,
+    color: colors.primary,
+    fontSize: fontSize.sm,
+  },
+  chipSub: {
+    fontSize: fontSize.xs,
+    color: colors.textMuted,
+    marginTop: 4,
+  },
+  devScroll: {
+    paddingHorizontal: spacing.lg,
     gap: spacing.md,
   },
   devCard: {
+    width: 168,
     backgroundColor: colors.white,
     borderRadius: borderRadius.lg,
     padding: spacing.md,
     marginRight: spacing.md,
-    width: 160,
     borderWidth: 1,
     borderColor: colors.border,
-    shadowColor: colors.shadow,
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 1,
+  },
+  devIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: 'rgba(5, 1, 76, 0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.sm,
   },
   devTitle: {
     fontWeight: fontWeight.bold,
     color: colors.primary,
     fontSize: fontSize.md,
-    marginBottom: spacing.xs,
   },
   devSub: {
     fontSize: fontSize.xs,
     color: colors.textMuted,
+    marginTop: 2,
     marginBottom: spacing.sm,
-    lineHeight: 16,
   },
-  devFooter: {
-    marginTop: spacing.md,
-    paddingTop: spacing.sm,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  devFooterText: {
-    color: colors.primary,
-    fontWeight: fontWeight.semibold,
+  devLink: {
     fontSize: fontSize.xs,
+    color: colors.accentBlue,
+    fontWeight: fontWeight.semibold,
   },
-
-  // Properties List
   propertyList: {
     paddingHorizontal: spacing.lg,
   },
-
-  // Empty State
-  empty: {
-    padding: spacing.lg,
-    color: colors.textMuted,
-    textAlign: "center",
-    fontSize: fontSize.md,
-  },
-  emptyState: {
+  emptyCard: {
     marginHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
+    padding: spacing.lg,
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
-
-  // CTA Section
+  emptyText: {
+    textAlign: 'center',
+    color: colors.textMuted,
+  },
   cta: {
     marginHorizontal: spacing.lg,
-    marginVertical: spacing.xl,
+    padding: spacing.lg,
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.xl,
+    borderWidth: 1,
+    borderColor: colors.border,
+    gap: spacing.md,
   },
   ctaTitle: {
     fontSize: fontSize.lg,
     fontWeight: fontWeight.bold,
     color: colors.text,
-    marginBottom: spacing.xs,
   },
   ctaText: {
     color: colors.textMuted,
-    marginBottom: spacing.lg,
     fontSize: fontSize.md,
-    lineHeight: 20,
-  },
-  ctaActions: {
-    gap: spacing.md,
-  },
-
-  footer: {
-    height: spacing.xl,
+    lineHeight: 22,
+    marginBottom: spacing.xs,
   },
 });

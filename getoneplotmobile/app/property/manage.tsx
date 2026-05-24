@@ -14,10 +14,11 @@ import {
   Text,
   View,
   TouchableOpacity,
+  type TextStyle,
 } from "react-native";
 import { Button } from "../../src/components/ui/Button";
 import { Input } from "../../src/components/ui/Input";
-import { colors, fontSize, spacing, borderRadius, fontWeight } from "../../src/constants/theme";
+import { useTheme } from "../../src/constants/theme";
 import { saveProperty, uploadPropertyImages } from "../../src/lib/propertyService";
 import { usePropertyStore } from "../../src/stores/propertyStore";
 import type { Property } from "../../src/types/property";
@@ -62,6 +63,7 @@ const REGIONS = [
 ];
 
 export default function ManagePropertyScreen() {
+  const { colors, spacing, borderRadius, fontWeight, fontSize } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useUser();
   const router = useRouter();
@@ -181,7 +183,7 @@ export default function ManagePropertyScreen() {
 
   if (fetching) {
     return (
-      <View style={styles.center}>
+      <View style={[styles.center, { backgroundColor: colors.background }]}>
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
@@ -191,20 +193,73 @@ export default function ManagePropertyScreen() {
   const isRent = formData.listing_type === "rent" || formData.listing_type === "airbnb";
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.header}>{id ? "Edit Property" : "Add New Property"}</Text>
+    <ScrollView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      contentContainerStyle={[styles.content, { padding: spacing.lg }]}
+    >
+      <Text
+        style={[
+          styles.header,
+          {
+            fontSize: fontSize.xxl,
+            fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+            color: colors.primary,
+            marginBottom: spacing.xl,
+          },
+        ]}
+      >
+        {id ? "Edit Property" : "Add New Property"}
+      </Text>
 
       {/* Basic Info */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Property Category</Text>
-        <View style={styles.chipRow}>
+      <View style={[styles.section, { marginBottom: spacing.xl }]}>
+        <Text
+          style={[
+            styles.sectionTitle,
+            {
+              fontSize: fontSize.lg,
+              fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+              color: colors.text,
+              marginBottom: spacing.md,
+            },
+          ]}
+        >
+          Property Category
+        </Text>
+        <View style={[styles.chipRow, { gap: spacing.sm, marginBottom: spacing.md }]}>
           {PROPERTY_CATEGORIES.map((cat) => (
             <TouchableOpacity
               key={cat.value}
-              style={[styles.chip, formData.type === cat.value && styles.chipActive]}
+              style={[
+                styles.chip,
+                {
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                  borderRadius: borderRadius.full,
+                  backgroundColor: colors.surface,
+                  borderColor: colors.border,
+                },
+                formData.type === cat.value && {
+                  backgroundColor: colors.primary,
+                  borderColor: colors.primary,
+                },
+              ]}
               onPress={() => updateType(cat.value)}
             >
-              <Text style={[styles.chipText, formData.type === cat.value && styles.chipTextActive]}>
+              <Text
+                style={[
+                  styles.chipText,
+                  {
+                    fontSize: fontSize.sm,
+                    color: colors.textSecondary,
+                    fontWeight: fontWeight.medium as TextStyle["fontWeight"],
+                  },
+                  formData.type === cat.value && {
+                    color: colors.white,
+                    fontWeight: fontWeight.semibold as TextStyle["fontWeight"],
+                  },
+                ]}
+              >
                 {cat.label}
               </Text>
             </TouchableOpacity>
@@ -213,18 +268,51 @@ export default function ManagePropertyScreen() {
 
         {isHouse && (
           <>
-            <Text style={styles.label}>House Sub-Type</Text>
-            <View style={styles.chipRow}>
+            <Text
+              style={[
+                styles.label,
+                {
+                  fontSize: fontSize.sm,
+                  fontWeight: fontWeight.medium as TextStyle["fontWeight"],
+                  color: colors.textSecondary,
+                  marginBottom: spacing.sm,
+                },
+              ]}
+            >
+              House Sub-Type
+            </Text>
+            <View style={[styles.chipRow, { gap: spacing.sm, marginBottom: spacing.md }]}>
               {HOUSE_SUB_TYPES.map((sub) => (
                 <TouchableOpacity
                   key={sub.value}
-                  style={[styles.chip, formData.property_type === sub.value && styles.chipActive]}
+                  style={[
+                    styles.chip,
+                    {
+                      paddingHorizontal: 16,
+                      paddingVertical: 8,
+                      borderRadius: borderRadius.full,
+                      backgroundColor: colors.surface,
+                      borderColor: colors.border,
+                    },
+                    formData.property_type === sub.value && {
+                      backgroundColor: colors.primary,
+                      borderColor: colors.primary,
+                    },
+                  ]}
                   onPress={() => setFormData({ ...formData, property_type: sub.value })}
                 >
                   <Text
                     style={[
                       styles.chipText,
-                      formData.property_type === sub.value && styles.chipTextActive,
+                      {
+                        fontSize: fontSize.sm,
+                        color: colors.textSecondary,
+                        fontWeight: fontWeight.medium as TextStyle["fontWeight"],
+                      },
+                      formData.property_type === sub.value && {
+                        color: colors.white,
+                        fontWeight: fontWeight.semibold as TextStyle["fontWeight"],
+                      },
                     ]}
                   >
                     {sub.label}
@@ -233,18 +321,51 @@ export default function ManagePropertyScreen() {
               ))}
             </View>
 
-            <Text style={styles.label}>Listing Type</Text>
-            <View style={styles.chipRow}>
+            <Text
+              style={[
+                styles.label,
+                {
+                  fontSize: fontSize.sm,
+                  fontWeight: fontWeight.medium as TextStyle["fontWeight"],
+                  color: colors.textSecondary,
+                  marginBottom: spacing.sm,
+                },
+              ]}
+            >
+              Listing Type
+            </Text>
+            <View style={[styles.chipRow, { gap: spacing.sm, marginBottom: spacing.md }]}>
               {LISTING_TYPES.map((item) => (
                 <TouchableOpacity
                   key={item.value}
-                  style={[styles.chip, formData.listing_type === item.value && styles.chipActive]}
+                  style={[
+                    styles.chip,
+                    {
+                      paddingHorizontal: 16,
+                      paddingVertical: 8,
+                      borderRadius: borderRadius.full,
+                      backgroundColor: colors.surface,
+                      borderColor: colors.border,
+                    },
+                    formData.listing_type === item.value && {
+                      backgroundColor: colors.primary,
+                      borderColor: colors.primary,
+                    },
+                  ]}
                   onPress={() => setFormData({ ...formData, listing_type: item.value })}
                 >
                   <Text
                     style={[
                       styles.chipText,
-                      formData.listing_type === item.value && styles.chipTextActive,
+                      {
+                        fontSize: fontSize.sm,
+                        color: colors.textSecondary,
+                        fontWeight: fontWeight.medium as TextStyle["fontWeight"],
+                      },
+                      formData.listing_type === item.value && {
+                        color: colors.white,
+                        fontWeight: fontWeight.semibold as TextStyle["fontWeight"],
+                      },
                     ]}
                   >
                     {item.label}
@@ -266,8 +387,20 @@ export default function ManagePropertyScreen() {
       </View>
 
       {/* Pricing */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Pricing (GHS)</Text>
+      <View style={[styles.section, { marginBottom: spacing.xl }]}>
+        <Text
+          style={[
+            styles.sectionTitle,
+            {
+              fontSize: fontSize.lg,
+              fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+              color: colors.text,
+              marginBottom: spacing.md,
+            },
+          ]}
+        >
+          Pricing (GHS)
+        </Text>
         {!isRent ? (
           <Input
             label="Sale Price"
@@ -288,25 +421,72 @@ export default function ManagePropertyScreen() {
       </View>
 
       {/* Location */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Location</Text>
-        <Text style={styles.label}>Region</Text>
+      <View style={[styles.section, { marginBottom: spacing.xl }]}>
+        <Text
+          style={[
+            styles.sectionTitle,
+            {
+              fontSize: fontSize.lg,
+              fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+              color: colors.text,
+              marginBottom: spacing.md,
+            },
+          ]}
+        >
+          Location
+        </Text>
+        <Text
+          style={[
+            styles.label,
+            {
+              fontSize: fontSize.sm,
+              fontWeight: fontWeight.medium as TextStyle["fontWeight"],
+              color: colors.textSecondary,
+              marginBottom: spacing.sm,
+            },
+          ]}
+        >
+          Region
+        </Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={styles.horizontalChips}
+          style={[styles.horizontalChips, { marginBottom: spacing.md }]}
         >
           {REGIONS.map((region) => (
             <TouchableOpacity
               key={region}
               style={[
                 styles.chip,
-                formData.region === region && styles.chipActive,
-                { marginRight: spacing.sm },
+                {
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                  borderRadius: borderRadius.full,
+                  backgroundColor: colors.surface,
+                  borderColor: colors.border,
+                  marginRight: spacing.sm,
+                },
+                formData.region === region && {
+                  backgroundColor: colors.primary,
+                  borderColor: colors.primary,
+                },
               ]}
               onPress={() => setFormData({ ...formData, region })}
             >
-              <Text style={[styles.chipText, formData.region === region && styles.chipTextActive]}>
+              <Text
+                style={[
+                  styles.chipText,
+                  {
+                    fontSize: fontSize.sm,
+                    color: colors.textSecondary,
+                    fontWeight: fontWeight.medium as TextStyle["fontWeight"],
+                  },
+                  formData.region === region && {
+                    color: colors.white,
+                    fontWeight: fontWeight.semibold as TextStyle["fontWeight"],
+                  },
+                ]}
+              >
                 {region}
               </Text>
             </TouchableOpacity>
@@ -328,9 +508,21 @@ export default function ManagePropertyScreen() {
 
       {/* Details */}
       {isHouse && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Property Details</Text>
-          <View style={styles.row}>
+        <View style={[styles.section, { marginBottom: spacing.xl }]}>
+          <Text
+            style={[
+              styles.sectionTitle,
+              {
+                fontSize: fontSize.lg,
+                fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+                color: colors.text,
+                marginBottom: spacing.md,
+              },
+            ]}
+          >
+            Property Details
+          </Text>
+          <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 1 }}>
               <Input
                 label="Bedrooms"
@@ -351,7 +543,7 @@ export default function ManagePropertyScreen() {
         </View>
       )}
 
-      <View style={styles.section}>
+      <View style={[styles.section, { marginBottom: spacing.xl }]}>
         <Input
           label="Size (Sq.ft / Acres)"
           placeholder={isHouse ? "e.g. 1500 sq ft" : "e.g. 2 acres"}
@@ -361,8 +553,20 @@ export default function ManagePropertyScreen() {
       </View>
 
       {/* Description */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Description</Text>
+      <View style={[styles.section, { marginBottom: spacing.xl }]}>
+        <Text
+          style={[
+            styles.sectionTitle,
+            {
+              fontSize: fontSize.lg,
+              fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+              color: colors.text,
+              marginBottom: spacing.md,
+            },
+          ]}
+        >
+          Description
+        </Text>
         <Input
           label="Property Description"
           multiline
@@ -374,26 +578,97 @@ export default function ManagePropertyScreen() {
       </View>
 
       {/* Images */}
-      <View style={styles.section}>
-        <View style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>Images</Text>
+      <View style={[styles.section, { marginBottom: spacing.xl }]}>
+        <View
+          style={[
+            styles.rowBetween,
+            { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+          ]}
+        >
+          <Text
+            style={[
+              styles.sectionTitle,
+              {
+                fontSize: fontSize.lg,
+                fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+                color: colors.text,
+                marginBottom: spacing.md,
+              },
+            ]}
+          >
+            Images
+          </Text>
           <TouchableOpacity onPress={pickImage}>
-            <Text style={styles.addText}>+ Add More</Text>
+            <Text
+              style={[
+                styles.addText,
+                { color: colors.primary, fontWeight: fontWeight.bold as TextStyle["fontWeight"] },
+              ]}
+            >
+              + Add More
+            </Text>
           </TouchableOpacity>
         </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.imageList}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={[styles.imageList, { flexDirection: "row", marginTop: spacing.md }]}
+        >
           {images.map((img, i) => (
-            <View key={i} style={styles.imageWrapper}>
-              <Image source={{ uri: img.uri }} style={styles.previewImage} />
-              <TouchableOpacity style={styles.deleteImgBtn} onPress={() => removeImage(i)}>
+            <View
+              key={i}
+              style={[styles.imageWrapper, { position: "relative", marginRight: spacing.md }]}
+            >
+              <Image
+                source={{ uri: img.uri }}
+                style={[
+                  styles.previewImage,
+                  { width: 100, height: 100, borderRadius: borderRadius.md },
+                ]}
+              />
+              <TouchableOpacity
+                style={[
+                  styles.deleteImgBtn,
+                  {
+                    position: "absolute",
+                    top: -5,
+                    right: -5,
+                    backgroundColor: colors.white,
+                    borderRadius: 10,
+                  },
+                ]}
+                onPress={() => removeImage(i)}
+              >
                 <Ionicons name="close-circle" size={20} color={colors.error} />
               </TouchableOpacity>
             </View>
           ))}
           {images.length === 0 && (
-            <TouchableOpacity style={styles.uploadPlaceholder} onPress={pickImage}>
+            <TouchableOpacity
+              style={[
+                styles.uploadPlaceholder,
+                {
+                  width: 100,
+                  height: 100,
+                  borderRadius: borderRadius.md,
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                  borderStyle: "dashed",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+              ]}
+              onPress={pickImage}
+            >
               <Ionicons name="camera-outline" size={32} color={colors.textMuted} />
-              <Text style={styles.placeholderText}>Tap to add images</Text>
+              <Text
+                style={[
+                  styles.placeholderText,
+                  { fontSize: 10, color: colors.textMuted, marginTop: 4 },
+                ]}
+              >
+                Tap to add images
+              </Text>
             </TouchableOpacity>
           )}
         </ScrollView>
@@ -410,63 +685,25 @@ export default function ManagePropertyScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.white },
-  content: { padding: spacing.lg },
+  container: { flex: 1 },
+  content: {},
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  header: {
-    fontSize: fontSize.xxl,
-    fontWeight: fontWeight.bold,
-    color: colors.primary,
-    marginBottom: spacing.xl,
-  },
-  section: { marginBottom: spacing.xl },
-  sectionTitle: {
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.bold,
-    color: colors.text,
-    marginBottom: spacing.md,
-  },
-  label: {
-    fontSize: fontSize.sm,
-    fontWeight: fontWeight.medium,
-    color: colors.textSecondary,
-    marginBottom: spacing.sm,
-  },
-  chipRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginBottom: spacing.md },
-  horizontalChips: { marginBottom: spacing.md },
+  header: {},
+  section: {},
+  sectionTitle: {},
+  label: {},
+  chipRow: { flexDirection: "row", flexWrap: "wrap" },
+  horizontalChips: {},
   chip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: borderRadius.full,
-    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.border,
   },
-  chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  chipText: { fontSize: fontSize.sm, color: colors.textSecondary, fontWeight: fontWeight.medium },
-  chipTextActive: { color: colors.white, fontWeight: fontWeight.semibold },
-  row: { flexDirection: "row" },
-  rowBetween: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  addText: { color: colors.primary, fontWeight: fontWeight.bold },
-  imageList: { flexDirection: "row", marginTop: spacing.md },
-  imageWrapper: { position: "relative", marginRight: spacing.md },
-  previewImage: { width: 100, height: 100, borderRadius: borderRadius.md },
-  deleteImgBtn: {
-    position: "absolute",
-    top: -5,
-    right: -5,
-    backgroundColor: colors.white,
-    borderRadius: 10,
-  },
-  uploadPlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: borderRadius.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderStyle: "dashed",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  placeholderText: { fontSize: 10, color: colors.textMuted, marginTop: 4 },
+  chipText: {},
+  rowBetween: {},
+  addText: {},
+  imageList: {},
+  imageWrapper: {},
+  previewImage: {},
+  deleteImgBtn: {},
+  uploadPlaceholder: {},
+  placeholderText: {},
 });

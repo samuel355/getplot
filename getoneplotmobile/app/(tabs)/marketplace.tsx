@@ -1,13 +1,20 @@
 import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  type TextStyle,
+} from "react-native";
 import { PropertyCard } from "../../src/components/PropertyCard";
 import { FilterModal } from "../../src/components/FilterModal";
-import { Badge } from "../../src/components/ui/Badge";
 import { Button } from "../../src/components/ui/Button";
 import { Loading } from "../../src/components/ui/Loading";
-import { colors, fontSize, spacing, fontWeight, borderRadius } from "../../src/constants/theme";
+import { useTheme } from "../../src/constants/theme";
 import { usePropertyStore } from "../../src/stores/propertyStore";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -18,6 +25,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function MarketplaceScreen() {
+  const { colors, spacing, borderRadius, fontWeight, fontSize } = useTheme();
   const router = useRouter();
   const { user } = useUser();
   const [filterModalVisible, setFilterModalVisible] = useState(false);
@@ -49,40 +57,121 @@ export default function MarketplaceScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.surface }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          {
+            backgroundColor: colors.background,
+            borderBottomColor: colors.border,
+            paddingHorizontal: spacing.lg,
+            paddingTop: spacing.lg,
+            paddingBottom: spacing.md,
+          },
+        ]}
+      >
         <View style={styles.headerTop}>
           <View>
-            <Text style={styles.title}>Marketplace</Text>
-            <Text style={styles.subtitle}>Find your perfect property</Text>
+            <Text
+              style={[
+                styles.title,
+                {
+                  fontSize: fontSize.xl,
+                  fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+                  color: colors.text,
+                  marginBottom: spacing.xs,
+                },
+              ]}
+            >
+              Marketplace
+            </Text>
+            <Text style={[styles.subtitle, { fontSize: fontSize.sm, color: colors.textMuted }]}>
+              Find your perfect property
+            </Text>
           </View>
-          <Pressable style={styles.filterBtn} onPress={() => setFilterModalVisible(true)}>
-            <Ionicons name="filter" size={20} color={colors.white} />
-            <Text style={styles.filterBtnText}>Filters</Text>
+          <Pressable
+            style={[
+              styles.filterBtn,
+              {
+                backgroundColor: colors.primary,
+                paddingHorizontal: spacing.md,
+                paddingVertical: spacing.sm,
+                borderRadius: borderRadius.md,
+                gap: spacing.xs,
+              },
+            ]}
+            onPress={() => setFilterModalVisible(true)}
+          >
+            <Ionicons name="filter" size={20} color={colors.textInverse} />
+            <Text
+              style={[
+                styles.filterBtnText,
+                {
+                  color: colors.textInverse,
+                  fontWeight: fontWeight.semibold as TextStyle["fontWeight"],
+                  fontSize: fontSize.sm,
+                },
+              ]}
+            >
+              Filters
+            </Text>
           </Pressable>
         </View>
       </View>
 
       {/* Sort Filters */}
-      <View style={styles.filtersWrapper}>
+      <View
+        style={[
+          styles.filtersWrapper,
+          { backgroundColor: colors.background, borderBottomColor: colors.border },
+        ]}
+      >
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={styles.filters}
-          contentContainerStyle={styles.filtersContent}
+          style={[styles.filters, { paddingVertical: spacing.md }]}
+          contentContainerStyle={[
+            styles.filtersContent,
+            { gap: spacing.sm, paddingHorizontal: spacing.lg },
+          ]}
         >
           {SORT_OPTIONS.map((opt) => (
             <Pressable
               key={opt.id}
-              style={[styles.chip, filters.sortBy === opt.id && styles.chipActive]}
+              style={[
+                styles.chip,
+                {
+                  borderRadius: borderRadius.full,
+                  backgroundColor: colors.surface,
+                  borderColor: colors.border,
+                  gap: spacing.xs,
+                },
+                filters.sortBy === opt.id && {
+                  backgroundColor: colors.primary,
+                  borderColor: colors.primary,
+                },
+              ]}
               onPress={() => {
                 setFilters({ sortBy: opt.id });
                 fetchProperties(1);
               }}
             >
               <Text style={styles.chipEmoji}>{opt.emoji}</Text>
-              <Text style={[styles.chipText, filters.sortBy === opt.id && styles.chipTextActive]}>
+              <Text
+                style={[
+                  styles.chipText,
+                  {
+                    fontSize: fontSize.sm,
+                    color: colors.text,
+                    fontWeight: fontWeight.medium as TextStyle["fontWeight"],
+                  },
+                  filters.sortBy === opt.id && {
+                    color: colors.textInverse,
+                    fontWeight: fontWeight.semibold as TextStyle["fontWeight"],
+                  },
+                ]}
+              >
                 {opt.label}
               </Text>
             </Pressable>
@@ -99,12 +188,13 @@ export default function MarketplaceScreen() {
         <FlatList
           data={filteredProperties}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={[styles.list, { padding: spacing.lg }]}
           renderItem={({ item, index }) => (
             <View
               style={[
                 styles.itemWrapper,
-                index === filteredProperties.length - 1 && styles.lastItem,
+                { marginBottom: spacing.md },
+                index === filteredProperties.length - 1 && { marginBottom: spacing.xl },
               ]}
             >
               <PropertyCard
@@ -116,10 +206,31 @@ export default function MarketplaceScreen() {
             </View>
           )}
           ListEmptyComponent={
-            <View style={styles.emptyContainer}>
+            <View
+              style={[
+                styles.emptyContainer,
+                { paddingVertical: spacing.xxxl, marginTop: spacing.xxl },
+              ]}
+            >
               <Text style={styles.emptyEmoji}>🔍</Text>
-              <Text style={styles.emptyText}>No properties match your filters.</Text>
-              <Text style={styles.emptySubText}>Try adjusting your search</Text>
+              <Text
+                style={[
+                  styles.emptyText,
+                  {
+                    fontSize: fontSize.lg,
+                    fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+                    color: colors.text,
+                    marginBottom: spacing.sm,
+                  },
+                ]}
+              >
+                No properties match your filters.
+              </Text>
+              <Text
+                style={[styles.emptySubText, { fontSize: fontSize.md, color: colors.textMuted }]}
+              >
+                Try adjusting your search
+              </Text>
               <Button
                 title="Clear All Filters"
                 onPress={() => {
@@ -140,29 +251,78 @@ export default function MarketplaceScreen() {
           }
           ListFooterComponent={
             totalPages > 1 ? (
-              <View style={styles.pagination}>
+              <View
+                style={[
+                  styles.pagination,
+                  {
+                    paddingVertical: spacing.xl,
+                    paddingHorizontal: spacing.lg,
+                    gap: spacing.md,
+                    backgroundColor: colors.background,
+                    borderTopColor: colors.border,
+                    marginTop: spacing.lg,
+                  },
+                ]}
+              >
                 <Pressable
                   disabled={currentPage <= 1}
-                  style={[styles.pageBtn, currentPage <= 1 && styles.pageBtnDisabled]}
+                  style={[
+                    styles.pageBtn,
+                    {
+                      flex: 1,
+                      paddingVertical: spacing.md,
+                      borderRadius: borderRadius.lg,
+                      backgroundColor: colors.primary,
+                      alignItems: "center",
+                    },
+                    currentPage <= 1 && { backgroundColor: colors.surface, opacity: 0.5 },
+                  ]}
                   onPress={() => {
                     setPage(currentPage - 1);
                     fetchProperties(currentPage - 1);
                   }}
                 >
                   <Text
-                    style={[styles.pageBtnText, currentPage <= 1 && styles.pageBtnTextDisabled]}
+                    style={[
+                      styles.pageBtnText,
+                      {
+                        color: colors.textInverse,
+                        fontWeight: fontWeight.semibold as TextStyle["fontWeight"],
+                        fontSize: fontSize.sm,
+                      },
+                      currentPage <= 1 && { color: colors.textMuted },
+                    ]}
                   >
                     ← Previous
                   </Text>
                 </Pressable>
-                <View style={styles.pageInfo}>
-                  <Text style={styles.pageInfoText}>
+                <View style={[styles.pageInfo, { flex: 1, alignItems: "center" }]}>
+                  <Text
+                    style={[
+                      styles.pageInfoText,
+                      {
+                        fontSize: fontSize.sm,
+                        color: colors.textMuted,
+                        fontWeight: fontWeight.medium as TextStyle["fontWeight"],
+                      },
+                    ]}
+                  >
                     Page {currentPage} of {totalPages}
                   </Text>
                 </View>
                 <Pressable
                   disabled={currentPage >= totalPages}
-                  style={[styles.pageBtn, currentPage >= totalPages && styles.pageBtnDisabled]}
+                  style={[
+                    styles.pageBtn,
+                    {
+                      flex: 1,
+                      paddingVertical: spacing.md,
+                      borderRadius: borderRadius.lg,
+                      backgroundColor: colors.primary,
+                      alignItems: "center",
+                    },
+                    currentPage >= totalPages && { backgroundColor: colors.surface, opacity: 0.5 },
+                  ]}
                   onPress={() => {
                     setPage(currentPage + 1);
                     fetchProperties(currentPage + 1);
@@ -171,7 +331,12 @@ export default function MarketplaceScreen() {
                   <Text
                     style={[
                       styles.pageBtnText,
-                      currentPage >= totalPages && styles.pageBtnTextDisabled,
+                      {
+                        color: colors.textInverse,
+                        fontWeight: fontWeight.semibold as TextStyle["fontWeight"],
+                        fontSize: fontSize.sm,
+                      },
+                      currentPage >= totalPages && { color: colors.textMuted },
                     ]}
                   >
                     Next →
@@ -196,171 +361,64 @@ export default function MarketplaceScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.surface,
   },
-
-  // Header
   header: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.md,
-    backgroundColor: colors.white,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
   headerTop: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  title: {
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.bold,
-    color: colors.text,
-    marginBottom: spacing.xs,
-  },
-  subtitle: {
-    fontSize: fontSize.sm,
-    color: colors.textMuted,
-  },
+  title: {},
+  subtitle: {},
   filterBtn: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.primary,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: borderRadius.md,
-    gap: spacing.xs,
   },
-  filterBtnText: {
-    color: colors.white,
-    fontWeight: fontWeight.semibold,
-    fontSize: fontSize.sm,
-  },
-
-  // Filters
+  filterBtnText: {},
   filtersWrapper: {
-    backgroundColor: colors.white,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
-  filters: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  filtersContent: {
-    gap: spacing.sm,
-    paddingRight: spacing.lg,
-  },
+  filters: {},
+  filtersContent: {},
   chip: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 14,
     paddingVertical: 8,
-    borderRadius: borderRadius.full,
-    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.border,
-    gap: spacing.xs,
-  },
-  chipActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
   },
   chipEmoji: {
     fontSize: 16,
   },
-  chipText: {
-    fontSize: fontSize.sm,
-    color: colors.text,
-    fontWeight: fontWeight.medium,
-  },
-  chipTextActive: {
-    color: colors.white,
-    fontWeight: fontWeight.semibold,
-  },
-
-  // Properties List
-  list: {
-    padding: spacing.lg,
-    paddingBottom: spacing.xxl,
-  },
-  itemWrapper: {
-    marginBottom: spacing.md,
-  },
-  lastItem: {
-    marginBottom: spacing.xl,
-  },
-
-  // Loading State
+  chipText: {},
+  list: {},
+  itemWrapper: {},
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-
-  // Empty State
   emptyContainer: {
     alignItems: "center",
-    paddingVertical: spacing.xxxl,
-    marginTop: spacing.xxl,
   },
   emptyEmoji: {
     fontSize: 64,
-    marginBottom: spacing.md,
+    marginBottom: 16,
   },
   emptyText: {
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.bold,
-    color: colors.text,
-    marginBottom: spacing.sm,
+    textAlign: "center",
   },
-  emptySubText: {
-    fontSize: fontSize.md,
-    color: colors.textMuted,
-  },
-
-  // Pagination
+  emptySubText: {},
   pagination: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: spacing.xl,
-    paddingHorizontal: spacing.lg,
-    gap: spacing.md,
-    backgroundColor: colors.white,
     borderTopWidth: 1,
-    borderTopColor: colors.border,
-    marginTop: spacing.lg,
   },
-  pageBtn: {
-    flex: 1,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    borderRadius: borderRadius.lg,
-    backgroundColor: colors.primary,
-    alignItems: "center",
-  },
-  pageBtnDisabled: {
-    backgroundColor: colors.surface,
-    opacity: 0.5,
-  },
-  pageBtnText: {
-    color: colors.white,
-    fontWeight: fontWeight.semibold,
-    fontSize: fontSize.sm,
-  },
-  pageBtnTextDisabled: {
-    color: colors.textMuted,
-  },
-  pageInfo: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: spacing.md,
-  },
-  pageInfoText: {
-    fontSize: fontSize.sm,
-    color: colors.textMuted,
-    fontWeight: fontWeight.medium,
-  },
+  pageBtn: {},
+  pageBtnText: {},
+  pageInfo: {},
+  pageInfoText: {},
 });

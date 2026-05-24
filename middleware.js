@@ -11,7 +11,7 @@ const protectedRoutes = {
 };
 
 export default clerkMiddleware({
-  publicRoutes: ["/"],
+  publicRoutes: ["/", "/api/approval-status"],
   afterAuth(auth, req) {
     // Handle users who aren't authenticated
     if (!auth.userId && !auth.isPublicRoute) {

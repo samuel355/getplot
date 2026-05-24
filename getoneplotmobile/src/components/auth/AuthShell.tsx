@@ -18,9 +18,21 @@ type Props = {
   subtitle?: string;
   footer?: ReactNode;
   headerExtra?: ReactNode;
+  /** Hide guest link — use on profile tab where user is already browsing */
+  embedded?: boolean;
+  /** Smaller brand header for in-tab layout */
+  compact?: boolean;
 };
 
-export function AuthShell({ children, title, subtitle, footer, headerExtra }: Props) {
+export function AuthShell({
+  children,
+  title,
+  subtitle,
+  footer,
+  headerExtra,
+  embedded = false,
+  compact = false,
+}: Props) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -36,25 +48,35 @@ export function AuthShell({ children, title, subtitle, footer, headerExtra }: Pr
           contentContainerStyle={[
             viewStyles.scroll,
             {
-              paddingTop: insets.top + spacing.lg,
+              paddingTop: insets.top + (embedded ? spacing.xl : spacing.lg),
               paddingBottom: insets.bottom + spacing.xl,
             },
           ]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={viewStyles.brandBlock}>
-            <View style={viewStyles.logoRing}>
+          <View
+            style={[
+              viewStyles.brandBlock,
+              compact && viewStyles.brandBlockCompact,
+              embedded && viewStyles.brandBlockEmbedded,
+            ]}
+          >
+            <View style={[viewStyles.logoRing, compact && viewStyles.logoRingCompact]}>
               <Image
                 source={require('../../../assets/icon.png')}
-                style={viewStyles.logo}
+                style={compact ? viewStyles.logoCompact : viewStyles.logo}
                 contentFit="contain"
               />
             </View>
-            <Text style={textStyles.brand}>Get One Plot</Text>
-            <Text style={textStyles.tagline}>
-              Where listing of properties and land purchase is made easy
-            </Text>
+            {!compact ? (
+              <>
+                <Text style={textStyles.brand}>Get One Plot</Text>
+                <Text style={textStyles.tagline}>
+                  Where listing of properties and land purchase is made easy
+                </Text>
+              </>
+            ) : null}
           </View>
 
           <View style={[viewStyles.card, cardShadow]}>
@@ -63,9 +85,11 @@ export function AuthShell({ children, title, subtitle, footer, headerExtra }: Pr
             {subtitle ? <Text style={textStyles.subtitle}>{subtitle}</Text> : null}
             {children}
             {footer}
-            <Link href="/(tabs)">
-              <Text style={textStyles.guestText}>Continue browsing as guest →</Text>
-            </Link>
+            {!embedded ? (
+              <Link href="/(tabs)">
+                <Text style={textStyles.guestText}>Continue browsing as guest →</Text>
+              </Link>
+            ) : null}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -117,6 +141,13 @@ const viewStyles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: spacing.xl,
   },
+  brandBlockCompact: {
+    marginBottom: spacing.lg,
+  },
+  brandBlockEmbedded: {
+    marginTop: spacing.md,
+    marginBottom: spacing.xl,
+  },
   logoRing: {
     width: 72,
     height: 72,
@@ -129,6 +160,13 @@ const viewStyles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   logo: { width: 48, height: 48 },
+  logoRingCompact: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    marginBottom: 0,
+  },
+  logoCompact: { width: 36, height: 36 },
   card: {
     backgroundColor: colors.white,
     borderRadius: borderRadius.xl,

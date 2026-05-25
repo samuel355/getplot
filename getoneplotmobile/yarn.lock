@@ -3312,8 +3312,6 @@ expo-glass-effect@^56.0.4:
   resolved "https://registry.yarnpkg.com/expo-glass-effect/-/expo-glass-effect-56.0.4.tgz#4549a8c84058fb88619ecb2e818be36f2fe003ee"
   integrity sha512-xI9rXtDwi7RW82uAlfyaXO6+k21ApWJ2tHAWYqPr/FjfmZbKsgNJ4Q0iZzGPCwboqjTGxaRZ61SZxBl8hDt5iA==
 
-<<<<<<< HEAD
-=======
 expo-image-loader@~56.0.3:
   version "56.0.3"
   resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-56.0.3.tgz#665112665e78d0fd9629f6160e2ca419d7f0c5c6"
@@ -3326,7 +3324,6 @@ expo-image-picker@~56.0.13:
   dependencies:
     expo-image-loader "~56.0.3"
 
->>>>>>> mobile
 expo-image@~3.0.11:
   version "3.0.11"
   resolved "https://registry.yarnpkg.com/expo-image/-/expo-image-3.0.11.tgz#54195565dc710e632c10414c3609deebb7149ac5"
@@ -3345,8 +3342,6 @@ expo-linking@~8.0.11, expo-linking@~8.0.12:
     expo-constants "~18.0.13"
     invariant "^2.2.4"
 
-<<<<<<< HEAD
-=======
 expo-location@~56.0.13:
   version "56.0.13"
   resolved "https://registry.yarnpkg.com/expo-location/-/expo-location-56.0.13.tgz#0b0befed078b4321d641b4239636b42272ccf41f"
@@ -3354,7 +3349,6 @@ expo-location@~56.0.13:
   dependencies:
     "@expo/image-utils" "^0.10.1"
 
->>>>>>> mobile
 expo-modules-autolinking@~56.0.11, expo-modules-autolinking@~56.0.12:
   version "56.0.12"
   resolved "https://registry.yarnpkg.com/expo-modules-autolinking/-/expo-modules-autolinking-56.0.12.tgz#cce93708a348812cad88c0ab64b79983745e7972"

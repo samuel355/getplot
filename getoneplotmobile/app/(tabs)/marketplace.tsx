@@ -1,15 +1,6 @@
 import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-<<<<<<< HEAD
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { PropertyCard } from "../../src/components/PropertyCard";
-import { Badge } from "../../src/components/ui/Badge";
-import { Card } from "../../src/components/ui/Card";
-import { Loading } from "../../src/components/ui/Loading";
-import { colors, fontSize, spacing, fontWeight, borderRadius } from "../../src/constants/theme";
-import { usePropertyStore } from "../../src/stores/propertyStore";
-=======
 import {
   FlatList,
   Pressable,
@@ -26,7 +17,6 @@ import { Loading } from "../../src/components/ui/Loading";
 import { useTheme } from "../../src/constants/theme";
 import { usePropertyStore } from "../../src/stores/propertyStore";
 import { Ionicons } from "@expo/vector-icons";
->>>>>>> mobile
 
 const SORT_OPTIONS = [
   { id: "newest", label: "Newest", emoji: "✨" },
@@ -35,15 +25,10 @@ const SORT_OPTIONS = [
 ];
 
 export default function MarketplaceScreen() {
-<<<<<<< HEAD
-  const router = useRouter();
-  const { user } = useUser();
-=======
   const { colors, spacing, borderRadius, fontWeight, fontSize } = useTheme();
   const router = useRouter();
   const { user } = useUser();
   const [filterModalVisible, setFilterModalVisible] = useState(false);
->>>>>>> mobile
   const {
     filteredProperties,
     loading,
@@ -62,39 +47,6 @@ export default function MarketplaceScreen() {
     if (user?.id) fetchFavorites(user.id);
   }, [user?.id]);
 
-<<<<<<< HEAD
-  return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Marketplace</Text>
-        <Text style={styles.subtitle}>Find your perfect property</Text>
-      </View>
-
-      {/* Sort Filters */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.filters}
-        contentContainerStyle={styles.filtersContent}
-      >
-        {SORT_OPTIONS.map((opt) => (
-          <Pressable
-            key={opt.id}
-            style={[styles.chip, filters.sortBy === opt.id && styles.chipActive]}
-            onPress={() => {
-              setFilters({ sortBy: opt.id });
-              fetchProperties(1);
-            }}
-          >
-            <Text style={styles.chipEmoji}>{opt.emoji}</Text>
-            <Text style={[styles.chipText, filters.sortBy === opt.id && styles.chipTextActive]}>
-              {opt.label}
-            </Text>
-          </Pressable>
-        ))}
-      </ScrollView>
-=======
   const handleApplyFilters = (newFilters: any) => {
     setFilters(newFilters);
     fetchProperties(1);
@@ -226,7 +178,6 @@ export default function MarketplaceScreen() {
           ))}
         </ScrollView>
       </View>
->>>>>>> mobile
 
       {/* Properties List */}
       {loading && !filteredProperties.length ? (
@@ -237,46 +188,24 @@ export default function MarketplaceScreen() {
         <FlatList
           data={filteredProperties}
           keyExtractor={(item) => item.id}
-<<<<<<< HEAD
-          contentContainerStyle={styles.list}
-=======
           contentContainerStyle={[styles.list, { padding: spacing.lg }]}
->>>>>>> mobile
           renderItem={({ item, index }) => (
             <View
               style={[
                 styles.itemWrapper,
-<<<<<<< HEAD
-                index === filteredProperties.length - 1 && styles.lastItem,
-=======
                 { marginBottom: spacing.md },
                 index === filteredProperties.length - 1 && { marginBottom: spacing.xl },
->>>>>>> mobile
               ]}
             >
               <PropertyCard
                 property={item}
                 onPress={() => router.push(`/property/${item.id}`)}
-<<<<<<< HEAD
-                favorited={favorites?.includes(item.id)}
-                onFavoritPress={() => {
-                  // Toggle favorite logic here
-                  console.log("Toggle favorite for:", item.id);
-                }}
-=======
                 favorited={favorites?.some((f) => f.id === item.id)}
                 onFavoritPress={() => handleToggleFavorite(item.id)}
->>>>>>> mobile
               />
             </View>
           )}
           ListEmptyComponent={
-<<<<<<< HEAD
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyEmoji}>🔍</Text>
-              <Text style={styles.emptyText}>No properties match your filters.</Text>
-              <Text style={styles.emptySubText}>Try adjusting your search</Text>
-=======
             <View
               style={[
                 styles.emptyContainer,
@@ -318,17 +247,10 @@ export default function MarketplaceScreen() {
                 variant="outline"
                 style={{ marginTop: spacing.lg }}
               />
->>>>>>> mobile
             </View>
           }
           ListFooterComponent={
             totalPages > 1 ? (
-<<<<<<< HEAD
-              <View style={styles.pagination}>
-                <Pressable
-                  disabled={currentPage <= 1}
-                  style={[styles.pageBtn, currentPage <= 1 && styles.pageBtnDisabled]}
-=======
               <View
                 style={[
                   styles.pagination,
@@ -355,16 +277,12 @@ export default function MarketplaceScreen() {
                     },
                     currentPage <= 1 && { backgroundColor: colors.surface, opacity: 0.5 },
                   ]}
->>>>>>> mobile
                   onPress={() => {
                     setPage(currentPage - 1);
                     fetchProperties(currentPage - 1);
                   }}
                 >
                   <Text
-<<<<<<< HEAD
-                    style={[styles.pageBtnText, currentPage <= 1 && styles.pageBtnTextDisabled]}
-=======
                     style={[
                       styles.pageBtnText,
                       {
@@ -374,15 +292,10 @@ export default function MarketplaceScreen() {
                       },
                       currentPage <= 1 && { color: colors.textMuted },
                     ]}
->>>>>>> mobile
                   >
                     ← Previous
                   </Text>
                 </Pressable>
-<<<<<<< HEAD
-                <View style={styles.pageInfo}>
-                  <Text style={styles.pageInfoText}>
-=======
                 <View style={[styles.pageInfo, { flex: 1, alignItems: "center" }]}>
                   <Text
                     style={[
@@ -394,15 +307,11 @@ export default function MarketplaceScreen() {
                       },
                     ]}
                   >
->>>>>>> mobile
                     Page {currentPage} of {totalPages}
                   </Text>
                 </View>
                 <Pressable
                   disabled={currentPage >= totalPages}
-<<<<<<< HEAD
-                  style={[styles.pageBtn, currentPage >= totalPages && styles.pageBtnDisabled]}
-=======
                   style={[
                     styles.pageBtn,
                     {
@@ -414,7 +323,6 @@ export default function MarketplaceScreen() {
                     },
                     currentPage >= totalPages && { backgroundColor: colors.surface, opacity: 0.5 },
                   ]}
->>>>>>> mobile
                   onPress={() => {
                     setPage(currentPage + 1);
                     fetchProperties(currentPage + 1);
@@ -423,16 +331,12 @@ export default function MarketplaceScreen() {
                   <Text
                     style={[
                       styles.pageBtnText,
-<<<<<<< HEAD
-                      currentPage >= totalPages && styles.pageBtnTextDisabled,
-=======
                       {
                         color: colors.textInverse,
                         fontWeight: fontWeight.semibold as TextStyle["fontWeight"],
                         fontSize: fontSize.sm,
                       },
                       currentPage >= totalPages && { color: colors.textMuted },
->>>>>>> mobile
                     ]}
                   >
                     Next →
@@ -443,8 +347,6 @@ export default function MarketplaceScreen() {
           }
         />
       )}
-<<<<<<< HEAD
-=======
 
       <FilterModal
         visible={filterModalVisible}
@@ -452,7 +354,6 @@ export default function MarketplaceScreen() {
         onApply={handleApplyFilters}
         initialFilters={filters}
       />
->>>>>>> mobile
     </View>
   );
 }
@@ -460,43 +361,6 @@ export default function MarketplaceScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-<<<<<<< HEAD
-    backgroundColor: colors.surface,
-  },
-
-  // Header
-  header: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.md,
-    backgroundColor: colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  title: {
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.bold,
-    color: colors.text,
-    marginBottom: spacing.xs,
-  },
-  subtitle: {
-    fontSize: fontSize.sm,
-    color: colors.textMuted,
-  },
-
-  // Filters
-  filters: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    backgroundColor: colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  filtersContent: {
-    gap: spacing.sm,
-    paddingRight: spacing.lg,
-  },
-=======
   },
   header: {
     borderBottomWidth: 1,
@@ -518,88 +382,24 @@ const styles = StyleSheet.create({
   },
   filters: {},
   filtersContent: {},
->>>>>>> mobile
   chip: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 14,
     paddingVertical: 8,
-<<<<<<< HEAD
-    borderRadius: borderRadius.full,
-    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.border,
-    gap: spacing.xs,
-  },
-  chipActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-=======
-    borderWidth: 1,
->>>>>>> mobile
   },
   chipEmoji: {
     fontSize: 16,
   },
-<<<<<<< HEAD
-  chipText: {
-    fontSize: fontSize.sm,
-    color: colors.text,
-    fontWeight: fontWeight.medium,
-  },
-  chipTextActive: {
-    color: colors.white,
-    fontWeight: fontWeight.semibold,
-  },
-
-  // Properties List
-  list: {
-    padding: spacing.lg,
-    paddingBottom: spacing.xxl,
-  },
-  itemWrapper: {
-    marginBottom: spacing.md,
-  },
-  lastItem: {
-    marginBottom: spacing.xl,
-  },
-
-  // Loading State
-=======
   chipText: {},
   list: {},
   itemWrapper: {},
->>>>>>> mobile
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-<<<<<<< HEAD
-
-  // Empty State
-  emptyContainer: {
-    alignItems: "center",
-    paddingVertical: spacing.xxxl,
-    marginTop: spacing.xxl,
-  },
-  emptyEmoji: {
-    fontSize: 64,
-    marginBottom: spacing.md,
-  },
-  emptyText: {
-    fontSize: fontSize.lg,
-    fontWeight: fontWeight.bold,
-    color: colors.text,
-    marginBottom: spacing.sm,
-  },
-  emptySubText: {
-    fontSize: fontSize.md,
-    color: colors.textMuted,
-  },
-
-  // Pagination
-=======
   emptyContainer: {
     alignItems: "center",
   },
@@ -611,56 +411,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   emptySubText: {},
->>>>>>> mobile
   pagination: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-<<<<<<< HEAD
-    paddingVertical: spacing.xl,
-    paddingHorizontal: spacing.lg,
-    gap: spacing.md,
-    backgroundColor: colors.white,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    marginTop: spacing.lg,
-  },
-  pageBtn: {
-    flex: 1,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    borderRadius: borderRadius.lg,
-    backgroundColor: colors.primary,
-    alignItems: "center",
-  },
-  pageBtnDisabled: {
-    backgroundColor: colors.surface,
-    opacity: 0.5,
-  },
-  pageBtnText: {
-    color: colors.white,
-    fontWeight: fontWeight.semibold,
-    fontSize: fontSize.sm,
-  },
-  pageBtnTextDisabled: {
-    color: colors.textMuted,
-  },
-  pageInfo: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: spacing.md,
-  },
-  pageInfoText: {
-    fontSize: fontSize.sm,
-    color: colors.textMuted,
-    fontWeight: fontWeight.medium,
-  },
-=======
     borderTopWidth: 1,
   },
   pageBtn: {},
   pageBtnText: {},
   pageInfo: {},
   pageInfoText: {},
->>>>>>> mobile
 });

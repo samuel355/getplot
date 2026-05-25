@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-import { useUser } from '@clerk/clerk-expo';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
-import { PaystackCheckout } from '../../../src/components/PaystackCheckout';
-import { Button } from '../../../src/components/ui/Button';
-import { Input } from '../../../src/components/ui/Input';
-import { Loading } from '../../../src/components/ui/Loading';
-import { colors, fontSize, spacing } from '../../../src/constants/theme';
-import { formatGhs, getPlotById, updatePlotOnHold } from '../../../src/lib/plotService';
-import type { BuyerInfo, PlotFeature } from '../../../src/types/plot';
-=======
 import { useUser } from "@clerk/clerk-expo";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -36,41 +23,25 @@ import {
 } from "../../../src/lib/plotService";
 import type { BuyerInfo, PlotFeature } from "../../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
->>>>>>> mobile
 
 const DEPOSIT_RATE = 0.1;
 
 export default function ReservePlotScreen() {
-<<<<<<< HEAD
-  const { id, table } = useLocalSearchParams<{ id: string; table: string }>();
-  const { user } = useUser();
-  const router = useRouter();
-=======
   const { colors, spacing, borderRadius, fontWeight, fontSize, isDark } = useTheme();
   const { id, table } = useLocalSearchParams<{ id: string; table: string }>();
   const { user } = useUser();
   const router = useRouter();
 
->>>>>>> mobile
   const [plot, setPlot] = useState<PlotFeature | null>(null);
   const [loading, setLoading] = useState(true);
   const [payVisible, setPayVisible] = useState(false);
   const [buyer, setBuyer] = useState<BuyerInfo>({
-<<<<<<< HEAD
-    firstname: user?.firstName || '',
-    lastname: user?.lastName || '',
-    email: user?.primaryEmailAddress?.emailAddress || '',
-    phone: '',
-    country: 'Ghana',
-    residentialAddress: '',
-=======
     firstname: user?.firstName || "",
     lastname: user?.lastName || "",
     email: user?.primaryEmailAddress?.emailAddress || "",
     phone: "",
     country: "Ghana",
     residentialAddress: "",
->>>>>>> mobile
     plotTotalAmount: 0,
     paidAmount: 0,
     remainingAmount: 0,
@@ -94,10 +65,6 @@ export default function ReservePlotScreen() {
     });
   }, [id, table]);
 
-<<<<<<< HEAD
-  if (loading) return <Loading />;
-  if (!plot) return null;
-=======
   const validate = () => {
     if (!buyer.firstname.trim()) return "Enter first name";
     if (!buyer.lastname.trim()) return "Enter last name";
@@ -143,38 +110,11 @@ export default function ReservePlotScreen() {
       </View>
     );
   }
->>>>>>> mobile
 
   const deposit = buyer.paidAmount || 0;
   const reference = `reserve_${id}_${Date.now()}`;
 
   return (
-<<<<<<< HEAD
-    <>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.heading}>Reserve Plot {plot.properties?.Plot_No}</Text>
-        <Text style={styles.line}>Full price: {formatGhs(buyer.plotTotalAmount)}</Text>
-        <Text style={styles.deposit}>Deposit (10%): {formatGhs(deposit)}</Text>
-
-        <Input label="First name" value={buyer.firstname} onChangeText={(v) => setBuyer({ ...buyer, firstname: v })} />
-        <Input label="Last name" value={buyer.lastname} onChangeText={(v) => setBuyer({ ...buyer, lastname: v })} />
-        <Input label="Email" value={buyer.email} onChangeText={(v) => setBuyer({ ...buyer, email: v })} autoCapitalize="none" />
-        <Input label="Phone" value={buyer.phone} onChangeText={(v) => setBuyer({ ...buyer, phone: v })} />
-        <Input label="Address" value={buyer.residentialAddress} onChangeText={(v) => setBuyer({ ...buyer, residentialAddress: v })} />
-
-        <Button
-          title={`Pay Deposit ${formatGhs(deposit)}`}
-          onPress={() => {
-            if (!buyer.phone) {
-              Alert.alert('Validation', 'Enter phone number');
-              return;
-            }
-            setPayVisible(true);
-          }}
-        />
-      </ScrollView>
-
-=======
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -374,37 +314,19 @@ export default function ReservePlotScreen() {
         <Button title={`Reserve Now • ${formatGhs(deposit)}`} onPress={onPay} size="lg" fullWidth />
       </View>
 
->>>>>>> mobile
       <PaystackCheckout
         visible={payVisible}
         email={buyer.email}
         amount={deposit}
         reference={reference}
-<<<<<<< HEAD
-        onSuccess={async () => {
-          setPayVisible(false);
-          if (table && id) await updatePlotOnHold(table, id, buyer);
-          router.replace('/payment-success');
-        }}
-        onClose={() => setPayVisible(false)}
-      />
-    </>
-=======
         onSuccess={onPaymentSuccess}
         onClose={() => setPayVisible(false)}
       />
     </View>
->>>>>>> mobile
   );
 }
 
 const styles = StyleSheet.create({
-<<<<<<< HEAD
-  container: { padding: spacing.lg },
-  heading: { fontSize: fontSize.xl, fontWeight: '800', color: colors.primary },
-  line: { marginTop: spacing.sm, color: colors.textMuted },
-  deposit: { fontSize: fontSize.lg, fontWeight: '700', color: colors.primary, marginVertical: spacing.md },
-=======
   container: { flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 40 },
   errorText: { marginBottom: 20, textAlign: "center" },
@@ -504,5 +426,4 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingBottom: 34,
   },
->>>>>>> mobile
 });

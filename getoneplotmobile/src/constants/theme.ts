@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Modern, mobile-optimized color palette
 export const colors = {
   // Primary brand colors
@@ -5,6 +6,22 @@ export const colors = {
   primaryLight: "#1a1870",
   primaryDark: "#030027",
   primaryAccent: "#6366f1", // Indigo for highlights
+=======
+import { useColorScheme } from "react-native";
+import { useAppStore } from "../stores/appStore";
+
+// Brand colors extracted from logo
+const BRAND_NAVY = "#191347";
+const BRAND_TEAL = "#68c9cd";
+
+// Modern, mobile-optimized color palette
+const lightColors = {
+  // Primary brand colors
+  primary: BRAND_NAVY,
+  primaryLight: "#2d2475",
+  primaryDark: "#0d0a2b",
+  primaryAccent: BRAND_TEAL,
+>>>>>>> mobile
 
   // Semantic colors
   success: "#10b981", // Emerald
@@ -12,7 +29,11 @@ export const colors = {
   warning: "#f59e0b", // Amber
   info: "#3b82f6", // Blue
 
+<<<<<<< HEAD
   // Plot status (legend / UI — matches plotStatus.ts)
+=======
+  // Plot status
+>>>>>>> mobile
   plotAvailable: "#166534",
   plotReserved: "#171717",
   plotSold: "#dc2626",
@@ -40,7 +61,75 @@ export const colors = {
   shadow: "rgba(0, 0, 0, 0.1)",
 };
 
+<<<<<<< HEAD
 // Responsive spacing system (8px base)
+=======
+const darkColors = {
+  // Primary brand colors
+  primary: "#a5b4fc", // Lighter lavender-blue for dark mode
+  primaryLight: "#c7d2fe",
+  primaryDark: BRAND_NAVY,
+  primaryAccent: BRAND_TEAL,
+
+  // Semantic colors
+  success: "#34d399",
+  error: "#f87171",
+  warning: "#fbbf24",
+  info: "#60a5fa",
+
+  // Plot status
+  plotAvailable: "#22c55e",
+  plotReserved: "#e5e7eb",
+  plotSold: "#ef4444",
+  plotOnHold: "#9ca3af",
+  plotUnpriced: "#3b82f6",
+  accentBlue: "#60a5fa",
+
+  // Neutral palette
+  white: "#ffffff",
+  black: "#000000",
+  background: "#0f172a",
+  surface: "#1e293b",
+  surfaceAlt: "#334155",
+  border: "#334155",
+  borderLight: "#1e293b",
+
+  // Text hierarchy
+  text: "#f8fafc",
+  textSecondary: "#cbd5e1",
+  textMuted: "#94a3b8",
+  textLight: "#475569",
+  textInverse: "#0f172a",
+
+  // Shadow
+  shadow: "rgba(0, 0, 0, 0.3)",
+};
+
+export const colors = lightColors; // Default for static usage, but prefer useTheme hook
+
+export function useTheme() {
+  const systemColorScheme = useColorScheme();
+  const themePreference = useAppStore((state) => state.theme);
+
+  const isDark =
+    themePreference === "system" ? systemColorScheme === "dark" : themePreference === "dark";
+
+  const themeColors = isDark ? darkColors : lightColors;
+
+  return {
+    colors: themeColors,
+    isDark,
+    themePreference,
+    spacing,
+    fontSize,
+    fontWeight,
+    borderRadius,
+    shadows,
+  };
+}
+
+// Static values that don't change between themes
+>>>>>>> mobile
 export const spacing = {
   xs: 4,
   sm: 8,
@@ -51,7 +140,10 @@ export const spacing = {
   xxxl: 40,
 };
 
+<<<<<<< HEAD
 // Mobile-optimized typography
+=======
+>>>>>>> mobile
 export const fontSize = {
   xs: 11,
   sm: 12,
@@ -64,7 +156,10 @@ export const fontSize = {
   display: 32,
 };
 
+<<<<<<< HEAD
 // Font weights
+=======
+>>>>>>> mobile
 export const fontWeight = {
   regular: "400",
   medium: "500",
@@ -73,7 +168,10 @@ export const fontWeight = {
   extrabold: "800",
 };
 
+<<<<<<< HEAD
 // Border radius system
+=======
+>>>>>>> mobile
 export const borderRadius = {
   none: 0,
   sm: 4,
@@ -83,7 +181,10 @@ export const borderRadius = {
   full: 9999,
 };
 
+<<<<<<< HEAD
 // Shadow system
+=======
+>>>>>>> mobile
 export const shadows = {
   none: "none",
   sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",

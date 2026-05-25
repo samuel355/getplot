@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { normalizePropertyImages } from '../lib/images';
 import { supabase } from '../lib/supabase';
 import type { Property, PropertyFilters } from '../types/property';
+=======
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { normalizePropertyImages } from "../lib/images";
+import { supabase } from "../lib/supabase";
+import type { Property, PropertyFilters } from "../types/property";
+>>>>>>> mobile
 
 function mapProperty(row: Record<string, unknown>): Property {
   const p = row as Property;
@@ -32,12 +41,17 @@ type PropertyState = {
   fetchFavorites: (userId: string) => Promise<void>;
   toggleFavorite: (
     propertyId: string,
+<<<<<<< HEAD
     userId?: string
+=======
+    userId?: string,
+>>>>>>> mobile
   ) => Promise<{ success: boolean; isFavorite: boolean; message?: string }>;
   isFavorite: (propertyId: string) => boolean;
 };
 
 const defaultFilters: PropertyFilters = {
+<<<<<<< HEAD
   propertyType: 'all',
   priceRange: [0, 10000000],
   location: 'all',
@@ -45,6 +59,15 @@ const defaultFilters: PropertyFilters = {
   bathrooms: 'any',
   sortBy: 'newest',
   property_type: 'all',
+=======
+  propertyType: "all",
+  priceRange: [0, 10000000],
+  location: "all",
+  bedrooms: "any",
+  bathrooms: "any",
+  sortBy: "newest",
+  property_type: "all",
+>>>>>>> mobile
 };
 
 export const usePropertyStore = create<PropertyState>()(
@@ -78,6 +101,7 @@ export const usePropertyStore = create<PropertyState>()(
           const to = from + propertiesPerPage - 1;
 
           let query = supabase
+<<<<<<< HEAD
             .from('properties')
             .select(
               'id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, description, features, region, property_type, rental_price, listing_type, negotiable',
@@ -106,10 +130,41 @@ export const usePropertyStore = create<PropertyState>()(
               query = query.gte('rental_price', minPrice).lte('rental_price', maxPrice);
             } else {
               query = query.gte('price', minPrice).lte('price', maxPrice);
+=======
+            .from("properties")
+            .select(
+              "id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, description, features, region, property_type, rental_price, listing_type, negotiable",
+              { count: "exact" },
+            )
+            .eq("status", "approved");
+
+          if (filters.propertyType !== "all") {
+            query = query.eq("type", filters.propertyType);
+          }
+          if (filters.property_type !== "all") {
+            query = query.eq("listing_type", filters.property_type);
+          }
+          if (filters.location !== "all") {
+            query = query.eq("region", filters.location);
+          }
+          if (filters.bedrooms !== "any" && filters.propertyType !== "land") {
+            query = query.gte("bedrooms", parseInt(filters.bedrooms, 10));
+          }
+          if (filters.bathrooms !== "any" && filters.propertyType !== "land") {
+            query = query.gte("bathrooms", parseInt(filters.bathrooms, 10));
+          }
+          const [minPrice, maxPrice] = filters.priceRange;
+          if (minPrice > 0 || maxPrice < 10000000) {
+            if (filters.property_type === "rent" || filters.property_type === "airbnb") {
+              query = query.gte("rental_price", minPrice).lte("rental_price", maxPrice);
+            } else {
+              query = query.gte("price", minPrice).lte("price", maxPrice);
+>>>>>>> mobile
             }
           }
 
           switch (filters.sortBy) {
+<<<<<<< HEAD
             case 'price-low':
               query = query.order('price', { ascending: true });
               break;
@@ -118,6 +173,16 @@ export const usePropertyStore = create<PropertyState>()(
               break;
             default:
               query = query.order('created_at', { ascending: false });
+=======
+            case "price-low":
+              query = query.order("price", { ascending: true });
+              break;
+            case "price-high":
+              query = query.order("price", { ascending: false });
+              break;
+            default:
+              query = query.order("created_at", { ascending: false });
+>>>>>>> mobile
           }
 
           const { data, error, count } = await query.range(from, to);
@@ -136,7 +201,11 @@ export const usePropertyStore = create<PropertyState>()(
         } catch (e) {
           set({
             loading: false,
+<<<<<<< HEAD
             error: e instanceof Error ? e.message : 'Failed to load properties',
+=======
+            error: e instanceof Error ? e.message : "Failed to load properties",
+>>>>>>> mobile
           });
         }
       },
@@ -145,9 +214,15 @@ export const usePropertyStore = create<PropertyState>()(
         set({ loading: true, error: null });
         try {
           const { data, error } = await supabase
+<<<<<<< HEAD
             .from('properties')
             .select('*')
             .eq('id', id)
+=======
+            .from("properties")
+            .select("*")
+            .eq("id", id)
+>>>>>>> mobile
             .single();
           if (error) throw error;
           const property = mapProperty(data as Record<string, unknown>);
@@ -156,7 +231,11 @@ export const usePropertyStore = create<PropertyState>()(
         } catch (e) {
           set({
             loading: false,
+<<<<<<< HEAD
             error: e instanceof Error ? e.message : 'Property not found',
+=======
+            error: e instanceof Error ? e.message : "Property not found",
+>>>>>>> mobile
           });
           return null;
         }
@@ -164,6 +243,7 @@ export const usePropertyStore = create<PropertyState>()(
 
       fetchFavorites: async (userId) => {
         const { data, error } = await supabase
+<<<<<<< HEAD
           .from('favorites')
           .select(
             `property_id, properties (id, title, price, location, type, images, bedrooms, bathrooms, size, description, created_at)`
@@ -175,6 +255,17 @@ export const usePropertyStore = create<PropertyState>()(
             const p = Array.isArray(row.properties)
               ? row.properties[0]
               : row.properties;
+=======
+          .from("favorites")
+          .select(
+            `property_id, properties (id, title, price, location, type, images, bedrooms, bathrooms, size, description, created_at, listing_type, rental_price)`,
+          )
+          .eq("user_id", userId);
+        if (error) return;
+        const favorites = (data || [])
+          .map((row: { properties: Property | Property[] | null }) => {
+            const p = Array.isArray(row.properties) ? row.properties[0] : row.properties;
+>>>>>>> mobile
             return p;
           })
           .filter(Boolean)
@@ -187,27 +278,44 @@ export const usePropertyStore = create<PropertyState>()(
           return {
             success: false,
             isFavorite: get().isFavorite(propertyId),
+<<<<<<< HEAD
             message: 'Sign in to save properties',
+=======
+            message: "Sign in to save properties",
+>>>>>>> mobile
           };
         }
         const isFav = get().isFavorite(propertyId);
         try {
           if (isFav) {
             await supabase
+<<<<<<< HEAD
               .from('favorites')
               .delete()
               .eq('user_id', userId)
               .eq('property_id', propertyId);
+=======
+              .from("favorites")
+              .delete()
+              .eq("user_id", userId)
+              .eq("property_id", propertyId);
+>>>>>>> mobile
             set((s) => ({
               favorites: s.favorites.filter((f) => f.id !== propertyId),
             }));
           } else {
+<<<<<<< HEAD
             await supabase
               .from('favorites')
               .insert([{ user_id: userId, property_id: propertyId }]);
             const property =
               get().properties.find((p) => p.id === propertyId) ||
               get().selectedProperty;
+=======
+            await supabase.from("favorites").insert([{ user_id: userId, property_id: propertyId }]);
+            const property =
+              get().properties.find((p) => p.id === propertyId) || get().selectedProperty;
+>>>>>>> mobile
             if (property) {
               set((s) => ({ favorites: [...s.favorites, property] }));
             }
@@ -217,11 +325,16 @@ export const usePropertyStore = create<PropertyState>()(
           return {
             success: false,
             isFavorite: isFav,
+<<<<<<< HEAD
             message: e instanceof Error ? e.message : 'Failed',
+=======
+            message: e instanceof Error ? e.message : "Failed",
+>>>>>>> mobile
           };
         }
       },
 
+<<<<<<< HEAD
       isFavorite: (propertyId) =>
         get().favorites.some((f) => f.id === propertyId),
     }),
@@ -231,4 +344,14 @@ export const usePropertyStore = create<PropertyState>()(
       partialize: (s) => ({ favorites: s.favorites }),
     }
   )
+=======
+      isFavorite: (propertyId) => get().favorites.some((f) => f.id === propertyId),
+    }),
+    {
+      name: "getoneplot-properties",
+      storage: createJSONStorage(() => AsyncStorage),
+      partialize: (s) => ({ favorites: s.favorites }),
+    },
+  ),
+>>>>>>> mobile
 );

@@ -6,11 +6,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-<<<<<<< HEAD
-import { colors } from "../src/constants/theme";
-=======
 import { colors, useTheme } from "../src/constants/theme";
->>>>>>> mobile
 
 // Keep the splash screen visible until we're done with app setup
 SplashScreen.preventAutoHideAsync().catch(() => {
@@ -23,8 +19,6 @@ const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
  * Mirrors web ClerkProvider (app/layout.jsx):
  * sign-in → /approval after auth; sign-out → home.
  */
-<<<<<<< HEAD
-=======
 function InnerLayout() {
   const { colors, isDark } = useTheme();
 
@@ -66,27 +60,15 @@ function InnerLayout() {
   );
 }
 
->>>>>>> mobile
 export default function RootLayout() {
   if (!publishableKey) {
     console.warn("Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY");
   }
 
   useEffect(() => {
-<<<<<<< HEAD
-    // Hide the splash screen once the app is ready
-    // Add a small delay to ensure the app is actually ready
-    const timer = setTimeout(() => {
-      SplashScreen.hideAsync().catch(() => {
-        // It's ok if this fails
-      });
-    }, 500);
-
-=======
     const timer = setTimeout(() => {
       SplashScreen.hideAsync().catch(() => {});
     }, 500);
->>>>>>> mobile
     return () => clearTimeout(timer);
   }, []);
 
@@ -95,34 +77,7 @@ export default function RootLayout() {
       <ClerkLoaded>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SafeAreaProvider>
-<<<<<<< HEAD
-            <StatusBar style="dark" />
-            <Stack
-              screenOptions={{
-                headerStyle: { backgroundColor: colors.white },
-                headerTintColor: colors.primary,
-                headerTitleStyle: { fontWeight: "700" },
-                contentStyle: { backgroundColor: colors.background },
-              }}
-            >
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="(protected)" options={{ headerShown: false }} />
-              <Stack.Screen name="approval" options={{ title: "Approval", headerShown: false }} />
-              <Stack.Screen name="plot/interest" options={{ title: "Express Interest" }} />
-              <Stack.Screen
-                name="property/[id]"
-                options={{ title: "Property", headerBackTitle: "Back" }}
-              />
-              <Stack.Screen name="contact" options={{ title: "Contact Us" }} />
-              <Stack.Screen
-                name="payment-success"
-                options={{ title: "Success", headerShown: false }}
-              />
-            </Stack>
-=======
             <InnerLayout />
->>>>>>> mobile
           </SafeAreaProvider>
         </GestureHandlerRootView>
       </ClerkLoaded>

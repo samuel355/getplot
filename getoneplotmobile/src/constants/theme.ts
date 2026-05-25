@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-// Modern, mobile-optimized color palette
-export const colors = {
-  // Primary brand colors
-  primary: "#05014c",
-  primaryLight: "#1a1870",
-  primaryDark: "#030027",
-  primaryAccent: "#6366f1", // Indigo for highlights
-=======
 import { useColorScheme } from "react-native";
 import { useAppStore } from "../stores/appStore";
 
@@ -21,7 +12,6 @@ const lightColors = {
   primaryLight: "#2d2475",
   primaryDark: "#0d0a2b",
   primaryAccent: BRAND_TEAL,
->>>>>>> mobile
 
   // Semantic colors
   success: "#10b981", // Emerald
@@ -29,11 +19,7 @@ const lightColors = {
   warning: "#f59e0b", // Amber
   info: "#3b82f6", // Blue
 
-<<<<<<< HEAD
-  // Plot status (legend / UI — matches plotStatus.ts)
-=======
   // Plot status
->>>>>>> mobile
   plotAvailable: "#166534",
   plotReserved: "#171717",
   plotSold: "#dc2626",
@@ -61,9 +47,6 @@ const lightColors = {
   shadow: "rgba(0, 0, 0, 0.1)",
 };
 
-<<<<<<< HEAD
-// Responsive spacing system (8px base)
-=======
 const darkColors = {
   // Primary brand colors
   primary: "#a5b4fc", // Lighter lavender-blue for dark mode
@@ -129,7 +112,6 @@ export function useTheme() {
 }
 
 // Static values that don't change between themes
->>>>>>> mobile
 export const spacing = {
   xs: 4,
   sm: 8,
@@ -140,10 +122,6 @@ export const spacing = {
   xxxl: 40,
 };
 
-<<<<<<< HEAD
-// Mobile-optimized typography
-=======
->>>>>>> mobile
 export const fontSize = {
   xs: 11,
   sm: 12,
@@ -156,10 +134,6 @@ export const fontSize = {
   display: 32,
 };
 
-<<<<<<< HEAD
-// Font weights
-=======
->>>>>>> mobile
 export const fontWeight = {
   regular: "400",
   medium: "500",
@@ -168,10 +142,6 @@ export const fontWeight = {
   extrabold: "800",
 };
 
-<<<<<<< HEAD
-// Border radius system
-=======
->>>>>>> mobile
 export const borderRadius = {
   none: 0,
   sm: 4,
@@ -181,10 +151,6 @@ export const borderRadius = {
   full: 9999,
 };
 
-<<<<<<< HEAD
-// Shadow system
-=======
->>>>>>> mobile
 export const shadows = {
   none: "none",
   sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",

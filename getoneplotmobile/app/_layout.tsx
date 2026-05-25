@@ -37,7 +37,10 @@ function InnerLayout() {
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(protected)" options={{ headerShown: false }} />
         <Stack.Screen name="approval" options={{ title: "Approval", headerShown: false }} />
-        <Stack.Screen name="plot/interest" options={{ title: "Express Interest" }} />
+        <Stack.Screen
+          name="plot/interest"
+          options={{ title: "Express Interest", headerBackTitle: "Back" }}
+        />
         <Stack.Screen
           name="property/[id]"
           options={{ title: "Property", headerBackTitle: "Back" }}
@@ -50,7 +53,7 @@ function InnerLayout() {
           name="property/my-listings"
           options={{ title: "My Listings", headerBackTitle: "Back" }}
         />
-        <Stack.Screen name="contact" options={{ title: "Contact Us" }} />
+        <Stack.Screen name="contact" options={{ title: "Contact Us", headerBackTitle: "Back" }} />
         <Stack.Screen name="payment-success" options={{ title: "Success", headerShown: false }} />
       </Stack>
     </>

@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import { FlatList, Pressable, StyleSheet, Text, View, type TextStyle } from "react-native";
 import { Button } from "../../src/components/ui/Button";
 import { useTheme } from "../../src/constants/theme";
-import { formatGhs } from "../../src/lib/plotService";
+import { formatGhs, formatStreet } from "../../src/lib/plotService";
 import { useCartStore } from "../../src/stores/cartStore";
 
 export default function CartScreen() {
@@ -81,6 +81,9 @@ export default function CartScreen() {
               </Text>
               <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.sm }]}>
                 {item.properties?.Site ?? "Standard Plot"}
+                {item.properties?.Street_Nam
+                  ? ` • ${formatStreet(item.properties.Street_Nam)}`
+                  : ""}
               </Text>
               <Text
                 style={[

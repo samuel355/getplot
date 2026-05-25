@@ -1,24 +1,17 @@
-import { supabase } from './supabase';
-import type { BuyerInfo, PlotFeature } from '../types/plot';
+import { supabase } from "./supabase";
+import type { BuyerInfo, PlotFeature } from "../types/plot";
 
-export async function getPlotById(
-  table: string,
-  id: string
-): Promise<PlotFeature | null> {
-  const { data, error } = await supabase.from(table).select('*').eq('id', id).single();
+export async function getPlotById(table: string, id: string): Promise<PlotFeature | null> {
+  const { data, error } = await supabase.from(table).select("*").eq("id", id).single();
   if (error || !data) return null;
   return data as PlotFeature;
 }
 
-export async function updatePlotOnHold(
-  table: string,
-  plotId: string,
-  buyer: BuyerInfo
-) {
+export async function updatePlotOnHold(table: string, plotId: string, buyer: BuyerInfo) {
   return supabase
     .from(table)
     .update({
-      status: 'On Hold',
+      status: "On Hold",
       firstname: buyer.firstname,
       lastname: buyer.lastname,
       email: buyer.email,
@@ -26,7 +19,7 @@ export async function updatePlotOnHold(
       country: buyer.country,
       residentialAddress: buyer.residentialAddress,
     })
-    .eq('id', plotId);
+    .eq("id", plotId);
 }
 
 export async function submitPlotInterest(
@@ -40,14 +33,11 @@ export async function submitPlotInterest(
     phone: string;
     country: string;
     message: string;
-  }
+  },
 ) {
-  const { data: plotRows } = await supabase
-    .from(plotTable)
-    .select('*')
-    .eq('id', plotId);
+  const { data: plotRows } = await supabase.from(plotTable).select("*").eq("id", plotId);
   const plot = plotRows?.[0];
-  if (!plot) throw new Error('Plot not found');
+  if (!plot) throw new Error("Plot not found");
 
   const { error } = await supabase.from(interestTable).insert([
     {
@@ -64,22 +54,25 @@ export async function submitPlotInterest(
   if (error) throw error;
 }
 
-export async function updatePlotPrice(
-  table: string,
-  plotId: string,
-  price: number
-) {
-  return supabase.from(table).update({ plotTotalAmount: price }).eq('id', plotId);
+export async function updatePlotPrice(table: string, plotId: string, price: number) {
+  return supabase.from(table).update({ plotTotalAmount: price }).eq("id", plotId);
 }
 
-export async function updatePlotStatusAdmin(
-  table: string,
-  plotId: string,
-  status: string
-) {
-  return supabase.from(table).update({ status }).eq('id', plotId);
+export async function updatePlotStatusAdmin(table: string, plotId: string, status: string) {
+  return supabase.from(table).update({ status }).eq("id", plotId);
 }
 
 export function formatGhs(amount: number) {
-  return `GHS ${amount.toLocaleString('en-GH')}`;
+  return `GHS ${amount.toLocaleString("en-GH")}`;
+}
+
+export function formatAreaSize(size: unknown): string {
+  if (size === undefined || size === null || size === "") return "";
+  const num = Number(size);
+  return Number.isNaN(num) ? "" : num.toFixed(2);
+}
+
+export function formatStreet(street: unknown): string {
+  if (!street) return "";
+  return String(street).replace(/\r/g, "").trim();
 }

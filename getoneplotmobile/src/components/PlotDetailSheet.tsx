@@ -16,16 +16,13 @@ import {
 import { useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, fontSize, spacing } from "../constants/theme";
-import { formatGhs } from "../lib/plotService";
+import { formatGhs, formatAreaSize, formatStreet } from "../lib/plotService";
 import type { PlotFeature, PlotProperties } from "../types/plot";
 import type { Development } from "../constants/developments";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  getPlotActionVisibility,
-  PLOT_SUPPORT_PHONE,
-} from "../constants/plotStatus";
+import { getPlotActionVisibility, PLOT_SUPPORT_PHONE } from "../constants/plotStatus";
 
 type Props = {
   visible: boolean;
@@ -41,21 +38,10 @@ type Props = {
 
 type DetailRow = { label: string; value: string };
 
-function formatSize(size: unknown): string {
-  if (size === undefined || size === null || size === "") return "";
-  const num = Number(size);
-  return Number.isNaN(num) ? "" : num.toFixed(2);
-}
-
-function formatStreet(street: unknown): string {
-  if (!street) return "";
-  return String(street).replace(/\r/g, "").trim();
-}
-
 function buildDetailRows(props: PlotProperties): DetailRow[] {
   const rows: DetailRow[] = [];
 
-  const size = formatSize(props.Area);
+  const size = formatAreaSize(props.Area);
   if (size) rows.push({ label: "Size", value: `${size} acres` });
 
   const useType = props.For;
@@ -238,7 +224,9 @@ export function PlotDetailSheet({
                   <View style={styles.statusBanner}>
                     <Text style={styles.statusBannerText}>
                       This plot is on hold for a client for 48 hours.
-                      {isAdmin ? " You can edit this plot and change the status on the web dashboard." : ""}
+                      {isAdmin
+                        ? " You can edit this plot and change the status on the web dashboard."
+                        : ""}
                     </Text>
                   </View>
                 ) : null}
@@ -256,10 +244,7 @@ export function PlotDetailSheet({
                           ]}
                         >
                           <Text
-                            style={[
-                              styles.detailLabel,
-                              isDescription && styles.detailLabelStacked,
-                            ]}
+                            style={[styles.detailLabel, isDescription && styles.detailLabelStacked]}
                           >
                             {row.label}
                           </Text>
@@ -341,9 +326,7 @@ export function PlotDetailSheet({
                         />
                       ) : null}
                     </View>
-                    {actions.showBuy ? (
-                      <Button title="Buy plot" fullWidth onPress={onBuy} />
-                    ) : null}
+                    {actions.showBuy ? <Button title="Buy plot" fullWidth onPress={onBuy} /> : null}
                   </>
                 ) : actions.showCallForInfo ? (
                   <Button title="Call for info" fullWidth onPress={handleCallForInfo} />

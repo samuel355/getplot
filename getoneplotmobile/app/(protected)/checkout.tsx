@@ -6,7 +6,7 @@ import { PaystackCheckout } from "../../src/components/PaystackCheckout";
 import { Button } from "../../src/components/ui/Button";
 import { Input } from "../../src/components/ui/Input";
 import { useTheme } from "../../src/constants/theme";
-import { formatGhs } from "../../src/lib/plotService";
+import { formatGhs, formatStreet } from "../../src/lib/plotService";
 import { useCartStore } from "../../src/stores/cartStore";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -126,6 +126,7 @@ export default function CheckoutScreen() {
                 </Text>
                 <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.xs }]}>
                   {p.properties?.Site ?? "Investment Plot"}
+                  {p.properties?.Street_Nam ? ` • ${formatStreet(p.properties.Street_Nam)}` : ""}
                 </Text>
               </View>
               <Text

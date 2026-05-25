@@ -7,7 +7,13 @@ import { Button } from "../../../src/components/ui/Button";
 import { Input } from "../../../src/components/ui/Input";
 import { Loading } from "../../../src/components/ui/Loading";
 import { useTheme } from "../../../src/constants/theme";
-import { formatGhs, getPlotById, updatePlotOnHold } from "../../../src/lib/plotService";
+import {
+  formatGhs,
+  getPlotById,
+  updatePlotOnHold,
+  formatAreaSize,
+  formatStreet,
+} from "../../../src/lib/plotService";
 import type { BuyerInfo, PlotFeature } from "../../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -122,6 +128,11 @@ export default function BuyPlotScreen() {
               <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.sm }]}>
                 {plot.properties?.Site ?? "Standard Development"}
               </Text>
+              {plot.properties?.Street_Nam ? (
+                <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.xs }]}>
+                  {formatStreet(plot.properties.Street_Nam)}
+                </Text>
+              ) : null}
             </View>
           </View>
 
@@ -139,7 +150,7 @@ export default function BuyPlotScreen() {
             <View style={styles.stat}>
               <Text style={[styles.statLabel, { color: colors.textMuted }]}>Area Size</Text>
               <Text style={[styles.statValue, { color: colors.text }]}>
-                {plot.properties?.Area ?? "Unknown"}
+                {formatAreaSize(plot.properties?.Area) || "Unknown"}
               </Text>
             </View>
             <View style={[styles.statDivider, { backgroundColor: colors.borderLight }]} />

@@ -11,7 +11,10 @@ import {
   type TextStyle,
   type ViewStyle,
   Dimensions,
+  Alert,
+  Linking,
 } from "react-native";
+import * as WebBrowser from "expo-web-browser";
 import { ProfileGuestAuth } from "../../src/components/auth/ProfileGuestAuth";
 import { useTheme } from "../../src/constants/theme";
 import { formatGhs } from "../../src/lib/plotService";
@@ -21,6 +24,9 @@ import type { Property } from "../../src/types/property";
 import { Button } from "../../src/components/ui/Button";
 
 const { width } = Dimensions.get("window");
+
+const PRIVACY_POLICY_URL = "https://getoneplot.com/privacy";
+const TERMS_URL = "https://getoneplot.com/terms";
 
 type ActionRowProps = {
   icon: keyof typeof Ionicons.glyphMap;
@@ -62,6 +68,46 @@ export default function ProfileScreen() {
   if (!isSignedIn) {
     return <ProfileGuestAuth />;
   }
+
+  const handleOpenLink = async (url: string) => {
+    await WebBrowser.openBrowserAsync(url);
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? This action is permanent and will remove all your data including saved properties and listings.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete My Account",
+          style: "destructive",
+          onPress: async () => {
+            // Note: Clerk client-side SDK doesn't support direct deletion for security.
+            // We direct the user to our support or a deletion request flow.
+            const supportEmail = "support@getoneplot.com";
+            const subject = "Account Deletion Request";
+            const body = `I would like to request the deletion of my account associated with ${email}. User ID: ${user?.id}`;
+            const mailUrl = `mailto:${supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            Alert.alert(
+              "Request Deletion",
+              "To comply with security standards, account deletion must be verified. Would you like to send a deletion request to our support team?",
+              [
+                { text: "Not Now", style: "cancel" },
+                {
+                  text: "Send Request",
+                  onPress: () => {
+                    Linking.openURL(mailUrl);
+                  },
+                },
+              ],
+            );
+          },
+        },
+      ],
+    );
+  };
 
   const getInitial = () => {
     return (
@@ -377,6 +423,43 @@ export default function ProfileScreen() {
               await signOut();
               router.replace("/(tabs)");
             }}
+          />
+        </View>
+
+        {/* Legal & Privacy Section */}
+        <Text
+          style={[styles.sectionTitle, { color: colors.text, marginTop: 24, marginBottom: 12 }]}
+        >
+          Legal & Safety
+        </Text>
+        <View
+          style={[
+            styles.groupedCard,
+            {
+              backgroundColor: colors.surface,
+              borderColor: colors.border,
+              borderRadius: borderRadius.xl,
+            },
+          ]}
+        >
+          <ActionRow
+            icon="document-text-outline"
+            label="Privacy Policy"
+            detail="How we handle your data"
+            onPress={() => handleOpenLink(PRIVACY_POLICY_URL)}
+          />
+          <ActionRow
+            icon="shield-checkmark-outline"
+            label="Terms of Service"
+            detail="Our agreement with you"
+            onPress={() => handleOpenLink(TERMS_URL)}
+          />
+          <ActionRow
+            icon="trash-outline"
+            label="Delete Account"
+            detail="Permanently remove your data"
+            tone="danger"
+            onPress={handleDeleteAccount}
             isLast
           />
         </View>

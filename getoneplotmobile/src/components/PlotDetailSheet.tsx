@@ -16,16 +16,24 @@ import {
 import { useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, fontSize, spacing } from "../constants/theme";
+<<<<<<< HEAD
 import { formatGhs } from "../lib/plotService";
+=======
+import { formatGhs, formatAreaSize, formatStreet } from "../lib/plotService";
+>>>>>>> mobile
 import type { PlotFeature, PlotProperties } from "../types/plot";
 import type { Development } from "../constants/developments";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+<<<<<<< HEAD
 import {
   getPlotActionVisibility,
   PLOT_SUPPORT_PHONE,
 } from "../constants/plotStatus";
+=======
+import { getPlotActionVisibility, PLOT_SUPPORT_PHONE } from "../constants/plotStatus";
+>>>>>>> mobile
 
 type Props = {
   visible: boolean;
@@ -41,6 +49,7 @@ type Props = {
 
 type DetailRow = { label: string; value: string };
 
+<<<<<<< HEAD
 function formatSize(size: unknown): string {
   if (size === undefined || size === null || size === "") return "";
   const num = Number(size);
@@ -56,6 +65,12 @@ function buildDetailRows(props: PlotProperties): DetailRow[] {
   const rows: DetailRow[] = [];
 
   const size = formatSize(props.Area);
+=======
+function buildDetailRows(props: PlotProperties): DetailRow[] {
+  const rows: DetailRow[] = [];
+
+  const size = formatAreaSize(props.Area);
+>>>>>>> mobile
   if (size) rows.push({ label: "Size", value: `${size} acres` });
 
   const useType = props.For;
@@ -238,7 +253,13 @@ export function PlotDetailSheet({
                   <View style={styles.statusBanner}>
                     <Text style={styles.statusBannerText}>
                       This plot is on hold for a client for 48 hours.
+<<<<<<< HEAD
                       {isAdmin ? " You can edit this plot and change the status on the web dashboard." : ""}
+=======
+                      {isAdmin
+                        ? " You can edit this plot and change the status on the web dashboard."
+                        : ""}
+>>>>>>> mobile
                     </Text>
                   </View>
                 ) : null}
@@ -256,10 +277,14 @@ export function PlotDetailSheet({
                           ]}
                         >
                           <Text
+<<<<<<< HEAD
                             style={[
                               styles.detailLabel,
                               isDescription && styles.detailLabelStacked,
                             ]}
+=======
+                            style={[styles.detailLabel, isDescription && styles.detailLabelStacked]}
+>>>>>>> mobile
                           >
                             {row.label}
                           </Text>
@@ -341,9 +366,13 @@ export function PlotDetailSheet({
                         />
                       ) : null}
                     </View>
+<<<<<<< HEAD
                     {actions.showBuy ? (
                       <Button title="Buy plot" fullWidth onPress={onBuy} />
                     ) : null}
+=======
+                    {actions.showBuy ? <Button title="Buy plot" fullWidth onPress={onBuy} /> : null}
+>>>>>>> mobile
                   </>
                 ) : actions.showCallForInfo ? (
                   <Button title="Call for info" fullWidth onPress={handleCallForInfo} />

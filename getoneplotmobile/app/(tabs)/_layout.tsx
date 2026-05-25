@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+<<<<<<< HEAD
 import { colors } from "../../src/constants/theme";
 
 export default function TabsLayout() {
@@ -11,6 +12,27 @@ export default function TabsLayout() {
         headerStyle: { backgroundColor: colors.white },
         headerTintColor: colors.primary,
         headerTitleStyle: { fontWeight: "700" },
+=======
+import { useTheme } from "../../src/constants/theme";
+import { useCartStore } from "../../src/stores/cartStore";
+
+export default function TabsLayout() {
+  const { colors } = useTheme();
+  const cartCount = useCartStore((state) => state.plots.length);
+
+  return (
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: colors.primaryAccent,
+        tabBarInactiveTintColor: colors.textMuted,
+        headerStyle: { backgroundColor: colors.background },
+        headerTintColor: colors.text,
+        headerTitleStyle: { fontWeight: "700" },
+        tabBarStyle: {
+          backgroundColor: colors.background,
+          borderTopColor: colors.border,
+        },
+>>>>>>> mobile
       }}
     >
       <Tabs.Screen
@@ -46,6 +68,15 @@ export default function TabsLayout() {
         name="cart"
         options={{
           title: "Cart",
+<<<<<<< HEAD
+=======
+          tabBarBadge: cartCount > 0 ? cartCount : undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: colors.primaryAccent,
+            color: colors.white,
+            fontSize: 10,
+          },
+>>>>>>> mobile
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="cart-outline" size={size} color={color} />
           ),

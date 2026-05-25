@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { supabase } from './supabase';
 import type { BuyerInfo, PlotFeature } from '../types/plot';
 
@@ -6,10 +7,18 @@ export async function getPlotById(
   id: string
 ): Promise<PlotFeature | null> {
   const { data, error } = await supabase.from(table).select('*').eq('id', id).single();
+=======
+import { supabase } from "./supabase";
+import type { BuyerInfo, PlotFeature } from "../types/plot";
+
+export async function getPlotById(table: string, id: string): Promise<PlotFeature | null> {
+  const { data, error } = await supabase.from(table).select("*").eq("id", id).single();
+>>>>>>> mobile
   if (error || !data) return null;
   return data as PlotFeature;
 }
 
+<<<<<<< HEAD
 export async function updatePlotOnHold(
   table: string,
   plotId: string,
@@ -19,6 +28,13 @@ export async function updatePlotOnHold(
     .from(table)
     .update({
       status: 'On Hold',
+=======
+export async function updatePlotOnHold(table: string, plotId: string, buyer: BuyerInfo) {
+  return supabase
+    .from(table)
+    .update({
+      status: "On Hold",
+>>>>>>> mobile
       firstname: buyer.firstname,
       lastname: buyer.lastname,
       email: buyer.email,
@@ -26,7 +42,11 @@ export async function updatePlotOnHold(
       country: buyer.country,
       residentialAddress: buyer.residentialAddress,
     })
+<<<<<<< HEAD
     .eq('id', plotId);
+=======
+    .eq("id", plotId);
+>>>>>>> mobile
 }
 
 export async function submitPlotInterest(
@@ -40,6 +60,7 @@ export async function submitPlotInterest(
     phone: string;
     country: string;
     message: string;
+<<<<<<< HEAD
   }
 ) {
   const { data: plotRows } = await supabase
@@ -52,18 +73,37 @@ export async function submitPlotInterest(
   const { error } = await supabase.from(interestTable).insert([
     {
       plot_id: plotId,
+=======
+  },
+) {
+  const { data: plotRows } = await supabase.from(plotTable).select("*").eq("id", plotId);
+  const plot = plotRows?.[0];
+  if (!plot) throw new Error("Plot not found");
+
+  const { error } = await supabase.from(interestTable).insert([
+    {
+      plotId: plotId, // Matching web app's 'plotId'
+>>>>>>> mobile
       firstname: customer.firstname,
       lastname: customer.lastname,
       email: customer.email,
       phone: customer.phone,
       country: customer.country,
       message: customer.message,
+<<<<<<< HEAD
       plot_details: plot,
+=======
+      plot_number: plot.properties?.Plot_No,
+      plot_name: plot.properties?.Street_Nam,
+      plot_amount: plot.plotTotalAmount,
+      plot_details: plot, // Keeping full object for mobile app compatibility
+>>>>>>> mobile
     },
   ]);
   if (error) throw error;
 }
 
+<<<<<<< HEAD
 export async function updatePlotPrice(
   table: string,
   plotId: string,
@@ -82,4 +122,27 @@ export async function updatePlotStatusAdmin(
 
 export function formatGhs(amount: number) {
   return `GHS ${amount.toLocaleString('en-GH')}`;
+=======
+export async function updatePlotPrice(table: string, plotId: string, price: number) {
+  return supabase.from(table).update({ plotTotalAmount: price }).eq("id", plotId);
+}
+
+export async function updatePlotStatusAdmin(table: string, plotId: string, status: string) {
+  return supabase.from(table).update({ status }).eq("id", plotId);
+}
+
+export function formatGhs(amount: number) {
+  return `GHS ${amount.toLocaleString("en-GH")}`;
+}
+
+export function formatAreaSize(size: unknown): string {
+  if (size === undefined || size === null || size === "") return "";
+  const num = Number(size);
+  return Number.isNaN(num) ? "" : num.toFixed(2);
+}
+
+export function formatStreet(street: unknown): string {
+  if (!street) return "";
+  return String(street).replace(/\r/g, "").trim();
+>>>>>>> mobile
 }

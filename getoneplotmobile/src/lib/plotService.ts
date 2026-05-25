@@ -41,14 +41,17 @@ export async function submitPlotInterest(
 
   const { error } = await supabase.from(interestTable).insert([
     {
-      plot_id: plotId,
+      plotId: plotId, // Matching web app's 'plotId'
       firstname: customer.firstname,
       lastname: customer.lastname,
       email: customer.email,
       phone: customer.phone,
       country: customer.country,
       message: customer.message,
-      plot_details: plot,
+      plot_number: plot.properties?.Plot_No,
+      plot_name: plot.properties?.Street_Nam,
+      plot_amount: plot.plotTotalAmount,
+      plot_details: plot, // Keeping full object for mobile app compatibility
     },
   ]);
   if (error) throw error;

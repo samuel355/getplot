@@ -1,6 +1,21 @@
 import { supabase } from "./supabase";
 import type { BuyerInfo, PlotFeature } from "../types/plot";
 
+export type AdminPlotUpdate = {
+  status: string;
+  firstname?: string;
+  lastname?: string;
+  email?: string;
+  country?: string;
+  phone?: string;
+  residentialAddress?: string;
+  agent?: string;
+  plotTotalAmount: number;
+  paidAmount: number;
+  remainingAmount: number;
+  remarks?: string;
+};
+
 export async function getPlotById(table: string, id: string): Promise<PlotFeature | null> {
   const { data, error } = await supabase.from(table).select("*").eq("id", id).single();
   if (error || !data) return null;
@@ -63,6 +78,14 @@ export async function updatePlotPrice(table: string, plotId: string, price: numb
 
 export async function updatePlotStatusAdmin(table: string, plotId: string, status: string) {
   return supabase.from(table).update({ status }).eq("id", plotId);
+}
+
+export async function updatePlotDetailsAdmin(
+  table: string,
+  plotId: string,
+  payload: AdminPlotUpdate,
+) {
+  return supabase.from(table).update(payload).eq("id", plotId).select("*").single();
 }
 
 export function formatGhs(amount: number) {

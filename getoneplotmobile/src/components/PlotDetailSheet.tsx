@@ -12,15 +12,23 @@ import {
   Share,
   Linking,
   Alert,
+  TextInput,
 } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, fontSize, spacing } from "../constants/theme";
-import { formatGhs, formatAreaSize, formatStreet } from "../lib/plotService";
+import {
+  formatGhs,
+  formatAreaSize,
+  formatStreet,
+  updatePlotDetailsAdmin,
+  type AdminPlotUpdate,
+} from "../lib/plotService";
 import type { PlotFeature, PlotProperties } from "../types/plot";
 import type { Development } from "../constants/developments";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
+import { Input } from "./ui/Input";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getPlotActionVisibility, PLOT_SUPPORT_PHONE } from "../constants/plotStatus";
 
@@ -34,9 +42,26 @@ type Props = {
   onBuy: () => void;
   onReserve: () => void;
   onExpressInterest: () => void;
+  onPlotUpdated?: (plot: PlotFeature) => void;
 };
 
 type DetailRow = { label: string; value: string };
+type AdminForm = {
+  status: string;
+  plotTotalAmount: string;
+  paidAmount: string;
+  remainingAmount: string;
+  remarks: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  country: string;
+  phone: string;
+  residentialAddress: string;
+  agent: string;
+};
+
+const STATUS_OPTIONS = ["Sold", "Reserved", "Available", "On Hold"] as const;
 
 function buildDetailRows(props: PlotProperties): DetailRow[] {
   const rows: DetailRow[] = [];
@@ -62,12 +87,43 @@ function buildDetailRows(props: PlotProperties): DetailRow[] {
   return rows;
 }
 
-function statusBadgeVariant(status: string): "success" | "error" | "warning" | "info" | "default" {
+function statusBadgeVariant(status: string): "success" | "error" | "warning" | "primary" | "secondary" {
   if (status === "Sold") return "error";
   if (status === "On Hold") return "warning";
   if (status === "Available") return "success";
-  if (status === "Reserved") return "default";
-  return "info";
+  if (status === "Reserved") return "secondary";
+  return "primary";
+}
+
+function numberToField(value: unknown): string {
+  const amount = Number(value ?? 0);
+  return Number.isFinite(amount) && amount > 0 ? String(amount) : "";
+}
+
+function parseCurrencyInput(value: string): number {
+  const parsed = Number(String(value || "0").replace(/,/g, ""));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function buildAdminForm(plot: PlotFeature | null): AdminForm {
+  const total = Number(plot?.plotTotalAmount ?? 0);
+  const paid = Number(plot?.paidAmount ?? 0);
+  const remaining = Number(plot?.remainingAmount ?? Math.max(total - paid, 0));
+
+  return {
+    status: plot?.status || "Available",
+    plotTotalAmount: numberToField(total),
+    paidAmount: numberToField(paid),
+    remainingAmount: numberToField(remaining),
+    remarks: plot?.remarks || "",
+    firstname: plot?.firstname || "",
+    lastname: plot?.lastname || "",
+    email: plot?.email || "",
+    country: plot?.country || "",
+    phone: plot?.phone || "",
+    residentialAddress: plot?.residentialAddress || "",
+    agent: plot?.agent || "",
+  };
 }
 
 export function PlotDetailSheet({
@@ -80,22 +136,31 @@ export function PlotDetailSheet({
   onBuy,
   onReserve,
   onExpressInterest,
+  onPlotUpdated,
 }: Props) {
   const { user } = useUser();
   const role = (user?.publicMetadata?.role as string) || "";
   const isAdmin = ["admin", "sysadmin", "chief", "chief_asst"].includes(role);
+  const isSysadmin = role === "sysadmin";
   const insets = useSafeAreaInsets();
 
   const props = plot?.properties || {};
   const detailRows = useMemo(() => buildDetailRows(props), [props]);
 
   const [favorite, setFavorite] = useState(false);
+  const [adminOpen, setAdminOpen] = useState(false);
+  const [adminSaving, setAdminSaving] = useState(false);
+  const [adminForm, setAdminForm] = useState<AdminForm>(() => buildAdminForm(plot));
   const translateY = useRef(new Animated.Value(0)).current;
   const panRef = useRef<ReturnType<typeof PanResponder.create> | null>(null);
 
   useEffect(() => {
-    if (visible) translateY.setValue(0);
-  }, [visible, translateY]);
+    if (visible) {
+      translateY.setValue(0);
+      setAdminOpen(false);
+      setAdminForm(buildAdminForm(plot));
+    }
+  }, [visible, plot, translateY]);
 
   if (!plot) return null;
 
@@ -104,6 +169,26 @@ export function PlotDetailSheet({
   const amount = plot.plotTotalAmount || 0;
   const status = plot.status ?? "Available";
   const actions = getPlotActionVisibility(plot.status);
+  const setAdminField = (field: keyof AdminForm, value: string) => {
+    setAdminForm((current) => {
+      const next = { ...current, [field]: value };
+      if (field === "plotTotalAmount" || field === "paidAmount") {
+        const total = parseCurrencyInput(field === "plotTotalAmount" ? value : next.plotTotalAmount);
+        const paid = parseCurrencyInput(field === "paidAmount" ? value : next.paidAmount);
+        next.remainingAmount = String(Math.max(total - paid, 0));
+      }
+      if (field === "status" && value === "Available") {
+        next.firstname = "";
+        next.lastname = "";
+        next.email = "";
+        next.country = "";
+        next.phone = "";
+        next.residentialAddress = "";
+        next.agent = "";
+      }
+      return next;
+    });
+  };
 
   if (!panRef.current) {
     panRef.current = PanResponder.create({
@@ -161,6 +246,81 @@ export function PlotDetailSheet({
     }
   };
 
+  const handleSaveAdminChanges = async () => {
+    if (!isSysadmin) return;
+
+    const total = parseCurrencyInput(adminForm.plotTotalAmount);
+    const paid = parseCurrencyInput(adminForm.paidAmount);
+    const remaining = Math.max(total - paid, 0);
+    const needsClient = adminForm.status === "Sold" || adminForm.status === "Reserved";
+
+    if (!adminForm.status) {
+      Alert.alert("Missing status", "Choose a plot status.");
+      return;
+    }
+    if (needsClient && total <= 0) {
+      Alert.alert("Missing amount", "Enter the plot total amount.");
+      return;
+    }
+    if (needsClient && paid <= 0) {
+      Alert.alert("Missing payment", "Enter the amount paid.");
+      return;
+    }
+    if (paid > total) {
+      Alert.alert("Check amount", "Paid amount must not be greater than the plot total amount.");
+      return;
+    }
+    if (needsClient) {
+      const required: Array<[keyof AdminForm, string]> = [
+        ["firstname", "first name"],
+        ["lastname", "last name"],
+        ["email", "email"],
+        ["country", "country"],
+        ["phone", "phone"],
+        ["residentialAddress", "residential address"],
+      ];
+      const missing = required.find(([field]) => !adminForm[field].trim());
+      if (missing) {
+        Alert.alert("Missing client info", `Enter the client's ${missing[1]}.`);
+        return;
+      }
+      if (adminForm.phone.trim().length !== 10) {
+        Alert.alert("Check phone", "Phone number must be 10 digits.");
+        return;
+      }
+    }
+
+    const clearClient = adminForm.status === "Available";
+    const payload: AdminPlotUpdate = {
+      status: adminForm.status,
+      firstname: clearClient ? "" : adminForm.firstname.trim(),
+      lastname: clearClient ? "" : adminForm.lastname.trim(),
+      email: clearClient ? "" : adminForm.email.trim(),
+      country: clearClient ? "" : adminForm.country.trim(),
+      phone: clearClient ? "" : adminForm.phone.trim(),
+      residentialAddress: clearClient ? "" : adminForm.residentialAddress.trim(),
+      agent: clearClient ? "" : adminForm.agent.trim(),
+      plotTotalAmount: total,
+      paidAmount: paid,
+      remainingAmount: remaining,
+      remarks: adminForm.remarks.trim(),
+    };
+
+    setAdminSaving(true);
+    const { data, error } = await updatePlotDetailsAdmin(development.table, plot.id, payload);
+    setAdminSaving(false);
+
+    if (error || !data) {
+      Alert.alert("Update failed", error?.message || "Could not update plot details.");
+      return;
+    }
+
+    const updated = data as PlotFeature;
+    setAdminForm(buildAdminForm(updated));
+    onPlotUpdated?.(updated);
+    Alert.alert("Saved", "Plot details updated successfully.");
+  };
+
   const initials = (development.title || "")
     .split(" ")
     .map((s) => s[0])
@@ -215,7 +375,7 @@ export function PlotDetailSheet({
                   </View>
 
                   <View style={styles.headerMeta}>
-                    <Badge label={status} variant={statusBadgeVariant(status)} size="md" />
+                    <Badge content={status} variant={statusBadgeVariant(status)} />
                     <Text style={styles.price}>{formatGhs(amount)}</Text>
                   </View>
                 </View>
@@ -224,8 +384,8 @@ export function PlotDetailSheet({
                   <View style={styles.statusBanner}>
                     <Text style={styles.statusBannerText}>
                       This plot is on hold for a client for 48 hours.
-                      {isAdmin
-                        ? " You can edit this plot and change the status on the web dashboard."
+                      {isSysadmin
+                        ? " You can edit this plot and change the status below."
                         : ""}
                     </Text>
                   </View>
@@ -298,10 +458,148 @@ export function PlotDetailSheet({
                   ) : null}
                 </View>
 
-                {isAdmin ? (
-                  <Text style={styles.adminHint}>
-                    Admin: use web dashboard for price/status edits, or contact support.
-                  </Text>
+                {isSysadmin ? (
+                  <View style={styles.adminPanel}>
+                    <Pressable
+                      style={styles.adminHeader}
+                      onPress={() => setAdminOpen((open) => !open)}
+                      accessibilityRole="button"
+                    >
+                      <View>
+                        <Text style={styles.adminTitle}>Sysadmin plot controls</Text>
+                        <Text style={styles.adminSubtitle}>Edit price, status, and client details</Text>
+                      </View>
+                      <Ionicons
+                        name={adminOpen ? "chevron-up" : "chevron-down"}
+                        size={20}
+                        color={colors.primary}
+                      />
+                    </Pressable>
+
+                    {adminOpen ? (
+                      <View style={styles.adminForm}>
+                        <Text style={styles.fieldLabel}>Status</Text>
+                        <View style={styles.statusOptions}>
+                          {STATUS_OPTIONS.map((option) => {
+                            const active = adminForm.status === option;
+                            return (
+                              <Pressable
+                                key={option}
+                                onPress={() => setAdminField("status", option)}
+                                style={[styles.statusOption, active && styles.statusOptionActive]}
+                              >
+                                <Text
+                                  style={[
+                                    styles.statusOptionText,
+                                    active && styles.statusOptionTextActive,
+                                  ]}
+                                >
+                                  {option}
+                                </Text>
+                              </Pressable>
+                            );
+                          })}
+                        </View>
+
+                        <View style={styles.twoColumn}>
+                          <Input
+                            label="Total amount"
+                            value={adminForm.plotTotalAmount}
+                            onChangeText={(value) => setAdminField("plotTotalAmount", value)}
+                            keyboardType="number-pad"
+                            containerStyle={styles.formHalf}
+                          />
+                          <Input
+                            label="Paid amount"
+                            value={adminForm.paidAmount}
+                            onChangeText={(value) => setAdminField("paidAmount", value)}
+                            keyboardType="number-pad"
+                            containerStyle={styles.formHalf}
+                          />
+                        </View>
+
+                        <Input
+                          label="Remaining amount"
+                          value={String(
+                            Math.max(
+                              parseCurrencyInput(adminForm.plotTotalAmount) -
+                                parseCurrencyInput(adminForm.paidAmount),
+                              0,
+                            ),
+                          )}
+                          editable={false}
+                        />
+
+                        <Text style={styles.sectionLabel}>Client information</Text>
+                        <View style={styles.twoColumn}>
+                          <Input
+                            label="First name"
+                            value={adminForm.firstname}
+                            onChangeText={(value) => setAdminField("firstname", value)}
+                            containerStyle={styles.formHalf}
+                          />
+                          <Input
+                            label="Last name"
+                            value={adminForm.lastname}
+                            onChangeText={(value) => setAdminField("lastname", value)}
+                            containerStyle={styles.formHalf}
+                          />
+                        </View>
+                        <Input
+                          label="Email"
+                          value={adminForm.email}
+                          onChangeText={(value) => setAdminField("email", value)}
+                          autoCapitalize="none"
+                          keyboardType="email-address"
+                        />
+                        <View style={styles.twoColumn}>
+                          <Input
+                            label="Country"
+                            value={adminForm.country}
+                            onChangeText={(value) => setAdminField("country", value)}
+                            containerStyle={styles.formHalf}
+                          />
+                          <Input
+                            label="Phone"
+                            value={adminForm.phone}
+                            onChangeText={(value) => setAdminField("phone", value)}
+                            keyboardType="phone-pad"
+                            containerStyle={styles.formHalf}
+                          />
+                        </View>
+                        <Input
+                          label="Residential address"
+                          value={adminForm.residentialAddress}
+                          onChangeText={(value) => setAdminField("residentialAddress", value)}
+                        />
+                        <Input
+                          label="Agent"
+                          value={adminForm.agent}
+                          onChangeText={(value) => setAdminField("agent", value)}
+                        />
+
+                        <Text style={styles.fieldLabel}>Remarks</Text>
+                        <TextInput
+                          value={adminForm.remarks}
+                          onChangeText={(value) => setAdminField("remarks", value)}
+                          multiline
+                          textAlignVertical="top"
+                          style={styles.remarksInput}
+                          placeholder="Add notes"
+                          placeholderTextColor={colors.textMuted}
+                        />
+
+                        <Button
+                          title="Save plot details"
+                          onPress={handleSaveAdminChanges}
+                          loading={adminSaving}
+                          fullWidth
+                        />
+                      </View>
+                    ) : null}
+                  </View>
+                ) : isAdmin ? (
+                  <Text style={styles.adminHint}>Only sysadmin can edit plot price and status.</Text>
                 ) : null}
               </ScrollView>
 
@@ -523,5 +821,92 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: spacing.lg,
     paddingHorizontal: spacing.lg,
+  },
+  adminPanel: {
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.lg,
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    overflow: "hidden",
+  },
+  adminHeader: {
+    minHeight: 58,
+    padding: spacing.md,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: spacing.md,
+  },
+  adminTitle: {
+    fontSize: fontSize.md,
+    fontWeight: "800",
+    color: colors.primary,
+  },
+  adminSubtitle: {
+    marginTop: 2,
+    fontSize: fontSize.xs,
+    color: colors.textMuted,
+  },
+  adminForm: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
+    padding: spacing.md,
+    gap: spacing.md,
+  },
+  fieldLabel: {
+    fontSize: fontSize.sm,
+    fontWeight: "700",
+    color: colors.textSecondary,
+  },
+  sectionLabel: {
+    marginTop: spacing.sm,
+    fontSize: fontSize.md,
+    fontWeight: "800",
+    color: colors.text,
+  },
+  statusOptions: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+  },
+  statusOption: {
+    minHeight: 38,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.white,
+  },
+  statusOptionActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary,
+  },
+  statusOptionText: {
+    fontSize: fontSize.sm,
+    fontWeight: "700",
+    color: colors.textSecondary,
+  },
+  statusOptionTextActive: {
+    color: colors.white,
+  },
+  twoColumn: {
+    flexDirection: "row",
+    gap: spacing.sm,
+  },
+  formHalf: {
+    flex: 1,
+  },
+  remarksInput: {
+    minHeight: 90,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 8,
+    padding: spacing.md,
+    backgroundColor: colors.white,
+    color: colors.text,
+    fontSize: fontSize.base,
   },
 });

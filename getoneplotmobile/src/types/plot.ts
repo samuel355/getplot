@@ -21,6 +21,10 @@ export type PlotFeature = {
   phone?: string;
   country?: string;
   residentialAddress?: string;
+  agent?: string;
+  paidAmount?: number;
+  remainingAmount?: number;
+  remarks?: string;
 };
 
 export type BuyerInfo = {

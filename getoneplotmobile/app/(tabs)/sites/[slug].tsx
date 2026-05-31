@@ -115,6 +115,13 @@ export default function SiteMapScreen() {
     action();
   };
 
+  const handlePlotUpdated = (updatedPlot: PlotFeature) => {
+    setPlots((current) =>
+      current.map((plot) => (plot.id === updatedPlot.id ? updatedPlot : plot)),
+    );
+    setSelected(updatedPlot);
+  };
+
   return (
     <View
       style={[
@@ -196,6 +203,7 @@ export default function SiteMapScreen() {
             },
           });
         }}
+        onPlotUpdated={handlePlotUpdated}
       />
     </View>
   );

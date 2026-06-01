@@ -217,32 +217,49 @@ export default function ProfileScreen() {
             <Text style={[styles.email, { color: colors.textMuted }]}>{email}</Text>
 
             <View style={{ flexDirection: "row", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
-              <View
-                style={[
-                  styles.roleBadge,
-                  { backgroundColor: isPending ? colors.warning : colors.primaryAccent },
-                ]}
-              >
-                <Text style={styles.roleText}>
-                  {isPending ? "PENDING APPROVAL" : formatRole(role)}
-                </Text>
-              </View>
-              {isPending && (
-                <Pressable
-                  onPress={() => router.push("/approval")}
+              {role !== "guest" && role !== "member" && role !== "" ? (
+                <>
+                  <View
+                    style={[
+                      styles.roleBadge,
+                      { backgroundColor: isPending ? colors.warning : colors.primaryAccent },
+                    ]}
+                  >
+                    <Text style={styles.roleText}>
+                      {isPending ? "PENDING APPROVAL" : formatRole(role)}
+                    </Text>
+                  </View>
+                  {isPending && (
+                    <Pressable
+                      onPress={() => router.push("/approval")}
+                      style={[
+                        styles.roleBadge,
+                        {
+                          backgroundColor: colors.surfaceAlt,
+                          borderColor: colors.border,
+                          borderWidth: 1,
+                        },
+                      ]}
+                    >
+                      <Text style={[styles.roleText, { color: colors.primary }]}>VIEW STATUS</Text>
+                    </Pressable>
+                  )}
+                </>
+              ) : (
+                <View
                   style={[
-                    styles.roleBadge,
-                    {
-                      backgroundColor: colors.surfaceAlt,
-                      borderColor: colors.border,
-                      borderWidth: 1,
-                    },
+                    styles.areaBadge,
+                    { backgroundColor: colors.surfaceAlt, borderColor: colors.border },
                   ]}
                 >
-                  <Text style={[styles.roleText, { color: colors.primary }]}>VIEW STATUS</Text>
-                </Pressable>
+                  <Ionicons name="person-outline" size={12} color={colors.primary} />
+                  <Text style={[styles.areaText, { color: colors.textSecondary }]}>
+                    Standard Account
+                  </Text>
+                </View>
               )}
-              {!isPending && (
+
+              {isAdmin && !isPending && (
                 <View
                   style={[
                     styles.areaBadge,

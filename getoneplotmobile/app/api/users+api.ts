@@ -5,37 +5,35 @@ const clerkClient = createClerkClient({
 });
 
 export async function GET(request: Request) {
+  const startTime = Date.now();
   try {
-    // Auth check: Expo Router API routes can access headers
+    console.log("[Mobile API /users] Request started at", new Date().toISOString());
+    console.log("[Mobile API /users] CLERK_SECRET_KEY available?", !!process.env.CLERK_SECRET_KEY);
+
+    // Auth check
     const authHeader = request.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log("[Mobile API /users] No auth header, returning 401");
       return Response.json({ error: "Not authenticated" }, { status: 401 });
     }
 
     const token = authHeader.split(" ")[1];
-
-    // In Expo Router API routes, we can verify the session token
-    // We'll use the JWT to get the user ID. Clerk session tokens are JWTs.
-    // For a more robust solution, use clerkClient.authenticateRequest
+    console.log("[Mobile API /users] Token received, attempting verification...");
 
     let userId: string;
     try {
-      // Direct verification if possible, or use the token to fetch the user
-      // which implicitly validates it against Clerk's backend.
-      const session = await clerkClient.sessions.getSessionList({ userId: undefined }); // This is just to test connectivity
-      // A better way: fetch the user using the token as a Bearer if Clerk supports it,
-      // but here we are on the SERVER side of the mobile app.
-
-      // We'll use clerkClient.users.getUser(token) if it was a user ID, but it's a token.
-      // So we use the verifyToken helper.
+      console.log("[Mobile API /users] Calling clerkClient.verifyToken...");
       const payload = await clerkClient.verifyToken(token);
       userId = payload.sub as string;
-    } catch (err) {
-      console.error("Token verification failed:", err);
+      console.log("[Mobile API /users] Token verified for userId:", userId);
+    } catch (err: any) {
+      console.error("[Mobile API /users] Token verification error:", err.message);
       return Response.json({ error: "Invalid or expired session" }, { status: 401 });
     }
 
+    console.log("[Mobile API /users] Fetching user from Clerk...");
     const user = await clerkClient.users.getUser(userId);
+    console.log("[Mobile API /users] User fetched:", user?.id);
 
     if (!user) {
       return Response.json({ error: "User not found" }, { status: 401 });
@@ -49,15 +47,22 @@ export async function GET(request: Request) {
     const isAllowedByEmail = email === "samueloseiboatenglistowell57@gmail.com";
 
     if (!isAllowedByRole && !isAllowedByEmail) {
+      console.log("[Mobile API /users] User not authorized. Role:", role, "Email:", email);
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    // Fetch user list
+    console.log("[Mobile API /users] User authorized, fetching users list from Clerk...");
+    const startClerkCall = Date.now();
     const users = await clerkClient.users.getUserList();
+    console.log("[Mobile API /users] Clerk getUserList completed in", Date.now() - startClerkCall, "ms");
+    console.log("[Mobile API /users] Users returned:", users.data?.length || 0);
 
+    console.log("[Mobile API /users] Success! Elapsed:", Date.now() - startTime, "ms");
     return Response.json(users, { status: 200 });
   } catch (error: any) {
-    console.error("Error in mobile /api/users:", error);
+    console.error("[Mobile API /users] FATAL ERROR:", error.message || error);
+    console.error("[Mobile API /users] Stack:", error.stack);
+    console.log("[Mobile API /users] Total elapsed:", Date.now() - startTime, "ms");
     return Response.json({ error: error.message || "Internal server error" }, { status: 500 });
   }
 }

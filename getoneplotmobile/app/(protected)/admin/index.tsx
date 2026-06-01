@@ -1,6 +1,6 @@
-import { useUser } from '@clerk/clerk-expo';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useUser } from "@clerk/clerk-expo";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import {
   Pressable,
   ScrollView,
@@ -9,16 +9,10 @@ import {
   View,
   type TextStyle,
   type ViewStyle,
-} from 'react-native';
-import {
-  borderRadius,
-  colors,
-  fontSize,
-  fontWeight,
-  spacing,
-} from '../../../src/constants/theme';
+} from "react-native";
+import { borderRadius, colors, fontSize, fontWeight, spacing } from "../../../src/constants/theme";
 
-const weights = fontWeight as Record<keyof typeof fontWeight, TextStyle['fontWeight']>;
+const weights = fontWeight as Record<keyof typeof fontWeight, TextStyle["fontWeight"]>;
 
 type DashboardCardProps = {
   icon: keyof typeof Ionicons.glyphMap;
@@ -31,10 +25,10 @@ type DashboardCardProps = {
 export default function AdminScreen() {
   const { user } = useUser();
   const router = useRouter();
-  const role = (user?.publicMetadata?.role as string) || '';
-  const area = (user?.publicMetadata?.area as string) || '';
-  const allowed = ['admin', 'sysadmin', 'chief', 'chief_asst'].includes(role);
-  const canManageProperties = role === 'admin' || role === 'sysadmin';
+  const role = (user?.publicMetadata?.role as string) || "";
+  const area = (user?.publicMetadata?.area as string) || "";
+  const allowed = ["admin", "sysadmin", "chief", "chief_asst"].includes(role);
+  const canManageProperties = role === "admin" || role === "sysadmin";
 
   if (!allowed) {
     return (
@@ -42,7 +36,7 @@ export default function AdminScreen() {
         <Ionicons name="lock-closed-outline" size={48} color={colors.textMuted} />
         <Text style={text.deniedTitle}>Admin access required</Text>
         <Text style={text.deniedHint}>Your role does not include dashboard access.</Text>
-        <Pressable style={styles.primaryButton} onPress={() => router.replace('/(tabs)')}>
+        <Pressable style={styles.primaryButton} onPress={() => router.replace("/(tabs)")}>
           <Text style={text.primaryButton}>Go home</Text>
         </Pressable>
       </View>
@@ -62,8 +56,8 @@ export default function AdminScreen() {
         <Text style={text.kicker}>Admin console</Text>
         <Text style={text.title}>Dashboards</Text>
         <Text style={text.subtitle}>
-          {role.replace(/_/g, ' ')}
-          {area ? ` - ${area}` : ''}
+          {role.replace(/_/g, " ")}
+          {area ? ` - ${area}` : ""}
         </Text>
       </View>
 
@@ -74,7 +68,7 @@ export default function AdminScreen() {
             title="Properties Dashboard"
             description="Review marketplace listings, filter by approval status, and approve or reject submissions."
             meta="Matches web /properties/all-properties"
-            onPress={() => router.push('/admin/properties')}
+            onPress={() => router.push("/admin/properties")}
           />
         ) : null}
         <DashboardCard
@@ -82,11 +76,20 @@ export default function AdminScreen() {
           title="Land Sites Dashboard"
           description="Review development sites, plot counts, status totals, and open each site map."
           meta="Matches web /dashboard"
-          onPress={() => router.push('/admin/plots')}
+          onPress={() => router.push("/admin/plots")}
         />
+        {canManageProperties ? (
+          <DashboardCard
+            icon="people-outline"
+            title="User Management"
+            description="View and manage user roles, permissions, and account status."
+            meta="Matches web /properties/users"
+            onPress={() => router.push("/admin/users")}
+          />
+        ) : null}
       </View>
 
-      <Pressable style={styles.secondaryButton} onPress={() => router.replace('/(tabs)/profile')}>
+      <Pressable style={styles.secondaryButton} onPress={() => router.replace("/(tabs)/profile")}>
         <Ionicons name="arrow-back" size={18} color={colors.primary} />
         <Text style={text.secondaryButton}>Back to profile</Text>
       </Pressable>
@@ -99,7 +102,7 @@ function DashboardCard({ icon, title, description, meta, onPress }: DashboardCar
     <Pressable
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
       onPress={onPress}
-      android_ripple={{ color: 'rgba(15, 23, 42, 0.06)' }}
+      android_ripple={{ color: "rgba(15, 23, 42, 0.06)" }}
     >
       <View style={styles.cardTop}>
         <View style={styles.cardIcon}>
@@ -131,9 +134,9 @@ const styles = StyleSheet.create<Record<string, ViewStyle>>({
     width: 50,
     height: 50,
     borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255,255,255,0.15)",
     marginBottom: spacing.lg,
   },
   grid: { gap: spacing.md },
@@ -145,17 +148,17 @@ const styles = StyleSheet.create<Record<string, ViewStyle>>({
     padding: spacing.lg,
   },
   cardTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: spacing.lg,
   },
   cardIcon: {
     width: 44,
     height: 44,
     borderRadius: borderRadius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: colors.surfaceAlt,
   },
   primaryButton: {
@@ -170,15 +173,15 @@ const styles = StyleSheet.create<Record<string, ViewStyle>>({
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.white,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     gap: spacing.sm,
   },
   denied: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: spacing.lg,
     gap: spacing.md,
     backgroundColor: colors.surface,
@@ -188,10 +191,10 @@ const styles = StyleSheet.create<Record<string, ViewStyle>>({
 
 const text = StyleSheet.create<Record<string, TextStyle>>({
   kicker: {
-    color: 'rgba(255,255,255,0.7)',
+    color: "rgba(255,255,255,0.7)",
     fontSize: fontSize.sm,
     fontWeight: weights.semibold,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   title: {
     color: colors.white,
@@ -200,10 +203,10 @@ const text = StyleSheet.create<Record<string, TextStyle>>({
     marginTop: spacing.xs,
   },
   subtitle: {
-    color: 'rgba(255,255,255,0.8)',
+    color: "rgba(255,255,255,0.8)",
     fontSize: fontSize.sm,
     marginTop: spacing.xs,
-    textTransform: 'capitalize',
+    textTransform: "capitalize",
   },
   cardTitle: {
     color: colors.text,
@@ -240,6 +243,6 @@ const text = StyleSheet.create<Record<string, TextStyle>>({
   deniedHint: {
     color: colors.textMuted,
     fontSize: fontSize.sm,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

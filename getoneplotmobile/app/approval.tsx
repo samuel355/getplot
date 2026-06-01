@@ -1,6 +1,6 @@
-import { useAuth } from '@clerk/clerk-expo';
-import { useRouter } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useAuth } from "@clerk/clerk-expo";
+import { useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Linking,
@@ -8,34 +8,33 @@ import {
   StyleSheet,
   Text,
   View,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button } from '../src/components/ui/Button';
-import { useApprovalStatus } from '../src/hooks/useApprovalStatus';
-import { getPostApprovalRoute, SUPPORT_EMAIL } from '../src/lib/auth';
-import {
-  colors,
-  fontSize,
-  spacing,
-  borderRadius,
-} from '../src/constants/theme';
+  type TextStyle,
+  Pressable,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Button } from "../src/components/ui/Button";
+import { useApprovalStatus } from "../src/hooks/useApprovalStatus";
+import { getPostApprovalRoute, SUPPORT_EMAIL } from "../src/lib/auth";
+import { useTheme } from "../src/constants/theme";
 
-type Phase = 'loading' | 'pending' | 'redirecting';
+type Phase = "loading" | "pending" | "redirecting";
 
 export default function ApprovalScreen() {
+  const { colors, spacing, borderRadius, fontWeight, fontSize, isDark } = useTheme();
   const { isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { status, initialLoading, isRefreshing, refresh, stopPolling, user } =
-    useApprovalStatus({ poll: true });
+  const { status, initialLoading, isRefreshing, refresh, stopPolling, user } = useApprovalStatus({
+    poll: true,
+  });
 
-  const [phase, setPhase] = useState<Phase>('loading');
+  const [phase, setPhase] = useState<Phase>("loading");
   const redirectStarted = useRef(false);
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
-      router.replace('/(auth)/sign-in');
+      router.replace("/(auth)/sign-in");
     }
   }, [isLoaded, isSignedIn, router]);
 
@@ -45,255 +44,315 @@ export default function ApprovalScreen() {
     if (status.isApproved) {
       if (redirectStarted.current) return;
       redirectStarted.current = true;
-      setPhase('redirecting');
+      setPhase("redirecting");
       stopPolling();
 
       const role = status.role || (user?.publicMetadata?.role as string | undefined);
       const destination = getPostApprovalRoute(role);
 
-      // Brief success state, then one clean navigation (matches web ~1s delay)
       const timer = setTimeout(() => {
-        router.replace(destination as '/(tabs)');
+        router.replace(destination as "/(tabs)");
       }, 800);
 
       return () => clearTimeout(timer);
     }
 
-    setPhase('pending');
+    setPhase("pending");
   }, [initialLoading, status, user, router, stopPolling]);
 
-  const showSpinner = phase === 'loading' || (phase === 'pending' && initialLoading);
-  const isApprovedView = phase === 'redirecting';
-  const isPending = phase === 'pending';
+  const showSpinner = phase === "loading" || (phase === "pending" && initialLoading);
+  const isApprovedView = phase === "redirecting";
+  const isPending = phase === "pending";
 
-  const title = isApprovedView ? 'Approved!' : isPending ? 'Pending approval' : 'Checking status';
+  const title = isApprovedView ? "Approved!" : isPending ? "Account Pending" : "Verifying Account";
   const message = isApprovedView
-    ? "You're all set. Opening your dashboard…"
+    ? "Welcome back! Redirecting you to your dashboard..."
     : isPending
-      ? 'Your account is awaiting approval by a system administrator.'
-      : 'Verifying your account…';
+      ? "Your account is awaiting approval by a system administrator. This usually takes less than 24 hours."
+      : "Please wait while we check your current approval status.";
 
   return (
-    <View style={[viewStyles.root, { paddingTop: insets.top + spacing.lg }]}>
-      <View style={viewStyles.blob} />
+    <View style={[styles.root, { backgroundColor: colors.background }]}>
+      <View
+        style={[styles.blob, { backgroundColor: colors.primary, opacity: isDark ? 0.1 : 0.05 }]}
+      />
+      <View
+        style={[
+          styles.blob2,
+          { backgroundColor: colors.primaryAccent, opacity: isDark ? 0.1 : 0.05 },
+        ]}
+      />
 
-      <View style={[viewStyles.card, cardShadow]}>
+      <View style={[styles.container, { paddingBottom: insets.bottom + spacing.xl }]}>
         <View
           style={[
-            viewStyles.iconRing,
-            isApprovedView ? viewStyles.iconRingSuccess : viewStyles.iconRingPending,
+            styles.card,
+            {
+              backgroundColor: colors.surface,
+              borderColor: colors.border,
+              borderRadius: 32,
+            },
           ]}
         >
-          {showSpinner ? (
-            <ActivityIndicator size="large" color={colors.primary} />
-          ) : (
-            <Ionicons
-              name={isApprovedView ? 'checkmark-circle' : 'time-outline'}
-              size={48}
-              color={isApprovedView ? colors.success : colors.primaryAccent}
+          {/* Visual Indicator */}
+          <View
+            style={[
+              styles.iconRing,
+              {
+                backgroundColor: isApprovedView
+                  ? colors.success + "15"
+                  : isPending
+                    ? colors.warning + "15"
+                    : colors.info + "15",
+              },
+            ]}
+          >
+            {showSpinner ? (
+              <ActivityIndicator size="large" color={colors.primary} />
+            ) : (
+              <Ionicons
+                name={isApprovedView ? "checkmark-circle" : "time"}
+                size={48}
+                color={isApprovedView ? colors.success : colors.warning}
+              />
+            )}
+          </View>
+
+          <Text
+            style={[
+              styles.title,
+              {
+                color: colors.text,
+                fontSize: fontSize.xxl,
+                fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+              },
+            ]}
+          >
+            {title}
+          </Text>
+          <Text style={[styles.message, { color: colors.textSecondary, fontSize: fontSize.base }]}>
+            {message}
+          </Text>
+
+          {isPending && (
+            <View
+              style={[
+                styles.infoBox,
+                {
+                  backgroundColor: colors.surfaceAlt,
+                  borderColor: colors.border,
+                  borderRadius: borderRadius.lg,
+                },
+              ]}
+            >
+              <Ionicons name="shield-checkmark" size={20} color={colors.primary} />
+              <Text
+                style={[
+                  styles.infoText,
+                  { color: colors.textSecondary, fontSize: fontSize.sm, lineHeight: 20 },
+                ]}
+              >
+                Our team is currently reviewing your application. You'll gain full access once your
+                assigned area is verified.
+              </Text>
+            </View>
+          )}
+
+          {isApprovedView && (status?.area || status?.role) ? (
+            <View
+              style={[
+                styles.approvedBox,
+                {
+                  backgroundColor: colors.success + "10",
+                  borderColor: colors.success + "30",
+                  borderRadius: borderRadius.lg,
+                },
+              ]}
+            >
+              <View style={styles.approvedHeader}>
+                <Ionicons name="ribbon" size={20} color={colors.success} />
+                <Text
+                  style={[
+                    styles.approvedTitle,
+                    { color: colors.success, fontSize: fontSize.md, fontWeight: "700" },
+                  ]}
+                >
+                  Account verified
+                </Text>
+              </View>
+              <View style={{ gap: 4 }}>
+                {status?.area && (
+                  <Text style={[styles.approvedLine, { color: colors.textSecondary }]}>
+                    <Text style={{ fontWeight: "700" }}>Area: </Text>
+                    {status.area}
+                  </Text>
+                )}
+                {status?.role && (
+                  <Text style={[styles.approvedLine, { color: colors.textSecondary }]}>
+                    <Text style={{ fontWeight: "700" }}>Role: </Text>
+                    {status.role.replace(/_/g, " ").toUpperCase()}
+                  </Text>
+                )}
+              </View>
+            </View>
+          ) : null}
+
+          {/* Action Row */}
+          <View style={styles.statusRow}>
+            <View
+              style={[
+                styles.pulse,
+                { backgroundColor: isApprovedView ? colors.success : colors.warning },
+              ]}
             />
+            <Text style={[styles.polling, { color: colors.textMuted, fontSize: fontSize.xs }]}>
+              {isApprovedView
+                ? "Launching your console..."
+                : isRefreshing
+                  ? "Updating status..."
+                  : "Auto-refreshing every 30s"}
+            </Text>
+          </View>
+
+          {isPending && (
+            <View style={{ gap: spacing.md, width: "100%" }}>
+              <Button
+                title="Refresh Status"
+                variant="primary"
+                onPress={() => refresh()}
+                loading={isRefreshing}
+                fullWidth
+                size="lg"
+              />
+              <Button
+                title="Back to marketplace"
+                variant="ghost"
+                onPress={() => router.replace("/(tabs)")}
+                fullWidth
+              />
+            </View>
           )}
         </View>
 
-        <Text style={textStyles.title}>{title}</Text>
-        <Text style={textStyles.message}>{message}</Text>
-
-        {isPending && (
-          <View style={viewStyles.infoBox}>
-            <Ionicons name="information-circle-outline" size={20} color={colors.info} />
-            <Text style={textStyles.infoText}>
-              Please wait while a system administrator assigns you to your area. Once
-              assigned, you will gain access to the dashboard.
-            </Text>
-          </View>
-        )}
-
-        {isApprovedView && (status?.area || status?.role) ? (
-          <View style={viewStyles.approvedBox}>
-            <View style={viewStyles.approvedHeader}>
-              <Ionicons name="checkmark-circle" size={18} color="#166534" />
-              <Text style={textStyles.approvedTitle}>Approval details</Text>
-            </View>
-            {status?.area ? (
-              <Text style={textStyles.approvedLine}>
-                <Text style={textStyles.bold}>Area: </Text>
-                {status.area}
-              </Text>
-            ) : null}
-            {status?.role ? (
-              <Text style={textStyles.approvedLine}>
-                <Text style={textStyles.bold}>Role: </Text>
-                {status.role}
-              </Text>
-            ) : null}
-          </View>
-        ) : null}
-
-        <View style={viewStyles.statusRow}>
-          <View style={[viewStyles.dot, isApprovedView && viewStyles.dotSuccess]} />
-          <Text style={textStyles.polling}>
-            {isApprovedView
-              ? 'Redirecting…'
-              : isRefreshing
-                ? 'Checking status…'
-                : 'Status updates every 30 seconds'}
-          </Text>
-        </View>
-
-        {isPending && (
-          <>
-            <Button
-              title="Check now"
-              variant="outline"
-              onPress={() => refresh()}
-              loading={isRefreshing}
-              disabled={isRefreshing}
-              fullWidth
-            />
-            <Button
-              title="Go home"
-              variant="ghost"
-              onPress={() => router.replace('/(tabs)')}
-              fullWidth
-            />
-          </>
-        )}
-
-        <Text
-          style={textStyles.help}
+        <Pressable
+          style={styles.helpButton}
           onPress={() => Linking.openURL(`mailto:${SUPPORT_EMAIL}`)}
         >
-          Need help? {SUPPORT_EMAIL}
-        </Text>
+          <Text style={[styles.helpText, { color: colors.primary, fontSize: fontSize.sm }]}>
+            Need assistance? <Text style={{ fontWeight: "700" }}>Contact Support</Text>
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
 }
 
-const cardShadow = Platform.select({
-  ios: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.18,
-    shadowRadius: 20,
-  },
-  android: { elevation: 10 },
-});
-
-const viewStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.primaryDark,
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.xl,
-    justifyContent: 'center',
+    justifyContent: "center",
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 24,
   },
   blob: {
-    position: 'absolute',
-    top: 80,
-    right: -40,
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    backgroundColor: colors.primaryAccent,
-    opacity: 0.3,
+    position: "absolute",
+    top: -100,
+    right: -100,
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+  },
+  blob2: {
+    position: "absolute",
+    bottom: -150,
+    left: -150,
+    width: 400,
+    height: 400,
+    borderRadius: 200,
   },
   card: {
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.xl,
-    padding: spacing.xl,
+    padding: 32,
+    alignItems: "center",
+    borderWidth: 1,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 12 },
+        shadowOpacity: 0.08,
+        shadowRadius: 24,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
   iconRing: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.lg,
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
   },
-  iconRingSuccess: { backgroundColor: '#dcfce7' },
-  iconRingPending: { backgroundColor: 'rgba(99, 102, 241, 0.12)' },
-  infoBox: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    backgroundColor: '#eff6ff',
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    marginBottom: spacing.lg,
-    borderWidth: 1,
-    borderColor: '#bfdbfe',
-  },
-  approvedBox: {
-    backgroundColor: '#f0fdf4',
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    marginBottom: spacing.lg,
-    borderWidth: 1,
-    borderColor: '#bbf7d0',
-  },
-  approvedHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
-  },
-  statusRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.lg,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.primaryAccent,
-  },
-  dotSuccess: {
-    backgroundColor: colors.success,
-  },
-});
-
-const textStyles = StyleSheet.create({
   title: {
-    fontSize: fontSize.xxl,
-    fontWeight: '800',
-    color: colors.primary,
-    textAlign: 'center',
-    marginBottom: spacing.sm,
+    textAlign: "center",
+    marginBottom: 12,
   },
   message: {
-    fontSize: fontSize.base,
-    color: colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 22,
-    marginBottom: spacing.lg,
+    marginBottom: 32,
+  },
+  infoBox: {
+    flexDirection: "row",
+    gap: 12,
+    padding: 16,
+    marginBottom: 32,
+    borderWidth: 1,
+    width: "100%",
   },
   infoText: {
     flex: 1,
-    color: colors.textSecondary,
-    fontSize: fontSize.sm,
-    lineHeight: 20,
   },
-  approvedTitle: {
-    fontWeight: '700',
-    color: '#166534',
-    fontSize: fontSize.sm,
+  approvedBox: {
+    padding: 16,
+    marginBottom: 32,
+    borderWidth: 1,
+    width: "100%",
+    gap: 12,
   },
-  approvedLine: { color: '#15803d', marginBottom: 4, fontSize: fontSize.sm },
-  bold: { fontWeight: '700' },
+  approvedHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  approvedTitle: {},
+  approvedLine: {
+    fontSize: 13,
+  },
+  statusRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 32,
+  },
+  pulse: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
   polling: {
-    textAlign: 'center',
-    color: colors.textMuted,
-    fontSize: fontSize.xs,
+    fontWeight: "500",
   },
-  help: {
-    textAlign: 'center',
-    marginTop: spacing.lg,
-    fontSize: fontSize.xs,
-    color: colors.primaryAccent,
-    fontWeight: '600',
+  helpButton: {
+    marginTop: 32,
+    alignSelf: "center",
+    padding: 8,
+  },
+  helpText: {
+    textAlign: "center",
   },
 });

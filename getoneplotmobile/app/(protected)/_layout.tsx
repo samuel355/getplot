@@ -116,6 +116,14 @@ export default function ProtectedLayout() {
             headerRight: () => profileButton,
           }}
         />
+        <Stack.Screen
+          name="admin/users"
+          options={{
+            title: "User Management",
+            headerBackTitle: "Admin",
+            headerRight: () => profileButton,
+          }}
+        />
       </Stack>
     </RequireAuth>
   );

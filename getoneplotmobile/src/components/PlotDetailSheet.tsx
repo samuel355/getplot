@@ -21,6 +21,8 @@ import {
   formatGhs,
   formatAreaSize,
   formatStreet,
+  updatePlotPrice,
+  updatePlotStatusAdmin,
   updatePlotDetailsAdmin,
   type AdminPlotUpdate,
 } from "../lib/plotService";
@@ -61,7 +63,8 @@ type AdminForm = {
   agent: string;
 };
 
-const STATUS_OPTIONS = ["Sold", "Reserved", "Available", "On Hold"] as const;
+const STATUS_OPTIONS = ["Available", "Reserved", "Sold"] as const;
+type AdminAction = "edit" | "price" | "status" | null;
 
 function buildDetailRows(props: PlotProperties): DetailRow[] {
   const rows: DetailRow[] = [];
@@ -149,7 +152,12 @@ export function PlotDetailSheet({
 
   const [favorite, setFavorite] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
+  const [adminAction, setAdminAction] = useState<AdminAction>(null);
   const [adminSaving, setAdminSaving] = useState(false);
+  const [priceSaving, setPriceSaving] = useState(false);
+  const [statusSaving, setStatusSaving] = useState(false);
+  const [newPrice, setNewPrice] = useState("");
+  const [newStatus, setNewStatus] = useState("");
   const [adminForm, setAdminForm] = useState<AdminForm>(() => buildAdminForm(plot));
   const translateY = useRef(new Animated.Value(0)).current;
   const panRef = useRef<ReturnType<typeof PanResponder.create> | null>(null);
@@ -158,6 +166,9 @@ export function PlotDetailSheet({
     if (visible) {
       translateY.setValue(0);
       setAdminOpen(false);
+      setAdminAction(null);
+      setNewPrice("");
+      setNewStatus(plot?.status || "");
       setAdminForm(buildAdminForm(plot));
     }
   }, [visible, plot, translateY]);
@@ -244,6 +255,54 @@ export function PlotDetailSheet({
     } catch {
       // ignore
     }
+  };
+
+  const handleSaveNewPrice = async () => {
+    if (!isSysadmin) return;
+
+    const price = parseCurrencyInput(newPrice);
+    if (!newPrice.trim() || price <= 0) {
+      Alert.alert("Check price", "Enter a valid new plot price.");
+      return;
+    }
+
+    setPriceSaving(true);
+    const { data, error } = await updatePlotPrice(development.table, plot.id, price);
+    setPriceSaving(false);
+
+    if (error || !data) {
+      Alert.alert("Update failed", error?.message || "Could not update plot price.");
+      return;
+    }
+
+    const updated = data as PlotFeature;
+    setNewPrice("");
+    setAdminForm(buildAdminForm(updated));
+    onPlotUpdated?.(updated);
+    Alert.alert("Saved", "Plot price updated successfully.");
+  };
+
+  const handleSaveNewStatus = async () => {
+    if (!isSysadmin) return;
+
+    if (!newStatus) {
+      Alert.alert("Missing status", "Choose a plot status.");
+      return;
+    }
+
+    setStatusSaving(true);
+    const { data, error } = await updatePlotStatusAdmin(development.table, plot.id, newStatus);
+    setStatusSaving(false);
+
+    if (error || !data) {
+      Alert.alert("Update failed", error?.message || "Could not update plot status.");
+      return;
+    }
+
+    const updated = data as PlotFeature;
+    setAdminForm(buildAdminForm(updated));
+    onPlotUpdated?.(updated);
+    Alert.alert("Saved", "Plot status updated successfully.");
   };
 
   const handleSaveAdminChanges = async () => {
@@ -478,123 +537,218 @@ export function PlotDetailSheet({
 
                     {adminOpen ? (
                       <View style={styles.adminForm}>
-                        <Text style={styles.fieldLabel}>Status</Text>
-                        <View style={styles.statusOptions}>
-                          {STATUS_OPTIONS.map((option) => {
-                            const active = adminForm.status === option;
-                            return (
-                              <Pressable
-                                key={option}
-                                onPress={() => setAdminField("status", option)}
-                                style={[styles.statusOption, active && styles.statusOptionActive]}
-                              >
-                                <Text
-                                  style={[
-                                    styles.statusOptionText,
-                                    active && styles.statusOptionTextActive,
-                                  ]}
-                                >
-                                  {option}
-                                </Text>
-                              </Pressable>
-                            );
-                          })}
-                        </View>
-
-                        <View style={styles.twoColumn}>
-                          <Input
-                            label="Total amount"
-                            value={adminForm.plotTotalAmount}
-                            onChangeText={(value) => setAdminField("plotTotalAmount", value)}
-                            keyboardType="number-pad"
-                            containerStyle={styles.formHalf}
+                        <View style={styles.adminActions}>
+                          <AdminActionButton
+                            icon="create-outline"
+                            label="Edit plot"
+                            active={adminAction === "edit"}
+                            onPress={() =>
+                              setAdminAction((action) => (action === "edit" ? null : "edit"))
+                            }
                           />
-                          <Input
-                            label="Paid amount"
-                            value={adminForm.paidAmount}
-                            onChangeText={(value) => setAdminField("paidAmount", value)}
-                            keyboardType="number-pad"
-                            containerStyle={styles.formHalf}
+                          <AdminActionButton
+                            icon="cash-outline"
+                            label="Change price"
+                            active={adminAction === "price"}
+                            onPress={() => {
+                              setNewPrice("");
+                              setAdminAction((action) => (action === "price" ? null : "price"));
+                            }}
+                          />
+                          <AdminActionButton
+                            icon="swap-horizontal-outline"
+                            label="Change status"
+                            active={adminAction === "status"}
+                            onPress={() => {
+                              setNewStatus(plot.status || "");
+                              setAdminAction((action) =>
+                                action === "status" ? null : "status",
+                              );
+                            }}
                           />
                         </View>
 
-                        <Input
-                          label="Remaining amount"
-                          value={String(
-                            Math.max(
-                              parseCurrencyInput(adminForm.plotTotalAmount) -
-                                parseCurrencyInput(adminForm.paidAmount),
-                              0,
-                            ),
-                          )}
-                          editable={false}
-                        />
+                        {adminAction === "price" ? (
+                          <View style={styles.adminSubForm}>
+                            <View style={styles.priceSummaryRow}>
+                              <Text style={styles.priceSummaryLabel}>Old price</Text>
+                              <Text style={styles.priceSummaryValue}>{formatGhs(amount)}</Text>
+                            </View>
+                            <Input
+                              label="New price (GHS)"
+                              value={newPrice}
+                              onChangeText={setNewPrice}
+                              keyboardType="number-pad"
+                            />
+                            <Button
+                              title="Save price"
+                              onPress={handleSaveNewPrice}
+                              loading={priceSaving}
+                              fullWidth
+                            />
+                          </View>
+                        ) : null}
 
-                        <Text style={styles.sectionLabel}>Client information</Text>
-                        <View style={styles.twoColumn}>
-                          <Input
-                            label="First name"
-                            value={adminForm.firstname}
-                            onChangeText={(value) => setAdminField("firstname", value)}
-                            containerStyle={styles.formHalf}
-                          />
-                          <Input
-                            label="Last name"
-                            value={adminForm.lastname}
-                            onChangeText={(value) => setAdminField("lastname", value)}
-                            containerStyle={styles.formHalf}
-                          />
-                        </View>
-                        <Input
-                          label="Email"
-                          value={adminForm.email}
-                          onChangeText={(value) => setAdminField("email", value)}
-                          autoCapitalize="none"
-                          keyboardType="email-address"
-                        />
-                        <View style={styles.twoColumn}>
-                          <Input
-                            label="Country"
-                            value={adminForm.country}
-                            onChangeText={(value) => setAdminField("country", value)}
-                            containerStyle={styles.formHalf}
-                          />
-                          <Input
-                            label="Phone"
-                            value={adminForm.phone}
-                            onChangeText={(value) => setAdminField("phone", value)}
-                            keyboardType="phone-pad"
-                            containerStyle={styles.formHalf}
-                          />
-                        </View>
-                        <Input
-                          label="Residential address"
-                          value={adminForm.residentialAddress}
-                          onChangeText={(value) => setAdminField("residentialAddress", value)}
-                        />
-                        <Input
-                          label="Agent"
-                          value={adminForm.agent}
-                          onChangeText={(value) => setAdminField("agent", value)}
-                        />
+                        {adminAction === "status" ? (
+                          <View style={styles.adminSubForm}>
+                            <Text style={styles.fieldLabel}>Status</Text>
+                            <View style={styles.statusOptions}>
+                              {STATUS_OPTIONS.map((option) => {
+                                const active = newStatus === option;
+                                return (
+                                  <Pressable
+                                    key={option}
+                                    onPress={() => setNewStatus(option)}
+                                    style={[
+                                      styles.statusOption,
+                                      active && styles.statusOptionActive,
+                                    ]}
+                                  >
+                                    <Text
+                                      style={[
+                                        styles.statusOptionText,
+                                        active && styles.statusOptionTextActive,
+                                      ]}
+                                    >
+                                      {option}
+                                    </Text>
+                                  </Pressable>
+                                );
+                              })}
+                            </View>
+                            <Button
+                              title="Save status"
+                              onPress={handleSaveNewStatus}
+                              loading={statusSaving}
+                              fullWidth
+                            />
+                          </View>
+                        ) : null}
 
-                        <Text style={styles.fieldLabel}>Remarks</Text>
-                        <TextInput
-                          value={adminForm.remarks}
-                          onChangeText={(value) => setAdminField("remarks", value)}
-                          multiline
-                          textAlignVertical="top"
-                          style={styles.remarksInput}
-                          placeholder="Add notes"
-                          placeholderTextColor={colors.textMuted}
-                        />
+                        {adminAction === "edit" ? (
+                          <>
+                            <Text style={styles.fieldLabel}>Status</Text>
+                            <View style={styles.statusOptions}>
+                              {STATUS_OPTIONS.map((option) => {
+                                const active = adminForm.status === option;
+                                return (
+                                  <Pressable
+                                    key={option}
+                                    onPress={() => setAdminField("status", option)}
+                                    style={[
+                                      styles.statusOption,
+                                      active && styles.statusOptionActive,
+                                    ]}
+                                  >
+                                    <Text
+                                      style={[
+                                        styles.statusOptionText,
+                                        active && styles.statusOptionTextActive,
+                                      ]}
+                                    >
+                                      {option}
+                                    </Text>
+                                  </Pressable>
+                                );
+                              })}
+                            </View>
 
-                        <Button
-                          title="Save plot details"
-                          onPress={handleSaveAdminChanges}
-                          loading={adminSaving}
-                          fullWidth
-                        />
+                            <View style={styles.twoColumn}>
+                              <Input
+                                label="Total amount"
+                                value={adminForm.plotTotalAmount}
+                                onChangeText={(value) => setAdminField("plotTotalAmount", value)}
+                                keyboardType="number-pad"
+                                containerStyle={styles.formHalf}
+                              />
+                              <Input
+                                label="Paid amount"
+                                value={adminForm.paidAmount}
+                                onChangeText={(value) => setAdminField("paidAmount", value)}
+                                keyboardType="number-pad"
+                                containerStyle={styles.formHalf}
+                              />
+                            </View>
+
+                            <Input
+                              label="Remaining amount"
+                              value={String(
+                                Math.max(
+                                  parseCurrencyInput(adminForm.plotTotalAmount) -
+                                    parseCurrencyInput(adminForm.paidAmount),
+                                  0,
+                                ),
+                              )}
+                              editable={false}
+                            />
+
+                            <Text style={styles.sectionLabel}>Client information</Text>
+                            <View style={styles.twoColumn}>
+                              <Input
+                                label="First name"
+                                value={adminForm.firstname}
+                                onChangeText={(value) => setAdminField("firstname", value)}
+                                containerStyle={styles.formHalf}
+                              />
+                              <Input
+                                label="Last name"
+                                value={adminForm.lastname}
+                                onChangeText={(value) => setAdminField("lastname", value)}
+                                containerStyle={styles.formHalf}
+                              />
+                            </View>
+                            <Input
+                              label="Email"
+                              value={adminForm.email}
+                              onChangeText={(value) => setAdminField("email", value)}
+                              autoCapitalize="none"
+                              keyboardType="email-address"
+                            />
+                            <View style={styles.twoColumn}>
+                              <Input
+                                label="Country"
+                                value={adminForm.country}
+                                onChangeText={(value) => setAdminField("country", value)}
+                                containerStyle={styles.formHalf}
+                              />
+                              <Input
+                                label="Phone"
+                                value={adminForm.phone}
+                                onChangeText={(value) => setAdminField("phone", value)}
+                                keyboardType="phone-pad"
+                                containerStyle={styles.formHalf}
+                              />
+                            </View>
+                            <Input
+                              label="Residential address"
+                              value={adminForm.residentialAddress}
+                              onChangeText={(value) => setAdminField("residentialAddress", value)}
+                            />
+                            <Input
+                              label="Agent"
+                              value={adminForm.agent}
+                              onChangeText={(value) => setAdminField("agent", value)}
+                            />
+
+                            <Text style={styles.fieldLabel}>Remarks</Text>
+                            <TextInput
+                              value={adminForm.remarks}
+                              onChangeText={(value) => setAdminField("remarks", value)}
+                              multiline
+                              textAlignVertical="top"
+                              style={styles.remarksInput}
+                              placeholder="Add notes"
+                              placeholderTextColor={colors.textMuted}
+                            />
+
+                            <Button
+                              title="Save plot details"
+                              onPress={handleSaveAdminChanges}
+                              loading={adminSaving}
+                              fullWidth
+                            />
+                          </>
+                        ) : null}
                       </View>
                     ) : null}
                   </View>
@@ -635,6 +789,29 @@ export function PlotDetailSheet({
         </View>
       </TouchableWithoutFeedback>
     </Modal>
+  );
+}
+
+function AdminActionButton({
+  icon,
+  label,
+  active,
+  onPress,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  active: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.adminActionButton, active && styles.adminActionButtonActive]}
+      accessibilityRole="button"
+    >
+      <Ionicons name={icon} size={18} color={active ? colors.white : colors.primary} />
+      <Text style={[styles.adminActionText, active && styles.adminActionTextActive]}>{label}</Text>
+    </Pressable>
   );
 }
 
@@ -854,6 +1031,58 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
     padding: spacing.md,
     gap: spacing.md,
+  },
+  adminActions: {
+    gap: spacing.sm,
+  },
+  adminActionButton: {
+    minHeight: 46,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.white,
+    paddingHorizontal: spacing.md,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+  },
+  adminActionButtonActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primary,
+  },
+  adminActionText: {
+    color: colors.primary,
+    fontSize: fontSize.sm,
+    fontWeight: "800",
+  },
+  adminActionTextActive: {
+    color: colors.white,
+  },
+  adminSubForm: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
+    paddingTop: spacing.md,
+    gap: spacing.md,
+  },
+  priceSummaryRow: {
+    minHeight: 42,
+    borderRadius: 8,
+    backgroundColor: colors.white,
+    paddingHorizontal: spacing.md,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: spacing.md,
+  },
+  priceSummaryLabel: {
+    color: colors.textMuted,
+    fontSize: fontSize.sm,
+    fontWeight: "700",
+  },
+  priceSummaryValue: {
+    color: colors.primary,
+    fontSize: fontSize.sm,
+    fontWeight: "800",
   },
   fieldLabel: {
     fontSize: fontSize.sm,

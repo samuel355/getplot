@@ -73,11 +73,29 @@ export async function submitPlotInterest(
 }
 
 export async function updatePlotPrice(table: string, plotId: string, price: number) {
-  return supabase.from(table).update({ plotTotalAmount: price }).eq("id", plotId);
+  const { data: current, error: fetchError } = await supabase
+    .from(table)
+    .select("paidAmount")
+    .eq("id", plotId)
+    .single();
+
+  if (fetchError) return { data: null, error: fetchError };
+
+  const paidAmount = Number(current?.paidAmount ?? 0);
+  return supabase
+    .from(table)
+    .update({
+      plotTotalAmount: price,
+      paidAmount,
+      remainingAmount: price - paidAmount,
+    })
+    .eq("id", plotId)
+    .select("*")
+    .single();
 }
 
 export async function updatePlotStatusAdmin(table: string, plotId: string, status: string) {
-  return supabase.from(table).update({ status }).eq("id", plotId);
+  return supabase.from(table).update({ status }).eq("id", plotId).select("*").single();
 }
 
 export async function updatePlotDetailsAdmin(

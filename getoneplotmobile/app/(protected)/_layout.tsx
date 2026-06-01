@@ -108,6 +108,14 @@ export default function ProtectedLayout() {
             headerRight: () => profileButton,
           }}
         />
+        <Stack.Screen
+          name="admin/site/[slug]"
+          options={{
+            title: "Site Plots",
+            headerBackTitle: "Sites",
+            headerRight: () => profileButton,
+          }}
+        />
       </Stack>
     </RequireAuth>
   );

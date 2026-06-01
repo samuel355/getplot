@@ -152,8 +152,8 @@ export default function AdminPlotsScreen() {
           style={({ pressed }) => [styles.siteCard, pressed && styles.pressed]}
           onPress={() =>
             router.push({
-              pathname: '/(tabs)/sites/[slug]',
-              params: { slug: item.slug, returnTo: 'admin-plots' },
+              pathname: '/admin/site/[slug]',
+              params: { slug: item.slug },
             })
           }
           android_ripple={{ color: 'rgba(15, 23, 42, 0.06)' }}
@@ -184,7 +184,7 @@ export default function AdminPlotsScreen() {
               <Text style={text.interestText}>{item.interested.toLocaleString()} interested</Text>
             </View>
             <View style={styles.mapLink}>
-              <Text style={text.mapLink}>Open map</Text>
+              <Text style={text.mapLink}>Manage plots</Text>
               <Ionicons name="chevron-forward" size={17} color={colors.primary} />
             </View>
           </View>

@@ -1,8 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
-import { Pressable, StyleSheet, Text, type TextStyle, type ViewStyle } from "react-native";
+import { Pressable, StyleSheet, Text, type TextStyle, type ViewStyle, Alert } from "react-native";
 import { RequireAuth } from "../../src/components/auth/RequireAuth";
 import { useTheme } from "../../src/constants/theme";
+import { useUser } from "@clerk/clerk-expo";
+import { useRef } from "react";
 
 /**
  * Routes that require sign-in (checkout, buy/reserve plot, admin).
@@ -11,6 +13,10 @@ import { useTheme } from "../../src/constants/theme";
 export default function ProtectedLayout() {
   const { colors, borderRadius, spacing, fontSize, fontWeight } = useTheme();
   const router = useRouter();
+  const { user } = useUser();
+  const role = (user?.publicMetadata?.role as string) || "guest";
+  const isAdmin = ["admin", "sysadmin", "chief", "chief_asst"].includes(role);
+  const refreshRef = useRef<() => void>(() => {});
 
   const backButton = (title: string) => (
     <Pressable
@@ -54,6 +60,15 @@ export default function ProtectedLayout() {
     </Pressable>
   );
 
+  const refreshButton = (
+    <Pressable
+      onPress={() => refreshRef.current?.()}
+      style={{ padding: spacing.sm }}
+    >
+      <Ionicons name="refresh" size={20} color={colors.primary} />
+    </Pressable>
+  );
+
   return (
     <RequireAuth>
       <Stack
@@ -90,6 +105,7 @@ export default function ProtectedLayout() {
           options={{
             title: "Admin",
             headerRight: () => profileButton,
+            headerShown: isAdmin,
           }}
         />
         <Stack.Screen
@@ -98,6 +114,7 @@ export default function ProtectedLayout() {
             title: "Properties Dashboard",
             headerBackTitle: "Admin",
             headerRight: () => profileButton,
+            headerShown: isAdmin,
           }}
         />
         <Stack.Screen
@@ -106,6 +123,7 @@ export default function ProtectedLayout() {
             title: "Land Sites Dashboard",
             headerBackTitle: "Admin",
             headerRight: () => profileButton,
+            headerShown: isAdmin,
           }}
         />
         <Stack.Screen
@@ -114,14 +132,16 @@ export default function ProtectedLayout() {
             title: "Site Plots",
             headerBackTitle: "Sites",
             headerRight: () => profileButton,
+            headerShown: isAdmin,
           }}
         />
         <Stack.Screen
           name="admin/users"
           options={{
             title: "User Management",
-            headerBackTitle: "Admin",
-            headerRight: () => profileButton,
+            headerLeft: () => backButton("Admin"),
+            headerRight: () => refreshButton,
+            headerShown: isAdmin,
           }}
         />
       </Stack>

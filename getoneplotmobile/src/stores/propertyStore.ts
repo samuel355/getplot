@@ -88,9 +88,16 @@ export const usePropertyStore = create<PropertyState>()(
             sort_by: filters.sortBy,
           });
 
-          // Try to fetch from cached API first
+          // Try to fetch from cached API first with 15s timeout
           try {
-            const response = await fetch(`${apiURL}/api/properties/list?${queryParams.toString()}`);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+            
+            const response = await fetch(`${apiURL}/api/properties/list?${queryParams.toString()}`, {
+              signal: controller.signal as any,
+            });
+            clearTimeout(timeoutId);
+            
             if (response.ok) {
               const result = await response.json();
               const mapped = (result.data || []).map((row: Record<string, unknown>) =>
@@ -106,8 +113,8 @@ export const usePropertyStore = create<PropertyState>()(
               });
               return;
             }
-          } catch (apiError) {
-            console.warn("API fetch failed, falling back to direct Supabase query:", apiError);
+          } catch (apiError: any) {
+            console.warn("[Marketplace] API fetch failed, falling back to Supabase:", apiError.message);
           }
 
           // Fallback to direct Supabase query if API is unavailable or fails
@@ -156,11 +163,13 @@ export const usePropertyStore = create<PropertyState>()(
               query = query.order("created_at", { ascending: false });
           }
 
+          console.log("[Marketplace] Fetching from Supabase...");
           const { data, error, count } = await query.range(from, to);
           if (error) throw error;
 
           const total = count || 0;
           const mapped = (data || []).map((row) => mapProperty(row as Record<string, unknown>));
+          console.log("[Marketplace] Loaded", mapped.length, "properties from Supabase");
           set({
             properties: mapped,
             filteredProperties: mapped,
@@ -169,7 +178,8 @@ export const usePropertyStore = create<PropertyState>()(
             currentPage: page,
             loading: false,
           });
-        } catch (e) {
+        } catch (e: any) {
+          console.error("[Marketplace] Error:", e.message || e);
           set({
             loading: false,
             error: e instanceof Error ? e.message : "Failed to load properties",

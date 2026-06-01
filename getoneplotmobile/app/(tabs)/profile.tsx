@@ -17,6 +17,7 @@ import {
 import * as WebBrowser from "expo-web-browser";
 import { ProfileGuestAuth } from "../../src/components/auth/ProfileGuestAuth";
 import { useTheme } from "../../src/constants/theme";
+import { useApprovalStatus } from "../../src/hooks/useApprovalStatus";
 import { formatGhs } from "../../src/lib/plotService";
 import { usePropertyStore } from "../../src/stores/propertyStore";
 import { useAppStore } from "../../src/stores/appStore";
@@ -53,6 +54,10 @@ export default function ProfileScreen() {
   const favorites = usePropertyStore((s) => s.favorites);
 
   const role = (user?.publicMetadata?.role as string) || "guest";
+  const { status } = useApprovalStatus({ enabled: isSignedIn, poll: false });
+  const isApproved = status?.isApproved ?? true; // Default to true to avoid flashing for guests
+  const isPending = isSignedIn && !isApproved && role !== "guest";
+
   const area = (user?.publicMetadata?.area as string) || "Not assigned";
   const email = user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress;
   const displayName = user?.fullName || user?.firstName || "Account Holder";
@@ -211,19 +216,43 @@ export default function ProfileScreen() {
             </Text>
             <Text style={[styles.email, { color: colors.textMuted }]}>{email}</Text>
 
-            <View style={{ flexDirection: "row", gap: 8, marginTop: 4 }}>
-              <View style={[styles.roleBadge, { backgroundColor: colors.primaryAccent }]}>
-                <Text style={styles.roleText}>{formatRole(role)}</Text>
-              </View>
+            <View style={{ flexDirection: "row", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
               <View
                 style={[
-                  styles.areaBadge,
-                  { backgroundColor: colors.surfaceAlt, borderColor: colors.border },
+                  styles.roleBadge,
+                  { backgroundColor: isPending ? colors.warning : colors.primaryAccent },
                 ]}
               >
-                <Ionicons name="location-outline" size={12} color={colors.primary} />
-                <Text style={[styles.areaText, { color: colors.textSecondary }]}>{area}</Text>
+                <Text style={styles.roleText}>
+                  {isPending ? "PENDING APPROVAL" : formatRole(role)}
+                </Text>
               </View>
+              {isPending && (
+                <Pressable
+                  onPress={() => router.push("/approval")}
+                  style={[
+                    styles.roleBadge,
+                    {
+                      backgroundColor: colors.surfaceAlt,
+                      borderColor: colors.border,
+                      borderWidth: 1,
+                    },
+                  ]}
+                >
+                  <Text style={[styles.roleText, { color: colors.primary }]}>VIEW STATUS</Text>
+                </Pressable>
+              )}
+              {!isPending && (
+                <View
+                  style={[
+                    styles.areaBadge,
+                    { backgroundColor: colors.surfaceAlt, borderColor: colors.border },
+                  ]}
+                >
+                  <Ionicons name="location-outline" size={12} color={colors.primary} />
+                  <Text style={[styles.areaText, { color: colors.textSecondary }]}>{area}</Text>
+                </View>
+              )}
             </View>
           </View>
         </View>
@@ -399,7 +428,28 @@ export default function ProfileScreen() {
             detail="List a property for sale or rent"
             onPress={() => router.push("/property/manage")}
           />
-          {isAdmin && (
+          {isAdmin && (role === "admin" || role === "sysadmin") ? (
+            <>
+              <ActionRow
+                icon="business-outline"
+                label="Properties Dashboard"
+                detail="Manage property listings"
+                onPress={() => router.push("/admin/properties")}
+              />
+              <ActionRow
+                icon="map-outline"
+                label="Land Sites Dashboard"
+                detail="Manage land sites and plots"
+                onPress={() => router.push("/admin/plots")}
+              />
+              <ActionRow
+                icon="people-outline"
+                label="User Management"
+                detail="View and manage users"
+                onPress={() => router.push("/admin/users")}
+              />
+            </>
+          ) : isAdmin ? (
             <ActionRow
               icon="shield-outline"
               label="Admin Dashboard"
@@ -407,7 +457,7 @@ export default function ProfileScreen() {
               tone="accent"
               onPress={() => router.push("/admin")}
             />
-          )}
+          ) : null}
           <ActionRow
             icon="chatbubble-outline"
             label="Help & Support"

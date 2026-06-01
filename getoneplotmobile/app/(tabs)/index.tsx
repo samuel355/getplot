@@ -54,6 +54,8 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const sentToApproval = useRef(false);
 
+  // Remove automatic redirect to approval screen so pending users can browse
+  /*
   useEffect(() => {
     if (!isLoaded || !isSignedIn || initialLoading || !status) return;
     if (!status.isApproved && !sentToApproval.current) {
@@ -61,6 +63,7 @@ export default function HomeScreen() {
       router.replace("/approval");
     }
   }, [isLoaded, isSignedIn, initialLoading, status, router]);
+  */
 
   useEffect(() => {
     (async () => {

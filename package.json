@@ -37,6 +37,7 @@
     "@react-google-maps/api": "^2.19.3",
     "@supabase/supabase-js": "^2.43.1",
     "@tanstack/react-table": "^8.20.5",
+    "@upstash/redis": "^1.38.0",
     "axios": "^1.7.7",
     "bullmq": "^5.28.1",
     "chart.js": "^4.4.8",

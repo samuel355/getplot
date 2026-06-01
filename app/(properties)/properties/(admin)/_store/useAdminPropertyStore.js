@@ -78,8 +78,7 @@ const useAdminPropertyStore = create((set, get) => ({
 
   // Filter properties based on tab, search and filters
   filterProperties: () => {
-    const { properties, currentTab, searchQuery, filterType, sortOrder } =
-      get();
+    const { properties, currentTab, searchQuery, filterType, sortOrder } = get();
 
     let filtered = [...properties];
 
@@ -95,7 +94,7 @@ const useAdminPropertyStore = create((set, get) => ({
         (p) =>
           p.title?.toLowerCase().includes(query) ||
           p.location?.toLowerCase().includes(query) ||
-          p.description?.toLowerCase().includes(query)
+          p.description?.toLowerCase().includes(query),
       );
     }
 
@@ -162,15 +161,19 @@ const useAdminPropertyStore = create((set, get) => ({
 
       if (error) throw error;
 
+      // Invalidate Redis cache
+      fetch("/api/cache/clear", {
+        method: "POST",
+        body: JSON.stringify({ key: "properties:list:*", usePattern: true }),
+      }).catch((err) => console.error("Cache invalidation failed:", err));
+
       // Update local state
       const updatedProperties = get().properties.map((p) =>
-        p.id === propertyId ? { ...p, status: "approved" } : p
+        p.id === propertyId ? { ...p, status: "approved" } : p,
       );
 
       // Update stats
-      const oldStatus = get().properties.find(
-        (p) => p.id === propertyId
-      )?.status;
+      const oldStatus = get().properties.find((p) => p.id === propertyId)?.status;
       const stats = { ...get().stats };
 
       if (oldStatus) {
@@ -211,17 +214,19 @@ const useAdminPropertyStore = create((set, get) => ({
 
       if (error) throw error;
 
+      // Invalidate Redis cache
+      fetch("/api/cache/clear", {
+        method: "POST",
+        body: JSON.stringify({ key: "properties:list:*", usePattern: true }),
+      }).catch((err) => console.error("Cache invalidation failed:", err));
+
       // Update local state
       const updatedProperties = get().properties.map((p) =>
-        p.id === propertyId
-          ? { ...p, status: "rejected", rejection_reason: reason }
-          : p
+        p.id === propertyId ? { ...p, status: "rejected", rejection_reason: reason } : p,
       );
 
       // Update stats
-      const oldStatus = get().properties.find(
-        (p) => p.id === propertyId
-      )?.status;
+      const oldStatus = get().properties.find((p) => p.id === propertyId)?.status;
       const stats = { ...get().stats };
 
       if (oldStatus) {

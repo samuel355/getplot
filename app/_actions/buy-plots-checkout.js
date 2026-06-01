@@ -156,6 +156,29 @@ export const BuyPlotCheckout = async (
       return { success: false, errors };
     }
 
+    // Invalidate cache on the server so clients see updated data quickly
+    try {
+      // Clear list cache pattern
+      await fetch('/api/cache/clear', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'properties:list:*', usePattern: true }),
+      });
+
+      // Clear individual property detail caches
+      await Promise.all(
+        plots.map((p) =>
+          fetch('/api/cache/clear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: `property:detail:${p.id}`, usePattern: false }),
+          })
+        )
+      );
+    } catch (e) {
+      console.warn('Failed to call cache clear API after updates', e);
+    }
+
     //send emaill
     const pdfBlob = doc.output("blob"); // Get PDF as a Blob
 

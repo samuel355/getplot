@@ -23,7 +23,7 @@ export async function getPlotById(table: string, id: string): Promise<PlotFeatur
 }
 
 export async function updatePlotOnHold(table: string, plotId: string, buyer: BuyerInfo) {
-  return supabase
+  const res = await supabase
     .from(table)
     .update({
       status: "On Hold",
@@ -35,6 +35,25 @@ export async function updatePlotOnHold(table: string, plotId: string, buyer: Buy
       residentialAddress: buyer.residentialAddress,
     })
     .eq("id", plotId);
+
+  // Best-effort cache invalidation
+  try {
+    const apiURL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
+    await fetch(`${apiURL}/api/cache/clear`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: `property:detail:${plotId}`, usePattern: false }),
+    });
+    await fetch(`${apiURL}/api/cache/clear`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: 'properties:list:*', usePattern: true }),
+    });
+  } catch (e) {
+    console.warn('Failed to clear cache after updating plot on hold', e);
+  }
+
+  return res;
 }
 
 export async function submitPlotInterest(

@@ -5,13 +5,13 @@ const clerkClient = createClerkClient({
 
 export async function POST(request) {
   try {
-    const { userId, newRole, area } = await request.json();
-    //console.log(userId, newRole, area)
+    const { userId, newRole, area, banned } = await request.json();
+    //console.log(userId, newRole, area, banned)
 
     // Validate required fields
-    if (!userId || !newRole) {
+    if (!userId || (!newRole && typeof banned === 'undefined')) {
       return new Response(
-        JSON.stringify({ error: "User ID and role are required" }),
+        JSON.stringify({ error: "User ID and either role or banned flag are required" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
@@ -25,14 +25,16 @@ export async function POST(request) {
     }
 
     // Determine area based on role - CLEAR area for non-chief roles
-    const finalArea =
-      newRole === "chief" || newRole === "chief_asst" ? area : "";
+    const finalArea = newRole === "chief" || newRole === "chief_asst" ? area : "";
+
+    // Build publicMetadata update object dynamically
+    const publicMetadata = {};
+    if (typeof newRole !== 'undefined') publicMetadata.role = newRole;
+    if (typeof finalArea !== 'undefined') publicMetadata.area = finalArea;
+    if (typeof banned !== 'undefined') publicMetadata.banned = banned;
 
     const user = await clerkClient.users.updateUser(userId, {
-      publicMetadata: {
-        role: newRole,
-        area: finalArea,
-      },
+      publicMetadata,
     });
 
     return new Response(JSON.stringify(user), {

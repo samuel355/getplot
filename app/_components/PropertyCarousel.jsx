@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { supabase } from "@/utils/supabase/client";
 import Image from "next/image";
 
 const PropertyCarousel = () => {
@@ -16,16 +15,9 @@ const PropertyCarousel = () => {
     const fetchProperties = async () => {
       try {
         setLoading(true);
-        const { data, error } = await supabase
-          .from("properties")
-          .select(
-            "id, title, type, price, location, size, bedrooms, bathrooms, images, status, listing_type, rental_price"
-          )
-          .eq("status", "approved")
-          .order("created_at", { ascending: false })
-          .limit(9);
-
-        if (error) throw error;
+        const response = await fetch(`/api/properties/list?limit=9`);
+        if (!response.ok) throw new Error("Failed to fetch properties");
+        const data = await response.json();
         setProperties(data || []);
       } catch (error) {
         console.error("Error fetching properties:", error);
@@ -39,17 +31,13 @@ const PropertyCarousel = () => {
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex + itemsPerPage >= properties.length
-        ? 0
-        : prevIndex + itemsPerPage
+      prevIndex + itemsPerPage >= properties.length ? 0 : prevIndex + itemsPerPage,
     );
   };
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex - itemsPerPage < 0
-        ? properties.length - itemsPerPage
-        : prevIndex - itemsPerPage
+      prevIndex - itemsPerPage < 0 ? properties.length - itemsPerPage : prevIndex - itemsPerPage,
     );
   };
 
@@ -75,19 +63,13 @@ const PropertyCarousel = () => {
     return null;
   }
 
-  const visibleProperties = properties.slice(
-    currentIndex,
-    currentIndex + itemsPerPage
-  );
+  const visibleProperties = properties.slice(currentIndex, currentIndex + itemsPerPage);
 
   return (
     <div className="relative">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {visibleProperties.map((property) => (
-          <div
-            key={property.id}
-            className="border rounded-lg overflow-hidden bg-white shadow-lg"
-          >
+          <div key={property.id} className="border rounded-lg overflow-hidden bg-white shadow-lg">
             {/* Property Image */}
             <div className="relative">
               <div className="w-full aspect-[4/3] bg-gray-100 rounded overflow-hidden">
@@ -103,17 +85,15 @@ const PropertyCarousel = () => {
                   {property.listing_type === "rent"
                     ? "For Rent"
                     : property.listing_type === "airbnb"
-                    ? "Airbnb"
-                    : property.type}
+                      ? "Airbnb"
+                      : property.type}
                 </span>
               </div>
             </div>
 
             {/* Property Details */}
             <div className="p-4">
-              <h3 className="font-semibold text-lg truncate">
-                {property.title}
-              </h3>
+              <h3 className="font-semibold text-lg truncate">{property.title}</h3>
               <p className="text-sm text-gray-600 truncate flex items-center mt-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -141,13 +121,9 @@ const PropertyCarousel = () => {
               <div className="flex justify-between items-center mt-2">
                 <div className="font-medium">
                   {property.listing_type === "rent" ? (
-                    <>
-                      GHS {Number(property.rental_price).toLocaleString()}/month
-                    </>
+                    <>GHS {Number(property.rental_price).toLocaleString()}/month</>
                   ) : property.listing_type === "airbnb" ? (
-                    <>
-                      GHS {Number(property.rental_price).toLocaleString()}/night
-                    </>
+                    <>GHS {Number(property.rental_price).toLocaleString()}/night</>
                   ) : (
                     <>GHS {Number(property.price).toLocaleString()}</>
                   )}
@@ -233,9 +209,7 @@ const PropertyCarousel = () => {
               key={index}
               onClick={() => setCurrentIndex(index * itemsPerPage)}
               className={`w-2 h-2 rounded-full transition-colors ${
-                index === Math.floor(currentIndex / itemsPerPage)
-                  ? "bg-primary"
-                  : "bg-gray-300"
+                index === Math.floor(currentIndex / itemsPerPage) ? "bg-primary" : "bg-gray-300"
               }`}
             />
           ))}

@@ -374,6 +374,20 @@ const EditPlot = () => {
       });
       setVerifyLoading(false);
       toast.success("Transaction verified successfully");
+      try {
+        await fetch('/api/cache/clear', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key: 'properties:list:*', usePattern: true }),
+        });
+        await fetch('/api/cache/clear', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key: `property:detail:${id}`, usePattern: false }),
+        });
+      } catch (e) {
+        console.warn('Cache clear failed', e);
+      }
     }
     if (error) {
       console.log(error);

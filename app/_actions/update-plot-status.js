@@ -1,4 +1,5 @@
 import { supabase } from "@/utils/supabase/client";
+import { clearCache } from '@/lib/redis';
 
 export const updatePlotStatus = async (
   databaseName,
@@ -28,5 +29,12 @@ export const updatePlotStatus = async (
   }
   if (data) {
     console.log("success update");
+    try {
+      // Invalidate relevant caches: properties list and specific property detail
+      await clearCache('properties:list:*', true);
+      await clearCache(`property:detail:${plotId}`);
+    } catch (e) {
+      console.warn('Failed to clear cache after plot status update', e);
+    }
   }
 };

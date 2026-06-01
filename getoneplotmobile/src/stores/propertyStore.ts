@@ -74,6 +74,43 @@ export const usePropertyStore = create<PropertyState>()(
         const { filters, propertiesPerPage } = get();
         set({ loading: true, error: null });
         try {
+          const apiURL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000";
+          const [minPrice, maxPrice] = filters.priceRange;
+
+          const queryParams = new URLSearchParams({
+            limit: propertiesPerPage.toString(),
+            page: page.toString(),
+            type: filters.propertyType,
+            listing_type: filters.property_type,
+            region: filters.location,
+            min_price: minPrice.toString(),
+            max_price: maxPrice.toString(),
+            sort_by: filters.sortBy,
+          });
+
+          // Try to fetch from cached API first
+          try {
+            const response = await fetch(`${apiURL}/api/properties/list?${queryParams.toString()}`);
+            if (response.ok) {
+              const result = await response.json();
+              const mapped = (result.data || []).map((row: Record<string, unknown>) =>
+                mapProperty(row),
+              );
+              set({
+                properties: mapped,
+                filteredProperties: mapped,
+                totalProperties: result.total,
+                totalPages: Math.max(1, Math.ceil(result.total / propertiesPerPage)),
+                currentPage: page,
+                loading: false,
+              });
+              return;
+            }
+          } catch (apiError) {
+            console.warn("API fetch failed, falling back to direct Supabase query:", apiError);
+          }
+
+          // Fallback to direct Supabase query if API is unavailable or fails
           const from = (page - 1) * propertiesPerPage;
           const to = from + propertiesPerPage - 1;
 
@@ -100,7 +137,6 @@ export const usePropertyStore = create<PropertyState>()(
           if (filters.bathrooms !== "any" && filters.propertyType !== "land") {
             query = query.gte("bathrooms", parseInt(filters.bathrooms, 10));
           }
-          const [minPrice, maxPrice] = filters.priceRange;
           if (minPrice > 0 || maxPrice < 10000000) {
             if (filters.property_type === "rent" || filters.property_type === "airbnb") {
               query = query.gte("rental_price", minPrice).lte("rental_price", maxPrice);
@@ -144,6 +180,25 @@ export const usePropertyStore = create<PropertyState>()(
       fetchPropertyById: async (id) => {
         set({ loading: true, error: null });
         try {
+          const apiURL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000";
+
+          // Try to fetch from cached API first
+          try {
+            const response = await fetch(`${apiURL}/api/properties/${id}`);
+            if (response.ok) {
+              const data = await response.json();
+              const property = mapProperty(data as Record<string, unknown>);
+              set({ selectedProperty: property, loading: false });
+              return property;
+            }
+          } catch (apiError) {
+            console.warn(
+              `API fetch for property ${id} failed, falling back to direct Supabase query:`,
+              apiError,
+            );
+          }
+
+          // Fallback to direct Supabase query
           const { data, error } = await supabase
             .from("properties")
             .select("*")
@@ -205,6 +260,18 @@ export const usePropertyStore = create<PropertyState>()(
               get().properties.find((p) => p.id === propertyId) || get().selectedProperty;
             if (property) {
               set((s) => ({ favorites: [...s.favorites, property] }));
+            }
+
+            // Clear server cache for lists so favorite changes reflect
+            try {
+              const apiURL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
+              await fetch(`${apiURL}/api/cache/clear`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: 'properties:list:*', usePattern: true }),
+              });
+            } catch (e) {
+              console.warn('Failed to clear cache after toggling favorite', e);
             }
           }
           return { success: true, isFavorite: !isFav };

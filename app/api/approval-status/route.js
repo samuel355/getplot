@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
+import { getOrSetCache } from '@/lib/redis';
 
 const acceptedRoles = ['sysadmin', 'admin', 'property_agent', 'chief', 'chief_asst'];
 const AUTO_APPROVED_EMAIL = 'samueloseiboatenglistowell57@gmail.com';
@@ -34,9 +35,19 @@ export async function GET() {
         acceptsToken: ['session_token', 'oauth_token'],
       });
       if (userId) {
-        const client = await clerkClient();
-        user = await client.users.getUser(userId);
+        // Use cached clerk user when available to avoid repeated network calls
+        user = await getOrSetCache(
+          `clerk:user:${userId}`,
+          async () => {
+            const client = await clerkClient();
+            return await client.users.getUser(userId);
+          },
+          60 // short cache for 1 minute
+        );
       }
+    } else if (user?.id) {
+      // Optionally warm the cache for the current user
+      getOrSetCache(`clerk:user:${user.id}`, async () => user, 60).catch(() => {});
     }
 
     if (!user) {

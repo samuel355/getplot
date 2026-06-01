@@ -112,6 +112,17 @@ const page = () => {
 
     if (data) {
       const id = data[0].id;
+      // Clear properties/list caches so new land shows up
+      try {
+        await fetch('/api/cache/clear', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key: 'properties:list:*', usePattern: true }),
+        });
+      } catch (e) {
+        console.warn('Failed to clear cache after land listing creation', e);
+      }
+
       uploadImage(id);
     }
     if (error) {

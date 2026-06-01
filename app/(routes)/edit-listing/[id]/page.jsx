@@ -124,6 +124,21 @@ const EditListing = () => {
       .select();
 
     if (data) {
+      try {
+        await fetch('/api/cache/clear', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key: `property:detail:${id}`, usePattern: false }),
+        });
+        await fetch('/api/cache/clear', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key: 'properties:list:*', usePattern: true }),
+        });
+      } catch (e) {
+        console.warn('Failed to clear cache after editing listing', e);
+      }
+
       uploadImage();
     }
     if (error) {

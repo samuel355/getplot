@@ -17,18 +17,18 @@ function resolveBaseUrl() {
     Constants.manifest?.debuggerHost || Constants.expoConfig?.extra?.debuggerHost;
   if (debuggerHost) {
     const host = debuggerHost.split(":")[0];
-    // Default to Expo server (8081) for internal API routes, falling back to Next.js (3000) only if needed
-    return `http://${host}:8081`;
+    // Use Next.js dev server (3000) for API routes by default in this project
+    return `http://${host}:3000`;
   }
 
-  // Emulator fallbacks
+  // Emulator fallbacks: prefer Next.js dev server on 3000
   if (Platform.OS === "android") {
-    // Android emulator (using 8081 for internal Expo API)
-    return "http://10.0.2.2:8081";
+    // Android emulator (using 3000 for Next.js API)
+    return "http://10.0.2.2:3000";
   }
 
-  // iOS simulator / default
-  return "http://localhost:8081";
+  // iOS simulator / default - point to Next.js dev server
+  return "http://localhost:3000";
 }
 
 const baseURL = resolveBaseUrl();

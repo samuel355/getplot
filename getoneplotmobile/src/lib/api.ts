@@ -1,10 +1,42 @@
 import axios from 'axios';
 import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 
-const baseURL =
-  process.env.EXPO_PUBLIC_API_URL ||
-  Constants.expoConfig?.extra?.apiUrl ||
-  'http://localhost:3000';
+// Resolve base URL for API calls in many dev environments (simulators, emulators, physical devices)
+function resolveBaseUrl() {
+  // Explicit env var (preferred for device/staging)
+  const envUrl = process.env.EXPO_PUBLIC_API_URL;
+  if (envUrl) return envUrl;
+
+  // expo config extra
+  const expoApi =
+    Constants.expoConfig?.extra?.apiUrl || Constants.manifest?.extra?.apiUrl;
+  if (expoApi) return expoApi;
+
+  // If running in Expo client / simulator, try debuggerHost to derive host IP
+  const debuggerHost = Constants.manifest?.debuggerHost || Constants.expoConfig?.extra?.debuggerHost;
+  if (debuggerHost) {
+    const host = debuggerHost.split(':')[0];
+    return `http://${host}:3000`;
+  }
+
+  // Emulator fallbacks
+  if (Platform.OS === 'android') {
+    // Android emulator
+    return 'http://10.0.2.2:3000';
+  }
+
+  // iOS simulator / default
+  return 'http://localhost:3000';
+}
+
+const baseURL = resolveBaseUrl();
+
+// Helpful for debugging network issues in development
+if (__DEV__) {
+  // eslint-disable-next-line no-console
+  console.log('[Mobile API] using baseURL =', baseURL);
+}
 
 export const api = axios.create({
   baseURL,

@@ -8,12 +8,10 @@ import {
   TextInput,
   ActivityIndicator,
   Alert,
-  Image,
 } from "react-native";
-import { api } from "../../../src/lib/api";
-import { useAuth, useUser } from "@clerk/clerk-expo";
+import { useAuth } from "@clerk/clerk-expo";
+import { fetchAdminUsers, updateAdminUser } from "../../../src/lib/adminUsers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
 import { useTheme } from "../../../src/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -26,29 +24,26 @@ export default function AdminUsersScreen() {
   const [newRole, setNewRole] = useState("");
   const [area, setArea] = useState("");
 
-  const { getToken } = useAuth();
+  const { getToken, isLoaded, isSignedIn } = useAuth();
   const { colors, spacing, borderRadius, fontSize, fontWeight } = useTheme();
 
   useEffect(() => {
+    if (!isLoaded) return;
+    if (!isSignedIn) {
+      setError("Please sign in to manage users.");
+      setLoading(false);
+      return;
+    }
     loadUsers();
-  }, []);
+  }, [isLoaded, isSignedIn]);
 
   const loadUsers = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      // First, test if server is reachable
-      console.log("[AdminUsers] Testing API health...");
-      try {
-        await api.get("/api/health", { timeout: 3000 });
-        console.log("[AdminUsers] API health check passed");
-      } catch (healthErr: any) {
-        console.warn("[AdminUsers] Health check failed:", healthErr.message);
-        setError("API server not responding. Make sure Expo dev server is running.");
-        setLoading(false);
-        return;
-      }
+      // Skipping explicit health check to avoid coupling Expo to Next.js availability.
+      // Attempt to fetch /api/users directly and rely on cached results if the request fails.
 
       // Try cached first to show immediate data
       const cached = await AsyncStorage.getItem("admin_users_cache");
@@ -62,38 +57,50 @@ export default function AdminUsersScreen() {
         } catch (e) {}
       }
 
-      // Create abort controller with 15s timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-      console.log("[AdminUsers] Fetching fresh users from API...");
-      const token = await getToken();
-      console.log("[AdminUsers] Token obtained, making request...");
-      
-      const res = await api.get("/api/users", {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        signal: controller.signal as any,
-      });
-      clearTimeout(timeoutId);
+      const token = await getToken({ skipCache: true });
+      if (!token) {
+        throw new Error("Not authenticated. Sign in again.");
+      }
+      const payload = await fetchAdminUsers(token);
 
       console.log("[AdminUsers] API response received");
-      const usersData = Array.isArray(res.data) ? res.data : res.data?.data;
+      const usersData = Array.isArray(payload) ? payload : payload?.data;
       console.log("[AdminUsers] Parsed users:", usersData?.length || 0, "users");
-      
+
       if (Array.isArray(usersData)) {
         setUsers(usersData);
         await AsyncStorage.setItem("admin_users_cache", JSON.stringify(usersData));
       }
-    } catch (err: any) {
-      console.error("[AdminUsers] Error loading users:", err.message || err);
-      if (err.code === "ECONNABORTED" || err.message?.includes("timeout")) {
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("[AdminUsers] Error loading users:", msg || err);
+      // Handle cancellation / network unreachable by falling back to cache
+      const isCanceled = msg === "canceled";
+      if (isCanceled) {
+        const cachedFallback = await AsyncStorage.getItem("admin_users_cache");
+        if (cachedFallback) {
+          try {
+            const parsed = JSON.parse(cachedFallback);
+            if (Array.isArray(parsed)) {
+              setUsers(parsed);
+              setError("Offline: showing cached users");
+            } else {
+              setError("Request canceled and no cached users available");
+            }
+          } catch (e) {
+            setError("Request canceled and no cached users available");
+          }
+        } else {
+          setError("Request canceled and no cached users available");
+        }
+      } else if (msg.includes("timeout")) {
         setError("Request timed out. Check Expo logs for details.");
-      } else if (err.response?.status === 401) {
+      } else if (msg.includes("401")) {
         setError("Unauthorized. Not an admin.");
-      } else if (err.response?.status === 403) {
+      } else if (msg.includes("403") || msg.toLowerCase().includes("forbidden")) {
         setError("Forbidden. Admin access required.");
       } else {
-        setError(err.response?.data?.error || err.message || "Failed to load users");
+        setError(msg || "Failed to load users");
       }
     } finally {
       setLoading(false);
@@ -111,15 +118,14 @@ export default function AdminUsersScreen() {
         payload.area = area;
       }
 
-      await api.post("/api/admin/update-user", payload, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
+      await updateAdminUser(token, payload);
 
       Alert.alert("Success", "User role updated");
       setModalOpen(false);
       loadUsers();
-    } catch (err: any) {
-      Alert.alert("Error", err.response?.data?.error || "Failed to update role");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to update role";
+      Alert.alert("Error", msg);
     }
   };
 
@@ -127,11 +133,7 @@ export default function AdminUsersScreen() {
     try {
       const token = await getToken();
       const banned = !!u.publicMetadata?.banned;
-      await api.post(
-        "/api/admin/update-user",
-        { userId: u.id, banned: !banned },
-        { headers: token ? { Authorization: `Bearer ${token}` } : {} }
-      );
+      await updateAdminUser(token, { userId: u.id, banned: !banned });
       Alert.alert("Success", `User ${!banned ? "banned" : "unbanned"}`);
       loadUsers();
     } catch (err: any) {

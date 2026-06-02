@@ -1,8 +1,7 @@
-import { createClerkClient } from "@clerk/backend";
+import { createClerkClient, verifyToken } from "@clerk/backend";
 
-const clerkClient = createClerkClient({
-  secretKey: process.env.CLERK_SECRET_KEY,
-});
+const secretKey = process.env.CLERK_SECRET_KEY;
+const clerkClient = createClerkClient({ secretKey });
 
 export async function POST(request: Request) {
   try {
@@ -16,7 +15,7 @@ export async function POST(request: Request) {
     // Verify requester is an admin
     let requesterId: string;
     try {
-      const payload = await clerkClient.verifyToken(token);
+      const payload = await verifyToken(token, { secretKey });
       requesterId = payload.sub as string;
     } catch (err) {
       return Response.json({ error: "Invalid session" }, { status: 401 });

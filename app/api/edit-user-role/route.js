@@ -1,48 +1,54 @@
-import { createClerkClient } from "@clerk/clerk-sdk-node";
-const clerkClient = createClerkClient({
-  secretKey: process.env.CLERK_SECRET_KEY,
-});
+import { NextResponse } from "next/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export async function POST(request) {
   try {
+    const authObj = await auth();
+    const { userId: requesterId } = authObj;
+
+    if (!requesterId) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
+    const client = await clerkClient();
+    const requester = await client.users.getUser(requesterId);
+    const requesterRole = requester.publicMetadata?.role;
+    const allowedRoles = ["admin", "sysadmin"];
+
+    const isAllowedByRole = requesterRole && allowedRoles.includes(requesterRole);
+    const isAllowedByEmail =
+      requester.primaryEmailAddress?.emailAddress === "samueloseiboatenglistowell57@gmail.com";
+
+    if (!isAllowedByRole && !isAllowedByEmail) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const { userId, role, area } = await request.json();
 
     // Validate required fields
     if (!userId || !role) {
-      return new Response(
-        JSON.stringify({ error: "User ID and role are required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      return NextResponse.json({ error: "User ID and role are required" }, { status: 400 });
     }
 
     // For chief roles, area is required
     if ((role === "chief" || role === "chief_asst") && !area) {
-      return new Response(
-        JSON.stringify({ error: "Area is required for chief roles" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      return NextResponse.json({ error: "Area is required for chief roles" }, { status: 400 });
     }
 
     // Determine area based on role - CLEAR area for non-chief roles
     const finalArea = role === "chief" || role === "chief_asst" ? area : "";
 
     // Update user in Clerk
-    const user = await clerkClient.users.updateUser(userId, {
+    const user = await client.users.updateUser(userId, {
       publicMetadata: {
         role: role,
-        area: finalArea, // This will be empty string for non-chief roles
+        area: finalArea,
       },
     });
 
-    return new Response(JSON.stringify(user), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(user, { status: 200 });
   } catch (error) {
     console.error("Error updating user role:", error);
-    return new Response(JSON.stringify({ error: "Internal server error" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

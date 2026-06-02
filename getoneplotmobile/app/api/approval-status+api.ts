@@ -1,8 +1,7 @@
-import { createClerkClient } from "@clerk/backend";
+import { createClerkClient, verifyToken } from "@clerk/backend";
 
-const clerkClient = createClerkClient({
-  secretKey: process.env.CLERK_SECRET_KEY,
-});
+const secretKey = process.env.CLERK_SECRET_KEY;
+const clerkClient = createClerkClient({ secretKey });
 
 const acceptedRoles = ["sysadmin", "admin", "property_agent", "chief", "chief_asst"];
 const AUTO_APPROVED_EMAIL = "samueloseiboatenglistowell57@gmail.com";
@@ -15,7 +14,7 @@ export async function GET(request: Request) {
     }
 
     const token = authHeader.split(" ")[1];
-    const payload = await clerkClient.verifyToken(token);
+    const payload = await verifyToken(token, { secretKey });
     const userId = payload.sub as string;
     const user = await clerkClient.users.getUser(userId);
 

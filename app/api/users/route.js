@@ -4,25 +4,23 @@ import { getOrSetCache } from "@/lib/redis";
 
 export async function GET(request) {
   try {
-    // Try web session first
-    let user = await currentUser();
+    // Mobile / API callers: auth() handles both Bearer token and session cookie in Next.js
+    const authObj = await auth();
+    let userId = authObj.userId;
+    let user = null;
 
-    // Mobile / API callers: accept Bearer token (Clerk session JWT)
-    if (!user) {
-      const { userId } = await auth({ acceptsToken: ["session_token", "oauth_token"] });
-      if (userId) {
-        user = await getOrSetCache(
-          `clerk:user:${userId}`,
-          async () => {
-            const client = await clerkClient();
-            return await client.users.getUser(userId);
-          },
-          60
-        );
-      }
-    } else if (user?.id) {
-      // warm cache for web callers
-      getOrSetCache(`clerk:user:${user.id}`, async () => user, 60).catch(() => {});
+    if (userId) {
+      user = await getOrSetCache(
+        `clerk:user:${userId}`,
+        async () => {
+          const client = await clerkClient();
+          return await client.users.getUser(userId);
+        },
+        60,
+      );
+    } else {
+      // Fallback for web if currentUser is preferred
+      user = await currentUser();
     }
 
     if (!user) {
@@ -31,8 +29,7 @@ export async function GET(request) {
 
     const role = user.publicMetadata?.role;
     const allowedRoles = ["admin", "sysadmin"];
-    const email =
-      user.primaryEmailAddress?.emailAddress || user.emailAddresses?.[0]?.emailAddress;
+    const email = user.primaryEmailAddress?.emailAddress || user.emailAddresses?.[0]?.emailAddress;
 
     const isAllowedByRole = role && allowedRoles.includes(role);
     const isAllowedByEmail = email === "samueloseiboatenglistowell57@gmail.com";
@@ -44,16 +41,19 @@ export async function GET(request) {
     // Use clerkClient to fetch user list
     const client = await clerkClient();
 
-    const users = await getOrSetCache(
+    const usersResponse = await getOrSetCache(
       "clerk:users:list",
       async () => {
-        const response = await client.users.getUserList();
-        return response;
+        return await client.users.getUserList();
       },
-      600
+      300, // 5 minutes cache
     );
 
-    return NextResponse.json(users, { status: 200 });
+    // Ensure we return an object with a 'data' property for the mobile app
+    // If usersResponse is already an array, wrap it. If it's the PaginatedResourceResponse, it already has .data
+    const responseData = Array.isArray(usersResponse) ? { data: usersResponse } : usersResponse;
+
+    return NextResponse.json(responseData, { status: 200 });
   } catch (error) {
     console.error("Error in /api/users:", error);
     return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });

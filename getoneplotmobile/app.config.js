@@ -1,5 +1,5 @@
 export default ({ config }) => {
-  const googleMapsApiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY || '';
+  const googleMapsApiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
   return {
     ...config,
@@ -21,17 +21,25 @@ export default ({ config }) => {
     },
     plugins: [
       ...(config.plugins || []).filter(
-        (p) => !(Array.isArray(p) && p[0] === 'react-native-maps')
+        (p) => !(Array.isArray(p) && p[0] === "react-native-maps"),
       ),
-      'expo-router',
-      'expo-secure-store',
       [
-        'react-native-maps',
+        "expo-router",
+        {
+          origin: process.env.EXPO_PUBLIC_APP_URL,
+        },
+      ],
+      "expo-secure-store",
+      [
+        "react-native-maps",
         {
           iosGoogleMapsApiKey: googleMapsApiKey,
           androidGoogleMapsApiKey: googleMapsApiKey,
         },
       ],
+      "expo-image",
+      "expo-splash-screen",
+      "expo-web-browser",
     ],
   };
 };

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClerkClient } from "@clerk/clerk-sdk-node";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import ejs from "ejs";
 import path from "path";
 import { promises as fs } from "fs";
@@ -16,47 +16,41 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const clerkClient = createClerkClient({
-  secretKey: process.env.CLERK_SECRET_KEY,
-});
-
 export async function POST(request) {
   try {
-    // Get data from request
-    const {
-      property,
-      userId,
-      userRole,
-      propertyId,
-      propertyOwnerId,
-      emailType,
-      rejectionReason,
-    } = await request.json();
+    const authObj = await auth();
+    const { userId: requesterId } = authObj;
 
-    // Verify that the user is an admin/sysadmin
-    if (!userId) {
+    if (!requesterId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (userRole !== "admin" && userRole !== "sysadmin") {
+    const client = await clerkClient();
+    const requester = await client.users.getUser(requesterId);
+    const requesterRole = requester.publicMetadata?.role;
+    const allowedRoles = ["admin", "sysadmin"];
+
+    const isAllowedByRole = requesterRole && allowedRoles.includes(requesterRole);
+    const isAllowedByEmail =
+      requester.primaryEmailAddress?.emailAddress === "samueloseiboatenglistowell57@gmail.com";
+
+    if (!isAllowedByRole && !isAllowedByEmail) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
+    // Get data from request
+    const { property, propertyId, propertyOwnerId, emailType, rejectionReason } =
+      await request.json();
+
     if (!propertyId || !propertyOwnerId || !emailType) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     // Get property owner details
     const propertyOwner = await clerkClient.users.getUser(propertyOwnerId);
 
     if (!propertyOwner) {
-      return NextResponse.json(
-        { error: "Property owner not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Property owner not found" }, { status: 404 });
     }
 
     // Get template path based on email type
@@ -68,7 +62,7 @@ export async function POST(request) {
       case "property-approved":
         templatePath = path.join(
           process.cwd(),
-          "app/api/admin/email-templates/property-approved.ejs"
+          "app/api/admin/email-templates/property-approved.ejs",
         );
         subject = "Your Property Listing Has Been Approved!";
         title = "Good News!";
@@ -76,32 +70,23 @@ export async function POST(request) {
       case "property-rejected":
         templatePath = path.join(
           process.cwd(),
-          "app/api/admin/email-templates/property-rejected.ejs"
+          "app/api/admin/email-templates/property-rejected.ejs",
         );
         subject = "Update on Your Property Listing";
         title = "Important Update";
         break;
       case "user-banned":
-        templatePath = path.join(
-          process.cwd(),
-          "app/api/admin/email-templates/user-banned.ejs"
-        );
+        templatePath = path.join(process.cwd(), "app/api/admin/email-templates/user-banned.ejs");
         subject = "Important: Your Account Has Been Suspended";
         title = "Account Suspension Notice";
         break;
       case "user-unbanned":
-        templatePath = path.join(
-          process.cwd(),
-          "app/api/admin/email-templates/user-unbanned.ejs"
-        );
+        templatePath = path.join(process.cwd(), "app/api/admin/email-templates/user-unbanned.ejs");
         subject = "Good News: Your Account Has Been Restored";
         title = "Account Restored";
         break;
       default:
-        return NextResponse.json(
-          { error: "Invalid email type" },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "Invalid email type" }, { status: 400 });
     }
 
     // Read template file
@@ -128,9 +113,6 @@ export async function POST(request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error sending email:", error);
-    return NextResponse.json(
-      { error: "Failed to send email" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
   }
 }

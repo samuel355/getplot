@@ -1,8 +1,7 @@
-import { createClerkClient } from "@clerk/backend";
+import { createClerkClient, verifyToken } from "@clerk/backend";
 
-const clerkClient = createClerkClient({
-  secretKey: process.env.CLERK_SECRET_KEY,
-});
+const secretKey = process.env.CLERK_SECRET_KEY;
+const clerkClient = createClerkClient({ secretKey });
 
 export async function GET(request: Request) {
   const startTime = Date.now();
@@ -22,8 +21,7 @@ export async function GET(request: Request) {
 
     let userId: string;
     try {
-      console.log("[Mobile API /users] Calling clerkClient.verifyToken...");
-      const payload = await clerkClient.verifyToken(token);
+      const payload = await verifyToken(token, { secretKey });
       userId = payload.sub as string;
       console.log("[Mobile API /users] Token verified for userId:", userId);
     } catch (err: any) {

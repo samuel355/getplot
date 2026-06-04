@@ -253,9 +253,19 @@ export default function CheckoutScreen() {
         onSuccess={() => {
           setPayVisible(false);
           clearCart();
-          router.replace("/payment-success");
+          Alert.alert(
+            "Success",
+            "Your payment was successful. All plots are now on hold for you.",
+            [{ text: "OK", onPress: () => router.replace("/(tabs)/marketplace") }],
+          );
         }}
-        onClose={() => setPayVisible(false)}
+        onClose={() => {
+          setPayVisible(false);
+          router.push({
+            pathname: "/payment-error",
+            params: { message: "Checkout was cancelled. Your items are still in your cart." },
+          });
+        }}
       />
     </View>
   );

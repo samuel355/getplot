@@ -55,6 +55,7 @@ function InnerLayout() {
         />
         <Stack.Screen name="contact" options={{ title: "Contact Us", headerBackTitle: "Back" }} />
         <Stack.Screen name="payment-success" options={{ title: "Success", headerShown: false }} />
+        <Stack.Screen name="payment-error" options={{ title: "Error", headerShown: false }} />
       </Stack>
     </>
   );

@@ -1,5 +1,4 @@
 import { supabase } from "@/utils/supabase/client";
-import { clearCache } from '@/lib/redis';
 
 export const updatePlotStatus = async (
   databaseName,
@@ -9,7 +8,7 @@ export const updatePlotStatus = async (
   email,
   phone,
   country,
-  residentialAddress
+  residentialAddress,
 ) => {
   //Change the status for on hold for client for 50 hours and change it back to Available
   const { data, error } = await supabase
@@ -26,15 +25,22 @@ export const updatePlotStatus = async (
     .eq("id", plotId);
   if (error) {
     console.log("changing reserve plot status error:", error);
-  }
-  if (data) {
+  } else {
     console.log("success update");
     try {
-      // Invalidate relevant caches: properties list and specific property detail
-      await clearCache('properties:list:*', true);
-      await clearCache(`property:detail:${plotId}`);
+      // Invalidate relevant caches via API route to avoid bundling Redis lib in client
+      await fetch("/api/cache/clear", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "properties:list:*", usePattern: true }),
+      });
+      await fetch("/api/cache/clear", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: `property:detail:${plotId}`, usePattern: false }),
+      });
     } catch (e) {
-      console.warn('Failed to clear cache after plot status update', e);
+      console.warn("Failed to clear cache after plot status update", e);
     }
   }
 };

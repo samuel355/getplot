@@ -131,9 +131,10 @@ export function formatGhs(amount: number) {
 }
 
 export function formatAreaSize(size: unknown): string {
-  if (size === undefined || size === null || size === "") return "";
+  if (size === undefined || size === null || size === "") return "Unknown size";
   const num = Number(size);
-  return Number.isNaN(num) ? "" : num.toFixed(2);
+  if (Number.isNaN(num) || num <= 0) return "Unknown size";
+  return `${num.toFixed(2)} acres`;
 }
 
 export function formatStreet(street: unknown): string {

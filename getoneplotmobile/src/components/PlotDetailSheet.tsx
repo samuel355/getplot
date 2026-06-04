@@ -72,7 +72,7 @@ function buildDetailRows(props: PlotProperties): DetailRow[] {
   const rows: DetailRow[] = [];
 
   const size = formatAreaSize(props.Area);
-  if (size) rows.push({ label: "Size", value: `${size} acres` });
+  if (size) rows.push({ label: "Size", value: size });
 
   const useType = props.For;
   if (useType && String(useType).trim()) {

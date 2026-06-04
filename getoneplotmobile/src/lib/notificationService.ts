@@ -28,7 +28,7 @@ export async function sendArkeselSMS(phone: string, message: string) {
 }
 
 /**
- * Notifies the web backend to send a confirmation email.
+ * Notifies the mobile API to send a confirmation email.
  */
 export async function sendEmailNotification(payload: {
   to: string;
@@ -38,17 +38,14 @@ export async function sendEmailNotification(payload: {
   amount: string;
   plotDetails: string;
   plotSize: string;
+  type: "buy" | "reserve";
 }) {
-  const apiURL = process.env.EXPO_PUBLIC_API_URL || "https://getoneplot.com";
+  const apiURL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:8081";
   try {
-    const formData = new FormData();
-    Object.entries(payload).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
-    const res = await fetch(`${apiURL}/api/buy-plot`, {
+    const res = await fetch(`${apiURL}/api/plot/notify`, {
       method: "POST",
-      body: formData,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
 
     if (!res.ok) {
@@ -94,6 +91,7 @@ export async function notifyPlotPurchaseSuccess(params: {
     plotArea: params.siteName,
     amount: amountStr,
     plotDetails: plotInfo,
-    plotSize: params.areaAcres ? `${params.areaAcres} Acres` : "N/A",
+    plotSize: params.areaAcres ? `${params.areaAcres}` : "N/A",
+    type: params.isFullPayment ? "buy" : "reserve",
   });
 }

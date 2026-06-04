@@ -1,7 +1,7 @@
 import { useUser } from "@clerk/clerk-expo";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, View, type TextStyle, Pressable } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View, type TextStyle } from "react-native";
 import { PaystackCheckout } from "../../../src/components/PaystackCheckout";
 import { Button } from "../../../src/components/ui/Button";
 import { Input } from "../../../src/components/ui/Input";
@@ -14,17 +14,19 @@ import {
   formatAreaSize,
   formatStreet,
 } from "../../../src/lib/plotService";
+import { notifyPlotPurchaseSuccess } from "../../../src/lib/notificationService";
 import type { BuyerInfo, PlotFeature } from "../../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function BuyPlotScreen() {
   const { colors, spacing, borderRadius, fontWeight, fontSize, isDark } = useTheme();
-  const { id, table } = useLocalSearchParams<{ id: string; table: string; slug: string }>();
+  const { id, table, slug } = useLocalSearchParams<{ id: string; table: string; slug: string }>();
   const { user } = useUser();
   const router = useRouter();
 
   const [plot, setPlot] = useState<PlotFeature | null>(null);
   const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(false);
   const [payVisible, setPayVisible] = useState(false);
   const [buyer, setBuyer] = useState<BuyerInfo>({
     firstname: user?.firstName || "",
@@ -69,18 +71,68 @@ export default function BuyPlotScreen() {
   const onPaymentSuccess = async () => {
     setPayVisible(false);
     if (!plot || !table || !id) return;
+
+    setProcessing(true);
     try {
+      // 1. Update Plot Status (Critical)
       await updatePlotOnHold(table, id, buyer);
-      router.replace("/payment-success");
-    } catch {
-      Alert.alert(
-        "Error",
-        "Payment successful but failed to update plot status. Please contact support.",
-      );
+
+      // 2. Trigger Notifications (Non-blocking for UI speed)
+      notifyPlotPurchaseSuccess({
+        phone: buyer.phone,
+        email: buyer.email,
+        firstname: buyer.firstname,
+        lastname: buyer.lastname,
+        plotNo: plot.properties?.Plot_No ?? "N/A",
+        siteName: plot.properties?.Site ?? "Standard Development",
+        amount: buyer.plotTotalAmount,
+        isFullPayment: true,
+        areaAcres: plot.properties?.Area,
+      }).catch((err) => console.error("Notification background error:", err));
+
+      // 3. Move to success screen immediately
+      setProcessing(false);
+      router.replace({
+        pathname: "/payment-success",
+        params: {
+          type: "buy",
+          amount: String(buyer.plotTotalAmount),
+          plotNo: plot.properties?.Plot_No ?? "N/A",
+          site: plot.properties?.Site ?? "Standard Development",
+        },
+      });
+    } catch (e) {
+      console.error("Post-payment error:", e);
+      setProcessing(false);
+      router.replace({
+        pathname: "/payment-error",
+        params: {
+          message:
+            "Payment was successful, but we couldn't update the plot status. Please contact support.",
+        },
+      });
     }
   };
 
   if (loading) return <Loading />;
+
+  if (processing) {
+    return (
+      <View style={[styles.center, { backgroundColor: colors.background }]}>
+        <Loading />
+        <Text
+          style={{
+            marginTop: 20,
+            color: colors.textSecondary,
+            fontWeight: "600",
+            textAlign: "center",
+          }}
+        >
+          Finalizing your purchase...{"\n"}Please do not close the app.
+        </Text>
+      </View>
+    );
+  }
   if (!plot) {
     return (
       <View style={[styles.center, { backgroundColor: colors.background }]}>
@@ -283,7 +335,13 @@ export default function BuyPlotScreen() {
         amount={buyer.plotTotalAmount}
         reference={reference}
         onSuccess={onPaymentSuccess}
-        onClose={() => setPayVisible(false)}
+        onClose={() => {
+          setPayVisible(false);
+          router.push({
+            pathname: "/payment-error",
+            params: { message: "Payment was cancelled. You can try again whenever you're ready." },
+          });
+        }}
       />
     </View>
   );

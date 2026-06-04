@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import type { BuyerInfo, PlotFeature } from "../types/plot";
+import { normalizePlot } from "./mapUtils";
 
 export type AdminPlotUpdate = {
   status: string;
@@ -19,7 +20,7 @@ export type AdminPlotUpdate = {
 export async function getPlotById(table: string, id: string): Promise<PlotFeature | null> {
   const { data, error } = await supabase.from(table).select("*").eq("id", id).single();
   if (error || !data) return null;
-  return data as PlotFeature;
+  return normalizePlot(data as Record<string, unknown>);
 }
 
 export async function updatePlotOnHold(table: string, plotId: string, buyer: BuyerInfo) {
@@ -38,19 +39,19 @@ export async function updatePlotOnHold(table: string, plotId: string, buyer: Buy
 
   // Best-effort cache invalidation
   try {
-    const apiURL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
+    const apiURL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000";
     await fetch(`${apiURL}/api/cache/clear`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ key: `property:detail:${plotId}`, usePattern: false }),
     });
     await fetch(`${apiURL}/api/cache/clear`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key: 'properties:list:*', usePattern: true }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "properties:list:*", usePattern: true }),
     });
   } catch (e) {
-    console.warn('Failed to clear cache after updating plot on hold', e);
+    console.warn("Failed to clear cache after updating plot on hold", e);
   }
 
   return res;

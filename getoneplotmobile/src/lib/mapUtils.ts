@@ -1,5 +1,5 @@
-import { PLOT_STATUS } from '../constants/plotStatus';
-import type { PlotFeature } from '../types/plot';
+import { PLOT_STATUS } from "../constants/plotStatus";
+import type { PlotFeature } from "../types/plot";
 
 export type MapBounds = {
   south: number;
@@ -14,22 +14,26 @@ export type LatLng = { latitude: number; longitude: number };
 export function normalizePlot(raw: Record<string, unknown>): PlotFeature | null {
   try {
     let geometry = raw.geometry;
-    if (typeof geometry === 'string') {
+    if (typeof geometry === "string") {
       geometry = JSON.parse(geometry);
     }
-    if (!geometry || typeof geometry !== 'object') return null;
+    if (!geometry || typeof geometry !== "object") return null;
 
     const props =
-      typeof raw.properties === 'string'
+      ((typeof raw.properties === "string"
         ? JSON.parse(raw.properties as string)
-        : raw.properties;
+        : raw.properties) as PlotProperties) || {};
+
+    // Robust price extraction: check root then properties, check multiple field names
+    const amount =
+      raw.plotTotalAmount ?? props.plotTotalAmount ?? raw.plotAmount ?? props.plotAmount ?? 0;
 
     return {
       ...(raw as PlotFeature),
-      geometry: geometry as PlotFeature['geometry'],
-      properties: (props || {}) as PlotFeature['properties'],
-      plotTotalAmount: Number(raw.plotTotalAmount) || 0,
-      status: (raw.status as string | null) ?? null,
+      geometry: geometry as PlotFeature["geometry"],
+      properties: props,
+      plotTotalAmount: Number(amount) || 0,
+      status: (raw.status as string | null) ?? (props.status as string | null) ?? null,
     };
   } catch {
     return null;
@@ -43,11 +47,7 @@ export function getPolygonRing(plot: PlotFeature): LatLng[] {
   if (!coords?.length) return [];
 
   // MultiPolygon: coordinates[polygonIndex][ringIndex][pointIndex]
-  if (
-    Array.isArray(coords[0]) &&
-    Array.isArray(coords[0][0]) &&
-    Array.isArray(coords[0][0][0])
-  ) {
+  if (Array.isArray(coords[0]) && Array.isArray(coords[0][0]) && Array.isArray(coords[0][0][0])) {
     const ring = coords[0][0] as number[][];
     return ringToLatLng(ring);
   }
@@ -56,7 +56,7 @@ export function getPolygonRing(plot: PlotFeature): LatLng[] {
   const ring = coords[0] as number[][];
   if (!Array.isArray(ring?.[0])) return [];
   // Point ring: [[lng, lat], ...]
-  if (typeof ring[0][0] === 'number') {
+  if (typeof ring[0][0] === "number") {
     return ringToLatLng(ring);
   }
 
@@ -92,7 +92,7 @@ export const calculateBoundingBox = (plot: PlotFeature) => {
 
 export const isPolygonInBounds = (
   polygonBounds: ReturnType<typeof calculateBoundingBox>,
-  mapBounds: MapBounds
+  mapBounds: MapBounds,
 ) => {
   if (polygonBounds.minLat === Infinity) return false;
   return !(
@@ -105,28 +105,28 @@ export const isPolygonInBounds = (
 
 export function getPlotFillColor(status: string | null, amount: number): string {
   if (Number(amount) > 0) {
-    if (!status || status === 'Available') return PLOT_STATUS.available.fill;
-    if (status === 'Reserved') return PLOT_STATUS.reserved.fill;
-    if (status === 'Sold') return PLOT_STATUS.sold.fill;
-    if (status === 'On Hold') return PLOT_STATUS.onHold.fill;
+    if (!status || status === "Available") return PLOT_STATUS.available.fill;
+    if (status === "Reserved") return PLOT_STATUS.reserved.fill;
+    if (status === "Sold") return PLOT_STATUS.sold.fill;
+    if (status === "On Hold") return PLOT_STATUS.onHold.fill;
   }
-  if (Number(amount) === 0 && status === 'Sold') return PLOT_STATUS.sold.fill;
+  if (Number(amount) === 0 && status === "Sold") return PLOT_STATUS.sold.fill;
   return PLOT_STATUS.unpriced.fill;
 }
 
 export function getPlotStrokeColor(status: string | null, amount: number): string {
   if (Number(amount) > 0) {
-    if (!status || status === 'Available') return PLOT_STATUS.available.stroke;
-    if (status === 'Reserved') return PLOT_STATUS.reserved.stroke;
-    if (status === 'Sold') return PLOT_STATUS.sold.stroke;
-    if (status === 'On Hold') return PLOT_STATUS.onHold.stroke;
+    if (!status || status === "Available") return PLOT_STATUS.available.stroke;
+    if (status === "Reserved") return PLOT_STATUS.reserved.stroke;
+    if (status === "Sold") return PLOT_STATUS.sold.stroke;
+    if (status === "On Hold") return PLOT_STATUS.onHold.stroke;
   }
   return PLOT_STATUS.unpriced.stroke;
 }
 
 /** Batch-fetch plot rows from Supabase (same ranges as web fetchPolygons). */
 export async function fetchPlotsForTable(table: string): Promise<PlotFeature[]> {
-  const { supabase } = await import('./supabase');
+  const { supabase } = await import("./supabase");
   const batches = [
     [0, 999],
     [1000, 1999],
@@ -137,7 +137,7 @@ export async function fetchPlotsForTable(table: string): Promise<PlotFeature[]> 
   let lastError: string | null = null;
 
   for (const [start, end] of batches) {
-    const { data, error } = await supabase.from(table).select('*').range(start, end);
+    const { data, error } = await supabase.from(table).select("*").range(start, end);
     if (error) {
       lastError = error.message;
       console.warn(`fetch ${table} batch error`, error.message);

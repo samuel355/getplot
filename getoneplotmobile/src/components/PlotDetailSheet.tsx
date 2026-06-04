@@ -13,6 +13,8 @@ import {
   Linking,
   Alert,
   TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
@@ -90,7 +92,9 @@ function buildDetailRows(props: PlotProperties): DetailRow[] {
   return rows;
 }
 
-function statusBadgeVariant(status: string): "success" | "error" | "warning" | "primary" | "secondary" {
+function statusBadgeVariant(
+  status: string,
+): "success" | "error" | "warning" | "primary" | "secondary" {
   if (status === "Sold") return "error";
   if (status === "On Hold") return "warning";
   if (status === "Available") return "success";
@@ -184,7 +188,9 @@ export function PlotDetailSheet({
     setAdminForm((current) => {
       const next = { ...current, [field]: value };
       if (field === "plotTotalAmount" || field === "paidAmount") {
-        const total = parseCurrencyInput(field === "plotTotalAmount" ? value : next.plotTotalAmount);
+        const total = parseCurrencyInput(
+          field === "plotTotalAmount" ? value : next.plotTotalAmount,
+        );
         const paid = parseCurrencyInput(field === "paidAmount" ? value : next.paidAmount);
         next.remainingAmount = String(Math.max(total - paid, 0));
       }
@@ -204,8 +210,7 @@ export function PlotDetailSheet({
   if (!panRef.current) {
     panRef.current = PanResponder.create({
       onStartShouldSetPanResponder: () => false,
-      onMoveShouldSetPanResponder: (_evt, gs) =>
-        Math.abs(gs.dy) > Math.abs(gs.dx) && Math.abs(gs.dy) > 4,
+      onMoveShouldSetPanResponder: (_evt, gs) => gs.dy > 4 && Math.abs(gs.dy) > Math.abs(gs.dx),
       onPanResponderMove: (_evt, gs) => {
         if (gs.dy > 0) translateY.setValue(gs.dy);
       },
@@ -389,405 +394,418 @@ export function PlotDetailSheet({
 
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.overlay}>
-          <TouchableWithoutFeedback onPress={() => {}}>
-            <Animated.View
-              style={[
-                styles.sheet,
-                { paddingBottom: 20 + (insets.bottom ?? 0), transform: [{ translateY }] },
-              ]}
-            >
-              <View style={styles.handleRow}>
-                <View
-                  style={styles.handle}
-                  {...(panRef.current ? panRef.current.panHandlers : {})}
-                />
-                <Pressable
-                  onPress={onClose}
-                  style={styles.closeBtn}
-                  hitSlop={8}
-                  accessibilityRole="button"
-                  accessibilityLabel="Close"
-                >
-                  <Ionicons name="close" size={22} color={colors.error} />
-                </Pressable>
-              </View>
-
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 140 }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={onClose}>
+          <View style={styles.overlay}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <Animated.View
+                style={[
+                  styles.sheet,
+                  { paddingBottom: 20 + (insets.bottom ?? 0), transform: [{ translateY }] },
+                ]}
               >
-                <View style={styles.header}>
-                  <View style={[styles.thumb, { backgroundColor: colors.primaryAccent }]}>
-                    <Text style={styles.thumbText}>{initials}</Text>
-                  </View>
-
-                  <View style={styles.headerBody}>
-                    <Text style={styles.site}>{development.title}</Text>
-                    <Text style={styles.plotNo}>Plot {plotNo}</Text>
-                    {street ? (
-                      <Text style={styles.street} numberOfLines={2}>
-                        {street}
-                      </Text>
-                    ) : null}
-                  </View>
-
-                  <View style={styles.headerMeta}>
-                    <Badge content={status} variant={statusBadgeVariant(status)} />
-                    <Text style={styles.price}>{formatGhs(amount)}</Text>
-                  </View>
+                <View style={styles.handleRow}>
+                  <View
+                    style={styles.handle}
+                    {...(panRef.current ? panRef.current.panHandlers : {})}
+                  />
+                  <Pressable
+                    onPress={onClose}
+                    style={styles.closeBtn}
+                    hitSlop={8}
+                    accessibilityRole="button"
+                    accessibilityLabel="Close"
+                  >
+                    <Ionicons name="close" size={22} color={colors.error} />
+                  </Pressable>
                 </View>
 
-                {actions.showOnHoldMessage ? (
-                  <View style={styles.statusBanner}>
-                    <Text style={styles.statusBannerText}>
-                      This plot is on hold for a client for 48 hours.
-                      {isSysadmin
-                        ? " You can edit this plot and change the status below."
-                        : ""}
-                    </Text>
-                  </View>
-                ) : null}
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ paddingBottom: adminAction ? 60 : 140 }}
+                  keyboardShouldPersistTaps="handled"
+                >
+                  <View style={styles.header}>
+                    <View style={[styles.thumb, { backgroundColor: colors.primaryAccent }]}>
+                      <Text style={styles.thumbText}>{initials}</Text>
+                    </View>
 
-                {detailRows.length > 0 ? (
-                  <View style={styles.detailsSection}>
-                    {detailRows.map((row, index) => {
-                      const isDescription = row.label === "Description";
-                      return (
-                        <View
-                          key={row.label}
-                          style={[
-                            isDescription ? styles.detailRowStacked : styles.detailRow,
-                            index < detailRows.length - 1 && styles.detailRowBorder,
-                          ]}
-                        >
-                          <Text
-                            style={[styles.detailLabel, isDescription && styles.detailLabelStacked]}
-                          >
-                            {row.label}
-                          </Text>
-                          <Text
+                    <View style={styles.headerBody}>
+                      <Text style={styles.site}>{development.title}</Text>
+                      <Text style={styles.plotNo}>Plot {plotNo}</Text>
+                      {street ? (
+                        <Text style={styles.street} numberOfLines={2}>
+                          {street}
+                        </Text>
+                      ) : null}
+                    </View>
+
+                    <View style={styles.headerMeta}>
+                      <Badge content={status} variant={statusBadgeVariant(status)} />
+                      <Text style={styles.price}>{formatGhs(amount)}</Text>
+                    </View>
+                  </View>
+
+                  {actions.showOnHoldMessage ? (
+                    <View style={styles.statusBanner}>
+                      <Text style={styles.statusBannerText}>
+                        This plot is on hold for a client for 48 hours.
+                        {isSysadmin ? " You can edit this plot and change the status below." : ""}
+                      </Text>
+                    </View>
+                  ) : null}
+
+                  {detailRows.length > 0 ? (
+                    <View style={styles.detailsSection}>
+                      {detailRows.map((row, index) => {
+                        const isDescription = row.label === "Description";
+                        return (
+                          <View
+                            key={row.label}
                             style={[
-                              styles.detailValue,
-                              isDescription && styles.detailValueMultiline,
+                              isDescription ? styles.detailRowStacked : styles.detailRow,
+                              index < detailRows.length - 1 && styles.detailRowBorder,
                             ]}
                           >
-                            {row.value}
-                          </Text>
-                        </View>
-                      );
-                    })}
-                  </View>
-                ) : null}
-
-                <View style={styles.toolbar}>
-                  <Pressable
-                    onPress={() => setFavorite((v) => !v)}
-                    style={styles.iconBtn}
-                    accessibilityRole="button"
-                    accessibilityLabel={favorite ? "Remove from favorites" : "Add to favorites"}
-                  >
-                    <Ionicons
-                      name={favorite ? "heart" : "heart-outline"}
-                      size={20}
-                      color={favorite ? colors.error : colors.primary}
-                    />
-                  </Pressable>
-
-                  <Pressable
-                    onPress={handleShare}
-                    style={styles.iconBtn}
-                    accessibilityRole="button"
-                    accessibilityLabel="Share plot"
-                  >
-                    <Ionicons name="share-social-outline" size={20} color={colors.primary} />
-                  </Pressable>
-
-                  {actions.showAddToCart ? (
-                    <Pressable
-                      onPress={onAddToCart}
-                      style={[styles.cartBtn, inCart && styles.cartBtnDisabled]}
-                      disabled={inCart}
-                      accessibilityRole="button"
-                    >
-                      <Ionicons name="cart-outline" size={18} color={colors.white} />
-                      <Text style={styles.cartBtnText}>{inCart ? "In cart" : "Add to cart"}</Text>
-                    </Pressable>
+                            <Text
+                              style={[
+                                styles.detailLabel,
+                                isDescription && styles.detailLabelStacked,
+                              ]}
+                            >
+                              {row.label}
+                            </Text>
+                            <Text
+                              style={[
+                                styles.detailValue,
+                                isDescription && styles.detailValueMultiline,
+                              ]}
+                            >
+                              {row.value}
+                            </Text>
+                          </View>
+                        );
+                      })}
+                    </View>
                   ) : null}
-                </View>
 
-                {isSysadmin ? (
-                  <View style={styles.adminPanel}>
+                  <View style={styles.toolbar}>
                     <Pressable
-                      style={styles.adminHeader}
-                      onPress={() => setAdminOpen((open) => !open)}
+                      onPress={() => setFavorite((v) => !v)}
+                      style={styles.iconBtn}
                       accessibilityRole="button"
+                      accessibilityLabel={favorite ? "Remove from favorites" : "Add to favorites"}
                     >
-                      <View>
-                        <Text style={styles.adminTitle}>Sysadmin plot controls</Text>
-                        <Text style={styles.adminSubtitle}>Edit price, status, and client details</Text>
-                      </View>
                       <Ionicons
-                        name={adminOpen ? "chevron-up" : "chevron-down"}
+                        name={favorite ? "heart" : "heart-outline"}
                         size={20}
-                        color={colors.primary}
+                        color={favorite ? colors.error : colors.primary}
                       />
                     </Pressable>
 
-                    {adminOpen ? (
-                      <View style={styles.adminForm}>
-                        <View style={styles.adminActions}>
-                          <AdminActionButton
-                            icon="create-outline"
-                            label="Edit plot"
-                            active={adminAction === "edit"}
-                            onPress={() =>
-                              setAdminAction((action) => (action === "edit" ? null : "edit"))
-                            }
-                          />
-                          <AdminActionButton
-                            icon="cash-outline"
-                            label="Change price"
-                            active={adminAction === "price"}
-                            onPress={() => {
-                              setNewPrice("");
-                              setAdminAction((action) => (action === "price" ? null : "price"));
-                            }}
-                          />
-                          <AdminActionButton
-                            icon="swap-horizontal-outline"
-                            label="Change status"
-                            active={adminAction === "status"}
-                            onPress={() => {
-                              setNewStatus(plot.status || "");
-                              setAdminAction((action) =>
-                                action === "status" ? null : "status",
-                              );
-                            }}
-                          />
-                        </View>
+                    <Pressable
+                      onPress={handleShare}
+                      style={styles.iconBtn}
+                      accessibilityRole="button"
+                      accessibilityLabel="Share plot"
+                    >
+                      <Ionicons name="share-social-outline" size={20} color={colors.primary} />
+                    </Pressable>
 
-                        {adminAction === "price" ? (
-                          <View style={styles.adminSubForm}>
-                            <View style={styles.priceSummaryRow}>
-                              <Text style={styles.priceSummaryLabel}>Old price</Text>
-                              <Text style={styles.priceSummaryValue}>{formatGhs(amount)}</Text>
-                            </View>
-                            <Input
-                              label="New price (GHS)"
-                              value={newPrice}
-                              onChangeText={setNewPrice}
-                              keyboardType="number-pad"
-                            />
-                            <Button
-                              title="Save price"
-                              onPress={handleSaveNewPrice}
-                              loading={priceSaving}
-                              fullWidth
-                            />
-                          </View>
-                        ) : null}
-
-                        {adminAction === "status" ? (
-                          <View style={styles.adminSubForm}>
-                            <Text style={styles.fieldLabel}>Status</Text>
-                            <View style={styles.statusOptions}>
-                              {STATUS_OPTIONS.map((option) => {
-                                const active = newStatus === option;
-                                return (
-                                  <Pressable
-                                    key={option}
-                                    onPress={() => setNewStatus(option)}
-                                    style={[
-                                      styles.statusOption,
-                                      active && styles.statusOptionActive,
-                                    ]}
-                                  >
-                                    <Text
-                                      style={[
-                                        styles.statusOptionText,
-                                        active && styles.statusOptionTextActive,
-                                      ]}
-                                    >
-                                      {option}
-                                    </Text>
-                                  </Pressable>
-                                );
-                              })}
-                            </View>
-                            <Button
-                              title="Save status"
-                              onPress={handleSaveNewStatus}
-                              loading={statusSaving}
-                              fullWidth
-                            />
-                          </View>
-                        ) : null}
-
-                        {adminAction === "edit" ? (
-                          <>
-                            <Text style={styles.fieldLabel}>Status</Text>
-                            <View style={styles.statusOptions}>
-                              {STATUS_OPTIONS.map((option) => {
-                                const active = adminForm.status === option;
-                                return (
-                                  <Pressable
-                                    key={option}
-                                    onPress={() => setAdminField("status", option)}
-                                    style={[
-                                      styles.statusOption,
-                                      active && styles.statusOptionActive,
-                                    ]}
-                                  >
-                                    <Text
-                                      style={[
-                                        styles.statusOptionText,
-                                        active && styles.statusOptionTextActive,
-                                      ]}
-                                    >
-                                      {option}
-                                    </Text>
-                                  </Pressable>
-                                );
-                              })}
-                            </View>
-
-                            <View style={styles.twoColumn}>
-                              <Input
-                                label="Total amount"
-                                value={adminForm.plotTotalAmount}
-                                onChangeText={(value) => setAdminField("plotTotalAmount", value)}
-                                keyboardType="number-pad"
-                                containerStyle={styles.formHalf}
-                              />
-                              <Input
-                                label="Paid amount"
-                                value={adminForm.paidAmount}
-                                onChangeText={(value) => setAdminField("paidAmount", value)}
-                                keyboardType="number-pad"
-                                containerStyle={styles.formHalf}
-                              />
-                            </View>
-
-                            <Input
-                              label="Remaining amount"
-                              value={String(
-                                Math.max(
-                                  parseCurrencyInput(adminForm.plotTotalAmount) -
-                                    parseCurrencyInput(adminForm.paidAmount),
-                                  0,
-                                ),
-                              )}
-                              editable={false}
-                            />
-
-                            <Text style={styles.sectionLabel}>Client information</Text>
-                            <View style={styles.twoColumn}>
-                              <Input
-                                label="First name"
-                                value={adminForm.firstname}
-                                onChangeText={(value) => setAdminField("firstname", value)}
-                                containerStyle={styles.formHalf}
-                              />
-                              <Input
-                                label="Last name"
-                                value={adminForm.lastname}
-                                onChangeText={(value) => setAdminField("lastname", value)}
-                                containerStyle={styles.formHalf}
-                              />
-                            </View>
-                            <Input
-                              label="Email"
-                              value={adminForm.email}
-                              onChangeText={(value) => setAdminField("email", value)}
-                              autoCapitalize="none"
-                              keyboardType="email-address"
-                            />
-                            <View style={styles.twoColumn}>
-                              <Input
-                                label="Country"
-                                value={adminForm.country}
-                                onChangeText={(value) => setAdminField("country", value)}
-                                containerStyle={styles.formHalf}
-                              />
-                              <Input
-                                label="Phone"
-                                value={adminForm.phone}
-                                onChangeText={(value) => setAdminField("phone", value)}
-                                keyboardType="phone-pad"
-                                containerStyle={styles.formHalf}
-                              />
-                            </View>
-                            <Input
-                              label="Residential address"
-                              value={adminForm.residentialAddress}
-                              onChangeText={(value) => setAdminField("residentialAddress", value)}
-                            />
-                            <Input
-                              label="Agent"
-                              value={adminForm.agent}
-                              onChangeText={(value) => setAdminField("agent", value)}
-                            />
-
-                            <Text style={styles.fieldLabel}>Remarks</Text>
-                            <TextInput
-                              value={adminForm.remarks}
-                              onChangeText={(value) => setAdminField("remarks", value)}
-                              multiline
-                              textAlignVertical="top"
-                              style={styles.remarksInput}
-                              placeholder="Add notes"
-                              placeholderTextColor={colors.textMuted}
-                            />
-
-                            <Button
-                              title="Save plot details"
-                              onPress={handleSaveAdminChanges}
-                              loading={adminSaving}
-                              fullWidth
-                            />
-                          </>
-                        ) : null}
-                      </View>
+                    {actions.showAddToCart ? (
+                      <Pressable
+                        onPress={onAddToCart}
+                        style={[styles.cartBtn, inCart && styles.cartBtnDisabled]}
+                        disabled={inCart}
+                        accessibilityRole="button"
+                      >
+                        <Ionicons name="cart-outline" size={18} color={colors.white} />
+                        <Text style={styles.cartBtnText}>{inCart ? "In cart" : "Add to cart"}</Text>
+                      </Pressable>
                     ) : null}
                   </View>
-                ) : isAdmin ? (
-                  <Text style={styles.adminHint}>Only sysadmin can edit plot price and status.</Text>
-                ) : null}
-              </ScrollView>
 
-              <View style={[styles.footer, { paddingBottom: 12 + (insets.bottom ?? 0) }]}>
-                {actions.isAvailable ? (
-                  <>
-                    <View style={styles.footerSecondary}>
-                      {actions.showReserve ? (
-                        <Button
-                          title="Reserve plot"
-                          variant="outline"
-                          onPress={onReserve}
-                          style={styles.footerHalf}
+                  {isSysadmin ? (
+                    <View style={styles.adminPanel}>
+                      <Pressable
+                        style={styles.adminHeader}
+                        onPress={() => setAdminOpen((open) => !open)}
+                        accessibilityRole="button"
+                      >
+                        <View>
+                          <Text style={styles.adminTitle}>Sysadmin plot controls</Text>
+                          <Text style={styles.adminSubtitle}>
+                            Edit price, status, and client details
+                          </Text>
+                        </View>
+                        <Ionicons
+                          name={adminOpen ? "chevron-up" : "chevron-down"}
+                          size={20}
+                          color={colors.primary}
                         />
-                      ) : null}
-                      {actions.showExpressInterest ? (
-                        <Button
-                          title="Express interest"
-                          variant="ghost"
-                          onPress={onExpressInterest}
-                          style={styles.footerHalf}
-                        />
+                      </Pressable>
+
+                      {adminOpen ? (
+                        <View style={styles.adminForm}>
+                          <View style={styles.adminActions}>
+                            <AdminActionButton
+                              icon="create-outline"
+                              label="Edit plot"
+                              active={adminAction === "edit"}
+                              onPress={() =>
+                                setAdminAction((action) => (action === "edit" ? null : "edit"))
+                              }
+                            />
+                            <AdminActionButton
+                              icon="cash-outline"
+                              label="Change price"
+                              active={adminAction === "price"}
+                              onPress={() => {
+                                setNewPrice("");
+                                setAdminAction((action) => (action === "price" ? null : "price"));
+                              }}
+                            />
+                            <AdminActionButton
+                              icon="swap-horizontal-outline"
+                              label="Change status"
+                              active={adminAction === "status"}
+                              onPress={() => {
+                                setNewStatus(plot.status || "");
+                                setAdminAction((action) => (action === "status" ? null : "status"));
+                              }}
+                            />
+                          </View>
+
+                          {adminAction === "price" ? (
+                            <View style={styles.adminSubForm}>
+                              <View style={styles.priceSummaryRow}>
+                                <Text style={styles.priceSummaryLabel}>Old price</Text>
+                                <Text style={styles.priceSummaryValue}>{formatGhs(amount)}</Text>
+                              </View>
+                              <Input
+                                label="New price (GHS)"
+                                value={newPrice}
+                                onChangeText={setNewPrice}
+                                keyboardType="number-pad"
+                              />
+                              <Button
+                                title="Save price"
+                                onPress={handleSaveNewPrice}
+                                loading={priceSaving}
+                                fullWidth
+                              />
+                            </View>
+                          ) : null}
+
+                          {adminAction === "status" ? (
+                            <View style={styles.adminSubForm}>
+                              <Text style={styles.fieldLabel}>Status</Text>
+                              <View style={styles.statusOptions}>
+                                {STATUS_OPTIONS.map((option) => {
+                                  const active = newStatus === option;
+                                  return (
+                                    <Pressable
+                                      key={option}
+                                      onPress={() => setNewStatus(option)}
+                                      style={[
+                                        styles.statusOption,
+                                        active && styles.statusOptionActive,
+                                      ]}
+                                    >
+                                      <Text
+                                        style={[
+                                          styles.statusOptionText,
+                                          active && styles.statusOptionTextActive,
+                                        ]}
+                                      >
+                                        {option}
+                                      </Text>
+                                    </Pressable>
+                                  );
+                                })}
+                              </View>
+                              <Button
+                                title="Save status"
+                                onPress={handleSaveNewStatus}
+                                loading={statusSaving}
+                                fullWidth
+                              />
+                            </View>
+                          ) : null}
+
+                          {adminAction === "edit" ? (
+                            <>
+                              <Text style={styles.fieldLabel}>Status</Text>
+                              <View style={styles.statusOptions}>
+                                {STATUS_OPTIONS.map((option) => {
+                                  const active = adminForm.status === option;
+                                  return (
+                                    <Pressable
+                                      key={option}
+                                      onPress={() => setAdminField("status", option)}
+                                      style={[
+                                        styles.statusOption,
+                                        active && styles.statusOptionActive,
+                                      ]}
+                                    >
+                                      <Text
+                                        style={[
+                                          styles.statusOptionText,
+                                          active && styles.statusOptionTextActive,
+                                        ]}
+                                      >
+                                        {option}
+                                      </Text>
+                                    </Pressable>
+                                  );
+                                })}
+                              </View>
+
+                              <View style={styles.twoColumn}>
+                                <Input
+                                  label="Total amount"
+                                  value={adminForm.plotTotalAmount}
+                                  onChangeText={(value) => setAdminField("plotTotalAmount", value)}
+                                  keyboardType="number-pad"
+                                  containerStyle={styles.formHalf}
+                                />
+                                <Input
+                                  label="Paid amount"
+                                  value={adminForm.paidAmount}
+                                  onChangeText={(value) => setAdminField("paidAmount", value)}
+                                  keyboardType="number-pad"
+                                  containerStyle={styles.formHalf}
+                                />
+                              </View>
+
+                              <Input
+                                label="Remaining amount"
+                                value={String(
+                                  Math.max(
+                                    parseCurrencyInput(adminForm.plotTotalAmount) -
+                                      parseCurrencyInput(adminForm.paidAmount),
+                                    0,
+                                  ),
+                                )}
+                                editable={false}
+                              />
+
+                              <Text style={styles.sectionLabel}>Client information</Text>
+                              <View style={styles.twoColumn}>
+                                <Input
+                                  label="First name"
+                                  value={adminForm.firstname}
+                                  onChangeText={(value) => setAdminField("firstname", value)}
+                                  containerStyle={styles.formHalf}
+                                />
+                                <Input
+                                  label="Last name"
+                                  value={adminForm.lastname}
+                                  onChangeText={(value) => setAdminField("lastname", value)}
+                                  containerStyle={styles.formHalf}
+                                />
+                              </View>
+                              <Input
+                                label="Email"
+                                value={adminForm.email}
+                                onChangeText={(value) => setAdminField("email", value)}
+                                autoCapitalize="none"
+                                keyboardType="email-address"
+                              />
+                              <View style={styles.twoColumn}>
+                                <Input
+                                  label="Country"
+                                  value={adminForm.country}
+                                  onChangeText={(value) => setAdminField("country", value)}
+                                  containerStyle={styles.formHalf}
+                                />
+                                <Input
+                                  label="Phone"
+                                  value={adminForm.phone}
+                                  onChangeText={(value) => setAdminField("phone", value)}
+                                  keyboardType="phone-pad"
+                                  containerStyle={styles.formHalf}
+                                />
+                              </View>
+                              <Input
+                                label="Residential address"
+                                value={adminForm.residentialAddress}
+                                onChangeText={(value) => setAdminField("residentialAddress", value)}
+                              />
+                              <Input
+                                label="Agent"
+                                value={adminForm.agent}
+                                onChangeText={(value) => setAdminField("agent", value)}
+                              />
+
+                              <Text style={styles.fieldLabel}>Remarks</Text>
+                              <TextInput
+                                value={adminForm.remarks}
+                                onChangeText={(value) => setAdminField("remarks", value)}
+                                multiline
+                                textAlignVertical="top"
+                                style={styles.remarksInput}
+                                placeholder="Add notes"
+                                placeholderTextColor={colors.textMuted}
+                              />
+
+                              <Button
+                                title="Save plot details"
+                                onPress={handleSaveAdminChanges}
+                                loading={adminSaving}
+                                fullWidth
+                              />
+                            </>
+                          ) : null}
+                        </View>
                       ) : null}
                     </View>
-                    {actions.showBuy ? <Button title="Buy plot" fullWidth onPress={onBuy} /> : null}
-                  </>
-                ) : actions.showCallForInfo ? (
-                  <Button title="Call for info" fullWidth onPress={handleCallForInfo} />
-                ) : null}
-              </View>
-            </Animated.View>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
+                  ) : isAdmin ? (
+                    <Text style={styles.adminHint}>
+                      Only sysadmin can edit plot price and status.
+                    </Text>
+                  ) : null}
+                </ScrollView>
+
+                {!adminAction && (
+                  <View style={[styles.footer, { paddingBottom: 12 + (insets.bottom ?? 0) }]}>
+                    {actions.isAvailable ? (
+                      <>
+                        <View style={styles.footerSecondary}>
+                          {actions.showReserve ? (
+                            <Button
+                              title="Reserve plot"
+                              variant="outline"
+                              onPress={onReserve}
+                              style={styles.footerHalf}
+                            />
+                          ) : null}
+                          {actions.showExpressInterest ? (
+                            <Button
+                              title="Express interest"
+                              variant="ghost"
+                              onPress={onExpressInterest}
+                              style={styles.footerHalf}
+                            />
+                          ) : null}
+                        </View>
+                        {actions.showBuy ? (
+                          <Button title="Buy plot" fullWidth onPress={onBuy} />
+                        ) : null}
+                      </>
+                    ) : actions.showCallForInfo ? (
+                      <Button title="Call for info" fullWidth onPress={handleCallForInfo} />
+                    ) : null}
+                  </View>
+                )}
+              </Animated.View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

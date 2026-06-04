@@ -17,6 +17,7 @@ import {
 import { notifyPlotPurchaseSuccess } from "../../../src/lib/notificationService";
 import type { BuyerInfo, PlotFeature } from "../../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
+import { getDevelopment } from "../../../src/constants/developments";
 
 const DEPOSIT_RATE = 0.1;
 
@@ -25,6 +26,9 @@ export default function ReservePlotScreen() {
   const { id, table, slug } = useLocalSearchParams<{ id: string; table: string; slug: string }>();
   const { user } = useUser();
   const router = useRouter();
+
+  const development = getDevelopment(slug || "");
+  const siteName = development?.title || "Standard Development";
 
   const [plot, setPlot] = useState<PlotFeature | null>(null);
   const [loading, setLoading] = useState(true);
@@ -95,10 +99,10 @@ export default function ReservePlotScreen() {
         firstname: buyer.firstname,
         lastname: buyer.lastname,
         plotNo: plot.properties?.Plot_No ?? "N/A",
-        siteName: plot.properties?.Site ?? "Standard Development",
+        siteName: siteName,
         amount: buyer.paidAmount || 0,
         isFullPayment: false,
-        areaAcres: plot.properties?.Area,
+        areaAcres: formatAreaSize(plot.properties?.Area),
       }).catch((err) => console.error("Notification background error:", err));
 
       // 3. Move to success screen immediately
@@ -109,7 +113,7 @@ export default function ReservePlotScreen() {
           type: "reserve",
           amount: String(buyer.paidAmount),
           plotNo: plot.properties?.Plot_No ?? "N/A",
-          site: plot.properties?.Site ?? "Standard Development",
+          site: siteName,
         },
       });
     } catch (e) {
@@ -190,7 +194,7 @@ export default function ReservePlotScreen() {
                 Plot {plot.properties?.Plot_No ?? "N/A"}
               </Text>
               <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.sm }]}>
-                {plot.properties?.Site ?? "Standard Development"}
+                {siteName}
               </Text>
               {plot.properties?.Street_Nam ? (
                 <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.xs }]}>
@@ -214,7 +218,7 @@ export default function ReservePlotScreen() {
             <View style={styles.stat}>
               <Text style={[styles.statLabel, { color: colors.textMuted }]}>Area Size</Text>
               <Text style={[styles.statValue, { color: colors.text }]}>
-                {formatAreaSize(plot.properties?.Area) || "Unknown"}
+                {formatAreaSize(plot.properties?.Area)}
               </Text>
             </View>
             <View style={[styles.statDivider, { backgroundColor: colors.borderLight }]} />

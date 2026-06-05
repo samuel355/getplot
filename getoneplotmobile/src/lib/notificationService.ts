@@ -70,27 +70,24 @@ export async function notifyPlotPurchaseSuccess(params: {
   isFullPayment: boolean;
   areaAcres?: string | number;
 }) {
-  const plotInfo = `Plot ${params.plotNo} at ${params.siteName}`;
+  const plotInfo = `Plot ${params.plotNo}, ${params.siteName}`;
   const amountStr = formatGhs(params.amount);
 
-  // 1. Send SMS
+  // 1. Send SMS via Arkesel
   const smsMessage = params.isFullPayment
     ? `Thank you ${params.firstname} for your purchase of ${plotInfo}. A confirmation email with plot details has been sent to ${params.email}.`
     : `Payment of ${amountStr} received for ${plotInfo}. Kindly complete payment to claim ownership. Check your email for details.`;
 
   await sendArkeselSMS(params.phone, smsMessage);
 
-  // 2. Send Email (via Web API)
-  // Note: Web API currently expects FormData with a PDF.
-  // For mobile, we might need a simpler email route or to generate a basic PDF blob.
-  // For now, we'll call the contact API as a fallback if buy-plot is too PDF-dependent.
+  // 2. Send Email via Mobile API (app/api/plot/notify)
   await sendEmailNotification({
     to: params.email,
     firstname: params.firstname,
     lastname: params.lastname,
     plotArea: params.siteName,
     amount: amountStr,
-    plotDetails: plotInfo,
+    plotDetails: `Plot Number ${params.plotNo}`,
     plotSize: params.areaAcres ? `${params.areaAcres}` : "N/A",
     type: params.isFullPayment ? "buy" : "reserve",
   });

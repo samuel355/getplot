@@ -16,11 +16,7 @@ export async function POST(request) {
     const pdf = data.get("pdf"); //Get pdf file
 
     const subject = "Plot & Payment Details";
-    const templatePath = path.resolve(
-      process.cwd(),
-      "emails",
-      "plot-buying-details.ejs"
-    );
+    const templatePath = path.resolve(process.cwd(), "emails", "plot-buying-details.ejs");
     const htmlContent = await ejs.renderFile(templatePath, {
       firstname,
       lastname,
@@ -40,27 +36,35 @@ export async function POST(request) {
       },
     });
 
-    // Send email with attachment
-    await transporter.sendMail({
+    // Send email with optional attachment
+    const mailOptions = {
       from: process.env.SMTP_FROM,
       to: to,
       subject: subject,
       html: htmlContent,
-      attachments: [
-        {
+      attachments: [],
+    };
+
+    if (pdf) {
+      try {
+        mailOptions.attachments.push({
           filename: "plot_details.pdf",
-          content: Buffer.from(await pdf.arrayBuffer()), // Convert the readable stream to a buffer.
+          content: Buffer.from(await pdf.arrayBuffer()),
           contentType: "application/pdf",
-        },
-      ],
-    });
+        });
+      } catch (pdfErr) {
+        console.error("Error processing PDF attachment:", pdfErr);
+      }
+    }
+
+    await transporter.sendMail(mailOptions);
 
     return NextResponse.json({ message: "Email sent successfully" });
   } catch (error) {
     console.error("Error sending email:", error);
     return NextResponse.json(
       { message: "Failed to send email", error: error.message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

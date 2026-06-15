@@ -1,5 +1,6 @@
 import { Alert } from "react-native";
 import { formatGhs } from "./plotService";
+import { fetchMobileApi } from "./api";
 
 /**
  * Sends an SMS via the Arkesel API.
@@ -40,17 +41,12 @@ export async function sendEmailNotification(payload: {
   plotSize: string;
   type: "buy" | "reserve";
 }) {
-  const apiURL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:8081";
   try {
-    const res = await fetch(`${apiURL}/api/plot/notify`, {
+    await fetchMobileApi("/api/plot/notify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-
-    if (!res.ok) {
-      console.warn("Failed to send email notification", await res.text());
-    }
   } catch (error) {
     console.error("Error sending email notification:", error);
   }

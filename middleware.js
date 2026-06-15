@@ -1,42 +1,33 @@
-import { auth, clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-const protectedRoutes = {
-  "/properties": ["admin", "sysadmin"],
-  "/properties/all-properties": ["admin", "sysadmin"],
-  "/properties/users": ["admin", "sysadmin"],
-  "/properties/analytics": ["admin", "sysadmin"],
-  "/properties/activity": ["admin", "sysadmin"],
-  "/properties/settings": ["admin", "sysadmin"],
-  "/properties/system-logs": ["admin", "sysadmin"],
-};
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+  "/api/approval-status",
+  "/api/properties/list",
+  "/api/properties/:id",
+]);
 
-export default clerkMiddleware(
-  (auth, req) => {
-    const { userId, isPublicRoute } = auth();
+export default clerkMiddleware(async (auth, req) => {
+  const { userId } = await auth();
+  const isPublic = isPublicRoute(req);
 
-    // If it's an API route and not authenticated, return 401 instead of redirecting
-    if (!userId && !isPublicRoute && req.nextUrl.pathname.startsWith("/api")) {
-      return new Response(JSON.stringify({ error: "Not authenticated" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
+  if (!isPublic && !userId) {
+    if (req.nextUrl.pathname.startsWith("/api")) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
+    return NextResponse.redirect(new URL("/sign-in", req.url));
+  }
 
-    // Handle users who aren't authenticated for non-API routes
-    if (!userId && !isPublicRoute) {
-      return Response.redirect(new URL("/sign-in", req.url));
-    }
-
-    // Redirect signed-in users to approval page from root
-    if (userId && req.nextUrl.pathname === "/") {
-      return Response.redirect(new URL("/approval", req.url));
-    }
-  },
-  {
-    publicRoutes: ["/", "/api/approval-status", "/api/properties/list", "/api/properties/:id"],
-  },
-);
+  if (userId && req.nextUrl.pathname === "/") {
+    return NextResponse.redirect(new URL("/approval", req.url));
+  }
+});
 
 export const config = {
-  matcher: ["/((?!.+.[w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2|ttf|otf|map)$).*)",
+  ],
 };

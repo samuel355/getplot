@@ -18,7 +18,7 @@ const PropertyCarousel = () => {
         const response = await fetch(`/api/properties/list?limit=9`);
         if (!response.ok) throw new Error("Failed to fetch properties");
         const data = await response.json();
-        setProperties(data || []);
+        setProperties(data?.data || []);
       } catch (error) {
         console.error("Error fetching properties:", error);
       } finally {
@@ -74,7 +74,7 @@ const PropertyCarousel = () => {
             <div className="relative">
               <div className="w-full aspect-[4/3] bg-gray-100 rounded overflow-hidden">
                 <Image
-                  src={property.images?.[0]?.url || "/placeholder-property.jpg"}
+                  src={property.images?.[0]?.url || property.images?.[0] || "/image-placeholder.png"}
                   alt={property.title}
                   fill
                   className="object-cover w-full h-full"

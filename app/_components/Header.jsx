@@ -62,14 +62,14 @@ const Header = () => {
           {/* Left section: Logo and dashboard name */}
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center">
-              <Image
+              <img
                 src="/logo-lateral.svg"
                 className="object-cover hidden md:block"
                 width={120}
                 height={40}
                 alt="logo"
               />
-              <Image
+              <img
                 src="/logo-lateral.svg"
                 className="object-cover md:hidden"
                 width={90}
@@ -299,8 +299,8 @@ const Header = () => {
         {/* Logo section */}
         <div className="">
           <Link href={"/"}>
-            <Image
-              src={"/logo-lateral.svg"}
+            <img
+              src="/logo-lateral.svg"
               className="object-cover"
               width={140}
               height={140}

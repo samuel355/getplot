@@ -22,28 +22,26 @@ export async function POST(request: Request) {
 
     // Use existing template if available or a generic one
     const templateName = type === 'reserve' ? 'plot-reserving-details.ejs' : 'plot-buying-details.ejs';
+    const templatePath = path.resolve("src/api/templates", templateName);
 
-    // We try to find the template in the root emails folder or the mobile src/api/templates
-    // Since we are in Expo API route, process.cwd() might be project root or mobile root.
-    // Given the structure, we'll try to find it in the web's emails folder first.
-    let templatePath = path.resolve("emails", templateName);
+    const INLINE_TEMPLATE = `
+      <h2>Plot ${type === 'reserve' ? 'Reservation' : 'Purchase'} Details</h2>
+      <p>Dear <%= firstname %> <%= lastname %>,</p>
+      <p>Thank you for your ${type === 'reserve' ? 'reservation' : 'purchase'} of a plot at <strong><%= plotArea %></strong>.</p>
+      <table style="border-collapse:collapse;width:100%">
+        <tr><td style="padding:8px;border:1px solid #ddd">Plot</td><td style="padding:8px;border:1px solid #ddd"><%= plotDetails %></td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd">Size</td><td style="padding:8px;border:1px solid #ddd"><%= plotSize %></td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd">Amount</td><td style="padding:8px;border:1px solid #ddd"><%= amount %></td></tr>
+      </table>
+      <p>Our team will be in touch with you shortly.</p>
+      <p>— Get One Plot Team</p>
+    `;
 
     let template: string;
     try {
       template = await fs.readFile(templatePath, "utf-8");
-    } catch (e) {
-      // Fallback to a simple inline template if files are not reachable
-      template = `
-        <h1>Plot Details</h1>
-        <p>Dear <%= firstname %> <%= lastname %>,</p>
-        <p>Thank you for your interest in <%= plotArea %>.</p>
-        <table>
-          <tr><td>Plot Details:</td><td><%= plotDetails %></td></tr>
-          <tr><td>Plot Size:</td><td><%= plotSize %></td></tr>
-          <tr><td>Amount:</td><td><%= amount %></td></tr>
-        </table>
-        <p>We will contact you shortly.</p>
-      `;
+    } catch {
+      template = INLINE_TEMPLATE;
     }
 
     const html = ejs.render(template, {

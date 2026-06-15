@@ -20,6 +20,7 @@ import {
   formatAreaSize,
   formatStreet,
 } from "../../src/lib/plotService";
+import { fetchMobileApi } from "../../src/lib/api";
 import type { PlotFeature } from "../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -76,20 +77,21 @@ export default function ExpressInterestScreen() {
     try {
       await submitPlotInterest(interestTable!, table!, id!, form);
 
-      // Attempt to send email via web app API (optional but good for parity)
+      // Notify admin of interest via mobile API
       try {
-        await fetch("https://getoneplot.com/api/mail-from-interests", {
+        await fetchMobileApi("/api/receive-email", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            ...form,
-            plot_number: plot?.properties?.Plot_No,
-            plot_name: plot?.properties?.Street_Nam,
-            plot_amount: plot?.plotTotalAmount,
+            from: form.email,
+            fullname: `${form.firstname} ${form.lastname}`,
+            phone: form.phone,
+            subject: `Plot Interest — Plot ${plot?.properties?.Plot_No ?? ""}`,
+            message: `${form.message}\n\nPlot: ${plot?.properties?.Street_Nam ?? ""} | Amount: GHS ${plot?.plotTotalAmount ?? ""}`,
           }),
         });
       } catch (mailErr) {
-        console.log("Mail sync error:", mailErr);
+        console.log("Interest email error:", mailErr);
       }
 
       Alert.alert(

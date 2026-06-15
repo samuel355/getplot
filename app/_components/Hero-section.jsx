@@ -158,7 +158,6 @@ const Hero = () => {
           {/* Main image with overlay card */}
           <div className="relative z-10 w-[90%] h-auto overflow-hidden rounded-2xl shadow-2xl">
             <img
-              srcc="https://images.unsplash.com/photo-1628624747186-a941c476b7ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
               src="/images/trabuom-lt.jpg"
               alt="Beautiful land in Ghana"
               className="w-full h-full object-cover aspect-[4/3] sm:aspect-[16/10]"

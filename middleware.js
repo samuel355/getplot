@@ -1,13 +1,25 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
+// Freely accessible — no sign-in required
 const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
   "/sign-up(.*)",
+  "/contact-us(.*)",
+  "/market-place(.*)",
+  "/get-plot(.*)",
+  "/get-home(.*)",
+  "/privacy(.*)",
+  "/terms(.*)",
+  "/property/(.*)",
+  "/view-land-listing(.*)",
+  "/view-house-listing(.*)",
   "/api/approval-status",
   "/api/properties/list",
   "/api/properties/:id",
+  "/api/receive-email",
+  "/api/properties/notify-interest",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
@@ -19,10 +31,6 @@ export default clerkMiddleware(async (auth, req) => {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
     return NextResponse.redirect(new URL("/sign-in", req.url));
-  }
-
-  if (userId && req.nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL("/approval", req.url));
   }
 });
 

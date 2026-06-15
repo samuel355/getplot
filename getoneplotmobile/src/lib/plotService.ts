@@ -37,22 +37,22 @@ export async function updatePlotOnHold(table: string, plotId: string, buyer: Buy
     })
     .eq("id", plotId);
 
-  // Best-effort cache invalidation
-  try {
-    const apiURL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000";
-    await fetch(`${apiURL}/api/cache/clear`, {
+  // Best-effort cache invalidation — fire-and-forget with a 4s cap so it never blocks the UI
+  const apiURL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000";
+  const clearCache = (body: object) => {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 4000);
+    fetch(`${apiURL}/api/cache/clear`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key: `property:detail:${plotId}`, usePattern: false }),
-    });
-    await fetch(`${apiURL}/api/cache/clear`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key: "properties:list:*", usePattern: true }),
-    });
-  } catch (e) {
-    console.warn("Failed to clear cache after updating plot on hold", e);
-  }
+      body: JSON.stringify(body),
+      signal: ctrl.signal,
+    })
+      .catch(() => {})
+      .finally(() => clearTimeout(t));
+  };
+  clearCache({ key: `property:detail:${plotId}`, usePattern: false });
+  clearCache({ key: "properties:list:*", usePattern: true });
 
   return res;
 }

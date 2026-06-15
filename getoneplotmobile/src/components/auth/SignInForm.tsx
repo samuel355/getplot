@@ -245,7 +245,7 @@ export function getSignInShellCopy(step: Step) {
 }
 
 const viewStyles = StyleSheet.create({
-  actions: { gap: spacing.sm },
+  actions: { gap: spacing.sm, marginTop: spacing.lg },
   footerRow: {
     flexDirection: 'row',
     justifyContent: 'center',

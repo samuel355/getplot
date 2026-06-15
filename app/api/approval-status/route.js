@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { getOrSetCache } from "@/lib/redis";
 
+export const dynamic = "force-dynamic";
+
 const acceptedRoles = ["sysadmin", "admin", "property_agent", "chief", "chief_asst"];
 const AUTO_APPROVED_EMAIL = "samueloseiboatenglistowell57@gmail.com";
 

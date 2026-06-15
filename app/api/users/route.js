@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { currentUser, clerkClient, auth } from "@clerk/nextjs/server";
 import { getOrSetCache } from "@/lib/redis";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request) {
   try {
     // Mobile / API callers: auth() handles both Bearer token and session cookie in Next.js

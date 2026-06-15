@@ -1,8 +1,10 @@
-import { createClerkClient } from "@clerk/backend";
-import { supabase } from "../../../src/lib/supabase";
+import { createClerkClient, verifyToken } from "@clerk/backend";
+import { supabase } from "@/lib/supabase";
 
 const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+const CLERK_SECRET_KEY = process.env.CLERK_SECRET_KEY as string;
 const ALLOWED_ROLES = ["property_agent", "chief"];
+
 
 export async function POST(request: Request) {
   try {
@@ -12,7 +14,7 @@ export async function POST(request: Request) {
     }
 
     const token = authHeader.split(" ")[1];
-    const payload = await clerkClient.verifyToken(token);
+    const payload = await verifyToken(token, { secretKey: CLERK_SECRET_KEY });
     const userId = payload.sub as string;
 
     const { role, details } = await request.json();
@@ -51,7 +53,7 @@ export async function GET(request: Request) {
     }
 
     const token = authHeader.split(" ")[1];
-    const payload = await clerkClient.verifyToken(token);
+    const payload = await verifyToken(token, { secretKey: CLERK_SECRET_KEY });
     const requesterId = payload.sub as string;
 
     const requester = await clerkClient.users.getUser(requesterId);

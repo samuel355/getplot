@@ -105,11 +105,11 @@ export async function sendContactEmail(payload: {
   subject: string;
   message: string;
 }) {
-  const { data } = await api.post("/api/receive-email", {
-    ...payload,
-    from: payload.email,
+  return fetchMobileApi("/api/receive-email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...payload, from: payload.email }),
   });
-  return data;
 }
 
 export async function notifyPropertyInterest(payload: {
@@ -119,6 +119,9 @@ export async function notifyPropertyInterest(payload: {
   phone: string;
   message: string;
 }) {
-  const { data } = await api.post("/api/properties/notify-interest", payload);
-  return data;
+  return fetchMobileApi("/api/properties/notify-interest", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 }

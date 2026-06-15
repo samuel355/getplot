@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -32,54 +32,42 @@ export default function WaitForApprovalPage() {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // Ensure component is mounted before showing time to avoid hydration issues
+  const isRedirectingRef = useRef(false);
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const checkApprovalStatus = useCallback(async () => {
-    if (!user) return;
-    
+    if (!user || isRedirectingRef.current) return;
+
     setChecking(true);
     try {
       const response = await fetch('/api/approval-status');
-      
-      if (!response.ok) {
-        throw new Error('Failed to check approval status');
-      }
+
+      if (!response.ok) throw new Error('Failed to check approval status');
 
       const statusData = await response.json();
-      console.log('status Data', statusData)
       const status = {
         isApproved: statusData.isApproved,
         userArea: statusData?.area,
         role: statusData.role,
-        lastChecked: new Date(statusData.lastChecked)
+        lastChecked: new Date(statusData.lastChecked),
       };
 
       setUserStatus(status);
       setLastChecked(new Date());
 
-      if (statusData.isApproved && !isRedirecting) {
-        console.log('User approved! Redirecting to dashboard...', statusData);
+      if (statusData.isApproved && !isRedirectingRef.current) {
+        isRedirectingRef.current = true;
         setIsRedirecting(true);
         toast.success("You've been approved! Redirecting to dashboard...");
-        const userRole = user.publicMetadata?.role
+        const userRole = user.publicMetadata?.role;
         let page;
-        if(userRole === 'chief' || userRole === 'chief_asst'){
-          page = 'chief/my-dashboard'
-        }
-        if(userRole=== 'admin' || userRole === 'sysadmin'){
-          page = 'dashboard'
-        }
-        if(userRole === 'property_agent'){
-          page = 'properties/my-dashboard'
-        }
-        setTimeout(() => {
-          window.location.href = `/${page}`;
-        }, 1050);
-      } else if (!statusData.isApproved) {
-        console.log('User not approved yet:', statusData);
+        if (userRole === 'chief' || userRole === 'chief_asst') page = 'chief/my-dashboard';
+        if (userRole === 'admin' || userRole === 'sysadmin') page = 'dashboard';
+        if (userRole === 'property_agent') page = 'properties/my-dashboard';
+        setTimeout(() => { window.location.href = `/${page}`; }, 1050);
       }
     } catch (error) {
       console.error('Error checking approval status:', error);
@@ -87,28 +75,22 @@ export default function WaitForApprovalPage() {
     } finally {
       setChecking(false);
     }
-  }, [user, isRedirecting]);
+  }, [user]);
 
+  // Keep a ref to the latest callback so the interval always calls the current version
+  const checkRef = useRef(checkApprovalStatus);
+  useEffect(() => { checkRef.current = checkApprovalStatus; }, [checkApprovalStatus]);
+
+  // Run once when user loads, then every 30 seconds — never re-runs just because
+  // the callback reference changed
   useEffect(() => {
-    if (isLoaded && !user) {
-      router.push("/sign-in");
-      return;
-    }
+    if (!isLoaded) return;
+    if (!user) { router.push("/sign-in"); return; }
 
-    if (isLoaded && user && !isRedirecting) {
-      // Check approval status immediately - don't check Clerk metadata here
-      // as it might not be updated yet, but the database might have the approval
-      checkApprovalStatus();
-
-      // Set up periodic checking every 30 seconds
-      const interval = setInterval(() => {
-        if (!isRedirecting) {
-          checkApprovalStatus();
-        }
-      }, 30000);
-      return () => clearInterval(interval);
-    }
-  }, [user, isLoaded, router, checkApprovalStatus, isRedirecting]);
+    checkRef.current();
+    const interval = setInterval(() => checkRef.current(), 30000);
+    return () => clearInterval(interval);
+  }, [isLoaded, user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleManualCheck = () => {
     if (!isRedirecting) {

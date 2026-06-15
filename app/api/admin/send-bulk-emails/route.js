@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import nodemailer from "nodemailer";
+
+export const dynamic = "force-dynamic";
+
 import ejs from "ejs";
 import path from "path";
 import { promises as fs } from "fs";

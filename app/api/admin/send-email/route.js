@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
+
+export const dynamic = "force-dynamic";
+
 import ejs from "ejs";
 import path from "path";
 import { promises as fs } from "fs";

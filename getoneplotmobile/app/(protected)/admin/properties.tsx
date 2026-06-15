@@ -324,6 +324,7 @@ export default function AdminPropertiesScreen() {
             updating={updatingId === item.id}
             onApprove={() => approveProperty(item)}
             onReject={() => openReject(item)}
+            onPress={() => router.push(`/property/${item.id}`)}
           />
         )}
       />
@@ -402,18 +403,20 @@ function PropertyRow({
   updating,
   onApprove,
   onReject,
+  onPress,
 }: {
   property: AdminProperty;
   updating: boolean;
   onApprove: () => void;
   onReject: () => void;
+  onPress: () => void;
 }) {
   const image = property.images?.[0];
   const status = property.status || 'pending';
   const statusColor = getStatusTone(status);
 
   return (
-    <View style={styles.propertyCard}>
+    <Pressable style={({ pressed }) => [styles.propertyCard, pressed && styles.propertyCardPressed]} onPress={onPress}>
       <View style={styles.propertyTop}>
         <View style={styles.thumbnail}>
           {image ? (
@@ -445,7 +448,7 @@ function PropertyRow({
         <View style={styles.rowActions}>
           <Pressable
             style={[styles.actionButton, styles.approveButton]}
-            onPress={onApprove}
+            onPress={(e) => { e.stopPropagation?.(); onApprove(); }}
             disabled={updating}
           >
             {updating ? (
@@ -459,7 +462,7 @@ function PropertyRow({
           </Pressable>
           <Pressable
             style={[styles.actionButton, styles.rejectOutlineButton]}
-            onPress={onReject}
+            onPress={(e) => { e.stopPropagation?.(); onReject(); }}
             disabled={updating}
           >
             <Ionicons name="close-circle-outline" size={18} color={colors.error} />
@@ -467,7 +470,7 @@ function PropertyRow({
           </Pressable>
         </View>
       ) : null}
-    </View>
+    </Pressable>
   );
 }
 
@@ -532,6 +535,9 @@ const styles = StyleSheet.create<Record<string, ViewStyle>>({
     borderWidth: 1,
     borderColor: colors.border,
     padding: spacing.md,
+  },
+  propertyCardPressed: {
+    opacity: 0.75,
   },
   propertyTop: { flexDirection: 'row', gap: spacing.md },
   thumbnail: {

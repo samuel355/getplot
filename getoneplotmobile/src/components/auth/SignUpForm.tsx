@@ -170,7 +170,7 @@ export function SignUpForm({
             icon={<Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} />}
             hint="Use at least 8 characters with letters and numbers."
           />
-          <Button title="Create account" onPress={onSignUp} loading={loading} fullWidth size="lg" />
+          <Button title="Create account" onPress={onSignUp} loading={loading} fullWidth size="lg" style={{ marginTop: spacing.lg }} />
         </>
       ) : (
         <View style={viewStyles.actions}>

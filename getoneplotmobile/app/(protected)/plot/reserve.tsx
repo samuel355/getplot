@@ -370,13 +370,15 @@ export default function ReservePlotScreen() {
         reference={reference}
         onSuccess={onPaymentSuccess}
         onClose={() => {
-          setPayVisible(false);
-          router.push({
-            pathname: "/payment-error",
-            params: {
-              message: "Reservation was cancelled. You can try again whenever you're ready.",
-            },
-          });
+          if (!processing) {
+            setPayVisible(false);
+            router.push({
+              pathname: "/payment-error",
+              params: {
+                message: "Reservation was cancelled. You can try again whenever you're ready.",
+              },
+            });
+          }
         }}
       />
     </View>

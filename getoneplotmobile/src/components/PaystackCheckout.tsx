@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
@@ -21,6 +21,11 @@ export function PaystackCheckout({
 }: Props) {
   const handled = useRef(false);
   const publicKey = process.env.EXPO_PUBLIC_PAYSTACK_PUBLIC_KEY || '';
+
+  // Reset guard every time the modal opens so retries work correctly
+  useEffect(() => {
+    if (visible) handled.current = false;
+  }, [visible]);
 
   const html = `
 <!DOCTYPE html>

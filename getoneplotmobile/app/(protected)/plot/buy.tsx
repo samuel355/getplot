@@ -340,11 +340,14 @@ export default function BuyPlotScreen() {
         reference={reference}
         onSuccess={onPaymentSuccess}
         onClose={() => {
-          setPayVisible(false);
-          router.push({
-            pathname: "/payment-error",
-            params: { message: "Payment was cancelled. You can try again whenever you're ready." },
-          });
+          // Only treat as cancellation — onSuccess already handles the success path
+          if (!processing) {
+            setPayVisible(false);
+            router.push({
+              pathname: "/payment-error",
+              params: { message: "Payment was cancelled. You can try again whenever you're ready." },
+            });
+          }
         }}
       />
     </View>

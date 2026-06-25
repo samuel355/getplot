@@ -15,11 +15,23 @@ const isPublicRoute = createRouteMatcher([
   "/property/(.*)",
   "/view-land-listing(.*)",
   "/view-house-listing(.*)",
+  "/trabuom(.*)",
+  "/legon-hills(.*)",
+  "/berekuso(.*)",
+  "/yabi(.*)",
+  "/nthc(.*)",
+  "/dar-es-salaam(.*)",
+  "/asokore-mampong(.*)",
+  "/royal-court-estate(.*)",
+  "/new-trabuom(.*)",
   "/api/approval-status",
   "/api/properties/list",
   "/api/properties/:id",
   "/api/receive-email",
   "/api/properties/notify-interest",
+  "/api/reserve-plot",
+  "/api/buy-plot",
+  "/api/send-sms",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

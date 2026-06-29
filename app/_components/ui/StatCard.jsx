@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 
-export default function StatCard({ label, value, icon: Icon, color = "text-[#05014c]", bg = "bg-[#05014c]/5" }) {
+export default function StatCard({ label, value, icon: Icon, color = "text-brand-navy", bg = "bg-brand-navy/5" }) {
   return (
-    <div className="bg-white rounded-2xl border p-5 flex items-center gap-4">
-      <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center", bg)}>
+    <div className="bg-white rounded-lg border border-slate-200 p-5 flex items-center gap-4">
+      <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center", bg)}>
         <Icon className={cn("w-6 h-6", color)} />
       </div>
       <div>

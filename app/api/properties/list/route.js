@@ -17,6 +17,8 @@ export async function GET(request) {
     const minPrice = parseInt(searchParams.get("min_price") || "0");
     const maxPrice = parseInt(searchParams.get("max_price") || "10000000");
     const sortBy = searchParams.get("sort_by") || "newest";
+    const bedrooms = searchParams.get("bedrooms") || "any";
+    const bathrooms = searchParams.get("bathrooms") || "any";
 
     // Generate a deterministic cache key based on all parameters
     const cacheKey = `properties:list:${JSON.stringify({
@@ -28,6 +30,8 @@ export async function GET(request) {
       minPrice,
       maxPrice,
       sortBy,
+      bedrooms,
+      bathrooms,
     })}`;
 
     const properties = await getOrSetCache(
@@ -36,7 +40,7 @@ export async function GET(request) {
         let query = supabase
           .from("properties")
           .select(
-            "id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, description, features, region, property_type, rental_price, listing_type, negotiable",
+            "id, title, type, price, location, address, size, bedrooms, bathrooms, images, status, created_at, description, features, region, property_type, rental_price, listing_type, negotiable, location_coordinates",
             { count: "exact" },
           )
           .eq("status", "approved");
@@ -50,6 +54,12 @@ export async function GET(request) {
         }
         if (region !== "all") {
           query = query.eq("region", region);
+        }
+        if (bedrooms !== "any" && type !== "land") {
+          query = query.gte("bedrooms", parseInt(bedrooms, 10));
+        }
+        if (bathrooms !== "any" && type !== "land") {
+          query = query.gte("bathrooms", parseInt(bathrooms, 10));
         }
 
         const priceField =

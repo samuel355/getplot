@@ -48,13 +48,13 @@ export default function UserManagement() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <Loader2 className="w-8 h-8 text-[#05014c] animate-spin" />
+        <Loader2 className="w-8 h-8 text-brand-navy animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
+    <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
@@ -112,7 +112,7 @@ function UserRow({ user, saving, onSave }) {
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="h-8 px-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#05014c] bg-white"
+          className="h-8 px-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-teal bg-white"
         >
           {ROLE_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>{o.label}</option>
@@ -128,7 +128,7 @@ function UserRow({ user, saving, onSave }) {
                   type="checkbox"
                   checked={selectedSites.includes(s.slug)}
                   onChange={() => toggleSite(s.slug)}
-                  className="accent-[#05014c]"
+                  className="accent-brand-navy"
                 />
                 <span className="text-xs text-gray-700">{s.name}</span>
               </label>
@@ -143,7 +143,7 @@ function UserRow({ user, saving, onSave }) {
           size="sm"
           onClick={() => onSave(role, selectedSites)}
           disabled={!dirty || saving}
-          className="bg-[#05014c] hover:bg-[#05014c]/90 disabled:opacity-40 h-8 text-xs"
+          className="bg-brand-navy hover:bg-brand-navy/90 disabled:opacity-40 h-8 text-xs"
         >
           {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : "Save"}
         </Button>

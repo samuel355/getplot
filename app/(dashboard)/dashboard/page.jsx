@@ -54,19 +54,19 @@ export default async function DashboardPage() {
         <StatCard label="Total Plots" value={totalPlots} icon={MapPin} />
         <StatCard label="Available" value={availablePlots} icon={TrendingUp} color="text-green-600" bg="bg-green-50" />
         <StatCard label="Sold" value={soldPlots} icon={TrendingUp} color="text-red-500" bg="bg-red-50" />
-        <StatCard label="Listings" value={propCount} icon={List} color="text-orange-500" bg="bg-orange-50" />
+        <StatCard label="Listings" value={propCount} icon={List} color="text-brand-teal" bg="bg-brand-teal/10" />
       </div>
 
-      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="font-semibold text-gray-900">Sites Overview</h2>
-          <Link href="/dashboard/sites" className="text-sm text-[#05014c] hover:underline flex items-center gap-1">
+          <Link href="/dashboard/sites" className="text-sm text-brand-navy hover:underline flex items-center gap-1">
             Manage all <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
+            <thead className="bg-slate-50 border-b">
               <tr>
                 {["Site", "Location", "Total", "Available", "Reserved", "Sold", ""].map((h) => (
                   <th key={h} className={`px-5 py-3 font-medium text-gray-500 ${h === "" || h === "Total" || h === "Available" || h === "Reserved" || h === "Sold" ? "text-center" : "text-left"}`}>{h}</th>
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
             </thead>
             <tbody className="divide-y">
               {siteOverview.map((site) => (
-                <tr key={site.slug} className="hover:bg-gray-50 transition-colors">
+                <tr key={site.slug} className="hover:bg-slate-50 transition-colors">
                   <td className="px-5 py-3.5 font-medium text-gray-900">{site.name}</td>
                   <td className="px-5 py-3.5 text-gray-500">{site.location}</td>
                   <td className="px-5 py-3.5 text-center text-gray-700">{site.total}</td>
@@ -83,7 +83,7 @@ export default async function DashboardPage() {
                   <td className="px-5 py-3.5 text-center font-medium text-orange-500">{site.reserved}</td>
                   <td className="px-5 py-3.5 text-center font-medium text-red-500">{site.sold}</td>
                   <td className="px-5 py-3.5">
-                    <Link href={`/dashboard/sites/${site.slug}`} className="text-[#05014c] hover:underline text-xs font-medium">
+                    <Link href={`/dashboard/sites/${site.slug}`} className="text-brand-navy hover:underline text-xs font-medium">
                       Manage →
                     </Link>
                   </td>

@@ -7,11 +7,11 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {/* Hero */}
-      <div className="bg-[#05014c] text-white py-16 px-4">
+      <div className="bg-brand-navy text-white py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-sm font-semibold text-orange-400 uppercase tracking-wider mb-2">Get in Touch</p>
+          <p className="text-sm font-semibold text-brand-teal uppercase tracking-wider mb-2">Get in Touch</p>
           <h1 className="text-3xl sm:text-4xl font-bold mb-3">We&apos;re here to help</h1>
           <p className="text-white/60">
             Have questions about a plot or site? Reach out and our team will respond promptly.
@@ -45,9 +45,9 @@ export default function ContactPage() {
                 lines: ["Mon – Fri: 8am – 6pm", "Sat: 9am – 4pm"],
               },
             ].map(({ icon: Icon, title, lines }) => (
-              <div key={title} className="bg-white rounded-2xl border p-5 flex items-start gap-4">
-                <div className="w-9 h-9 bg-[#05014c]/5 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-4 h-4 text-[#05014c]" />
+              <div key={title} className="bg-white rounded-lg border border-slate-200 p-5 flex items-start gap-4">
+                <div className="w-9 h-9 bg-brand-navy/5 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Icon className="w-4 h-4 text-brand-navy" />
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">{title}</p>
@@ -60,7 +60,7 @@ export default function ContactPage() {
           </div>
 
           {/* Form */}
-          <div className="lg:col-span-3 bg-white rounded-2xl border p-6 sm:p-8">
+          <div className="lg:col-span-3 bg-white rounded-lg border border-slate-200 p-6 sm:p-8">
             <h2 className="font-semibold text-gray-900 text-lg mb-6">Send us a message</h2>
             <ContactForm />
           </div>

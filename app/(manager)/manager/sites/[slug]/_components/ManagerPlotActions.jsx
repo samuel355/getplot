@@ -29,7 +29,7 @@ export default function ManagerPlotActions({ plotId, table, currentStatus }) {
       <select
         value={status}
         onChange={(e) => setStatus(e.target.value)}
-        className="h-7 px-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#05014c] bg-white"
+        className="h-7 px-2 text-xs border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-teal bg-white"
       >
         {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
       </select>
@@ -37,7 +37,7 @@ export default function ManagerPlotActions({ plotId, table, currentStatus }) {
         <button
           onClick={save}
           disabled={saving}
-          className="h-7 px-2.5 text-xs bg-[#05014c] text-white rounded-lg hover:bg-[#05014c]/90 disabled:opacity-50 flex items-center gap-1"
+          className="h-7 px-2.5 text-xs bg-brand-navy text-white rounded-lg hover:bg-brand-navy/90 disabled:opacity-50 flex items-center gap-1"
         >
           {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : "Save"}
         </button>

@@ -8,7 +8,7 @@ export default function Footer() {
   const accra = SITES.filter((s) => s.location === "Accra");
 
   return (
-    <footer className="bg-[#05014c] text-white">
+    <footer className="bg-brand-navy text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
@@ -44,7 +44,7 @@ export default function Footer() {
                 <li key={site.slug}>
                   <Link
                     href={`/sites/${site.slug}`}
-                    className="text-sm text-white/60 hover:text-orange-400 transition-colors"
+                    className="text-sm text-white/60 hover:text-brand-teal transition-colors"
                   >
                     {site.name}
                   </Link>
@@ -61,7 +61,7 @@ export default function Footer() {
                 <li key={site.slug}>
                   <Link
                     href={`/sites/${site.slug}`}
-                    className="text-sm text-white/60 hover:text-orange-400 transition-colors"
+                    className="text-sm text-white/60 hover:text-brand-teal transition-colors"
                   >
                     {site.name}
                   </Link>
@@ -77,7 +77,7 @@ export default function Footer() {
                 { label: "Terms of Service", href: "/terms" },
               ].map(({ label, href }) => (
                 <li key={href}>
-                  <Link href={href} className="text-sm text-white/60 hover:text-orange-400 transition-colors">
+                  <Link href={href} className="text-sm text-white/60 hover:text-brand-teal transition-colors">
                     {label}
                   </Link>
                 </li>
@@ -90,18 +90,18 @@ export default function Footer() {
             <h4 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-4">Get in Touch</h4>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <Phone className="w-4 h-4 text-orange-400 mt-0.5 shrink-0" />
+                <Phone className="w-4 h-4 text-brand-teal mt-0.5 shrink-0" />
                 <div>
                   <p className="text-sm text-white/70">0322008282</p>
                   <p className="text-sm text-white/70">+233 54 855 4216</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Mail className="w-4 h-4 text-orange-400 mt-0.5 shrink-0" />
+                <Mail className="w-4 h-4 text-brand-teal mt-0.5 shrink-0" />
                 <p className="text-sm text-white/70">landandhomesconsult@gmail.com</p>
               </div>
               <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-orange-400 mt-0.5 shrink-0" />
+                <MapPin className="w-4 h-4 text-brand-teal mt-0.5 shrink-0" />
                 <p className="text-sm text-white/70">Kumasi Dichemso, Ghana</p>
               </div>
             </div>

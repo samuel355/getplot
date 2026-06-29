@@ -14,10 +14,10 @@ import {
   X,
   Home,
   ChevronRight,
-  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SITES } from "@/lib/sites";
+import { LogoLateral } from "@/app/_components/Logo";
 
 // Nav config per role
 const NAV = {
@@ -57,9 +57,8 @@ export default function Sidebar({ role, assignedSites = [] }) {
     <>
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-[#05014c] text-white flex items-center justify-between px-4 shadow-md">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-          <MapPin className="w-4 h-4 text-orange-400" />
-          GetOnePlot
+        <Link href="/" className="flex items-center">
+          <LogoLateral variant="light" height={28} />
         </Link>
         <button onClick={() => setMobileOpen((o) => !o)} className="p-1.5 rounded-md hover:bg-white/10">
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -83,9 +82,8 @@ export default function Sidebar({ role, assignedSites = [] }) {
         )}
       >
         {/* Brand */}
-        <div className="flex items-center gap-2 px-5 py-5 border-b border-white/10">
-          <MapPin className="w-5 h-5 text-orange-400 shrink-0" />
-          <span className="font-bold text-lg tracking-tight">GetOnePlot</span>
+        <div className="flex items-center px-5 py-5 border-b border-white/10">
+          <LogoLateral variant="light" height={30} />
         </div>
 
         {/* Role badge */}

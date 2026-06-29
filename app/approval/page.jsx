@@ -1,9 +1,10 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { getPortalPath } from "@/lib/roles";
-import { MapPin, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 import Link from "next/link";
 import { SignOutButton } from "@clerk/nextjs";
+import { LogoLateral } from "@/app/_components/Logo";
 
 export default async function ApprovalPage() {
   const user = await currentUser();
@@ -15,6 +16,9 @@ export default async function ApprovalPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
+        <div className="flex justify-center mb-8">
+          <LogoLateral variant="dark" height={30} />
+        </div>
         <div className="bg-white rounded-2xl shadow-sm border p-8 text-center">
           <div className="w-14 h-14 bg-[#05014c]/5 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Clock className="w-7 h-7 text-[#05014c]" />

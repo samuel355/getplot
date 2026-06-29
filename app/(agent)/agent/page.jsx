@@ -41,7 +41,7 @@ export default async function AgentPage() {
         </div>
         <Link
           href="/agent/listings/new"
-          className="inline-flex items-center gap-2 bg-[#05014c] text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-[#05014c]/90 transition-colors"
+          className="inline-flex items-center gap-2 bg-brand-navy text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-brand-navy/90 transition-colors"
         >
           <PlusCircle className="w-4 h-4" /> Add Listing
         </Link>
@@ -50,13 +50,13 @@ export default async function AgentPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard label="Total Listings" value={stats.total} icon={List} />
         <StatCard label="Active" value={stats.active} icon={TrendingUp} color="text-green-600" bg="bg-green-50" />
-        <StatCard label="Pending Review" value={stats.pending} icon={Eye} color="text-orange-500" bg="bg-orange-50" />
+        <StatCard label="Pending Review" value={stats.pending} icon={Eye} color="text-brand-teal" bg="bg-brand-teal/10" />
       </div>
 
-      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="font-semibold text-gray-900">Recent Listings</h2>
-          <Link href="/agent/listings" className="text-sm text-[#05014c] hover:underline flex items-center gap-1">
+          <Link href="/agent/listings" className="text-sm text-brand-navy hover:underline flex items-center gap-1">
             View all <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -72,7 +72,7 @@ export default async function AgentPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <StatusPill status={listing.status} />
-                  <Link href={`/agent/listings/${listing.id}`} className="text-[#05014c] text-xs hover:underline">Edit</Link>
+                  <Link href={`/agent/listings/${listing.id}`} className="text-brand-navy text-xs hover:underline">Edit</Link>
                 </div>
               </div>
             ))}
@@ -80,7 +80,7 @@ export default async function AgentPage() {
         ) : (
           <div className="py-16 text-center text-gray-400">
             <p className="text-sm">No listings yet.</p>
-            <Link href="/agent/listings/new" className="text-[#05014c] text-sm hover:underline mt-1 inline-block">
+            <Link href="/agent/listings/new" className="text-brand-navy text-sm hover:underline mt-1 inline-block">
               Create your first listing →
             </Link>
           </div>

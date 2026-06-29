@@ -26,7 +26,7 @@ export default async function AdminSitePage({ params }) {
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-[#05014c] rounded-xl flex items-center justify-center">
+        <div className="w-10 h-10 bg-brand-navy rounded-lg flex items-center justify-center">
           <MapPin className="w-5 h-5 text-white" />
         </div>
         <div>
@@ -35,17 +35,17 @@ export default async function AdminSitePage({ params }) {
         </div>
         <Link
           href={`/sites/${site.slug}`}
-          className="ml-auto text-sm text-[#05014c] hover:underline"
+          className="ml-auto text-sm text-brand-navy hover:underline"
           target="_blank"
         >
           View public page →
         </Link>
       </div>
 
-      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
+            <thead className="bg-slate-50 border-b">
               <tr>
                 {["Plot No.", "Street", "Size (Acres)", "Price (GHS)", "Status", "Client", "Actions"].map((h) => (
                   <th key={h} className="text-left px-5 py-3 font-medium text-gray-500 whitespace-nowrap">{h}</th>
@@ -56,7 +56,7 @@ export default async function AdminSitePage({ params }) {
               {plots.map((plot) => {
                 const props = plot.properties ?? {};
                 return (
-                  <tr key={plot.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={plot.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-5 py-3.5 font-medium text-gray-900">{props.Plot_No ?? plot.id}</td>
                     <td className="px-5 py-3.5 text-gray-600">{props.Street_Nam ?? "—"}</td>
                     <td className="px-5 py-3.5 text-gray-600">
@@ -74,7 +74,7 @@ export default async function AdminSitePage({ params }) {
                     <td className="px-5 py-3.5">
                       <Link
                         href={`/dashboard/edit-plot/${plot.id}?table=${site.table}&slug=${site.slug}`}
-                        className="text-[#05014c] hover:underline text-xs font-medium"
+                        className="text-brand-navy hover:underline text-xs font-medium"
                       >
                         Edit
                       </Link>

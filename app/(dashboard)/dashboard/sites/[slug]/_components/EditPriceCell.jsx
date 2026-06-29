@@ -25,7 +25,7 @@ export default function EditPriceCell({ plotId, table, price }) {
     return (
       <button
         onClick={() => setEditing(true)}
-        className="flex items-center gap-1.5 text-gray-700 hover:text-[#05014c] group transition-colors"
+        className="flex items-center gap-1.5 text-gray-700 hover:text-brand-navy group transition-colors"
       >
         {price ? `${Number(price).toLocaleString()}` : <span className="text-gray-400 italic">Set price</span>}
         <Pencil className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -40,7 +40,7 @@ export default function EditPriceCell({ plotId, table, price }) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         autoFocus
-        className="w-28 h-7 px-2 text-sm border rounded-md focus:outline-none focus:ring-1 focus:ring-[#05014c]"
+        className="w-28 h-7 px-2 text-sm border rounded-md focus:outline-none focus:ring-1 focus:ring-brand-teal"
       />
       <button onClick={save} disabled={saving} className="p-1 text-green-600 hover:text-green-700">
         <Check className="w-4 h-4" />

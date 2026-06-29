@@ -6,8 +6,8 @@ export default function MessagePage({ searchParams }) {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl border shadow-sm p-8 text-center">
-        <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+      <div className="max-w-md w-full bg-white rounded-lg border shadow-sm p-8 text-center">
+        <div className="w-14 h-14 bg-green-50 rounded-lg flex items-center justify-center mx-auto mb-4">
           <CheckCircle className="w-7 h-7 text-green-500" />
         </div>
         <h1 className="text-xl font-bold text-gray-900 mb-2">Request Received!</h1>
@@ -19,7 +19,7 @@ export default function MessagePage({ searchParams }) {
         </p>
         <Link
           href={redirect}
-          className="inline-flex items-center justify-center w-full bg-[#05014c] text-white text-sm font-medium py-2.5 rounded-xl hover:bg-[#05014c]/90 transition-colors"
+          className="inline-flex items-center justify-center w-full bg-brand-navy text-white text-sm font-medium py-2.5 rounded-lg hover:bg-brand-navy/90 transition-colors"
         >
           Back to Site
         </Link>

@@ -29,19 +29,19 @@ export default async function ManagerSitePage({ params }) {
       </Link>
 
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-[#05014c] rounded-xl flex items-center justify-center">
+        <div className="w-10 h-10 bg-brand-navy rounded-lg flex items-center justify-center">
           <MapPin className="w-5 h-5 text-white" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{site.name}</h1>
           <p className="text-sm text-gray-500">{plots.length} plots · {site.location}</p>
         </div>
-        <Link href={`/sites/${site.slug}`} className="ml-auto text-sm text-[#05014c] hover:underline" target="_blank">
+        <Link href={`/sites/${site.slug}`} className="ml-auto text-sm text-brand-navy hover:underline" target="_blank">
           Public view →
         </Link>
       </div>
 
-      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b">

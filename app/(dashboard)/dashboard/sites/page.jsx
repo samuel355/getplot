@@ -34,13 +34,13 @@ export default async function SitesPage() {
           <Link
             key={site.slug}
             href={`/dashboard/sites/${site.slug}`}
-            className="group bg-white rounded-2xl border p-5 hover:shadow-md hover:border-[#05014c]/30 transition-all"
+            className="group bg-white rounded-lg border p-5 hover:shadow-md hover:border-brand-teal/40 transition-all"
           >
             <div className="flex items-start justify-between mb-4">
-              <div className="w-10 h-10 bg-[#05014c]/5 rounded-xl flex items-center justify-center group-hover:bg-[#05014c]/10 transition-colors">
-                <MapPin className="w-5 h-5 text-[#05014c]" />
+              <div className="w-10 h-10 bg-brand-navy/5 rounded-lg flex items-center justify-center group-hover:bg-brand-navy/10 transition-colors">
+                <MapPin className="w-5 h-5 text-brand-navy" />
               </div>
-              <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-[#05014c] transition-colors" />
+              <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-brand-navy transition-colors" />
             </div>
             <h3 className="font-semibold text-gray-900 mb-0.5">{site.name}</h3>
             <p className="text-xs text-gray-400 mb-4">{site.location}</p>

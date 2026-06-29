@@ -182,6 +182,20 @@ function fitPropertiesOnMap(map, properties) {
   map.fitBounds(bounds, 64);
 }
 
+function marketplaceMarkerIcon(property, active) {
+  if (!window.google?.maps) return undefined;
+
+  const type = String(property.type ?? property.property_type ?? "").toLowerCase();
+  const isLand = type.includes("land");
+  const size = active ? 54 : 44;
+
+  return {
+    url: isLand ? "/images/marker-land.png" : "/images/marker-house.png",
+    scaledSize: new window.google.maps.Size(size, size),
+    anchor: new window.google.maps.Point(size / 2, size),
+  };
+}
+
 export default function MarketplacePage() {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [properties, setProperties] = useState([]);
@@ -441,20 +455,23 @@ function MapView({ properties, loading, mapLoaded, center, selected, onSelect, o
       >
         {properties.map((property, index) => {
           const position = parseCoordinates(property, index);
+          const active = selected?.id === property.id;
           return (
-            <MarkerF key={property.id} position={position} onClick={() => onSelect({ ...property, position })} />
+            <MarkerF
+              key={property.id}
+              position={position}
+              icon={marketplaceMarkerIcon(property, active)}
+              zIndex={active ? 2 : 1}
+              onClick={() => {
+                mapRef.current?.panTo(position);
+                onSelect({ ...property, position });
+              }}
+            />
           );
         })}
         {selected?.position && (
           <InfoWindow position={selected.position} onCloseClick={() => onSelect(null)}>
-            <div className="w-64 space-y-2">
-              <p className="font-semibold text-slate-900">{selected.title}</p>
-              <p className="text-sm text-slate-500">{selected.location || selected.region}</p>
-              <p className="font-bold text-brand-navy">{formatPrice(selected)}</p>
-              <Link href={`/contact?property=${encodeURIComponent(selected.title)}`} className="inline-flex rounded-md bg-brand-navy px-3 py-2 text-xs font-semibold text-white">
-                Enquire
-              </Link>
-            </div>
+            <MarketplaceInfoWindow property={selected} />
           </InfoWindow>
         )}
       </GoogleMap>
@@ -468,6 +485,57 @@ function MapView({ properties, loading, mapLoaded, center, selected, onSelect, o
         loading={loading}
       />
     </div>
+  );
+}
+
+function MarketplaceInfoWindow({ property }) {
+  const image = firstImage(property.images);
+  const location = property.location || property.address || property.region || "Ghana";
+  const type = property.type || property.property_type;
+  const listingType = property.listing_type;
+
+  return (
+    <article className="w-[min(20rem,calc(100vw-3rem))] overflow-hidden rounded-lg bg-white text-slate-900">
+      <div className="relative h-32 bg-slate-100">
+        {image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={image} alt={property.title} className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-brand-navy/5">
+            <Home className="h-9 w-9 text-brand-navy/35" />
+          </div>
+        )}
+        <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+          {type ? <Badge>{type}</Badge> : null}
+          {listingType ? <Badge accent>{listingType}</Badge> : null}
+        </div>
+      </div>
+
+      <div className="space-y-3 p-4">
+        <div>
+          <h3 className="line-clamp-1 font-bold text-brand-navy">{property.title}</h3>
+          <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-500">
+            <MapPin className="h-3.5 w-3.5" />
+            <span className="line-clamp-1">{location}</span>
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Price</p>
+          <p className="font-bold text-brand-navy">{formatPrice(property)}</p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
+          {property.bedrooms ? <span className="inline-flex items-center gap-1"><BedDouble className="h-3.5 w-3.5" />{property.bedrooms} beds</span> : null}
+          {property.bathrooms ? <span className="inline-flex items-center gap-1"><Bath className="h-3.5 w-3.5" />{property.bathrooms} baths</span> : null}
+          {property.size ? <span className="inline-flex items-center gap-1"><Ruler className="h-3.5 w-3.5" />{property.size}</span> : null}
+        </div>
+
+        <Link href={`/contact?property=${encodeURIComponent(property.title)}`} className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-navy/90">
+          Enquire now <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+    </article>
   );
 }
 

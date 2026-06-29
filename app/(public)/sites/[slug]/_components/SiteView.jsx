@@ -7,11 +7,14 @@ import { useUser } from "@clerk/nextjs";
 import {
   ArrowRight,
   HeartHandshake,
+  Info,
   LayoutGrid,
   Loader2,
   LocateFixed,
   Layers,
   MapPin,
+  Maximize,
+  Minimize,
   Pencil,
   Phone,
   RefreshCw,
@@ -33,10 +36,11 @@ const MAP_CONTAINER_STYLE = { width: "100%", height: "100%" };
 const POPUP_PAN_OFFSET_Y = -170;
 const MAP_OPTIONS = {
   clickableIcons: false,
-  fullscreenControl: true,
+  fullscreenControl: false,
   mapTypeControl: false,
   streetViewControl: false,
   zoomControl: false,
+  gestureHandling: "greedy",
 };
 
 const STATUS_STYLE = {
@@ -124,10 +128,29 @@ export default function SiteView({ site }) {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("map");
   const [mapType, setMapType] = useState("satellite");
+  const [isMapTypeMenuOpen, setIsMapTypeMenuOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [stats, setStats] = useState({ total: 0, available: 0, reserved: 0, sold: 0 });
   const role = user?.publicMetadata?.role;
   const canManagePlots = role === "sysadmin" || role === "land_manager";
   const canEditPlots = role === "sysadmin";
+
+  const changeMapType = (type) => {
+    setMapType(type);
+    setIsMapTypeMenuOpen(false);
+  };
+
+  const toggleFullscreen = () => {
+    const container = document.querySelector(".map-container");
+    if (!container) return;
+    if (!isFullscreen) {
+      (container.requestFullscreen ?? container.webkitRequestFullscreen ?? container.msRequestFullscreen)?.call(container);
+      setIsFullscreen(true);
+    } else {
+      (document.exitFullscreen ?? document.webkitExitFullscreen ?? document.msExitFullscreen)?.call(document);
+      setIsFullscreen(false);
+    }
+  };
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-scripts",
@@ -149,8 +172,23 @@ export default function SiteView({ site }) {
 
   const fetchPlots = async () => {
     setLoading(true);
-    const { data } = await supabase.from(site.table).select("*");
-    const valid = (data ?? []).filter((plot) => getPolygonPath(plot).length >= 3);
+    const batchSize = 1000;
+    let all = [];
+    let from = 0;
+
+    while (true) {
+      const { data, error } = await supabase
+        .from(site.table)
+        .select("*")
+        .range(from, from + batchSize - 1);
+
+      if (error || !data?.length) break;
+      all = [...all, ...data];
+      if (data.length < batchSize) break;
+      from += batchSize;
+    }
+
+    const valid = all.filter((plot) => getPolygonPath(plot).length >= 3);
     setPlots(valid);
     setStats({
       total: valid.length,
@@ -238,7 +276,7 @@ export default function SiteView({ site }) {
         )}
 
         {view === "map" && (
-          <div className="relative h-full">
+          <div className="map-container relative h-full">
             {!GOOGLE_MAPS_KEY || loadError ? (
               <MapUnavailable onViewList={() => setView("list")} />
             ) : !isLoaded ? (
@@ -307,12 +345,28 @@ export default function SiteView({ site }) {
                 </GoogleMap>
                 <MapControls
                   mapType={mapType}
-                  onToggleMapType={() => setMapType((type) => type === "satellite" ? "roadmap" : "satellite")}
+                  isMapTypeMenuOpen={isMapTypeMenuOpen}
+                  onToggleMapTypeMenu={() => setIsMapTypeMenuOpen((v) => !v)}
+                  onChangeMapType={changeMapType}
+                  isFullscreen={isFullscreen}
+                  onToggleFullscreen={toggleFullscreen}
                   onZoomIn={() => mapRef.current?.setZoom((mapRef.current?.getZoom() ?? 15) + 1)}
                   onZoomOut={() => mapRef.current?.setZoom((mapRef.current?.getZoom() ?? 15) - 1)}
                   onFit={() => fitMapToPlots(mapRef.current, plots)}
                   onRefresh={fetchPlots}
                   loading={loading}
+                />
+                <MobileMapControls
+                  onZoomIn={() => mapRef.current?.setZoom((mapRef.current?.getZoom() ?? 15) + 1)}
+                  onZoomOut={() => mapRef.current?.setZoom((mapRef.current?.getZoom() ?? 15) - 1)}
+                  onFit={() => fitMapToPlots(mapRef.current, plots)}
+                  onOpenMapType={() => setIsMapTypeMenuOpen(true)}
+                />
+                <MobileMapTypeSheet
+                  open={isMapTypeMenuOpen}
+                  mapType={mapType}
+                  onChangeMapType={changeMapType}
+                  onClose={() => setIsMapTypeMenuOpen(false)}
                 />
               </>
             )}
@@ -340,29 +394,125 @@ export default function SiteView({ site }) {
   );
 }
 
-function MapControls({ mapType, onToggleMapType, onZoomIn, onZoomOut, onFit, onRefresh, loading }) {
+const MAP_TYPES = [
+  { value: "roadmap", label: "Road Map" },
+  { value: "satellite", label: "Satellite" },
+  { value: "hybrid", label: "Hybrid" },
+  { value: "terrain", label: "Terrain" },
+];
+
+function MapControls({ mapType, isMapTypeMenuOpen, onToggleMapTypeMenu, onChangeMapType, isFullscreen, onToggleFullscreen, onZoomIn, onZoomOut, onFit, onRefresh, loading }) {
   return (
-    <div className="absolute right-4 top-4 z-10 flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
-      <MapControlButton label="Zoom in" onClick={onZoomIn} icon={ZoomIn} />
-      <MapControlButton label="Zoom out" onClick={onZoomOut} icon={ZoomOut} />
-      <MapControlButton label="Fit plots" onClick={onFit} icon={LocateFixed} />
-      <MapControlButton label={mapType === "satellite" ? "Roadmap" : "Satellite"} onClick={onToggleMapType} icon={Layers} />
-      <MapControlButton label="Refresh plots" onClick={onRefresh} icon={RefreshCw} loading={loading} />
+    <div className="absolute right-4 top-4 z-10 hidden md:flex flex-col gap-2 p-2">
+      <button type="button" onClick={onZoomIn} title="Zoom in" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+        <ZoomIn className="h-5 w-5 text-brand-navy" />
+      </button>
+      <button type="button" onClick={onZoomOut} title="Zoom out" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+        <ZoomOut className="h-5 w-5 text-brand-navy" />
+      </button>
+
+      <div className="border-t border-gray-200 my-1" />
+
+      <div className="relative">
+        <button type="button" onClick={onToggleMapTypeMenu} title="Change map type" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+          <Layers className="h-5 w-5 text-brand-navy" />
+        </button>
+        {isMapTypeMenuOpen && (
+          <div className="absolute right-full mr-2 top-0 bg-white shadow-lg rounded-lg overflow-hidden min-w-[120px]">
+            {MAP_TYPES.map(({ value, label }) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => onChangeMapType(value)}
+                className={cn("px-3 py-2 w-full text-left text-sm hover:bg-slate-50 transition-colors", mapType === value && "bg-brand-navy/10 text-brand-navy font-medium")}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <button type="button" onClick={onToggleFullscreen} title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"} className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+        {isFullscreen ? <Minimize className="h-5 w-5 text-brand-navy" /> : <Maximize className="h-5 w-5 text-brand-navy" />}
+      </button>
+
+      <button type="button" onClick={onFit} title="Fit all plots" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+        <LocateFixed className="h-5 w-5 text-brand-navy" />
+      </button>
+
+      <button type="button" onClick={onRefresh} title="Refresh plots" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+        <RefreshCw className={cn("h-5 w-5 text-brand-navy", loading && "animate-spin")} />
+      </button>
+
+      <button
+        type="button"
+        title="Help"
+        onClick={() => alert("Click on any plot to see details and take action.")}
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors"
+      >
+        <Info className="h-5 w-5 text-brand-navy" />
+      </button>
     </div>
   );
 }
 
-function MapControlButton({ label, onClick, icon: Icon, loading }) {
+function MobileMapControls({ onZoomIn, onZoomOut, onFit, onOpenMapType }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={label}
-      aria-label={label}
-      className="flex h-10 w-10 items-center justify-center border-b border-slate-100 text-brand-navy transition-colors last:border-b-0 hover:bg-slate-50"
-    >
-      <Icon className={cn("h-4 w-4", loading && "animate-spin")} />
-    </button>
+    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg z-20 flex justify-around items-center py-2 border-t border-slate-200">
+      <button type="button" onClick={onZoomIn} className="flex flex-col items-center gap-0.5 p-2 text-gray-700">
+        <ZoomIn size={18} />
+        <span className="text-[10px]">Zoom In</span>
+      </button>
+      <button type="button" onClick={onZoomOut} className="flex flex-col items-center gap-0.5 p-2 text-gray-700">
+        <ZoomOut size={18} />
+        <span className="text-[10px]">Zoom Out</span>
+      </button>
+      <button type="button" onClick={onOpenMapType} className="flex flex-col items-center gap-0.5 p-2 text-gray-700">
+        <Layers size={18} />
+        <span className="text-[10px]">Map Type</span>
+      </button>
+      <button type="button" onClick={onFit} className="flex flex-col items-center gap-0.5 p-2 text-gray-700">
+        <LocateFixed size={18} />
+        <span className="text-[10px]">All Plots</span>
+      </button>
+    </div>
+  );
+}
+
+function MobileMapTypeSheet({ open, mapType, onChangeMapType, onClose }) {
+  if (!open) return null;
+
+  const MAP_TYPE_VISUALS = {
+    roadmap: "bg-gray-100",
+    satellite: "bg-gray-700",
+    hybrid: "bg-gray-800 border border-white",
+    terrain: "bg-green-100",
+  };
+
+  return (
+    <div className="md:hidden fixed inset-0 bg-black/50 z-30" onClick={onClose}>
+      <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-4" onClick={(e) => e.stopPropagation()}>
+        <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4" />
+        <h3 className="text-base font-semibold mb-3">Map Type</h3>
+        <div className="grid grid-cols-2 gap-2">
+          {MAP_TYPES.map(({ value, label }) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => onChangeMapType(value)}
+              className={cn("p-3 rounded-lg flex flex-col items-center border gap-2 transition-colors", mapType === value ? "border-brand-navy bg-brand-navy/5" : "border-gray-200")}
+            >
+              <span className="text-sm font-medium">{label}</span>
+              <div className={cn("w-10 h-10 rounded-md", MAP_TYPE_VISUALS[value])} />
+            </button>
+          ))}
+        </div>
+        <button type="button" onClick={onClose} className="mt-4 w-full p-3 bg-brand-navy text-white rounded-lg font-medium text-sm">
+          Close
+        </button>
+      </div>
+    </div>
   );
 }
 

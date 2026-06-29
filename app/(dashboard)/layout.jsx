@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import Sidebar from "@/app/_components/nav/Sidebar";
+import Sidebar from "./dashboard/_components/Sidebar";
+import MobileMenu from "./dashboard/_components/MobileMenu";
 
 export default async function DashboardLayout({ children }) {
   const { userId } = await auth();
@@ -8,14 +10,25 @@ export default async function DashboardLayout({ children }) {
 
   const user = await currentUser();
   const role = user?.publicMetadata?.role;
-  if (role !== "sysadmin") redirect("/unauthorized");
+  if (role !== "sysadmin" && role !== "admin") redirect("/unauthorized");
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <Sidebar role="sysadmin" />
-      <main className="flex-1 md:ml-64 pt-14 md:pt-0">
-        <div className="p-6 lg:p-8">{children}</div>
-      </main>
+    <div className="w-full h-screen max-h-screen">
+      <div className="flex flex-row gap-4 items-center">
+        <div className="fixed sidebar top-0 w-[25%] overflow-hidden max-w-[25%] box-border hidden md:flex lg:flex xl:flex z-20">
+          <Suspense fallback={null}>
+            <Sidebar />
+          </Suspense>
+        </div>
+        <div className="md:w-[75%] md:mt-0 md:ml-[22%] md:mr-[1.5rem] md:mb-[1.5rem] main-content lg:w-full xl:w-full 2xl:ml-[14.5%] xl:ml-[20%] h-full bg-white overflow-x-hidden">
+          <div className="w-full">
+            <MobileMenu />
+            <div className="px-4 pt-2 md:pt-7 md:m-2 relative z-0">
+              {children}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

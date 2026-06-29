@@ -23,12 +23,8 @@ const isPublicRoute = createRouteMatcher([
   "/api/send-sms",
 ]);
 
-const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
-const isAgentRoute = createRouteMatcher(["/agent(.*)"]);
-const isManagerRoute = createRouteMatcher(["/manager(.*)"]);
-
 export default clerkMiddleware(async (auth, req) => {
-  const { userId, sessionClaims } = await auth();
+  const { userId } = await auth();
   const isPublic = isPublicRoute(req);
 
   if (!isPublic && !userId) {
@@ -38,19 +34,8 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(new URL("/sign-in", req.url));
   }
 
-  if (userId) {
-    const role = sessionClaims?.publicMetadata?.role;
-
-    if (isDashboardRoute(req) && role !== "sysadmin") {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
-    }
-    if (isAgentRoute(req) && role !== "agent" && role !== "sysadmin") {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
-    }
-    if (isManagerRoute(req) && role !== "land_manager" && role !== "sysadmin") {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
-    }
-  }
+  // Role-based access is enforced in each route's server-side layout via
+  // currentUser() (always fresh from Clerk's API), avoiding stale-JWT issues.
 });
 
 export const config = {

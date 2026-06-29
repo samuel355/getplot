@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { ShieldX } from "lucide-react";
+import { LogoLateral } from "@/app/_components/Logo";
 
 export default function UnauthorizedPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl border shadow-sm p-8 text-center">
+      <div className="max-w-md w-full">
+        <div className="flex justify-center mb-8">
+          <LogoLateral variant="dark" height={30} />
+        </div>
+        <div className="bg-white rounded-2xl border shadow-sm p-8 text-center">
         <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <ShieldX className="w-7 h-7 text-red-500" />
         </div>
@@ -18,6 +23,7 @@ export default function UnauthorizedPage() {
         >
           Go Home
         </Link>
+        </div>
       </div>
     </div>
   );

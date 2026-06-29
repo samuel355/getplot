@@ -1,221 +1,123 @@
-"use client";
-import { supabase } from "@/utils/supabase/client";
-import { Building2, Instagram, Twitter, Facebook, Linkedin } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { MapPin, Phone, Mail, Facebook, Instagram, Twitter } from "lucide-react";
+import { SITES } from "@/lib/sites";
 
-const Footer = () => {
-  const [email, setEmail] = useState("");
-
-  const subscribeNewsletter = async (e) => {
-    e.preventDefault();
-    if (email === "") {
-      return toast.error("Enter your email");
-    }
-    const emailRegexPattern =
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-    const validateEmail = (email) => {
-      return emailRegexPattern.test(email);
-    };
-
-    if (!validateEmail(email)) {
-      return toast.error("Please enter a valid email");
-    }
-    setEmail("");
-
-    try {
-      const { data, error } = await supabase
-        .from("news_letter_mails")
-        .insert({ email: email })
-        .select();
-      if (data) {
-        toast.success("Thank you for subscribing to our News letter");
-        setEmail("");
-      }
-      if (error) {
-        console.log(error);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Error occured \n Try again later");
-    }
-  };
+export default function Footer() {
+  const kumasi = SITES.filter((s) => s.location === "Kumasi");
+  const accra = SITES.filter((s) => s.location === "Accra");
 
   return (
-    <footer className="w-full bg-gradient-to-br from-primary to-blue-900 text-white/90 pt-12 pb-6">
-      <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <div className="flex flex-wrap gap-8 md:gap-3 border-b border-white/10 pb-8">
-          {/* Company Info */}
-          <div className="flex-1 min-w-[220px] mb-6 md:mb-0">
-            <Link href="/" className="flex items-center gap-x-2 mb-2" aria-label="Go to homepage">
-              <Building2 className="text-3xl text-white" />
-              <span className="font-bold text-xl tracking-wide">GETONEPLOT</span>
-            </Link>
-            <p className="text-sm text-white/70 mt-2 max-w-xs">
-              Your trusted partner for land registration, management, and property development.
-              Secure your future, one plot at a time.
+    <footer className="bg-[#05014c] text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+          {/* Brand */}
+          <div className="lg:col-span-1">
+            <div className="flex items-center gap-2 mb-4">
+              <MapPin className="w-5 h-5 text-orange-400" />
+              <span className="font-bold text-lg">GetOnePlot</span>
+            </div>
+            <p className="text-white/50 text-sm leading-relaxed mb-6">
+              Ghana&apos;s trusted platform for verified land plots and property listings across Kumasi and Accra.
             </p>
-            <div className="flex gap-3 mt-4">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener"
-                aria-label="Instagram"
-                className="hover:text-pink-400 transition-colors"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener"
-                aria-label="Twitter"
-                className="hover:text-blue-400 transition-colors"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener"
-                aria-label="Facebook"
-                className="hover:text-blue-500 transition-colors"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener"
-                aria-label="LinkedIn"
-                className="hover:text-blue-300 transition-colors"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
+            <div className="flex gap-3">
+              {[
+                { icon: Facebook, href: "#" },
+                { icon: Instagram, href: "#" },
+                { icon: Twitter, href: "#" },
+              ].map(({ icon: Icon, href }) => (
+                <a
+                  key={href + Icon.name}
+                  href={href}
+                  className="w-8 h-8 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors"
+                >
+                  <Icon className="w-4 h-4" />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Services */}
-          <div className="flex-1 min-w-[180px]">
-            <h2 className="text-lg font-semibold mb-2">Services</h2>
+          {/* Kumasi sites */}
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-4">Kumasi Sites</h4>
             <ul className="space-y-2">
-              <li>
-                <a className="text-sm hover:underline hover:text-white" href="#">
-                  Land Registration
-                </a>
-              </li>
-              <li>
-                <a className="text-sm hover:underline hover:text-white" href="#">
-                  Land Management
-                </a>
-              </li>
-              <li>
-                <a className="text-sm hover:underline hover:text-white" href="#">
-                  Building and Constructions
-                </a>
-              </li>
-              <li>
-                <a className="text-sm hover:underline hover:text-white" href="/contact-us">
-                  Contact support
-                </a>
-              </li>
+              {kumasi.map((site) => (
+                <li key={site.slug}>
+                  <Link
+                    href={`/sites/${site.slug}`}
+                    className="text-sm text-white/60 hover:text-orange-400 transition-colors"
+                  >
+                    {site.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Quick Links */}
-          <div className="flex-1 min-w-[180px]">
-            <h2 className="text-lg font-semibold mb-2">Quick Links</h2>
+          {/* Accra sites + quick links */}
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-4">Accra Sites</h4>
+            <ul className="space-y-2 mb-6">
+              {accra.map((site) => (
+                <li key={site.slug}>
+                  <Link
+                    href={`/sites/${site.slug}`}
+                    className="text-sm text-white/60 hover:text-orange-400 transition-colors"
+                  >
+                    {site.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-4">Company</h4>
             <ul className="space-y-2">
-              <li>
-                <Link href="/market-place" className="text-sm hover:underline hover:text-white">
-                  Market Place
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact-us" className="text-sm hover:underline hover:text-white">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <a href="/trabuom" className="text-sm hover:underline hover:text-white">
-                  Trabuom Site
-                </a>
-              </li>
-              <li>
-                <a href="/nthc" className="text-sm hover:underline hover:text-white">
-                  Kwadaso Lands
-                </a>
-              </li>
-              <li>
-                <a href="/legon-hills" className="text-sm hover:underline hover:text-white">
-                  East Legon Hills Land
-                </a>
-              </li>
-              <li>
-                <a href="/berekuso" className="text-sm hover:underline hover:text-white">
-                  Berekuso Lands
-                </a>
-              </li>
+              {[
+                { label: "Marketplace", href: "/marketplace" },
+                { label: "Contact Us", href: "/contact" },
+                { label: "Privacy Policy", href: "/privacy" },
+                { label: "Terms of Service", href: "/terms" },
+              ].map(({ label, href }) => (
+                <li key={href}>
+                  <Link href={href} className="text-sm text-white/60 hover:text-orange-400 transition-colors">
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Newsletter */}
-          <div className="flex-1 min-w-[260px]">
-            <h2 className="text-lg font-semibold mb-2">Subscribe to our Newsletter</h2>
-            <p className="text-sm text-white/70 mb-3">
-              Be the first to know about updates. Enter your email:
-            </p>
-            <form
-              className="flex flex-col sm:flex-row w-full rounded-full overflow-hidden border border-white/20 bg-white/10 focus-within:ring-2 focus-within:ring-blue-400"
-              onSubmit={subscribeNewsletter}
-            >
-              <input
-                type="email"
-                required
-                className="min-w-0 flex-1 px-4 py-2 bg-transparent text-white placeholder-white/60 outline-none w-full"
-                placeholder="Email Address..."
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                aria-label="Email address"
-              />
-              <button
-                type="submit"
-                className="bg-white text-primary font-semibold px-5 py-2 hover:bg-blue-100 transition-colors w-full sm:w-auto border-t border-white/10 sm:border-t-0 sm:border-l"
-              >
-                Subscribe
-              </button>
-            </form>
+          {/* Contact */}
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-white/40 mb-4">Get in Touch</h4>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <Phone className="w-4 h-4 text-orange-400 mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-sm text-white/70">0322008282</p>
+                  <p className="text-sm text-white/70">+233 54 855 4216</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Mail className="w-4 h-4 text-orange-400 mt-0.5 shrink-0" />
+                <p className="text-sm text-white/70">landandhomesconsult@gmail.com</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 text-orange-400 mt-0.5 shrink-0" />
+                <p className="text-sm text-white/70">Kumasi Dichemso, Ghana</p>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-white/60 gap-4">
-          <div className="flex flex-col md:flex-row items-center gap-4">
-            <div>&copy; {new Date().getFullYear()} Get One Plot. All rights reserved.</div>
-            <div className="flex gap-4">
-              <Link href="/privacy" className="hover:underline hover:text-white">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="hover:underline hover:text-white">
-                Terms of Service
-              </Link>
-            </div>
-          </div>
-          <div>
-            Powered by{" "}
-            <a
-              href="https://www.landandhomesconsult.com"
-              target="_blank"
-              rel="noopener"
-              className="hover:underline hover:text-white ml-1"
-            >
-              Land and Homes Consult
-            </a>
+
+        <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-white/30">
+            © {new Date().getFullYear()} GetOnePlot. All rights reserved.
+          </p>
+          <div className="flex gap-6">
+            <Link href="/privacy" className="text-xs text-white/30 hover:text-white/60 transition-colors">Privacy</Link>
+            <Link href="/terms" className="text-xs text-white/30 hover:text-white/60 transition-colors">Terms</Link>
           </div>
         </div>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

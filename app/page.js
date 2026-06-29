@@ -95,7 +95,7 @@ export default function LandingPage() {
           />
           <div className="absolute inset-0 bg-brand-navy/80" aria-hidden="true" />
 
-          <div className="relative mx-auto grid min-h-[calc(100vh-120px)] max-w-7xl grid-cols-1 items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
+          <div className="relative mx-auto grid min-h-[calc(100vh-120px)] max-w-7xl grid-cols-1 items-center gap-12 px-4 pt-28 pb-16 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
             <div>
               <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white/80">
                 <BadgeCheck className="h-4 w-4 text-brand-teal" />
@@ -130,6 +130,37 @@ export default function LandingPage() {
             </div>
 
             <LandMapShowcase />
+          </div>
+        </section>
+
+        <section className="bg-white py-20">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wider text-brand-teal">Marketplace</p>
+              <h2 className="mt-3 text-3xl font-bold text-brand-navy sm:text-4xl">
+                Search beyond land and compare every opportunity with confidence.
+              </h2>
+              <p className="mt-4 max-w-xl text-slate-500 leading-7">
+                The marketplace supports land, houses, apartments, commercial options, rentals, and investment listings with the filters buyers expect.
+              </p>
+
+              <div className="mt-7 space-y-3">
+                {MARKET_FEATURES.map((item) => (
+                  <div key={item} className="flex items-center gap-3 text-sm font-medium text-slate-700">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-teal/15">
+                      <CheckCircle className="h-3.5 w-3.5 text-brand-navy" />
+                    </span>
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <Link href="/marketplace" className="mt-8 inline-flex items-center gap-2 rounded-lg bg-brand-navy px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-navy/90">
+                Explore marketplace <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            <MarketplacePreview />
           </div>
         </section>
 
@@ -168,37 +199,6 @@ export default function LandingPage() {
                 </article>
               ))}
             </div>
-          </div>
-        </section>
-
-        <section className="bg-white py-20">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-brand-teal">Marketplace</p>
-              <h2 className="mt-3 text-3xl font-bold text-brand-navy sm:text-4xl">
-                Search beyond land and compare every opportunity with confidence.
-              </h2>
-              <p className="mt-4 max-w-xl text-slate-500 leading-7">
-                The marketplace supports land, houses, apartments, commercial options, rentals, and investment listings with the filters buyers expect.
-              </p>
-
-              <div className="mt-7 space-y-3">
-                {MARKET_FEATURES.map((item) => (
-                  <div key={item} className="flex items-center gap-3 text-sm font-medium text-slate-700">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-teal/15">
-                      <CheckCircle className="h-3.5 w-3.5 text-brand-navy" />
-                    </span>
-                    {item}
-                  </div>
-                ))}
-              </div>
-
-              <Link href="/marketplace" className="mt-8 inline-flex items-center gap-2 rounded-lg bg-brand-navy px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-navy/90">
-                Explore marketplace <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            <MarketplacePreview />
           </div>
         </section>
 

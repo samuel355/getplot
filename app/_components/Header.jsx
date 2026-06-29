@@ -356,31 +356,31 @@ const Header = () => {
                       </ListItem>
                       <ListItem
                         href="/nthc"
-                        title="NTHC"
+                        title="Kwadaso (NTHC)"
                         isActive={path === "/nthc"}
                       >
-                        NTHC (Kwadaso)
+                        Kwadaso (NTHC)
                       </ListItem>
                       <ListItem
                         href="/dar-es-salaam"
-                        title="Dar Es Salaam"
+                        title="Ejisu - Adense"
                         isActive={path === "/dar-es-salaam"}
                       >
-                        Dar Es Salaam (Ejisu)
+                        Ejisu - Adense
                       </ListItem>
                       <ListItem
                         href="/trabuom"
-                        title="Trabuom"
+                        title="Trabuom Sector 1"
                         isActive={path === "/trabuom"}
                       >
-                        Trabuom
+                        Trabuom Sector 1
                       </ListItem>
                       <ListItem
                         href="/new-trabuom"
-                        title="New Trabuom"
+                        title="Trabuom Sector 2"
                         isActive={path === "/new-trabuom"}
                       >
-                        New Trabuom
+                        Trabuom Sector 2
                       </ListItem>
                       <ListItem
                         href="/legon-hills"
@@ -617,7 +617,7 @@ const Header = () => {
                         path === "/nthc" && "text-primary font-semibold"
                       )}
                     >
-                      NTHC (Kwadaso)
+                      Kwadaso (NTHC)
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -629,7 +629,7 @@ const Header = () => {
                           "text-primary font-semibold"
                       )}
                     >
-                      Dar Es Salaam (Ejisu)
+                      Ejisu - Adense
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -640,7 +640,7 @@ const Header = () => {
                         path === "/trabuom" && "text-primary font-semibold"
                       )}
                     >
-                      Trabuom
+                      Trabuom Sector 1
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -651,7 +651,7 @@ const Header = () => {
                         path === "/new-trabuom" && "text-primary font-semibold"
                       )}
                     >
-                      New Trabuom
+                      Trabuom Sector 2
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>

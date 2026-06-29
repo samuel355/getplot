@@ -1,364 +1,189 @@
-"use client";
 import Link from "next/link";
-import { Loader } from "lucide-react";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useEffect, useState } from "react";
+import { clerkClient } from "@clerk/nextjs/server";
+import { ArrowRight, Building2, LandPlot, ShieldCheck, Users2 } from "lucide-react";
+import { SITES } from "@/lib/sites";
 import { supabase } from "@/utils/supabase/client";
 
-const Dashboard = () => {
-  const [trabuomPlots, setTrabuomPlots] = useState();
-  const [nthcPlots, setNTHCPlots] = useState();
-  const [legonHillsPlots, setLegonHillsPlots] = useState();
-  const [adensePlots, setAdensePlots] = useState();
-  const [berekusoPlots, setBerekusoPlots] = useState();
-  const [saadiPlots, setSaadiPlots] = useState();
-  const [asokoreMampongPlots, setAsokoreMampongPlots] = useState();
-  const [usersList, setUsersList] = useState([]);
-  const [usersLoading, setUsersLoading] = useState(false);
-  const [loading, setLoading] = useState(false);
+async function getSiteStats(table) {
+  try {
+    const { data } = await supabase.from(table).select("status");
+    if (!data) return { total: 0, available: 0, reserved: 0, sold: 0 };
 
-  useEffect(() => {
-    fetchPlots("trabuom");
-    fetchPlots("dar_es_salaam");
-    fetchPlots("nthc");
-    fetchPlots("legon_hills");
-    fetchPlots("berekuso");
-    fetchPlots("saadi");
-    fetchPlots("asokore_mampong");
-    fetchUsers();
-  }, []);
+    return {
+      total: data.length,
+      available: data.filter((plot) => ["Available", "AVAILABLE"].includes(plot.status)).length,
+      reserved: data.filter((plot) => ["Reserved", "RESERVED"].includes(plot.status)).length,
+      sold: data.filter((plot) => ["Sold", "SOLD"].includes(plot.status)).length,
+    };
+  } catch {
+    return { total: 0, available: 0, reserved: 0, sold: 0 };
+  }
+}
 
-  const fetchPlots = async (databaseName) => {
-    try {
-      setLoading(true);
-      const { count, error: countError } = await supabase
-        .from(databaseName)
-        .select("*", { count: "exact" });
+async function getPropertyCount() {
+  try {
+    const { count } = await supabase
+      .from("properties")
+      .select("id", { count: "exact", head: true });
+    return count ?? 0;
+  } catch {
+    return 0;
+  }
+}
 
-      if (countError) {
-        console.log(error);
-      }
-      if (databaseName === "trabuom") {
-        setTrabuomPlots(count);
-        setLoading(false);
-      }
-      if (databaseName === "dar_es_salaam") {
-        setAdensePlots(count);
-        setLoading(false);
-      }
-      if (databaseName === "legon_hills") {
-        setLegonHillsPlots(count);
-        setLoading(false);
-      }
-      if (databaseName === "nthc") {
-        setNTHCPlots(count);
-        setLoading(false);
-      }
-      if (databaseName === "berekuso") {
-        setBerekusoPlots(count);
-        setLoading(false);
-      }
-      if (databaseName === "saadi") {
-        setSaadiPlots(count);
-        setLoading(false);
-      }
-      if (databaseName === "asokore_mampong") {
-        setAsokoreMampongPlots(count);
-        setLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
+async function getUserCount() {
+  try {
+    const client = await clerkClient();
+    const users = await client.users.getUserList({ limit: 1 });
+    return users.totalCount ?? users.data?.length ?? 0;
+  } catch {
+    return 0;
+  }
+}
 
-  const fetchUsers = async () => {
-    setUsersLoading(true);
-    try {
-      const response = await fetch("/api/users"); //api/users
-      if (!response.ok) {
-        setUsersLoading(false);
-        throw new Error("Failed to fetch client list");
-      }
-      const data = await response.json();
-      if (data) {
-        setUsersList(data.data);
-        setUsersLoading(false);
-      }
-    } catch (error) {
-      setUsersLoading(false);
-      console.log(error.message);
-    }
+export default async function Dashboard() {
+  const [siteStats, propertyCount, userCount] = await Promise.all([
+    Promise.all(SITES.map((site) => getSiteStats(site.table))),
+    getPropertyCount(),
+    getUserCount(),
+  ]);
+
+  const sites = SITES.map((site, index) => ({ ...site, ...siteStats[index] }));
+  const totals = siteStats.reduce(
+    (sum, site) => ({
+      plots: sum.plots + site.total,
+      available: sum.available + site.available,
+      reserved: sum.reserved + site.reserved,
+      sold: sum.sold + site.sold,
+    }),
+    { plots: 0, available: 0, reserved: 0, sold: 0 },
+  );
+
+  return (
+    <div className="space-y-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-teal">Admin dashboard</p>
+          <h1 className="mt-1 text-2xl font-bold text-slate-950">Overview</h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Manage land sites, property listings, users, and assignments from one place.
+          </p>
+        </div>
+        <Link
+          href="/dashboard/users"
+          className="inline-flex w-fit items-center gap-2 rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-navy/90"
+        >
+          Manage users
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <MetricCard label="Total plots" value={totals.plots} icon={LandPlot} />
+        <MetricCard label="Available plots" value={totals.available} icon={ShieldCheck} tone="green" />
+        <MetricCard label="Property listings" value={propertyCount} icon={Building2} tone="blue" />
+        <MetricCard label="Registered users" value={userCount} icon={Users2} tone="amber" />
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        <ActionCard
+          title="Land sites"
+          text="Open site dashboards, update plot records, and review site availability."
+          href="/dashboard/sites"
+        />
+        <ActionCard
+          title="User access"
+          text="Assign admin, chief, land manager, assistant, and property agent roles."
+          href="/dashboard/users"
+        />
+        <ActionCard
+          title="Property marketplace"
+          text="Review posted properties and monitor listings submitted by agents."
+          href="/properties/all-properties"
+        />
+      </div>
+
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-base font-semibold text-slate-900">Land Sites</h2>
+            <p className="text-sm text-slate-500">All managed sites and current plot status.</p>
+          </div>
+          <Link href="/dashboard/sites" className="text-sm font-medium text-brand-navy hover:underline">
+            View all
+          </Link>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {sites.map((site) => (
+            <Link
+              key={site.slug}
+              href={`/dashboard/sites/${site.slug}`}
+              className="group rounded-lg border border-slate-200 bg-white p-5 transition-colors hover:border-brand-teal/60"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="font-semibold text-slate-950">{site.name}</h3>
+                  <p className="mt-0.5 text-xs text-slate-400">{site.location}</p>
+                </div>
+                <ArrowRight className="h-4 w-4 text-slate-300 transition-colors group-hover:text-brand-navy" />
+              </div>
+
+              <div className="mt-5 grid grid-cols-4 gap-2 text-center">
+                <MiniStat label="Total" value={site.total} />
+                <MiniStat label="Avail." value={site.available} className="text-green-600" />
+                <MiniStat label="Resv." value={site.reserved} className="text-amber-600" />
+                <MiniStat label="Sold" value={site.sold} className="text-red-600" />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function MetricCard({ label, value, icon: Icon, tone = "slate" }) {
+  const tones = {
+    slate: "bg-slate-100 text-slate-700",
+    green: "bg-green-50 text-green-700",
+    blue: "bg-blue-50 text-blue-700",
+    amber: "bg-amber-50 text-amber-700",
   };
 
   return (
-    <div className="flex w-full flex-col -mt-4">
-      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background">
-        <nav className="flex gap-3 text-base flex-wrap pb-4 lg:mb-0 md:mb-0 xl:mb-0">
-          <Link
-            href="#"
-            className="text-foreground transition-colors hover:text-foreground"
-          >
-            Dashboard
-          </Link>
-          <Link
-            href="/dashboard/trabuom"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Trabuom
-          </Link>
-          <Link
-            href="/dashboard/new-trabuom"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            New Trabuom
-          </Link>
-          <Link
-            href="/dashboard/nthc"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            NTHC (Kumasi)
-          </Link>
-          <Link
-            href="/dashboard/legon-hills"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            NTHC(Santeo)
-          </Link>
-          <Link
-            href="/dashboard/dar-es-salaam"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Dar Es Salaam
-          </Link>
-          <Link
-            href="/dashboard/berekuso"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Berekuso
-          </Link>
-          <Link
-            href="/dashboard/saadi"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Saadi
-          </Link>
-          <Link
-            href="/dashboard/asokore-mampong"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Asokore Mampong
-          </Link>
-        </nav>
-      </header>
-      <main className="flex flex-1 flex-col gap-3 mt-5">
-        <div className="grid gap-3 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-          <Card x-chunk="dashboard-01-chunk-0">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Plots at Trabuom
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loading && (
-                <div className="flex flex-col justify-center items-center">
-                  <Loader size={12} className="animate-spin" />
-                </div>
-              )}
-              <div className="text-2xl font-bold">
-                {trabuomPlots?.toLocaleString()}
-              </div>
-              <Link
-                className="text-primary text-xs mt-2 font-medium"
-                href={"/dashboard/trabuom"}
-              >
-                View Plots
-              </Link>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-1">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Plots at Santeo
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loading && (
-                <div className="flex flex-col justify-center items-center">
-                  <Loader size={12} className="animate-spin" />
-                </div>
-              )}
-              <div className="text-2xl font-bold">
-                {legonHillsPlots?.toLocaleString()}
-              </div>
-              <Link
-                className="text-primary text-xs mt-2 font-medium"
-                href={"/dashboard/legon-hills"}
-              >
-                View Plots
-              </Link>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-2">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Plots at NTHC (Kumasi)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loading && (
-                <div className="flex flex-col justify-center items-center">
-                  <Loader size={12} className="animate-spin" />
-                </div>
-              )}
-              <div className="text-2xl font-bold">
-                {nthcPlots?.toLocaleString()}
-              </div>
-              <Link
-                className="text-primary text-xs mt-2 font-medium"
-                href={"/dashboard/nthc"}
-              >
-                View Plots
-              </Link>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-3">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Plots at Dar Es Salaam
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loading && (
-                <div className="flex flex-col justify-center items-center">
-                  <Loader size={12} className="animate-spin" />
-                </div>
-              )}
-              <div className="text-2xl font-bold">
-                {adensePlots?.toLocaleString()}
-              </div>
-              <Link
-                className="text-primary text-xs mt-2 font-medium"
-                href={"/dashboard/dar-es-salaam"}
-              >
-                View Plots
-              </Link>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-3">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Plots at Berekuso
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loading && (
-                <div className="flex flex-col justify-center items-center">
-                  <Loader size={12} className="animate-spin" />
-                </div>
-              )}
-              <div className="text-2xl font-bold">
-                {berekusoPlots?.toLocaleString()}
-              </div>
-              <Link
-                className="text-primary text-xs mt-2 font-medium"
-                href={"/dashboard/berekuso"}
-              >
-                View Plots
-              </Link>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-3">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Plots at Royal Court Estate
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loading && (
-                <div className="flex flex-col justify-center items-center">
-                  <Loader size={12} className="animate-spin" />
-                </div>
-              )}
-              <div className="text-2xl font-bold">
-                {saadiPlots?.toLocaleString()}
-              </div>
-              <Link
-                className="text-primary text-xs mt-2 font-medium"
-                href={"/dashboard/royal-court-estate"}
-              >
-                View Plots
-              </Link>
-            </CardContent>
-          </Card>
-          <Card x-chunk="dashboard-01-chunk-3">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Plots at Asokore Mampong
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loading && (
-                <div className="flex flex-col justify-center items-center">
-                  <Loader size={12} className="animate-spin" />
-                </div>
-              )}
-              <div className="text-2xl font-bold">
-                {asokoreMampongPlots?.toLocaleString()}
-              </div>
-              <Link
-                className="text-primary text-xs mt-2 font-medium"
-                href={"/dashboard/asokore-mampong"}
-              >
-                View Plots
-              </Link>
-            </CardContent>
-          </Card>
-        </div>
-        <div className="grid gap-4 md:gap-8 grid-cols-1 mt-3">
-          <Card x-chunk="dashboard-01-chunk-5">
-            <CardHeader>
-              <CardTitle>Users</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-8">
-              {usersLoading && (
-                <div className="flex flex-col justify-center items-center">
-                  <Loader size={12} className="animate-spin" />
-                </div>
-              )}
-              {usersList.slice(0, 5).map((user) => (
-                <div key={user.id} className="flex items-center gap-4 mr-2">
-                  <Avatar className="hidden h-9 w-9 sm:flex">
-                    <AvatarImage src={user.imageUrl} alt="Avatar" />
-                    <AvatarFallback>OM</AvatarFallback>
-                  </Avatar>
-                  <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none">
-                      {user.firstName + " " + user.lastName}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {user.emailAddresses[0]?.emailAddress}
-                    </p>
-                  </div>
-                </div>
-              ))}
-              {usersList.length > 0 && (
-                <Link
-                  className="text-primary text-sm font-medium text-left hover:underline mr-1"
-                  href={"/dashboard/users"}
-                >
-                  View all users
-                </Link>
-              )}
-
-              {!usersLoading && usersList.length <= 0 && <p>No Users Found</p>}
-            </CardContent>
-          </Card>
-        </div>
-      </main>
+    <div className="rounded-lg border border-slate-200 bg-white p-5">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-slate-500">{label}</p>
+        <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${tones[tone]}`}>
+          <Icon className="h-4 w-4" />
+        </span>
+      </div>
+      <p className="mt-4 text-3xl font-bold leading-none text-slate-950">{Number(value).toLocaleString()}</p>
     </div>
   );
-};
-export default Dashboard;
+}
+
+function ActionCard({ title, text, href }) {
+  return (
+    <Link
+      href={href}
+      className="group rounded-lg border border-slate-200 bg-white p-5 transition-colors hover:border-brand-teal/60"
+    >
+      <div className="flex items-center justify-between gap-4">
+        <h2 className="font-semibold text-slate-950">{title}</h2>
+        <ArrowRight className="h-4 w-4 text-slate-300 transition-colors group-hover:text-brand-navy" />
+      </div>
+      <p className="mt-2 text-sm leading-6 text-slate-500">{text}</p>
+    </Link>
+  );
+}
+
+function MiniStat({ label, value, className = "text-slate-800" }) {
+  return (
+    <div>
+      <p className={`text-lg font-bold leading-none ${className}`}>{Number(value).toLocaleString()}</p>
+      <p className="mt-1 text-xs text-slate-400">{label}</p>
+    </div>
+  );
+}

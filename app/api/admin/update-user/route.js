@@ -3,6 +3,8 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export const dynamic = "force-dynamic";
 
+const LAND_MANAGEMENT_ROLES = ["chief", "chief_asst", "land_manager"];
+
 export async function POST(request) {
   try {
     const authObj = await auth();
@@ -35,13 +37,13 @@ export async function POST(request) {
       );
     }
 
-    // For chief roles, area is required
-    if ((newRole === "chief" || newRole === "chief_asst") && !area) {
-      return NextResponse.json({ error: "Area is required for chief roles" }, { status: 400 });
+    // Land-management roles must be assigned to a site/area.
+    if (LAND_MANAGEMENT_ROLES.includes(newRole) && !area) {
+      return NextResponse.json({ error: "Area is required for land management roles" }, { status: 400 });
     }
 
-    // Determine area based on role - CLEAR area for non-chief roles
-    const finalArea = newRole === "chief" || newRole === "chief_asst" ? area : "";
+    // Determine area based on role - CLEAR area for non-land-management roles
+    const finalArea = LAND_MANAGEMENT_ROLES.includes(newRole) ? area : "";
 
     // Build publicMetadata update object dynamically
     const publicMetadata = { ...(await client.users.getUser(userId)).publicMetadata };

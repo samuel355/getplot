@@ -73,13 +73,16 @@ export default function Trabuom() {
 
   return (
     <div>
-      <div className="-mt-5 flex items-center justify-between">
-        <h1 className="text-primary font-bold text-2xl">Trabuom Plot</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900">Trabuom Sector 1</h1>
+          <p className="text-sm text-slate-400 mt-0.5">{plotData.length.toLocaleString()} plots loaded</p>
+        </div>
         <Link
-          href={"/trabuom"}
-          className="text-primary text-base hover:underline flex items-center"
+          href={"/sites/trabuom-sector-1"}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50"
         >
-          <span>See plots on maps span</span> <ArrowRight size={16} />{" "}
+          View on map <ArrowRight size={14} />
         </Link>
       </div>
       <div className="mt-2">

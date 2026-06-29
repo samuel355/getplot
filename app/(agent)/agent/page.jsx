@@ -40,7 +40,7 @@ export default async function AgentPage() {
           <p className="text-sm text-gray-500 mt-1">Manage your property listings from here.</p>
         </div>
         <Link
-          href="/agent/listings/new"
+          href="/properties/add-listing"
           className="inline-flex items-center gap-2 bg-brand-navy text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-brand-navy/90 transition-colors"
         >
           <PlusCircle className="w-4 h-4" /> Add Listing
@@ -72,7 +72,7 @@ export default async function AgentPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <StatusPill status={listing.status} />
-                  <Link href={`/agent/listings/${listing.id}`} className="text-brand-navy text-xs hover:underline">Edit</Link>
+                  <Link href={`/properties/edit-property/${listing.id}`} className="text-brand-navy text-xs hover:underline">Edit</Link>
                 </div>
               </div>
             ))}
@@ -80,8 +80,8 @@ export default async function AgentPage() {
         ) : (
           <div className="py-16 text-center text-gray-400">
             <p className="text-sm">No listings yet.</p>
-            <Link href="/agent/listings/new" className="text-brand-navy text-sm hover:underline mt-1 inline-block">
-              Create your first listing →
+            <Link href="/properties/add-listing" className="text-brand-navy text-sm hover:underline mt-1 inline-block">
+              Create your first listing
             </Link>
           </div>
         )}

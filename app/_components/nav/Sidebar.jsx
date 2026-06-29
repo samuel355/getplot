@@ -25,17 +25,46 @@ const NAV = {
     { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { label: "Sites", href: "/dashboard/sites", icon: MapPin },
     { label: "Users", href: "/dashboard/users", icon: Users },
-    { label: "Listings", href: "/dashboard/listings", icon: List },
+    { label: "Properties", href: "/properties/all-properties", icon: List },
+  ],
+  admin: [
+    { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
+    { label: "Sites", href: "/dashboard/sites", icon: MapPin },
+    { label: "Users", href: "/dashboard/users", icon: Users },
+    { label: "Properties", href: "/properties/all-properties", icon: List },
   ],
   agent: [
     { label: "Overview", href: "/agent", icon: LayoutDashboard },
     { label: "My Listings", href: "/agent/listings", icon: List },
-    { label: "Add Listing", href: "/agent/listings/new", icon: PlusCircle },
+    { label: "Add Listing", href: "/properties/add-listing", icon: PlusCircle },
+  ],
+  property_agent: [
+    { label: "Overview", href: "/agent", icon: LayoutDashboard },
+    { label: "My Listings", href: "/agent/listings", icon: List },
+    { label: "Add Listing", href: "/properties/add-listing", icon: PlusCircle },
   ],
   land_manager: [
     { label: "Overview", href: "/manager", icon: LayoutDashboard },
     { label: "My Sites", href: "/manager/sites", icon: MapPin },
   ],
+  chief: [
+    { label: "Overview", href: "/manager", icon: LayoutDashboard },
+    { label: "My Sites", href: "/manager/sites", icon: MapPin },
+  ],
+  chief_asst: [
+    { label: "Overview", href: "/manager", icon: LayoutDashboard },
+    { label: "My Sites", href: "/manager/sites", icon: MapPin },
+  ],
+};
+
+const ROLE_LABELS = {
+  sysadmin: "System Admin",
+  admin: "Admin",
+  agent: "Property Agent",
+  property_agent: "Property Agent",
+  land_manager: "Land Manager",
+  chief: "Chief",
+  chief_asst: "Chief Assistant",
 };
 
 export default function Sidebar({ role, assignedSites = [] }) {
@@ -44,7 +73,7 @@ export default function Sidebar({ role, assignedSites = [] }) {
   const navItems = NAV[role] ?? [];
 
   // For land managers, append their assigned sites under "My Sites"
-  const managerSiteItems = role === "land_manager"
+  const managerSiteItems = ["land_manager", "chief", "chief_asst"].includes(role)
     ? SITES.filter((s) => assignedSites.includes(s.slug)).map((s) => ({
         label: s.name,
         href: `/manager/sites/${s.slug}`,
@@ -89,7 +118,7 @@ export default function Sidebar({ role, assignedSites = [] }) {
         {/* Role badge */}
         <div className="px-5 py-3 border-b border-white/10">
           <span className="text-xs font-medium uppercase tracking-wider text-white/40">
-            {role === "sysadmin" ? "System Admin" : role === "agent" ? "Property Agent" : "Land Manager"}
+            {ROLE_LABELS[role] ?? "Dashboard"}
           </span>
         </div>
 

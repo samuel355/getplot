@@ -1,6 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { supabase } from "@/utils/supabase/client";
 import { getSiteBySlug } from "@/lib/sites";
+import { getUserSites } from "@/lib/roles";
 import Link from "next/link";
 import StatCard from "@/app/_components/ui/StatCard";
 import { MapPin, TrendingUp, ArrowRight } from "lucide-react";
@@ -22,7 +23,7 @@ async function getSiteStats(table) {
 
 export default async function ManagerPage() {
   const user = await currentUser();
-  const assignedSlugs = (user?.publicMetadata?.sites ?? []);
+  const assignedSlugs = getUserSites(user);
   const firstName = user?.firstName ?? "Manager";
 
   const sites = assignedSlugs.map(getSiteBySlug).filter(Boolean);

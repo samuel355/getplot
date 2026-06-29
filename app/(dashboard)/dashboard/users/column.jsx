@@ -26,6 +26,9 @@ import {
 } from "@/components/ui/select";
 import { toast } from "react-toastify";
 import { useUser } from "@clerk/nextjs";
+import { SITES } from "@/lib/sites";
+
+const LAND_MANAGEMENT_ROLES = ["chief", "chief_asst", "land_manager"];
 
 export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
   const [user, setUser] = useState(null);
@@ -79,7 +82,7 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
       return;
     }
 
-    if ((role === "chief" || role === "chief_asst") && !area) {
+    if (LAND_MANAGEMENT_ROLES.includes(role) && !area) {
       setAreaError(true);
       toast.error("Select Area");
       setLoading(false);
@@ -179,8 +182,9 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
                       <SelectItem value="member">Normal User</SelectItem>
                       <SelectItem value="chief">Chief</SelectItem>
                       <SelectItem value="chief_asst">
-                        Chief/Owner Assitant
+                        Chief/Owner Assistant
                       </SelectItem>
+                      <SelectItem value="land_manager">Land Manager</SelectItem>
                       <SelectItem value="property_agent">
                         Property Agent
                       </SelectItem>
@@ -191,30 +195,28 @@ export function ViewUserDialog({ open, onOpenChange, userId, setDialogOpen }) {
                   <span className="text-red-600 text-xs"> Choose Role</span>
                 )}
               </div>
-              {(role === "chief" || role === "chief_asst") && (
+              {LAND_MANAGEMENT_ROLES.includes(role) && (
                 <div className="w-full flex items-center gap-4 mt-3">
                   <Label htmlFor="area" className="text-right">
-                    Area
+                    Site
                   </Label>
                   <Select onValueChange={(event) => setArea(event)}>
                     <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select Area" />
+                      <SelectValue placeholder="Select Site" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel>Areas</SelectLabel>
-                        <SelectItem value="asokore_mampong">
-                          Asokore Mampong
-                        </SelectItem>
-                        <SelectItem value="royal_court_estate">
-                          Royal Court Estate
-                        </SelectItem>
-                        <SelectItem value="legon_hills">Legon Hills</SelectItem>
+                        <SelectLabel>Sites</SelectLabel>
+                        {SITES.map((site) => (
+                          <SelectItem key={site.slug} value={site.slug}>
+                            {site.name}
+                          </SelectItem>
+                        ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
                   {areaError && (
-                    <span className="text-red-600 text-xs"> Assign Area</span>
+                    <span className="text-red-600 text-xs"> Assign site</span>
                   )}
                 </div>
               )}

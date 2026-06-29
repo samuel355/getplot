@@ -1,8 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import { Toaster as NewToaster } from "@/components/ui/toaster";
-import { ToastContainer } from "react-toastify";
+import ClientToasters from "@/app/_components/ClientToasters";
 import "react-toastify/dist/ReactToastify.css";
 
 export const metadata = {
@@ -22,9 +20,7 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <body className="font-[Outfit,sans-serif] antialiased">
           {children}
-          <Toaster />
-          <NewToaster />
-          <ToastContainer position="top-right" autoClose={4000} />
+          <ClientToasters />
         </body>
       </html>
     </ClerkProvider>

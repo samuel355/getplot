@@ -596,7 +596,7 @@ function PlotPopup({ plot, site, canManage, canEdit, onClose, onStatusSaved }) {
             </Link>
           </>
         )}
-        <Link href={`/contact?plot=${encodeURIComponent(plotNo)}&site=${encodeURIComponent(site.name)}`} className="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50">
+        <Link href={`/sites/${site.slug}/plot/${plot.id}/interest`} className="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50">
           <HeartHandshake className="h-3 w-3" /> Interest
         </Link>
         <a href={`tel:${CONTACT_PHONE}`} className="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50">

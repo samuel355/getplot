@@ -2,12 +2,10 @@
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import AdminLayout from "../(admin)/_components/admin-layout";
 import PropertyTable from "../(admin)/_components/property-table";
 import StatCards from "../(admin)/_components/stat-cards";
 import RejectionDialog from "../(admin)/_components/rejection-dialog";
 import useAdminPropertyStore from "../(admin)/_store/useAdminPropertyStore";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -25,16 +23,12 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  Badge,
-  PlusCircle,
 } from "lucide-react";
 import { BulkActionBar } from "../(admin)/_components/bulk-actions/bulk-action-bar";
 import { useToast } from "@/hooks/use-toast";
-import AuthCheck from "@/app/_components/AuthCheck";
 
 export default function AdminPropertiesPage() {
   const {
-    properties,
     filteredProperties,
     stats,
     loading,
@@ -56,113 +50,66 @@ export default function AdminPropertiesPage() {
   const userRole = user?.publicMetadata?.role;
   const userId = user?.id;
 
-  // Fetch properties on mount
   useEffect(() => {
     fetchProperties();
   }, [fetchProperties]);
 
-  // Handler for property approval
   const handleApproveProperty = async (propertyId) => {
     const result = await approveProperty(propertyId);
-
     if (result.success) {
-      toast({
-        title: "Success",
-        description: "Property has been approved",
-      });
-
-      // Send notification email (we'll implement this next)
+      toast({ title: "Property approved" });
       sendNotificationEmail(result.property, "approved");
     } else {
-      toast({
-        title: "Error",
-        description: result.error || "Failed to approve property",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: result.error, variant: "destructive" });
     }
   };
 
-  // Open rejection dialog
   const handleOpenRejectDialog = (property) => {
     setSelectedProperty(property);
     setRejectionReason("");
     setIsRejectionDialogOpen(true);
   };
 
-  // Handler for property rejection
   const handleRejectProperty = async () => {
     if (!selectedProperty) return;
-
     const result = await rejectProperty(selectedProperty.id, rejectionReason);
-
     if (result.success) {
       setIsRejectionDialogOpen(false);
-
-      toast({
-        title: "Success",
-        description: "Property has been rejected",
-      });
-
-      // Send notification email
+      toast({ title: "Property rejected" });
       sendNotificationEmail(result.property, "rejected", rejectionReason);
     } else {
-      toast({
-        title: "Error",
-        description: result.error || "Failed to reject property",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: result.error, variant: "destructive" });
     }
   };
 
-  // Notification email sending
   const sendNotificationEmail = async (property, status, reason = null) => {
     try {
-      const response = await fetch("/api/admin/send-email", {
+      await fetch("/api/admin/send-email", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          property: property,
+          property,
           propertyId: property.id,
           propertyOwnerId: property.user_id,
-          userId: userId,
-          userRole: userRole,
-
-          emailType:
-            status === "approved" ? "property-approved" : "property-rejected",
+          userId,
+          userRole,
+          emailType: status === "approved" ? "property-approved" : "property-rejected",
           rejectionReason: reason,
         }),
       });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to send notification");
-      }
-
-      toast({
-        title: "Notification Sent",
-        description: `Email notification sent to property owner`,
-      });
     } catch (error) {
       console.error("Error sending notification:", error);
-      toast({
-        title: "Error",
-        description: "Failed to send notification email",
-        variant: "destructive",
-      });
     }
   };
 
-  // Generate stats for display
   const statsData = [
     {
-      title: "Total Properties",
+      title: "Total",
       value: stats.total,
-      icon: <Building className="h-4 w-4 text-muted-foreground" />,
+      icon: <Building className="h-4 w-4 text-slate-400" />,
     },
     {
-      title: "Pending Approval",
+      title: "Pending",
       value: stats.pending,
       icon: <Clock className="h-4 w-4 text-amber-500" />,
     },
@@ -179,158 +126,100 @@ export default function AdminPropertiesPage() {
   ];
 
   return (
-    <AuthCheck>
-      <AdminLayout>
-        <div className="flex-1 p-6 space-y-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">
-                Property Management
-              </h1>
-              <p className="text-muted-foreground">
-                Review, approve, and manage property listings
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button asChild>
-                <Link href="/properties/list">
-                  <Building className="mr-2 h-4 w-4" />
-                  View My Listings
-                </Link>
-              </Button>
-            </div>
-          </div>
-
-          {/* Stats cards */}
-          <StatCards stats={statsData} />
-
-          {/* Filters */}
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search properties..."
-                className="w-full pl-8"
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <div className="flex gap-2">
-              <Select defaultValue="all" onValueChange={setFilterType}>
-                <SelectTrigger className="w-[160px]">
-                  <Filter className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder="Property Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="house">Houses</SelectItem>
-                  <SelectItem value="land">Land</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select defaultValue="newest" onValueChange={setSortOrder}>
-                <SelectTrigger className="w-[160px]">
-                  <ArrowUpDown className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder="Sort By" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="newest">Newest First</SelectItem>
-                  <SelectItem value="oldest">Oldest First</SelectItem>
-                  <SelectItem value="price-high">
-                    Price (High to Low)
-                  </SelectItem>
-                  <SelectItem value="price-low">Price (Low to High)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Tabs and Table */}
-          <Tabs
-            defaultValue="pending"
-            value={currentTab}
-            onValueChange={setTab}
-          >
-            <TabsList>
-              <TabsTrigger value="all" className="flex gap-2 items-center">
-                All{" "}
-                <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
-                  {stats.total}
-                </span>
-              </TabsTrigger>
-              <TabsTrigger value="pending" className="flex gap-2 items-center">
-                <Clock className="h-4 w-4" />
-                Pending{" "}
-                <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
-                  {stats.pending}
-                </span>
-              </TabsTrigger>
-              <TabsTrigger value="approved" className="flex gap-2 items-center">
-                <CheckCircle className="h-4 w-4" />
-                Approved{" "}
-                <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
-                  {stats.approved}
-                </span>
-              </TabsTrigger>
-              <TabsTrigger value="rejected" className="flex gap-2 items-center">
-                <XCircle className="h-4 w-4" />
-                Rejected{" "}
-                <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium">
-                  {stats.rejected}
-                </span>
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="pending" className="mt-6">
-              <PropertyTable
-                properties={filteredProperties}
-                approveProperty={handleApproveProperty}
-                openRejectDialog={handleOpenRejectDialog}
-                emptyMessage="No pending properties found"
-              />
-            </TabsContent>
-
-            <TabsContent value="approved" className="mt-6">
-              <PropertyTable
-                properties={filteredProperties}
-                approveProperty={handleApproveProperty}
-                openRejectDialog={handleOpenRejectDialog}
-                hideActions
-                emptyMessage="No approved properties found"
-              />
-            </TabsContent>
-
-            <TabsContent value="rejected" className="mt-6">
-              <PropertyTable
-                properties={filteredProperties}
-                approveProperty={handleApproveProperty}
-                openRejectDialog={handleOpenRejectDialog}
-                hideActions
-                emptyMessage="No rejected properties found"
-              />
-            </TabsContent>
-
-            <TabsContent value="all" className="mt-6">
-              <PropertyTable
-                properties={filteredProperties}
-                approveProperty={handleApproveProperty}
-                openRejectDialog={handleOpenRejectDialog}
-                emptyMessage="No properties found"
-              />
-            </TabsContent>
-          </Tabs>
-
-          {/* Rejection Dialog */}
-          <RejectionDialog
-            isOpen={isRejectionDialogOpen}
-            setIsOpen={setIsRejectionDialogOpen}
-            selectedProperty={selectedProperty}
-            rejectionReason={rejectionReason}
-            setRejectionReason={setRejectionReason}
-            onReject={handleRejectProperty}
-          />
-          <BulkActionBar />
+    <div className="space-y-6">
+      {/* Page header */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900">All Properties</h1>
+          <p className="text-sm text-slate-400 mt-0.5">
+            Review, approve, and manage property listings
+          </p>
         </div>
-      </AdminLayout>
-    </AuthCheck>
+      </div>
+
+      {/* Stats */}
+      <StatCards stats={statsData} />
+
+      {/* Filters */}
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+          <Input
+            type="search"
+            placeholder="Search properties…"
+            className="pl-9"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className="flex gap-2">
+          <Select defaultValue="all" onValueChange={setFilterType}>
+            <SelectTrigger className="w-40">
+              <Filter className="mr-2 h-4 w-4 text-slate-400" />
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="house">Houses</SelectItem>
+              <SelectItem value="land">Land</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select defaultValue="newest" onValueChange={setSortOrder}>
+            <SelectTrigger className="w-44">
+              <ArrowUpDown className="mr-2 h-4 w-4 text-slate-400" />
+              <SelectValue placeholder="Sort" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="newest">Newest First</SelectItem>
+              <SelectItem value="oldest">Oldest First</SelectItem>
+              <SelectItem value="price-high">Price: High → Low</SelectItem>
+              <SelectItem value="price-low">Price: Low → High</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Tabs + Table */}
+      <Tabs defaultValue="pending" value={currentTab} onValueChange={setTab}>
+        <TabsList className="bg-slate-100">
+          {[
+            { value: "all", label: "All", count: stats.total },
+            { value: "pending", label: "Pending", count: stats.pending },
+            { value: "approved", label: "Approved", count: stats.approved },
+            { value: "rejected", label: "Rejected", count: stats.rejected },
+          ].map(({ value, label, count }) => (
+            <TabsTrigger key={value} value={value} className="gap-1.5">
+              {label}
+              <span className="rounded-full bg-white px-1.5 py-0.5 text-xs font-medium text-slate-600 shadow-sm">
+                {count}
+              </span>
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
+        {["pending", "approved", "rejected", "all"].map((tab) => (
+          <TabsContent key={tab} value={tab} className="mt-4">
+            <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+              <PropertyTable
+                properties={filteredProperties}
+                approveProperty={handleApproveProperty}
+                openRejectDialog={handleOpenRejectDialog}
+                hideActions={tab === "approved" || tab === "rejected"}
+                emptyMessage={`No ${tab === "all" ? "" : tab} properties found`}
+              />
+            </div>
+          </TabsContent>
+        ))}
+      </Tabs>
+
+      <RejectionDialog
+        isOpen={isRejectionDialogOpen}
+        setIsOpen={setIsRejectionDialogOpen}
+        selectedProperty={selectedProperty}
+        rejectionReason={rejectionReason}
+        setRejectionReason={setRejectionReason}
+        onReject={handleRejectProperty}
+      />
+      <BulkActionBar />
+    </div>
   );
 }

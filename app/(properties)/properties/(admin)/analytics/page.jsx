@@ -1,13 +1,24 @@
 "use client";
 
 import { useEffect } from "react";
+import dynamic from "next/dynamic";
 import AdminLayout from "../_components/admin-layout";
-import { TrendChart } from "../_components/analytics/trend-chart";
-import { LocationChart } from "../_components/analytics/location-chart";
-import { PropertyTypeChart } from "../_components/analytics/property-type-chart";
 import { StatsCards } from "../_components/analytics/stats-cards";
 import useAnalyticsStore from "../_store/useAnalyticsStore";
 import AuthCheck from "@/app/_components/AuthCheck";
+
+const TrendChart = dynamic(
+  () => import("../_components/analytics/trend-chart").then((mod) => mod.TrendChart),
+  { ssr: false, loading: () => <ChartSkeleton /> },
+);
+const LocationChart = dynamic(
+  () => import("../_components/analytics/location-chart").then((mod) => mod.LocationChart),
+  { ssr: false, loading: () => <ChartSkeleton /> },
+);
+const PropertyTypeChart = dynamic(
+  () => import("../_components/analytics/property-type-chart").then((mod) => mod.PropertyTypeChart),
+  { ssr: false, loading: () => <ChartSkeleton /> },
+);
 
 export default function AnalyticsPage() {
   const {
@@ -72,4 +83,8 @@ export default function AnalyticsPage() {
       </AdminLayout>
     </AuthCheck>
   );
+}
+
+function ChartSkeleton() {
+  return <div className="h-80 animate-pulse rounded-lg bg-white shadow" />;
 }

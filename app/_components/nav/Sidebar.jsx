@@ -56,7 +56,7 @@ export default function Sidebar({ role, assignedSites = [] }) {
   return (
     <>
       {/* Mobile top bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-[#05014c] text-white flex items-center justify-between px-4 shadow-md">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-brand-navy text-white flex items-center justify-between px-4 shadow-md">
         <Link href="/" className="flex items-center">
           <LogoLateral variant="light" height={28} />
         </Link>
@@ -76,7 +76,7 @@ export default function Sidebar({ role, assignedSites = [] }) {
       {/* Sidebar panel */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-64 bg-[#05014c] text-white flex flex-col transition-transform duration-200",
+          "fixed top-0 left-0 z-50 h-full w-64 bg-brand-navy text-white flex flex-col transition-transform duration-200",
           "md:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
@@ -134,7 +134,7 @@ function SidebarLink({ item, pathname, onClick, sub }) {
         "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
         sub && "pl-6 text-xs",
         active
-          ? "bg-white text-[#05014c]"
+          ? "bg-white text-brand-navy"
           : "text-white/70 hover:text-white hover:bg-white/10"
       )}
     >

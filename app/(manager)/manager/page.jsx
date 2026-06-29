@@ -48,7 +48,7 @@ export default async function ManagerPage() {
             <StatCard label="Available" value={available} icon={TrendingUp} color="text-green-600" bg="bg-green-50" />
           </div>
 
-          <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
+          <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b">
               <h2 className="font-semibold text-gray-900">Your Sites</h2>
             </div>
@@ -57,11 +57,11 @@ export default async function ManagerPage() {
                 <Link
                   key={site.slug}
                   href={`/manager/sites/${site.slug}`}
-                  className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors group"
+                  className="flex items-center justify-between px-6 py-4 hover:bg-slate-50 transition-colors group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-[#05014c]/5 rounded-lg flex items-center justify-center">
-                      <MapPin className="w-4 h-4 text-[#05014c]" />
+                    <div className="w-8 h-8 bg-brand-navy/5 rounded-lg flex items-center justify-center">
+                      <MapPin className="w-4 h-4 text-brand-navy" />
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 text-sm">{site.name}</p>
@@ -71,7 +71,7 @@ export default async function ManagerPage() {
                   <div className="flex items-center gap-6 text-sm">
                     <span className="text-gray-500">{site.total} plots</span>
                     <span className="text-green-600 font-medium">{site.available} avail.</span>
-                    <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-[#05014c] transition-colors" />
+                    <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-brand-navy transition-colors" />
                   </div>
                 </Link>
               ))}
@@ -79,7 +79,7 @@ export default async function ManagerPage() {
           </div>
         </>
       ) : (
-        <div className="bg-white rounded-2xl border p-12 text-center text-gray-400">
+        <div className="bg-white rounded-lg border p-12 text-center text-gray-400">
           <MapPin className="w-10 h-10 mx-auto mb-3 opacity-30" />
           <p className="text-sm">No sites assigned yet. Contact your admin.</p>
         </div>

@@ -26,17 +26,17 @@ export default async function AgentListingsPage() {
         </div>
         <Link
           href="/agent/listings/new"
-          className="inline-flex items-center gap-2 bg-[#05014c] text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-[#05014c]/90 transition-colors"
+          className="inline-flex items-center gap-2 bg-brand-navy text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-brand-navy/90 transition-colors"
         >
           <PlusCircle className="w-4 h-4" /> Add Listing
         </Link>
       </div>
 
-      <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
         {listings.length ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-slate-50 border-b">
                 <tr>
                   {["Title", "Type", "Listing", "Price", "Region", "Status", "Actions"].map((h) => (
                     <th key={h} className="text-left px-5 py-3 font-medium text-gray-500 whitespace-nowrap">{h}</th>
@@ -45,7 +45,7 @@ export default async function AgentListingsPage() {
               </thead>
               <tbody className="divide-y">
                 {listings.map((l) => (
-                  <tr key={l.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={l.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-5 py-3.5 font-medium text-gray-900 max-w-[200px] truncate">{l.title}</td>
                     <td className="px-5 py-3.5 text-gray-600 capitalize">{l.type}</td>
                     <td className="px-5 py-3.5 text-gray-600 capitalize">{l.listing_type}</td>
@@ -55,7 +55,7 @@ export default async function AgentListingsPage() {
                     <td className="px-5 py-3.5 text-gray-600">{l.region ?? "—"}</td>
                     <td className="px-5 py-3.5"><StatusPill status={l.status} /></td>
                     <td className="px-5 py-3.5">
-                      <Link href={`/agent/listings/${l.id}`} className="text-[#05014c] hover:underline text-xs font-medium">
+                      <Link href={`/agent/listings/${l.id}`} className="text-brand-navy hover:underline text-xs font-medium">
                         Edit
                       </Link>
                     </td>
@@ -67,7 +67,7 @@ export default async function AgentListingsPage() {
         ) : (
           <div className="py-20 text-center text-gray-400">
             <p className="text-sm mb-2">No listings yet.</p>
-            <Link href="/agent/listings/new" className="text-[#05014c] text-sm hover:underline">
+            <Link href="/agent/listings/new" className="text-brand-navy text-sm hover:underline">
               Create your first listing →
             </Link>
           </div>

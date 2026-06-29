@@ -1,342 +1,270 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  MapPin,
-  CheckCircle,
-  Mail,
   Building2,
-  ShieldCheck,
+  CheckCircle,
+  ClipboardCheck,
+  MapPin,
   Phone,
-  Users,
+  ShieldCheck,
   TrendingUp,
-  ChevronRight,
 } from "lucide-react";
 import PublicHeader from "@/app/_components/nav/PublicHeader";
 import Footer from "@/app/_components/Footer";
 import { SITES } from "@/lib/sites";
 
+const STATS = [
+  { value: "9", label: "Verified land sites" },
+  { value: "500+", label: "Land plots" },
+  { value: "2", label: "Active cities" },
+  { value: "100%", label: "Mapped inventory" },
+];
+
+const PROCESS = [
+  {
+    icon: MapPin,
+    title: "Inspect the map",
+    desc: "Open any site, review plot boundaries, status colors, size, price, and location context.",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Choose an action",
+    desc: "Reserve, buy, express interest, or call the office directly from each plot popup.",
+  },
+  {
+    icon: Building2,
+    title: "Plan payment",
+    desc: "Receive payment instructions, discuss flexible payment options, and complete documentation with expert support.",
+  },
+];
+
+const TRUST = [
+  { icon: ShieldCheck, title: "Verified land sites", desc: "Land inventory is reviewed before appearing on the platform." },
+  { icon: MapPin, title: "GIS mapped", desc: "Plot boundaries are visible on interactive Google Maps." },
+  { icon: TrendingUp, title: "Affordable prices", desc: "Compare pricing and status labels before making an enquiry." },
+  { icon: Phone, title: "Expert consultation", desc: "Speak with the team before, during, or after selection." },
+];
+
 export default function LandingPage() {
-  const kumasi = SITES.filter((s) => s.location === "Kumasi");
-  const accra = SITES.filter((s) => s.location === "Accra");
+  const kumasi = SITES.filter((site) => site.location === "Kumasi");
+  const accra = SITES.filter((site) => site.location === "Accra");
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex min-h-screen flex-col bg-white">
       <PublicHeader />
 
-      {/* ── HERO ─────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex items-center bg-[#05014c] overflow-hidden">
-        {/* Background texture */}
-        <div className="absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }}
-        />
-        {/* Glow blobs */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 w-full">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left */}
+      <main>
+        <section className="bg-brand-navy text-white">
+          <div className="mx-auto grid min-h-[calc(100vh-80px)] max-w-7xl grid-cols-1 items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8">
             <div>
-              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-sm text-white/80 mb-8">
-                <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
-                Trusted land management across Ghana
-              </div>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] mb-6">
-                Own Your
-                <span className="block text-orange-400">Land in Ghana</span>
-                <span className="block text-white/60 text-3xl sm:text-4xl lg:text-5xl mt-1 font-medium">
-                  the right way.
-                </span>
+              <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white/75">
+                <span className="h-2 w-2 rounded-full bg-brand-teal" />
+                Verified land listings across Ghana
+              </p>
+              <h1 className="mt-7 max-w-3xl text-4xl font-bold leading-tight tracking-normal sm:text-5xl lg:text-6xl">
+                Find Your Perfect Land In Ghana
               </h1>
-
-              <p className="text-white/60 text-lg leading-relaxed mb-10 max-w-lg">
-                Browse verified plot sites across Kumasi and Accra. Choose your plot, fill in your details, and receive bank payment instructions by email. Simple as that.
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/65">
+                Explore verified listings across all regions with ease. Whether you&apos;re seeking residential, commercial, or investment opportunities, we connect you with the right land to build your dreams.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 mb-12">
-                <Link
-                  href="/sites/trabuom-sector-1"
-                  className="inline-flex items-center justify-center gap-2 bg-orange-400 hover:bg-orange-500 text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-orange-400/30 hover:shadow-orange-400/50 hover:-translate-y-0.5"
-                >
-                  Browse Sites <ArrowRight className="w-4 h-4" />
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Link href="/marketplace" className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-teal px-6 py-3 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
+                  Browse Listed Properties <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link
-                  href="/marketplace"
-                  className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 border border-white/20 text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-200"
-                >
-                  View Marketplace
+                <Link href="/sites/trabuom-sector-1" className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">
+                  Browse our Land locations
                 </Link>
-              </div>
-
-              {/* Trust indicators */}
-              <div className="flex items-center gap-6 flex-wrap">
-                {[
-                  { icon: ShieldCheck, label: "Verified Sites" },
-                  { icon: Users, label: "100+ Clients" },
-                  { icon: MapPin, label: "9 Locations" },
-                ].map(({ icon: Icon, label }) => (
-                  <div key={label} className="flex items-center gap-2 text-white/50 text-sm">
-                    <Icon className="w-4 h-4 text-orange-400" />
-                    {label}
-                  </div>
-                ))}
               </div>
             </div>
 
-            {/* Right: site cards preview */}
-            <div className="hidden lg:block">
-              <div className="relative">
-                {/* Main card */}
-                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 mb-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-orange-400 rounded-lg flex items-center justify-center">
-                        <MapPin className="w-4 h-4 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-white text-sm">Trabuom Sector 1</p>
-                        <p className="text-white/40 text-xs">Kumasi</p>
-                      </div>
-                    </div>
-                    <span className="bg-green-500/20 text-green-400 text-xs font-medium px-2.5 py-1 rounded-full">Available</span>
+            <div className="rounded-lg border border-white/15 bg-white/[0.06] p-5 shadow-2xl shadow-black/10">
+              <div className="rounded-lg border border-white/10 bg-white p-5 text-brand-navy">
+                <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Featured site</p>
+                    <h2 className="mt-1 text-xl font-bold">Trabuom Sector 1</h2>
+                    <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-500">
+                      <MapPin className="h-4 w-4" /> Kumasi
+                    </p>
                   </div>
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      { label: "Total Plots", val: "80+" },
-                      { label: "Available", val: "60+" },
-                      { label: "Sold", val: "20+" },
-                    ].map(({ label, val }) => (
-                      <div key={label} className="bg-white/5 rounded-xl p-3 text-center">
-                        <p className="text-white font-bold text-lg">{val}</p>
-                        <p className="text-white/40 text-xs">{label}</p>
-                      </div>
-                    ))}
-                  </div>
+                  <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">Active</span>
                 </div>
 
-                {/* Floating cards */}
-                <div className="grid grid-cols-2 gap-4">
-                  {SITES.slice(1, 5).map((site) => (
-                    <Link
-                      key={site.slug}
-                      href={`/sites/${site.slug}`}
-                      className="bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-colors group"
-                    >
-                      <MapPin className="w-4 h-4 text-orange-400 mb-2" />
-                      <p className="text-white text-sm font-medium leading-tight">{site.name}</p>
-                      <p className="text-white/40 text-xs mt-1 flex items-center gap-1">
-                        {site.location} <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </p>
-                    </Link>
+                <div className="grid grid-cols-3 gap-3 py-5">
+                  {[
+                    { label: "Inventory", value: "80+" },
+                    { label: "Available", value: "60+" },
+                    { label: "Mapped", value: "100%" },
+                  ].map((item) => (
+                    <div key={item.label} className="rounded-lg bg-slate-50 p-3">
+                      <p className="text-lg font-bold">{item.value}</p>
+                      <p className="mt-1 text-xs text-slate-500">{item.label}</p>
+                    </div>
                   ))}
                 </div>
+
+                <div className="space-y-3">
+                  {["Verified Land Sites", "Affordable Prices", "Flexible Payment Plans", "Expert Consultation"].map((item) => (
+                    <div key={item} className="flex items-center gap-2 text-sm text-slate-600">
+                      <CheckCircle className="h-4 w-4 text-brand-teal" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+
+                <Link href="/sites/trabuom-sector-1" className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-navy px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-navy/90">
+                  Open map <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 60L1440 60L1440 30C1200 60 900 0 720 0C540 0 240 60 0 30L0 60Z" fill="white" />
-          </svg>
-        </div>
-      </section>
-
-      {/* ── STATS BAR ────────────────────────────────── */}
-      <section className="py-12 bg-white border-b">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { value: "9", label: "Verified Sites" },
-              { value: "500+", label: "Total Plots" },
-              { value: "2", label: "Cities" },
-              { value: "100%", label: "Legit Titles" },
-            ].map(({ value, label }) => (
-              <div key={label}>
-                <p className="text-3xl font-bold text-[#05014c]">{value}</p>
-                <p className="text-sm text-gray-500 mt-1">{label}</p>
+        <section className="border-b border-slate-200 bg-white">
+          <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px bg-slate-200 px-4 sm:px-6 md:grid-cols-4 lg:px-8">
+            {STATS.map((stat) => (
+              <div key={stat.label} className="bg-white py-8 text-center">
+                <p className="text-3xl font-bold text-brand-navy">{stat.value}</p>
+                <p className="mt-1 text-sm text-slate-500">{stat.label}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ── SITES GRID ───────────────────────────────── */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-sm font-semibold text-orange-500 uppercase tracking-wider mb-2">Our Locations</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">Browse Our Land Sites</h2>
-            <p className="text-gray-500 mt-3 max-w-xl mx-auto">
-              Every site is verified with GIS-mapped plots. Click any site to view the interactive map and available plots.
-            </p>
+        <section className="bg-slate-50 py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <SectionHeader eyebrow="Land locations" title="Browse our verified land locations" desc="Open any location to inspect available, reserved, sold, hold, and other plot statuses on Google Maps." />
+            <SiteGroup title="Kumasi" sites={kumasi} />
+            <SiteGroup title="Accra" sites={accra} />
           </div>
+        </section>
 
-          {/* Kumasi */}
-          <div className="mb-10">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-6 h-6 rounded-full bg-[#05014c] flex items-center justify-center">
-                <MapPin className="w-3.5 h-3.5 text-white" />
-              </div>
-              <h3 className="font-semibold text-gray-800">Kumasi</h3>
-              <div className="flex-1 h-px bg-gray-200" />
-              <span className="text-sm text-gray-400">{kumasi.length} sites</span>
+        <section className="bg-white py-20">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wider text-brand-teal">Listed properties</p>
+              <h2 className="mt-3 text-3xl font-bold text-brand-navy">Residential, commercial, and investment land opportunities.</h2>
+              <p className="mt-4 text-slate-500 leading-7">
+                Search listed opportunities with filters for category, region, rooms, price, and map view.
+              </p>
+              <Link href="/marketplace" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-brand-navy px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-navy/90">
+                Explore marketplace <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {kumasi.map((site) => <SiteCard key={site.slug} site={site} />)}
-            </div>
-          </div>
-
-          {/* Accra */}
-          <div>
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-6 h-6 rounded-full bg-[#05014c] flex items-center justify-center">
-                <MapPin className="w-3.5 h-3.5 text-white" />
-              </div>
-              <h3 className="font-semibold text-gray-800">Accra</h3>
-              <div className="flex-1 h-px bg-gray-200" />
-              <span className="text-sm text-gray-400">{accra.length} sites</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {accra.map((site) => <SiteCard key={site.slug} site={site} />)}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ─────────────────────────────── */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-sm font-semibold text-orange-500 uppercase tracking-wider mb-2">Process</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">How to Own a Plot</h2>
-            <p className="text-gray-500 mt-3">No complicated processes. Just these simple steps.</p>
-          </div>
-
-          <div className="relative">
-            {/* Connector line */}
-            <div className="hidden md:block absolute top-10 left-[calc(16.67%+20px)] right-[calc(16.67%+20px)] h-0.5 bg-gray-100" />
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              {[
-                {
-                  step: "01",
-                  icon: MapPin,
-                  title: "Browse & Pick",
-                  desc: "Explore our interactive site maps. Click any green (available) plot to view its size, price, and details.",
-                },
-                {
-                  step: "02",
-                  icon: Mail,
-                  title: "Submit Your Details",
-                  desc: "Fill in your name, email, and contact info. We send you bank account details with your plot info via email.",
-                },
-                {
-                  step: "03",
-                  icon: Building2,
-                  title: "Pay & Claim",
-                  desc: "Make payment to the provided bank account. Visit our office with your receipt to finalise ownership.",
-                },
-              ].map(({ step, icon: Icon, title, desc }) => (
-                <div key={step} className="text-center relative">
-                  <div className="w-20 h-20 bg-[#05014c] rounded-2xl flex items-center justify-center mx-auto mb-5 relative">
-                    <Icon className="w-8 h-8 text-white" />
-                    <span className="absolute -top-2 -right-2 w-6 h-6 bg-orange-400 text-white text-xs font-bold rounded-full flex items-center justify-center">
-                      {step}
-                    </span>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              {["List view", "Map view", "Advanced filters"].map((item) => (
+                <div key={item} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+                  <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-navy/5">
+                    <CheckCircle className="h-5 w-5 text-brand-navy" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 text-lg mb-2">{title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+                  <h3 className="font-semibold text-slate-900">{item}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-500">Built for quick comparison and confident enquiry.</p>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ── WHY CHOOSE US ────────────────────────────── */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-sm font-semibold text-orange-500 uppercase tracking-wider mb-2">Why Us</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">The GetOnePlot Difference</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { icon: ShieldCheck, title: "Legitimate Titles", desc: "All plots are registered with full documentation and legal backing." },
-              { icon: MapPin, title: "GIS-Mapped Plots", desc: "Every plot is mapped with GPS coordinates. See exactly what you're buying." },
-              { icon: TrendingUp, title: "Transparent Pricing", desc: "No hidden fees. Price shown is what you pay — nothing more." },
-              { icon: Phone, title: "24/7 Support", desc: "Call us anytime on 0322008282 or +233 54 855 4216." },
-            ].map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-white rounded-2xl border p-6 hover:shadow-md transition-shadow">
-                <div className="w-11 h-11 bg-[#05014c]/5 rounded-xl flex items-center justify-center mb-4">
-                  <Icon className="w-5 h-5 text-[#05014c]" />
+        <section className="border-y border-slate-200 bg-white py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <SectionHeader eyebrow="Process" title="A clear route from search to ownership" desc="The platform keeps each step focused: inspect, choose, submit details, then complete documentation." />
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+              {PROCESS.map(({ icon: Icon, title, desc }, index) => (
+                <div key={title} className="rounded-lg border border-slate-200 bg-white p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-navy text-white">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className="text-sm font-bold text-brand-teal">0{index + 1}</span>
+                  </div>
+                  <h3 className="mt-5 font-semibold text-slate-900">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-500">{desc}</p>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ── CTA BANNER ───────────────────────────────── */}
-      <section className="py-20 px-4 bg-[#05014c] relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }}
-        />
-        <div className="absolute top-0 right-0 w-80 h-80 bg-orange-400/10 rounded-full blur-3xl" />
-        <div className="relative max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Ready to own land in Ghana?
-          </h2>
-          <p className="text-white/60 text-lg mb-8 max-w-xl mx-auto">
-            Browse our verified sites, pick your plot, and get started today. No account required to browse.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/sites/trabuom-sector-1"
-              className="inline-flex items-center justify-center gap-2 bg-orange-400 hover:bg-orange-500 text-white font-semibold px-8 py-3.5 rounded-xl transition-all shadow-lg shadow-orange-400/20 hover:-translate-y-0.5"
-            >
-              Browse Sites <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 border border-white/20 text-white font-semibold px-8 py-3.5 rounded-xl transition-all"
-            >
-              Contact Us
-            </Link>
+        <section className="bg-slate-50 py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <SectionHeader eyebrow="Why GetOnePlot" title="Everything you need to choose land with confidence" />
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {TRUST.map(({ icon: Icon, title, desc }) => (
+                <div key={title} className="rounded-lg border border-slate-200 bg-white p-6">
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-brand-navy/5">
+                    <Icon className="h-5 w-5 text-brand-navy" />
+                  </div>
+                  <h3 className="font-semibold text-slate-900">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-500">{desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <section className="bg-brand-navy py-16 text-white">
+          <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+            <div>
+              <h2 className="text-3xl font-bold">Start with verified land locations.</h2>
+              <p className="mt-2 max-w-2xl text-white/60">Review land sites, compare listed opportunities, and speak with an expert before you commit.</p>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link href="/sites/trabuom-sector-1" className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-teal px-5 py-3 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
+                Browse sites <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href="/contact" className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">
+                Contact office
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
 
       <Footer />
     </div>
   );
 }
 
+function SectionHeader({ eyebrow, title, desc }) {
+  return (
+    <div className="mb-10 max-w-3xl">
+      <p className="text-sm font-semibold uppercase tracking-wider text-brand-teal">{eyebrow}</p>
+      <h2 className="mt-3 text-3xl font-bold text-brand-navy sm:text-4xl">{title}</h2>
+      {desc && <p className="mt-3 text-slate-500 leading-7">{desc}</p>}
+    </div>
+  );
+}
+
+function SiteGroup({ title, sites }) {
+  return (
+    <div className="mb-10 last:mb-0">
+      <div className="mb-4 flex items-center gap-3">
+        <h3 className="font-semibold text-slate-900">{title}</h3>
+        <div className="h-px flex-1 bg-slate-200" />
+        <span className="text-sm text-slate-400">{sites.length} sites</span>
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {sites.map((site) => <SiteCard key={site.slug} site={site} />)}
+      </div>
+    </div>
+  );
+}
+
 function SiteCard({ site }) {
   return (
-    <Link
-      href={`/sites/${site.slug}`}
-      className="group bg-white border border-gray-100 rounded-2xl p-5 hover:shadow-lg hover:border-[#05014c]/20 hover:-translate-y-0.5 transition-all duration-200"
-    >
-      <div className="flex items-start justify-between mb-4">
-        <div className="w-9 h-9 bg-[#05014c]/5 rounded-xl flex items-center justify-center group-hover:bg-[#05014c] transition-colors duration-200">
-          <MapPin className="w-4 h-4 text-[#05014c] group-hover:text-white transition-colors duration-200" />
+    <Link href={`/sites/${site.slug}`} className="group rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-teal/50 hover:shadow-md">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-navy/5 transition-colors group-hover:bg-brand-navy">
+          <MapPin className="h-5 w-5 text-brand-navy transition-colors group-hover:text-white" />
         </div>
-        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-orange-400 transition-colors duration-200" />
+        <ArrowRight className="h-4 w-4 text-slate-300 transition-colors group-hover:text-brand-teal" />
       </div>
-      <h3 className="font-semibold text-gray-900 text-sm mb-1">{site.name}</h3>
-      <p className="text-xs text-gray-400 leading-relaxed">{site.description}</p>
-      <div className="mt-4 pt-3 border-t border-gray-50 flex items-center justify-between">
-        <span className="inline-flex items-center gap-1 text-xs text-[#05014c] font-medium">
-          <MapPin className="w-3 h-3" /> {site.location}
-        </span>
-        <span className="text-xs text-gray-400 group-hover:text-[#05014c] transition-colors">View map →</span>
+      <h3 className="mt-5 font-semibold text-slate-900">{site.name}</h3>
+      <p className="mt-1 text-sm text-slate-500">{site.description}</p>
+      <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-xs">
+        <span className="font-semibold text-brand-navy">{site.location}</span>
+        <span className="text-slate-400 group-hover:text-brand-navy">Open map</span>
       </div>
     </Link>
   );

@@ -18,9 +18,9 @@ import Footer from "@/app/_components/Footer";
 import { SITES } from "@/lib/sites";
 
 const HERO_METRICS = [
-  { value: "9", label: "Verified land sites" },
-  { value: "500+", label: "Mapped plots" },
-  { value: "2", label: "Active cities" },
+  { value: "Verified", label: "Land locations" },
+  { value: "Mapped", label: "Plot boundaries" },
+  { value: "Guided", label: "Purchase support" },
 ];
 
 const STATUS_ITEMS = [
@@ -121,7 +121,7 @@ export default function LandingPage() {
 
               <div className="mt-10 grid max-w-xl grid-cols-3 border-y border-white/15">
                 {HERO_METRICS.map((item) => (
-                  <div key={item.label} className="border-r border-white/15 py-5 last:border-r-0">
+                  <div key={item.label} className="border-r border-white/15 px-4 py-6 last:border-r-0 sm:px-6">
                     <p className="text-2xl font-bold text-white">{item.value}</p>
                     <p className="mt-1 text-xs text-white/55 sm:text-sm">{item.label}</p>
                   </div>
@@ -325,7 +325,7 @@ function LandMapShowcase() {
       <div className="flex items-center justify-between border-b border-slate-200 pb-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Live site map</p>
-          <h2 className="mt-1 font-bold text-brand-navy">Trabuom Sector 1</h2>
+          <h2 className="mt-1 font-bold text-brand-navy">Verified Land Site</h2>
         </div>
         <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1">
           <span className="rounded-md bg-white px-3 py-1 text-xs font-semibold text-brand-navy shadow-sm">Map</span>

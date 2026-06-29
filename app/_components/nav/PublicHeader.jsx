@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
-import { Menu, X, ChevronDown, MapPin } from "lucide-react";
+import { useUser, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { Menu, X, ChevronDown, MapPin, LayoutDashboard, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SITES } from "@/lib/sites";
 import { LogoLateral } from "@/app/_components/Logo";
@@ -12,10 +12,21 @@ import { LogoLateral } from "@/app/_components/Logo";
 export default function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sitesOpen, setSitesOpen] = useState(false);
+  const [dashOpen, setDashOpen] = useState(false);
   const pathname = usePathname();
+  const { user } = useUser();
+  const role = user?.publicMetadata?.role;
 
+  const isAdmin = role === "sysadmin" || role === "admin";
   const isActive = (href) => pathname === href;
   const isSiteActive = SITES.some((s) => pathname === `/sites/${s.slug}`);
+  const isDashActive = pathname.startsWith("/dashboard") || pathname.startsWith("/properties") || pathname.startsWith("/agent") || pathname.startsWith("/manager");
+
+  const singleDashHref =
+    isAdmin ? null
+    : role === "agent" ? "/agent"
+    : role === "land_manager" ? "/manager"
+    : null;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-brand-navy text-white shadow-lg shadow-brand-navy/20">
@@ -66,6 +77,57 @@ export default function PublicHeader() {
 
             <NavLink href="/marketplace" active={isActive("/marketplace")}>Marketplace</NavLink>
             <NavLink href="/contact" active={isActive("/contact")}>Contact</NavLink>
+
+            {/* Dashboard — visible when signed in */}
+            <SignedIn>
+              {isAdmin ? (
+                <div className="relative" onMouseLeave={() => setDashOpen(false)}>
+                  <button
+                    onMouseEnter={() => setDashOpen(true)}
+                    className={cn(
+                      "flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-white/10",
+                      isDashActive && "bg-white/15 text-brand-teal"
+                    )}
+                  >
+                    Dashboard <ChevronDown className="w-4 h-4" />
+                  </button>
+                  {dashOpen && (
+                    <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-xl overflow-hidden border border-slate-200">
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setDashOpen(false)}
+                        className={cn(
+                          "flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors border-b border-slate-100",
+                          pathname.startsWith("/dashboard") && "bg-brand-teal/10"
+                        )}
+                      >
+                        <LayoutDashboard className="w-4 h-4 text-brand-navy mt-0.5 shrink-0" />
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">Land Dashboard</p>
+                          <p className="text-xs text-gray-500">Sites, plots & users</p>
+                        </div>
+                      </Link>
+                      <Link
+                        href="/properties"
+                        onClick={() => setDashOpen(false)}
+                        className={cn(
+                          "flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors",
+                          pathname.startsWith("/properties") && "bg-brand-teal/10"
+                        )}
+                      >
+                        <Building2 className="w-4 h-4 text-brand-navy mt-0.5 shrink-0" />
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">Properties Dashboard</p>
+                          <p className="text-xs text-gray-500">Marketplace listings</p>
+                        </div>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              ) : singleDashHref ? (
+                <NavLink href={singleDashHref} active={isDashActive}>Dashboard</NavLink>
+              ) : null}
+            </SignedIn>
           </nav>
 
           {/* Right: auth */}
@@ -113,6 +175,26 @@ export default function PublicHeader() {
           </div>
           <MobileNavLink href="/marketplace" onClick={() => setMobileOpen(false)}>Marketplace</MobileNavLink>
           <MobileNavLink href="/contact" onClick={() => setMobileOpen(false)}>Contact</MobileNavLink>
+
+          {/* Dashboard in mobile */}
+          <SignedIn>
+            {isAdmin ? (
+              <div className="pt-1 pb-1">
+                <p className="text-xs uppercase tracking-wider text-white/40 px-3 py-1">Dashboard</p>
+                <MobileNavLink href="/dashboard" onClick={() => setMobileOpen(false)}>
+                  Land Dashboard
+                </MobileNavLink>
+                <MobileNavLink href="/properties" onClick={() => setMobileOpen(false)}>
+                  Properties Dashboard
+                </MobileNavLink>
+              </div>
+            ) : singleDashHref ? (
+              <MobileNavLink href={singleDashHref} onClick={() => setMobileOpen(false)}>
+                Dashboard
+              </MobileNavLink>
+            ) : null}
+          </SignedIn>
+
           <div className="pt-2 flex gap-2">
             <SignedIn>
               <UserButton afterSignOutUrl="/" />

@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "@/app/_components/Header";
+import PublicHeader from "@/app/_components/nav/PublicHeader";
 import Footer from "@/app/_components/Footer";
 
 export const metadata = {
@@ -12,7 +12,7 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <Header />
+      <PublicHeader />
       <main className="flex-grow pt-24 md:pt-32 bg-gray-50/30">
         <div className="max-w-4xl mx-auto px-6 py-16 bg-white shadow-sm border border-gray-100 rounded-xl my-8">
           <header className="border-b border-gray-100 pb-8 mb-12">

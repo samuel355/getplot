@@ -6,11 +6,12 @@
  * variant="dark"   → original dark fills for light backgrounds
  */
 
-const TEAL = "#68c9cd";
+const TEAL = "#30D5C7";
+const NAVY = "#0B0E2D";
 
 export function LogoLateral({ variant = "light", className = "", height = 36 }) {
-  const navyFill = variant === "light" ? "#ffffff" : "#191347";
-  const textFill = variant === "light" ? "#ffffff" : "#231f20";
+  const navyFill = variant === "light" ? "#ffffff" : NAVY;
+  const textFill = variant === "light" ? "#ffffff" : NAVY;
 
   return (
     <svg
@@ -55,8 +56,8 @@ export function LogoLateral({ variant = "light", className = "", height = 36 }) 
 }
 
 export function LogoMain({ variant = "light", className = "", height = 80 }) {
-  const navyFill = variant === "light" ? "#ffffff" : "#191347";
-  const textFill = variant === "light" ? "#ffffff" : "#231f20";
+  const navyFill = variant === "light" ? "#ffffff" : NAVY;
+  const textFill = variant === "light" ? "#ffffff" : NAVY;
 
   return (
     <svg

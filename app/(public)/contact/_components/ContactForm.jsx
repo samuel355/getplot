@@ -38,7 +38,7 @@ export default function ContactForm() {
   if (sent) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center mb-4">
+        <div className="w-14 h-14 bg-green-50 rounded-lg flex items-center justify-center mb-4">
           <CheckCircle className="w-7 h-7 text-green-500" />
         </div>
         <h3 className="font-semibold text-gray-900 mb-2">Message Sent!</h3>
@@ -76,7 +76,7 @@ export default function ContactForm() {
       <Button
         type="submit"
         disabled={loading}
-        className="w-full bg-[#05014c] hover:bg-[#05014c]/90 text-white font-semibold py-2.5"
+        className="w-full bg-brand-navy hover:bg-brand-navy/90 text-white font-semibold py-2.5"
       >
         {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
         Send Message

@@ -106,7 +106,7 @@ export default function ReservePlotPage() {
   if (!site || !plot) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <div className="max-w-2xl mx-auto px-4 py-10">
         {/* Back */}
         <Link href={`/sites/${slug}`} className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 mb-6 transition-colors">
@@ -115,7 +115,7 @@ export default function ReservePlotPage() {
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 bg-[#05014c] rounded-xl flex items-center justify-center">
+          <div className="w-10 h-10 bg-brand-navy rounded-lg flex items-center justify-center">
             <MapPin className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -128,7 +128,7 @@ export default function ReservePlotPage() {
         <Stepper steps={STEPS} current={step} />
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-sm border p-6 mt-6">
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mt-6">
           {/* Step 0: Plot details */}
           {step === 0 && (
             <div className="space-y-5">
@@ -177,14 +177,14 @@ export default function ReservePlotPage() {
           {step === 2 && (
             <div className="space-y-5">
               <h2 className="font-semibold text-gray-900">Confirm Details</h2>
-              <div className="bg-gray-50 rounded-xl p-4 space-y-3">
+              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
                 <p className="text-xs font-semibold uppercase text-gray-400 tracking-wider">Plot</p>
                 <InfoRow label="Plot No." value={`Plot No. ${plotNo}`} />
                 <InfoRow label="Site" value={site.name} />
                 <InfoRow label="Total Amount" value={`GHS ${Number(plotAmount).toLocaleString()}`} />
                 <InfoRow label="Initial Deposit" value={`GHS ${Number(form.initialDeposit).toLocaleString()}`} />
               </div>
-              <div className="bg-gray-50 rounded-xl p-4 space-y-3">
+              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
                 <p className="text-xs font-semibold uppercase text-gray-400 tracking-wider">Client</p>
                 <InfoRow label="Name" value={`${form.firstname} ${form.lastname}`} />
                 <InfoRow label="Email" value={form.email} />
@@ -204,11 +204,11 @@ export default function ReservePlotPage() {
               <ArrowLeft className="w-4 h-4 mr-1" /> Previous
             </Button>
             {step < 2 ? (
-              <Button onClick={handleNext} className="bg-[#05014c] hover:bg-[#05014c]/90">
+              <Button onClick={handleNext} className="bg-brand-navy hover:bg-brand-navy/90">
                 Next <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             ) : (
-              <Button onClick={handleSubmit} disabled={submitting} className="bg-orange-400 hover:bg-orange-500">
+              <Button onClick={handleSubmit} disabled={submitting} className="bg-brand-teal hover:bg-brand-teal/90 text-brand-navy">
                 {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null}
                 Confirm Reservation
               </Button>
@@ -226,13 +226,13 @@ function Stepper({ steps, current }) {
       {steps.map((label, i) => (
         <div key={label} className="flex items-center flex-1 last:flex-none">
           <div className="flex flex-col items-center">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors ${i <= current ? "bg-[#05014c] text-white" : "bg-gray-200 text-gray-400"}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors ${i <= current ? "bg-brand-navy text-white" : "bg-gray-200 text-gray-400"}`}>
               {i + 1}
             </div>
-            <span className={`text-xs mt-1 ${i <= current ? "text-[#05014c] font-medium" : "text-gray-400"}`}>{label}</span>
+            <span className={`text-xs mt-1 ${i <= current ? "text-brand-navy font-medium" : "text-gray-400"}`}>{label}</span>
           </div>
           {i < steps.length - 1 && (
-            <div className={`flex-1 h-0.5 mx-2 mb-4 ${i < current ? "bg-[#05014c]" : "bg-gray-200"}`} />
+            <div className={`flex-1 h-0.5 mx-2 mb-4 ${i < current ? "bg-brand-navy" : "bg-gray-200"}`} />
           )}
         </div>
       ))}
@@ -261,7 +261,7 @@ function FormField({ label, name, type = "text", value, onChange, placeholder })
 function PageLoader() {
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <Loader2 className="w-8 h-8 text-[#05014c] animate-spin" />
+      <Loader2 className="w-8 h-8 text-brand-navy animate-spin" />
     </div>
   );
 }

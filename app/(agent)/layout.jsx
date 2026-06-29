@@ -8,7 +8,7 @@ export default async function AgentLayout({ children }) {
 
   const user = await currentUser();
   const role = user?.publicMetadata?.role;
-  if (role !== "agent" && role !== "sysadmin") redirect("/unauthorized");
+  if (role !== "agent" && role !== "sysadmin" && role !== "admin") redirect("/unauthorized");
 
   return (
     <div className="flex min-h-screen bg-slate-50">

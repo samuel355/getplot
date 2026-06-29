@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/utils/supabase/client";
 import { getSiteBySlug } from "@/lib/sites";
-import { buyPlot } from "@/app/_actions/buy-plot";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Loader2, MapPin } from "lucide-react";
@@ -77,6 +76,7 @@ export default function BuyPlotPage() {
 
   const handleSubmit = async () => {
     setSubmitting(true);
+    const { buyPlot } = await import("@/app/_actions/buy-plot");
     await buyPlot(
       plot,
       plotAmount,

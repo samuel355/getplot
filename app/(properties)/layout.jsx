@@ -15,11 +15,14 @@ export default async function PropertiesLayout({ children }) {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen flex-col w-full">
-        <Header />
-        <div className="flex flex-1">
-          <Sidebar />
-          <main className="flex-1 p-4 md:p-6 mt-16">{children}</main>
+      <div className="flex min-h-screen bg-slate-50">
+        <Sidebar />
+        <div className="flex flex-1 flex-col min-h-screen">
+          <Header />
+          <div className="h-16 shrink-0" />
+          <main className="flex-1 px-4 py-6 md:px-6 md:py-8">
+            {children}
+          </main>
         </div>
       </div>
     </SidebarProvider>

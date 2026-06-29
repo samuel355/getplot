@@ -1,325 +1,205 @@
 "use client";
-import React from "react";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import {
+  ChevronDown,
   Globe,
+  HeartHandshake,
   LandPlot,
   LayoutDashboard,
-  Users2,
   LogOut,
-  X,
+  MapPin,
+  Users2,
 } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { UserButton, useUser, useClerk } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { cn } from "@/lib/utils";
+
+const SITES = [
+  { href: "/dashboard/trabuom",         label: "Trabuom Sector 1" },
+  { href: "/dashboard/new-trabuom",     label: "Trabuom Sector 2" },
+  { href: "/dashboard/nthc",            label: "NTHC Kwadaso" },
+  { href: "/dashboard/legon-hills",     label: "East Legon Hills" },
+  { href: "/dashboard/dar-es-salaam",   label: "Dar Es Salaam" },
+  { href: "/dashboard/yabi",            label: "Yabi" },
+  { href: "/dashboard/berekuso",        label: "Berekuso" },
+  { href: "/dashboard/asokore-mampong", label: "Asokore Mampong" },
+  { href: "/dashboard/royal-court-estate", label: "Royal Court Estate" },
+];
+
+const INTERESTS = [
+  { href: "/dashboard/trabuom-interested-clients",         label: "Trabuom S1" },
+  { href: "/dashboard/new-trabuom-interested-clients",     label: "Trabuom S2" },
+  { href: "/dashboard/kwadaso-interested-clients",         label: "NTHC Kwadaso" },
+  { href: "/dashboard/legon-hills-interested-clients",     label: "East Legon Hills" },
+  { href: "/dashboard/adense-interested-clients",          label: "Dar Es Salaam" },
+  { href: "/dashboard/yabi-interested-clients",            label: "Yabi" },
+  { href: "/dashboard/berekuso-interested-clients",        label: "Berekuso" },
+  { href: "/dashboard/asokore-mampong-interested-clients", label: "Asokore Mampong" },
+  { href: "/dashboard/royal-court-interested-clients",     label: "Royal Court Estate" },
+];
+
+function NavLink({ href, label, icon: Icon, pathname }) {
+  const active = pathname === href;
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors",
+        active
+          ? "bg-brand-teal/15 text-brand-navy font-semibold"
+          : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+      )}
+    >
+      {Icon && <Icon className="h-4 w-4 shrink-0" />}
+      <span className="truncate">{label}</span>
+      {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-brand-teal shrink-0" />}
+    </Link>
+  );
+}
+
+function CollapsibleSection({ title, icon: Icon, children, defaultOpen = false, isAnyChildActive }) {
+  const [open, setOpen] = useState(defaultOpen || isAnyChildActive);
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors",
+          isAnyChildActive
+            ? "text-brand-navy font-semibold"
+            : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+        )}
+      >
+        {Icon && <Icon className="h-4 w-4 shrink-0" />}
+        <span className="flex-1 text-left truncate">{title}</span>
+        <ChevronDown className={cn("h-3.5 w-3.5 shrink-0 transition-transform", open && "rotate-180")} />
+      </button>
+      {open && (
+        <div className="ml-3 mt-0.5 border-l border-slate-200 pl-3 space-y-0.5">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
 
 const Sidebar = () => {
   const { user } = useUser();
   const { signOut } = useClerk();
-  const path = usePathname();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const search = searchParams.get("table");
 
-  const menuLinks = [
-    {
-      id: 1,
-      href: "/dashboard",
-      title: "Dashboard",
-      query: "dashboard",
-      icon: <LayoutDashboard className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 2,
-      href: "/dashboard/royal-court-estate",
-      title: "Royal Court Estate",
-      query: "royal-court-estate",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 3,
-      href: "/dashboard/trabuom",
-      title: "Trabuom",
-      query: "trabuom",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 3.1,
-      href: "/dashboard/new-trabuom",
-      title: "New Trabuom",
-      query: "new-trabuom",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 4,
-      href: "/dashboard/nthc",
-      title: "NTHC Kwadaso",
-      query: "nthc",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 5,
-      href: "/dashboard/legon-hills",
-      title: "East Legon Hills",
-      query: "legon-hills",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 6,
-      href: "/dashboard/dar-es-salaam",
-      title: "Dar Es Salaam",
-      query: "dar-es-salaam",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 7,
-      href: "/dashboard/yabi",
-      title: "Yabi",
-      query: "yabi",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 8,
-      href: "/dashboard/berekuso",
-      title: "Berekuso",
-      query: "berekuso",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 9,
-      href: "/dashboard/asokore-mampong",
-      title: "Asokore Mampong",
-      query: "asokore-mampong",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-  ];
-
-  const Button = ({ children, onClick, className }) => (
-    <button onClick={onClick} className={className}>
-      {children}
-    </button>
-  );
-
-  const sidebarContent = (
-    <div className="flex flex-col h-screen">
-      <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 shrink-0">
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-2 font-semibold"
-        >
-          <LayoutDashboard className="h-6 w-6" />
-          <span>SITES DASHBOARD</span>
-        </Link>
-      </div>
-
-      <div className="flex-1 overflow-y-auto">
-        <nav className="grid items-start px-2 lg:px-4 gap-1 py-2">
-          <div className="my-4">
-            <Link
-              href={"/"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              <Globe className="h-4 w-4" /> <span>Website</span>
-            </Link>
-            <Link
-              href={"/properties/all-properties"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/properties/all-properties"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              <LayoutDashboard className="h-4 w-4" />{" "}
-              <span>Properties Dashboard</span>
-            </Link>
-          </div>
-
-          <hr className="my-2" />
-
-          <div className="my-4">
-            {menuLinks.map((link) => {
-              const isActive =
-                path === link.href || search?.includes(link?.query);
-              return (
-                <Link
-                  key={link.id}
-                  href={link.href}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  }`}
-                >
-                  {link.icon}
-                  {link.title}
-                </Link>
-              );
-            })}
-          </div>
-
-          <hr className="my-2" />
-
-          <div className="my-4">
-            <Link
-              href={"/dashboard/users"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/dashboard/users"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              <Users2 className="h-4 w-4" /> <span>Users</span>
-            </Link>
-            <h2 className="mb-2 mt-4 px-1 text-xs font-semibold tracking-tight text-muted-foreground">
-              Interested Clients
-            </h2>
-            <Link
-              href={"/dashboard/royal-court-interested-clients"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/dashboard/royal-court-interested-clients"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              Royal Court Interested clients
-            </Link>
-            <Link
-              href={"/dashboard/trabuom-interested-clients"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/dashboard/trabuom-interested-clients"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              Trabuom Interested clients
-            </Link>
-            <Link
-              href={"/dashboard/new-trabuom-interested-clients"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/dashboard/new-trabuom-interested-clients"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              New Trabuom Interested clients
-            </Link>
-            <Link
-              href={"/dashboard/kwadaso-interested-clients"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/dashboard/kwadaso-interested-clients"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              Kwadaso Interested clients
-            </Link>
-            <Link
-              href={"/dashboard/legon-hills-interested-clients"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/dashboard/legon-hills-interested-clients"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              Legon Hills Interested clients
-            </Link>
-            <Link
-              href={"/dashboard/adense-interested-clients"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/dashboard/adense-interested-clients"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              Adense Interested clients
-            </Link>
-            <Link
-              href={"/dashboard/yabi-interested-clients"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/dashboard/yabi-interested-clients"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              Yabi Interested clients
-            </Link>
-            <Link
-              href={"/dashboard/berekuso-interested-clients"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/dashboard/berekuso-interested-clients"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              Berekuso Interested clients
-            </Link>
-            <Link
-              href={"/dashboard/asokore-mampong-interested-clients"}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                path === "/dashboard/asokore-mampong-interested-clients"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
-            >
-              Asokore Mampong Interested clients
-            </Link>
-          </div>
-        </nav>
-      </div>
-
-      <div className="p-4 border-t shrink-0">
-        <div className="flex items-center gap-3 py-2">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
-            <img
-              src={user?.imageUrl}
-              alt={user?.fullName || "User"}
-              className="rounded-full h-8 w-8"
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium leading-none">
-              {user?.fullName || user?.username}
-            </span>
-            <span className="text-xs text-muted-foreground">
-              {user?.emailAddresses[0]?.emailAddress}
-            </span>
-          </div>
-        </div>
-        <Button
-          className="mt-2 w-full justify-start flex gap-2 p-2 rounded-md hover:bg-gray-100"
-          onClick={() => signOut()}
-        >
-          <LogOut className="h-4 w-4" />
-          Log out
-        </Button>
-      </div>
-    </div>
-  );
+  const isSiteActive = (href) => pathname === href || search?.includes(href.replace("/dashboard/", ""));
+  const isInterestActive = (href) => pathname === href;
+  const anySiteActive = SITES.some((s) => isSiteActive(s.href));
+  const anyInterestActive = INTERESTS.some((s) => isInterestActive(s.href));
 
   return (
-    <>
-      <div className="hidden md:block md:w-64 border-r bg-muted/40 fixed h-screen z-10">
-        {sidebarContent}
+    <div className="flex flex-col h-screen w-full border-r bg-white">
+      {/* Header */}
+      <div className="flex h-[60px] items-center gap-3 border-b px-5 shrink-0 bg-brand-navy">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-teal">
+          <LandPlot className="h-4 w-4 text-brand-navy" />
+        </div>
+        <div>
+          <p className="text-sm font-bold text-white leading-none">GetOnePlot</p>
+          <p className="text-[10px] text-white/50 mt-0.5">Land Dashboard</p>
+        </div>
       </div>
 
-      <div className="hidden md:block md:w-64 flex-shrink-0"></div>
+      {/* Nav */}
+      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
 
-      {/* Mobile sidebar overlay - will be implemented when useSidebar context is available */}
-      {/* {isMobileOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          <div
-            className="fixed inset-0 bg-black/50"
-            onClick={() => setIsMobileOpen(false)}
-          ></div>
+        {/* Overview */}
+        <div className="space-y-0.5">
+          <NavLink href="/dashboard" label="Overview" icon={LayoutDashboard} pathname={pathname} />
+          <NavLink href="/" label="Public Website" icon={Globe} pathname={pathname} />
+          <NavLink href="/properties/all-properties" label="Properties Dashboard" icon={MapPin} pathname={pathname} />
+        </div>
 
-          <div className="fixed inset-y-0 left-0 w-64 border-r bg-background">
-            {sidebarContent}
+        <div className="border-t border-slate-100" />
+
+        {/* Land Sites */}
+        <div className="space-y-0.5">
+          <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Land Sites</p>
+          <CollapsibleSection
+            title="All Sites"
+            icon={LandPlot}
+            defaultOpen={true}
+            isAnyChildActive={anySiteActive}
+          >
+            {SITES.map((s) => (
+              <Link
+                key={s.href}
+                href={s.href}
+                className={cn(
+                  "block py-1.5 px-2 rounded-md text-sm transition-colors truncate",
+                  isSiteActive(s.href)
+                    ? "text-brand-navy font-semibold bg-brand-teal/10"
+                    : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
+                )}
+              >
+                {s.label}
+              </Link>
+            ))}
+          </CollapsibleSection>
+        </div>
+
+        <div className="border-t border-slate-100" />
+
+        {/* People */}
+        <div className="space-y-0.5">
+          <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-400">People</p>
+          <NavLink href="/dashboard/users" label="Users" icon={Users2} pathname={pathname} />
+          <CollapsibleSection
+            title="Interested Clients"
+            icon={HeartHandshake}
+            isAnyChildActive={anyInterestActive}
+          >
+            {INTERESTS.map((s) => (
+              <Link
+                key={s.href}
+                href={s.href}
+                className={cn(
+                  "block py-1.5 px-2 rounded-md text-sm transition-colors truncate",
+                  isInterestActive(s.href)
+                    ? "text-brand-navy font-semibold bg-brand-teal/10"
+                    : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
+                )}
+              >
+                {s.label}
+              </Link>
+            ))}
+          </CollapsibleSection>
+        </div>
+      </div>
+
+      {/* User footer */}
+      <div className="border-t px-4 py-3 shrink-0 bg-slate-50">
+        <div className="flex items-center gap-3">
+          <img
+            src={user?.imageUrl}
+            alt={user?.fullName || "User"}
+            className="h-8 w-8 rounded-full object-cover border border-slate-200"
+          />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-slate-800 truncate leading-none">{user?.fullName || user?.username}</p>
+            <p className="text-xs text-slate-400 truncate mt-0.5">{user?.emailAddresses[0]?.emailAddress}</p>
           </div>
         </div>
-      )} */}
-    </>
+        <button
+          onClick={() => signOut()}
+          className="mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-500 transition-colors hover:bg-red-50 hover:text-red-600"
+        >
+          <LogOut className="h-4 w-4" />
+          Sign out
+        </button>
+      </div>
+    </div>
   );
 };
 

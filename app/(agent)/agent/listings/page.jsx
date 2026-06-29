@@ -25,7 +25,7 @@ export default async function AgentListingsPage() {
           <p className="text-sm text-gray-500 mt-1">{listings.length} listing{listings.length !== 1 ? "s" : ""}</p>
         </div>
         <Link
-          href="/agent/listings/new"
+          href="/properties/add-listing"
           className="inline-flex items-center gap-2 bg-brand-navy text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-brand-navy/90 transition-colors"
         >
           <PlusCircle className="w-4 h-4" /> Add Listing
@@ -55,7 +55,7 @@ export default async function AgentListingsPage() {
                     <td className="px-5 py-3.5 text-gray-600">{l.region ?? "—"}</td>
                     <td className="px-5 py-3.5"><StatusPill status={l.status} /></td>
                     <td className="px-5 py-3.5">
-                      <Link href={`/agent/listings/${l.id}`} className="text-brand-navy hover:underline text-xs font-medium">
+                      <Link href={`/properties/edit-property/${l.id}`} className="text-brand-navy hover:underline text-xs font-medium">
                         Edit
                       </Link>
                     </td>
@@ -67,8 +67,8 @@ export default async function AgentListingsPage() {
         ) : (
           <div className="py-20 text-center text-gray-400">
             <p className="text-sm mb-2">No listings yet.</p>
-            <Link href="/agent/listings/new" className="text-brand-navy text-sm hover:underline">
-              Create your first listing →
+            <Link href="/properties/add-listing" className="text-brand-navy text-sm hover:underline">
+              Create your first listing
             </Link>
           </div>
         )}

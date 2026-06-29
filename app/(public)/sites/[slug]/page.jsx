@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getSiteBySlug } from "@/lib/sites";
-import SiteView from "./_components/SiteView";
+import SiteViewLoader from "./_components/SiteViewLoader";
 
 export async function generateMetadata({ params }) {
   const site = getSiteBySlug(params.slug);
@@ -15,5 +15,5 @@ export default function SitePage({ params }) {
   const site = getSiteBySlug(params.slug);
   if (!site) notFound();
 
-  return <SiteView site={site} />;
+  return <SiteViewLoader site={site} />;
 }

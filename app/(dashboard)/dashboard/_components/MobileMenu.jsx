@@ -1,313 +1,220 @@
 "use client";
-import React from "react";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import {
-  DraftingCompass,
+  ChevronDown,
+  Globe,
+  HeartHandshake,
   LandPlot,
   LayoutDashboard,
+  LogOut,
+  MapPin,
   Menu,
   Users2,
   X,
 } from "lucide-react";
-
-import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
+import { useClerk, useUser, UserButton } from "@clerk/nextjs";
+import { cn } from "@/lib/utils";
+
+const SITES = [
+  { href: "/dashboard/trabuom",            label: "Trabuom Sector 1" },
+  { href: "/dashboard/new-trabuom",        label: "Trabuom Sector 2" },
+  { href: "/dashboard/nthc",               label: "NTHC Kwadaso" },
+  { href: "/dashboard/legon-hills",        label: "East Legon Hills" },
+  { href: "/dashboard/dar-es-salaam",      label: "Dar Es Salaam" },
+  { href: "/dashboard/yabi",               label: "Yabi" },
+  { href: "/dashboard/berekuso",           label: "Berekuso" },
+  { href: "/dashboard/asokore-mampong",    label: "Asokore Mampong" },
+  { href: "/dashboard/royal-court-estate", label: "Royal Court Estate" },
+];
+
+const INTERESTS = [
+  { href: "/dashboard/trabuom-interested-clients",         label: "Trabuom S1" },
+  { href: "/dashboard/new-trabuom-interested-clients",     label: "Trabuom S2" },
+  { href: "/dashboard/kwadaso-interested-clients",         label: "NTHC Kwadaso" },
+  { href: "/dashboard/legon-hills-interested-clients",     label: "East Legon Hills" },
+  { href: "/dashboard/adense-interested-clients",          label: "Dar Es Salaam" },
+  { href: "/dashboard/yabi-interested-clients",            label: "Yabi" },
+  { href: "/dashboard/berekuso-interested-clients",        label: "Berekuso" },
+  { href: "/dashboard/asokore-mampong-interested-clients", label: "Asokore Mampong" },
+  { href: "/dashboard/royal-court-interested-clients",     label: "Royal Court Estate" },
+];
+
+function DrawerLink({ href, label, icon: Icon, pathname, onClick }) {
+  const active = pathname === href;
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={cn(
+        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+        active
+          ? "bg-brand-teal/15 text-brand-navy font-semibold"
+          : "text-slate-600 hover:bg-slate-100"
+      )}
+    >
+      {Icon && <Icon className="h-4 w-4 shrink-0" />}
+      <span>{label}</span>
+    </Link>
+  );
+}
+
+function DrawerSection({ title, icon: Icon, items, pathname, onLinkClick }) {
+  const isAnyActive = items.some((s) => pathname === s.href);
+  const [open, setOpen] = useState(isAnyActive);
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+          isAnyActive ? "text-brand-navy font-semibold" : "text-slate-600 hover:bg-slate-100"
+        )}
+      >
+        {Icon && <Icon className="h-4 w-4 shrink-0" />}
+        <span className="flex-1 text-left">{title}</span>
+        <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
+      </button>
+      {open && (
+        <div className="ml-4 mt-0.5 border-l border-slate-200 pl-3 space-y-0.5">
+          {items.map((s) => (
+            <Link
+              key={s.href}
+              href={s.href}
+              onClick={onLinkClick}
+              className={cn(
+                "block rounded-md px-2 py-2 text-sm transition-colors",
+                pathname === s.href
+                  ? "text-brand-navy font-semibold bg-brand-teal/10"
+                  : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
+              )}
+            >
+              {s.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const path = usePathname();
-
-  const menuLinks = [
-    {
-      id: 1,
-      href: "/dashboard",
-      title: "Dashboard",
-      icon: <LayoutDashboard className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 2,
-      href: "/dashboard/trabuom",
-      title: "Trabuom",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 2.1,
-      href: "/dashboard/new-trabuom",
-      title: "New Trabuom",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 3,
-      href: "/dashboard/royal-court-estate",
-      title: "Royal Court Estate",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 4,
-      href: "/dashboard/trabuom",
-      title: "Trabuom",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 5,
-      href: "/dashboard/nthc",
-      title: "NTHC Kwadaso",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 6,
-      href: "/dashboard/legon-hills",
-      title: "East Legon Hills",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 7,
-      href: "/dashboard/dar-es-salaam",
-      title: "Dar Es Salaam",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 8,
-      href: "/dashboard/berekuso",
-      title: "Berekuso",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 9,
-      href: "/dashboard/asokore-mampong",
-      title: "Asokore Mampong",
-      icon: <LandPlot className="w-4 h-4 ml-2" />,
-    },
-  ];
-  const sites = [
-    {
-      id: 1,
-      href: "/dashboard/royal-court-estate",
-      title: "Royal Court Estate",
-      icon: <DraftingCompass className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 2,
-      href: "/dashboard/nthc",
-      title: "NTHC",
-      icon: <DraftingCompass className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 3,
-      href: "/dashboard/dar-es-salaam",
-      title: "Dar Es Salaam",
-      icon: <DraftingCompass className="w-4 h-4 ml-2" />,
-    },
-    {
-      id: 4,
-      href: "/dashboard/trabuom",
-      title: "Trabuom",
-      icon: <DraftingCompass className="w-4 h-4 ml-2" />,
-    },
-  ];
+  const pathname = usePathname();
+  const { user, signOut } = useClerk();
+  const { user: clerkUser } = useUser();
+  const close = () => setIsOpen(false);
 
   return (
-    <div className="lg:hidden md:hidden flex items-center justify-between py-3 px-5 mobile-menu">
-      <Menu
-        className="w-5 h-5 text-gray-400 hover:text-gray-700"
-        onClick={() => setIsOpen(true)}
-      />
-
-      <div className="pt-2">
-        <UserButton />
+    <div className="flex items-center justify-between border-b bg-white px-4 py-3 md:hidden">
+      {/* Brand */}
+      <div className="flex items-center gap-2">
+        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-brand-navy">
+          <LandPlot className="h-3.5 w-3.5 text-white" />
+        </div>
+        <span className="text-sm font-bold text-brand-navy">GetOnePlot</span>
       </div>
 
+      <div className="flex items-center gap-3">
+        <UserButton />
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="rounded-md p-1.5 text-slate-600 hover:bg-slate-100 transition-colors"
+          aria-label="Open menu"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Overlay */}
       {isOpen && (
         <div
-          className={`absolute z-10 w-full h-screen overflow-hidden left-0 top-0 bg-black/20 transition-opacity duration-500 ease-in-out ${
-            isOpen
-              ? "opacity-100 translate-x-0 duration-200"
-              : "opacity-0 -translate-x-4 duration-200"
-          }`}
-          onClick={() => setIsOpen(false)}
-        >
-          <div
-            className={`md:w-[55%] w-[65%] p-4 h-[95vh] rounded-md bg-white m-2 z-20 transition-all duration-500 ease-in-out ${
-              isOpen
-                ? "opacity-100 translate-x-0 duration-200"
-                : "opacity-0 -translate-x-4 duration-200"
-            }`}
-          >
-            <X
-              className="w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-700"
-              onClick={() => setIsOpen(false)}
-            />
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+          onClick={close}
+        />
+      )}
 
-            {/* Add your content here */}
-            <div className="flex flex-col h-full justify-between">
-              <div>
-                <div className="border-b pb-3 pt-3">
-                  <h2 className="text-primary text-xl font-semibold text-center">
-                    Get One Plot
-                  </h2>
-                </div>
-
-                <div className="py-6">
-                  <h1 className="text-primary text-muted text-sm">
-                    Land Sites
-                  </h1>
-                </div>
-
-                <nav className="pt-2">
-                  <ul className="flex flex-col gap-1">
-                    {menuLinks.map((link) => (
-                      <li
-                        key={link.id}
-                        className={`p-1 hover:bg-gray-100 rounded-sm text-sm ${
-                          path === link.href && "bg-gray-100"
-                        }`}
-                      >
-                        <Link
-                          href={link.href}
-                          className={`relative flex items-center ${
-                            path === link.href && "font-semibold"
-                          }`}
-                        >
-                          {link.icon}
-                          {path === link.href && (
-                            <span className="absolute w-[3px] h-4 bg-primary left-0 top-[4px]"></span>
-                          )}
-                          <span className="ml-2">{link.title}</span>
-                        </Link>
-                      </li>
-                    ))}
-
-                    <li
-                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-5 ${
-                        path === "/dashboard/users" && "bg-gray-100"
-                      }`}
-                    >
-                      <Link
-                        href={"/dashboard/users"}
-                        className="flex gap-2 items-center"
-                      >
-                        {" "}
-                        <Users2 className="w-4 h-4" /> <span>Users</span>
-                      </Link>
-                    </li>
-                    <hr className="my-2" />
-                    <li
-                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-5 ${
-                        path === "/dashboard/royal-court-interested-clients" &&
-                        "bg-gray-100"
-                      }`}
-                    >
-                      <Link
-                        href={"/dashboard/royal-court-interested-clients"}
-                        className="flex gap-2 items-center"
-                      >
-                        Royal Court Estate Interested clients
-                      </Link>
-                    </li>
-                    <li
-                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                        path === "/dashboard/trabuom-interested-clients" &&
-                        "bg-gray-100"
-                      }`}
-                    >
-                      <Link
-                        href={"/dashboard/trabuom-interested-clients"}
-                        className="flex gap-2 items-center"
-                      >
-                        Trabuom Interested clients
-                      </Link>
-                    </li>
-                    <li
-                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                        path === "/dashboard/new-trabuom-interested-clients" &&
-                        "bg-gray-100"
-                      }`}
-                    >
-                      <Link
-                        href={"/dashboard/new-trabuom-interested-clients"}
-                        className="flex gap-2 items-center"
-                      >
-                        New Trabuom Interested clients
-                      </Link>
-                    </li>
-                    <li
-                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                        path === "/dashboard/kwadaso-interested-clients" &&
-                        "bg-gray-100"
-                      }`}
-                    >
-                      <Link
-                        href={"/dashboard/kwadaso-interested-clients"}
-                        className="flex gap-2 items-center"
-                      >
-                        Kwadaso Interested clients
-                      </Link>
-                    </li>
-                    <li
-                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                        path === "/dashboard/legon-hills-interested-clients" &&
-                        "bg-gray-100"
-                      }`}
-                    >
-                      <Link
-                        href={"/dashboard/legon-hills-interested-clients"}
-                        className="flex gap-2 items-center"
-                      >
-                        East Legon Hills Interested clients
-                      </Link>
-                    </li>
-                    <li
-                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                        path === "/dashboard/adense-interested-clients" &&
-                        "bg-gray-100"
-                      }`}
-                    >
-                      <Link
-                        href={"/dashboard/adense-interested-clients"}
-                        className="flex gap-2 items-center"
-                      >
-                        Adense Interested clients
-                      </Link>
-                    </li>
-                    <li
-                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                        path === "/dashboard/berekuso-interested-clients" &&
-                        "bg-gray-100"
-                      }`}
-                    >
-                      <Link
-                        href={"/dashboard/berekuso-interested-clients"}
-                        className="flex gap-2 items-center"
-                      >
-                        Berekuso Interested clients
-                      </Link>
-                    </li>
-                    <li
-                      className={`p-1 hover:bg-gray-100 rounded-sm text-sm mt-1 ${
-                        path === "/dashboard/asokore-mampong-interested-clients" &&
-                        "bg-gray-100"
-                      }`}
-                    >
-                      <Link
-                        href={"/dashboard/asokore-mampong-interested-clients"}
-                        className="flex gap-2 items-center"
-                      >
-                        Asokore Mampong Interested clients
-                      </Link>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-              <footer className="">
-                <p className="text-gray-500 text-center text-sm mb-3 font-light">
-                  All Rights Reserved @2024
-                </p>
-              </footer>
+      {/* Drawer */}
+      <div
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 w-[75vw] max-w-[300px] flex flex-col bg-white shadow-2xl transition-transform duration-300",
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        {/* Drawer header */}
+        <div className="flex h-14 items-center justify-between bg-brand-navy px-4 shrink-0">
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-brand-teal">
+              <LandPlot className="h-3.5 w-3.5 text-brand-navy" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-white leading-none">GetOnePlot</p>
+              <p className="text-[9px] text-white/50">Land Dashboard</p>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={close}
+            className="rounded-md p-1 text-white/60 hover:text-white transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
-      )}
+
+        {/* Nav */}
+        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-4">
+          {/* Overview */}
+          <div className="space-y-0.5">
+            <DrawerLink href="/dashboard" label="Overview" icon={LayoutDashboard} pathname={pathname} onClick={close} />
+            <DrawerLink href="/" label="Public Website" icon={Globe} pathname={pathname} onClick={close} />
+            <DrawerLink href="/properties/all-properties" label="Properties Dashboard" icon={MapPin} pathname={pathname} onClick={close} />
+          </div>
+
+          <div className="border-t border-slate-100" />
+
+          {/* Land Sites */}
+          <div>
+            <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Land Sites</p>
+            <DrawerSection title="All Sites" icon={LandPlot} items={SITES} pathname={pathname} onLinkClick={close} />
+          </div>
+
+          <div className="border-t border-slate-100" />
+
+          {/* People */}
+          <div className="space-y-0.5">
+            <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-400">People</p>
+            <DrawerLink href="/dashboard/users" label="Users" icon={Users2} pathname={pathname} onClick={close} />
+            <DrawerSection title="Interested Clients" icon={HeartHandshake} items={INTERESTS} pathname={pathname} onLinkClick={close} />
+          </div>
+        </div>
+
+        {/* User footer */}
+        <div className="border-t px-4 py-3 shrink-0 bg-slate-50">
+          <div className="flex items-center gap-3">
+            <img
+              src={clerkUser?.imageUrl}
+              alt={clerkUser?.fullName || "User"}
+              className="h-8 w-8 rounded-full object-cover border border-slate-200"
+            />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-slate-800 truncate leading-none">{clerkUser?.fullName || clerkUser?.username}</p>
+              <p className="text-xs text-slate-400 truncate mt-0.5">{clerkUser?.emailAddresses?.[0]?.emailAddress}</p>
+            </div>
+          </div>
+          <button
+            onClick={() => signOut()}
+            className="mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-500 transition-colors hover:bg-red-50 hover:text-red-600"
+          >
+            <LogOut className="h-4 w-4" />
+            Sign out
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

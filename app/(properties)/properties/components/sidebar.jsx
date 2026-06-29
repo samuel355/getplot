@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useUser, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -18,10 +18,67 @@ import {
   Clock,
   Store,
   Bookmark,
+  MapPin,
+  ChevronRight,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useClerk } from "@clerk/nextjs";
+import { cn } from "@/lib/utils";
 import { useSidebar } from "../contexts/sidebar-context";
+import { LogoLateral } from "@/app/_components/Logo";
+
+const USER_NAV = [
+  { name: "My Dashboard", href: "/properties/my-dashboard", icon: LayoutDashboard },
+  { name: "My Properties", href: "/properties/list", icon: Home },
+  { name: "Saved Properties", href: "/properties/saved", icon: Bookmark },
+  { name: "Market Place", href: "/market-place", icon: Store },
+  { name: "Add Property", href: "/properties/add-listing", icon: PlusCircle },
+];
+
+const ADMIN_NAV = [
+  { name: "Overview", href: "/properties", icon: LayoutDashboard, exact: true },
+  { name: "Lands Dashboard", href: "/dashboard", icon: MapPin, exact: true },
+  { name: "All Properties", href: "/properties/all-properties", icon: Building },
+  { name: "Advanced Search", href: "/properties/search", icon: Search },
+  { name: "Users", href: "/properties/users", icon: Users },
+  { name: "Analytics", href: "/properties/analytics", icon: BarChart4 },
+  { name: "Activity Logs", href: "/properties/activity", icon: Clock },
+  { name: "Settings", href: "/properties/settings", icon: Settings },
+];
+
+const SYSADMIN_NAV = [
+  { name: "System Logs", href: "/properties/system-logs", icon: FileText },
+];
+
+function NavLink({ item, pathname, onClick }) {
+  const active = item.exact
+    ? pathname === item.href
+    : pathname === item.href || pathname.startsWith(item.href + "/");
+  const Icon = item.icon;
+
+  return (
+    <Link
+      href={item.href}
+      onClick={onClick}
+      className={cn(
+        "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+        active
+          ? "bg-white text-brand-navy"
+          : "text-white/70 hover:text-white hover:bg-white/10"
+      )}
+    >
+      <Icon className="w-4 h-4 shrink-0" />
+      <span className="flex-1 truncate">{item.name}</span>
+      {active && <ChevronRight className="w-3 h-3 shrink-0" />}
+    </Link>
+  );
+}
+
+function SectionLabel({ children }) {
+  return (
+    <p className="px-3 pt-4 pb-1.5 text-xs font-semibold uppercase tracking-wider text-white/30 select-none">
+      {children}
+    </p>
+  );
+}
 
 export default function Sidebar() {
   const { user, isSignedIn } = useUser();
@@ -35,197 +92,110 @@ export default function Sidebar() {
     user?.publicMetadata?.role === "admin" ||
     user?.publicMetadata?.role === "sysadmin";
   const isSysAdmin = user?.publicMetadata?.role === "sysadmin";
-  const isChief = user?.publicMetadata?.role === "chief";
 
-  // Regular user navigation
-  const navigation = [
-    {
-      name: "My Dashboard",
-      href: "/properties/my-dashboard",
-      icon: LayoutDashboard,
-    },
-    { name: "My Properties", href: "/properties/list", icon: Home },
-    { name: "Saved Properties", href: "/properties/saved", icon: Bookmark },
-    { name: "Market Place", href: "/market-place", icon: Store },
-    { name: "Add Property", href: "/properties/add-listing", icon: PlusCircle },
-  ];
+  const close = () => setIsMobileOpen(false);
 
-  // Admin navigation with new routes
-  const adminNavigation = [
-    {
-      name: "Properties Dashboard",
-      href: "/properties",
-      icon: LayoutDashboard,
-    },
-    { name: "Lands Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    {
-      name: "All Properties",
-      href: "/properties/all-properties",
-      icon: Building,
-    },
-    { name: "Advanced Search", href: "/properties/search", icon: Search },
-    { name: "Users", href: "/properties/users", icon: Users },
-    { name: "Analytics", href: "/properties/analytics", icon: BarChart4 },
-    { name: "Activity Logs", href: "/properties/activity", icon: Clock },
-    { name: "Settings", href: "/properties/settings", icon: Settings },
-  ];
-
-  // System admin only navigation
-  const sysAdminNavigation = [
-    { name: "System Logs", href: "/properties/system-logs", icon: FileText },
-  ];
-
-  // The main sidebar content
-  const sidebarContent = (
-    <div className="flex flex-col h-screen">
-      <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 shrink-0">
-        <Link
-          href="/properties"
-          className="flex items-center gap-2 font-semibold"
-        >
-          <Building className="h-6 w-6" />
-          <span>PropManager</span>
+  const content = (
+    <div className="flex flex-col h-full bg-brand-navy text-white overflow-hidden">
+      {/* Logo header */}
+      <div className="flex items-center justify-between px-5 py-5 border-b border-white/10 shrink-0">
+        <Link href={isAdmin ? "/properties" : "/properties/my-dashboard"} onClick={close}>
+          <LogoLateral variant="light" height={28} />
         </Link>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="ml-auto md:hidden"
-          onClick={() => setIsMobileOpen(false)}
+        <button
+          className="md:hidden p-1.5 rounded-md hover:bg-white/10 transition-colors"
+          onClick={close}
         >
-          <X className="h-5 w-5" />
-        </Button>
+          <X className="w-4 h-4" />
+        </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
-        <nav className="grid items-start px-2 lg:px-4 gap-1 py-2">
-          {/* Regular navigation */}
-          <div className="my-4">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  }`}
-                  onClick={() => setIsMobileOpen(false)}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.name}
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* Admin navigation */}
-          {isAdmin && (
-            <div className="space-y-4">
-              <div className="px-3">
-                <h2 className="mb-2 px-1 text-xs font-semibold tracking-tight text-muted-foreground">
-                  Admin
-                </h2>
-                {adminNavigation.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                        isActive
-                          ? "bg-primary text-primary-foreground"
-                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                      }`}
-                      onClick={() => setIsMobileOpen(false)}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      {item.name}
-                    </Link>
-                  );
-                })}
-              </div>
-
-              {/* System Admin Only Section */}
-              {isSysAdmin && (
-                <div className="px-3">
-                  <h2 className="mb-2 px-1 text-xs font-semibold tracking-tight text-muted-foreground">
-                    System
-                  </h2>
-                  {sysAdminNavigation.map((item) => {
-                    const isActive = pathname === item.href;
-                    return (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                          isActive
-                            ? "bg-primary text-primary-foreground"
-                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                        }`}
-                        onClick={() => setIsMobileOpen(false)}
-                      >
-                        <item.icon className="h-4 w-4" />
-                        {item.name}
-                      </Link>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
-        </nav>
+      {/* Role badge */}
+      <div className="px-5 py-2.5 border-b border-white/10 shrink-0">
+        <span className="text-xs font-medium uppercase tracking-wider text-white/40">
+          {isSysAdmin ? "System Admin" : isAdmin ? "Administrator" : "Properties"}
+        </span>
       </div>
 
-      {/* User profile and logout */}
-      <div className="p-4 border-t shrink-0">
-        <div className="flex items-center gap-3 py-2">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
-            <img
-              src={user?.imageUrl}
-              alt={user?.fullName || "User"}
-              className="rounded-full h-8 w-8"
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-medium leading-none">
-              {user?.fullName || user?.username}
-            </span>
-            <span className="text-xs text-muted-foreground">
-              {isSysAdmin ? "System Admin" : isAdmin ? "Administrator" : "User"}
-            </span>
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-3 overflow-y-auto space-y-0.5">
+        {/* Regular user section (only for non-admins, or at bottom for admins) */}
+        {!isAdmin && (
+          <>
+            {USER_NAV.map((item) => (
+              <NavLink key={item.href} item={item} pathname={pathname} onClick={close} />
+            ))}
+          </>
+        )}
+
+        {/* Admin section */}
+        {isAdmin && (
+          <>
+            {ADMIN_NAV.map((item) => (
+              <NavLink key={item.href} item={item} pathname={pathname} onClick={close} />
+            ))}
+
+            <SectionLabel>My Account</SectionLabel>
+            {USER_NAV.map((item) => (
+              <NavLink key={item.href} item={item} pathname={pathname} onClick={close} />
+            ))}
+          </>
+        )}
+
+        {/* Sysadmin-only section */}
+        {isSysAdmin && (
+          <>
+            <SectionLabel>System</SectionLabel>
+            {SYSADMIN_NAV.map((item) => (
+              <NavLink key={item.href} item={item} pathname={pathname} onClick={close} />
+            ))}
+          </>
+        )}
+      </nav>
+
+      {/* User footer */}
+      <div className="shrink-0 border-t border-white/10 px-3 py-3">
+        <div className="flex items-center gap-3 px-3 py-2 rounded-lg mb-1">
+          <img
+            src={user.imageUrl}
+            alt={user.fullName ?? "User"}
+            className="h-8 w-8 rounded-full object-cover border border-white/20 shrink-0"
+          />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-white truncate">
+              {user.fullName ?? user.username}
+            </p>
+            <p className="text-xs text-white/40 truncate">
+              {user.primaryEmailAddress?.emailAddress}
+            </p>
           </div>
         </div>
-        <Button
-          variant="outline"
-          className="mt-2 w-full justify-start flex gap-2"
+        <button
           onClick={() => signOut()}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/10 transition-colors"
         >
-          <LogOut className="h-4 w-4" />
-          Log out
-        </Button>
+          <LogOut className="w-4 h-4 shrink-0" />
+          Sign out
+        </button>
       </div>
     </div>
   );
 
   return (
     <>
-      <div className="hidden md:block md:w-64 border-r bg-muted/40 fixed h-screen z-10">
-        {sidebarContent}
+      {/* Desktop fixed sidebar */}
+      <div className="hidden md:block w-64 shrink-0 fixed inset-y-0 left-0 z-20">
+        {content}
       </div>
+      {/* Desktop spacer */}
+      <div className="hidden md:block w-64 shrink-0" />
 
-      <div className="hidden md:block md:w-64 flex-shrink-0"></div>
-
+      {/* Mobile overlay */}
       {isMobileOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div
-            className="fixed inset-0 bg-black/50"
-            onClick={() => setIsMobileOpen(false)}
-          ></div>
-
-          <div className="fixed inset-y-0 left-0 w-64 border-r bg-background">
-            {sidebarContent}
+          <div className="fixed inset-0 bg-black/50" onClick={close} />
+          <div className="fixed inset-y-0 left-0 w-64 shadow-2xl">
+            {content}
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MapPin, Phone, Mail, Facebook, Instagram, Twitter } from "lucide-react";
 import { SITES } from "@/lib/sites";
+import { LogoMain } from "@/app/_components/Logo";
 
 export default function Footer() {
   const kumasi = SITES.filter((s) => s.location === "Kumasi");
@@ -12,9 +13,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <MapPin className="w-5 h-5 text-orange-400" />
-              <span className="font-bold text-lg">GetOnePlot</span>
+            <div className="mb-5">
+              <LogoMain variant="light" height={72} />
             </div>
             <p className="text-white/50 text-sm leading-relaxed mb-6">
               Ghana&apos;s trusted platform for verified land plots and property listings across Kumasi and Accra.

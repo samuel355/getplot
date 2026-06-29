@@ -7,6 +7,7 @@ import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { Menu, X, ChevronDown, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SITES } from "@/lib/sites";
+import { LogoLateral } from "@/app/_components/Logo";
 
 export default function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -21,9 +22,8 @@ export default function PublicHeader() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
-            <MapPin className="w-5 h-5 text-orange-400" />
-            <span>GetOnePlot</span>
+          <Link href="/" className="flex items-center">
+            <LogoLateral variant="light" height={32} />
           </Link>
 
           {/* Desktop nav */}

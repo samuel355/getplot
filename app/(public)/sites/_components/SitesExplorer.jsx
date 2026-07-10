@@ -118,7 +118,7 @@ export default function SitesExplorer({ sites }) {
   const [activeRoute, setActiveRoute] = useState(null);
 
   const { isLoaded, loadError } = useJsApiLoader({
-    id: "site-locations-map",
+    id: "google-map-scripts",
     googleMapsApiKey: GOOGLE_MAPS_KEY ?? "",
   });
 

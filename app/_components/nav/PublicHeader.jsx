@@ -120,9 +120,6 @@ export default function PublicHeader() {
               <UserButton afterSignOutUrl="/" />
             </SignedIn>
             <SignedOut>
-              <Link href="/sign-in" className="inline-flex h-10 items-center rounded-lg px-4 text-sm font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-white">
-                Sign in
-              </Link>
               <Link href="/sign-up" className="inline-flex h-10 items-center rounded-lg bg-brand-teal px-4 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
                 Get started
               </Link>
@@ -335,11 +332,8 @@ function MobileMenu({ groupedSites, isAdmin, dashboardHref, onClose }) {
           </div>
         </SignedIn>
         <SignedOut>
-          <div className="grid grid-cols-2 gap-2">
-            <Link href="/sign-in" onClick={onClose} className="inline-flex h-10 items-center justify-center rounded-lg bg-white/10 text-sm font-semibold text-white transition-colors hover:bg-white/15">
-              Sign in
-            </Link>
-            <Link href="/sign-up" onClick={onClose} className="inline-flex h-10 items-center justify-center rounded-lg bg-brand-teal text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
+          <div>
+            <Link href="/sign-up" onClick={onClose} className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-brand-teal text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
               Get started
             </Link>
           </div>

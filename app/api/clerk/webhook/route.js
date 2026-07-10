@@ -25,7 +25,13 @@ export async function POST(request) {
   let event;
 
   try {
-    event = await verifyWebhook(request);
+    const signingSecret = process.env.CLERK_WEBHOOK_SIGNING_SECRET;
+    if (!signingSecret) {
+      console.error("CLERK_WEBHOOK_SIGNING_SECRET is not configured");
+      return NextResponse.json({ error: "Webhook signing secret is not configured" }, { status: 500 });
+    }
+
+    event = await verifyWebhook(request, { signingSecret });
   } catch (error) {
     console.error("Clerk webhook verification failed:", error);
     return NextResponse.json({ error: "Webhook verification failed" }, { status: 400 });

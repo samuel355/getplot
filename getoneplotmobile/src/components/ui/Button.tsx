@@ -58,9 +58,9 @@ export function Button({
     switch (variant) {
       case "outline":
       case "ghost":
+      case "secondary":
         return { color: colors.primary };
       case "primary":
-      case "secondary":
       case "danger":
       default:
         return { color: colors.textInverse };
@@ -90,7 +90,11 @@ export function Button({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === "outline" || variant === "ghost" ? colors.primary : colors.white}
+          color={
+            variant === "outline" || variant === "ghost" || variant === "secondary"
+              ? colors.primary
+              : colors.white
+          }
           size="small"
         />
       ) : (

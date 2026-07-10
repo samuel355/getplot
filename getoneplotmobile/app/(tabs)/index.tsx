@@ -5,7 +5,6 @@ import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { useApprovalStatus } from "../../src/hooks/useApprovalStatus";
 import {
-  FlatList,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -40,6 +39,42 @@ const heroSites = FEATURED_SITE_SLUGS.map((slug) =>
 ).filter(Boolean);
 
 const servicedLandImage = require("../../assets/images/trabuom-lt.jpg");
+
+const TRUST_METRICS = [
+  { value: "Verified", label: "Land locations" },
+  { value: "Mapped", label: "Plot boundaries" },
+  { value: "Guided", label: "Every enquiry" },
+];
+
+const PLOT_STATUS_LEGEND = [
+  { label: "Available", color: "#22c55e" },
+  { label: "Reserved", color: "#171717" },
+  { label: "Sold", color: "#ef4444" },
+  { label: "Hold", color: "#9ca3af" },
+];
+
+const CAPABILITIES = [
+  {
+    icon: "map-outline" as const,
+    title: "Interactive maps",
+    desc: "See real plot boundaries and live status on Google Maps.",
+  },
+  {
+    icon: "shield-checkmark-outline" as const,
+    title: "Verified listings",
+    desc: "Every site and property is checked before it's published.",
+  },
+  {
+    icon: "headset-outline" as const,
+    title: "Guided support",
+    desc: "Reserve, buy, or ask a question — the team follows up fast.",
+  },
+  {
+    icon: "cash-outline" as const,
+    title: "Flexible plans",
+    desc: "Talk through payment options before you commit.",
+  },
+];
 
 export default function HomeScreen() {
   const { colors, spacing, borderRadius, fontWeight, fontSize, isDark } = useTheme();
@@ -99,7 +134,7 @@ export default function HomeScreen() {
         {title}
       </Text>
       {onSeeAll && (
-        <Pressable onPress={onSeeAll}>
+        <Pressable onPress={onSeeAll} hitSlop={8}>
           <Text
             style={[
               styles.seeAll,
@@ -136,7 +171,7 @@ export default function HomeScreen() {
         <View
           style={[
             styles.heroGlow,
-            { backgroundColor: colors.primaryAccent, opacity: isDark ? 0.1 : 0.05 },
+            { backgroundColor: colors.primaryAccent, opacity: isDark ? 0.12 : 0.08 },
           ]}
         />
 
@@ -144,22 +179,22 @@ export default function HomeScreen() {
           style={[
             styles.badge,
             {
-              backgroundColor: isDark ? colors.surfaceAlt : "rgba(99, 102, 241, 0.1)",
+              backgroundColor: isDark ? colors.surfaceAlt : `${colors.primaryAccent}1a`,
               borderRadius: borderRadius.full,
             },
           ]}
         >
-          <View style={[styles.badgeDot, { backgroundColor: colors.primaryAccent }]} />
+          <Ionicons name="shield-checkmark" size={13} color={colors.primaryAccent} />
           <Text
             style={[
               styles.badgeText,
               {
-                color: isDark ? colors.textSecondary : colors.primaryAccent,
+                color: isDark ? colors.textSecondary : colors.primary,
                 fontWeight: fontWeight.bold as TextStyle["fontWeight"],
               },
             ]}
           >
-            GHANA'S PREMIER MARKETPLACE
+            LAND MANAGEMENT & MARKETPLACE
           </Text>
         </View>
 
@@ -170,12 +205,12 @@ export default function HomeScreen() {
           ]}
         >
           Find Your Perfect{"\n"}
-          <Text style={{ color: colors.primaryAccent }}>Dream Plot</Text>
+          <Text style={{ color: colors.primaryAccent }}>Plot in Ghana</Text>
         </Text>
 
         <Text style={[styles.heroSub, { color: colors.textSecondary }]}>
-          Verified residential and investment lands across Ghana. Start your ownership journey
-          today.
+          Verified land locations with mapped plot boundaries, plus a marketplace of homes,
+          rentals, and investment listings.
         </Text>
 
         <View style={styles.heroActions}>
@@ -193,6 +228,36 @@ export default function HomeScreen() {
           >
             <Ionicons name="map-outline" size={22} color={colors.text} />
           </Pressable>
+        </View>
+
+        <View
+          style={[
+            styles.trustRow,
+            { borderColor: colors.border, backgroundColor: colors.surface },
+          ]}
+        >
+          {TRUST_METRICS.map((item, index) => (
+            <View
+              key={item.label}
+              style={[
+                styles.trustItem,
+                index < TRUST_METRICS.length - 1 && {
+                  borderRightWidth: StyleSheet.hairlineWidth,
+                  borderRightColor: colors.border,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.trustValue,
+                  { color: colors.primary, fontWeight: fontWeight.extrabold as TextStyle["fontWeight"] },
+                ]}
+              >
+                {item.value}
+              </Text>
+              <Text style={[styles.trustLabel, { color: colors.textMuted }]}>{item.label}</Text>
+            </View>
+          ))}
         </View>
       </View>
 
@@ -214,7 +279,7 @@ export default function HomeScreen() {
             <View
               style={[
                 styles.glassCard,
-                { backgroundColor: isDark ? "rgba(15, 23, 42, 0.8)" : "rgba(255, 255, 255, 0.8)" },
+                { backgroundColor: isDark ? "rgba(15, 23, 42, 0.8)" : "rgba(255, 255, 255, 0.85)" },
               ]}
             >
               <View>
@@ -229,6 +294,15 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
+        </View>
+
+        <View style={styles.legendRow}>
+          {PLOT_STATUS_LEGEND.map((item) => (
+            <View key={item.label} style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: item.color }]} />
+              <Text style={[styles.legendLabel, { color: colors.textMuted }]}>{item.label}</Text>
+            </View>
+          ))}
         </View>
       </View>
 
@@ -250,12 +324,37 @@ export default function HomeScreen() {
                 ]}
                 onPress={() => router.push(`/(tabs)/sites/${d.slug}`)}
               >
-                <Text style={[styles.chipTitle, { color: colors.text }]}>{d.title}</Text>
-                <Text style={[styles.chipSub, { color: colors.textMuted }]}>{d.subtitle}</Text>
+                <Ionicons name="location" size={14} color={colors.primaryAccent} />
+                <View>
+                  <Text style={[styles.chipTitle, { color: colors.text }]}>{d.title}</Text>
+                  <Text style={[styles.chipSub, { color: colors.textMuted }]}>{d.subtitle}</Text>
+                </View>
               </Pressable>
             ) : null,
           )}
         </ScrollView>
+      </View>
+
+      {/* Why GetOnePlot */}
+      <View style={styles.section}>
+        {sectionHeader("Why GetOnePlot")}
+        <View style={styles.capabilityGrid}>
+          {CAPABILITIES.map((item) => (
+            <View
+              key={item.title}
+              style={[
+                styles.capabilityCard,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
+            >
+              <View style={[styles.capabilityIcon, { backgroundColor: colors.primary }]}>
+                <Ionicons name={item.icon} size={18} color={colors.white} />
+              </View>
+              <Text style={[styles.capabilityTitle, { color: colors.text }]}>{item.title}</Text>
+              <Text style={[styles.capabilityDesc, { color: colors.textMuted }]}>{item.desc}</Text>
+            </View>
+          ))}
+        </View>
       </View>
 
       {/* Featured Properties */}
@@ -316,9 +415,12 @@ export default function HomeScreen() {
         <View
           style={[styles.cta, { backgroundColor: colors.primary, borderRadius: borderRadius.xl }]}
         >
+          <View style={[styles.ctaIcon, { backgroundColor: "rgba(255,255,255,0.12)" }]}>
+            <Ionicons name="sparkles-outline" size={22} color={colors.white} />
+          </View>
           <Text style={[styles.ctaTitle, { color: colors.white }]}>Ready to Invest?</Text>
           <Text style={[styles.ctaText, { color: "rgba(255,255,255,0.8)" }]}>
-            Join thousands of users building their future with verified plots.
+            Create a free account to reserve plots, save listings, and track your enquiries.
           </Text>
           <Button
             title="Create Free Account"
@@ -338,7 +440,7 @@ const styles = StyleSheet.create({
   // Hero
   hero: {
     paddingHorizontal: 20,
-    paddingBottom: 30,
+    paddingBottom: 24,
     position: "relative",
     overflow: "hidden",
   },
@@ -359,11 +461,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     gap: 6,
   },
-  badgeDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
   badgeText: {
     fontSize: 10,
     letterSpacing: 0.5,
@@ -377,7 +474,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 24,
-    maxWidth: "90%",
+    maxWidth: "92%",
   },
   heroActions: {
     flexDirection: "row",
@@ -392,10 +489,32 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
+  // Trust row
+  trustRow: {
+    flexDirection: "row",
+    marginTop: 20,
+    borderRadius: 16,
+    borderWidth: 1,
+    overflow: "hidden",
+  },
+  trustItem: {
+    flex: 1,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  trustValue: {
+    fontSize: 15,
+  },
+  trustLabel: {
+    fontSize: 10,
+    marginTop: 2,
+    textAlign: "center",
+  },
+
   // Image Card
   imageSection: {
     paddingHorizontal: 20,
-    marginTop: -10,
+    marginTop: -6,
     marginBottom: 30,
   },
   imageCard: {
@@ -446,6 +565,27 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "bold",
   },
+  legendRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 14,
+    marginTop: 14,
+    paddingHorizontal: 4,
+  },
+  legendItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  legendDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 2,
+  },
+  legendLabel: {
+    fontSize: 11,
+    fontWeight: "600",
+  },
 
   // Sections
   section: {
@@ -467,11 +607,14 @@ const styles = StyleSheet.create({
 
   // Locations
   locationChip: {
-    paddingHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 16,
     paddingVertical: 14,
     borderRadius: 16,
     borderWidth: 1,
-    minWidth: 140,
+    minWidth: 150,
   },
   chipTitle: {
     fontSize: 14,
@@ -480,6 +623,37 @@ const styles = StyleSheet.create({
   chipSub: {
     fontSize: 11,
     marginTop: 2,
+  },
+
+  // Capabilities
+  capabilityGrid: {
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+  capabilityCard: {
+    width: (width - 52) / 2,
+    padding: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  capabilityIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 12,
+  },
+  capabilityTitle: {
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  capabilityDesc: {
+    fontSize: 11,
+    lineHeight: 16,
+    marginTop: 4,
   },
 
   // Dev Grid
@@ -516,9 +690,17 @@ const styles = StyleSheet.create({
   cta: {
     marginHorizontal: 20,
     padding: 24,
-    gap: 16,
+    gap: 12,
     alignItems: "center",
     textAlign: "center",
+  },
+  ctaIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 4,
   },
   ctaTitle: {
     fontSize: 22,

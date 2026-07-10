@@ -38,7 +38,14 @@ export default ({ config }) => {
         },
       ],
       "expo-image",
-      "expo-splash-screen",
+      [
+        "expo-splash-screen",
+        {
+          image: "./assets/splash-logo.png",
+          resizeMode: "contain",
+          backgroundColor: "#ffffff",
+        },
+      ],
       "expo-web-browser",
     ],
   };

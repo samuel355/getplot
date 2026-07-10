@@ -7,12 +7,6 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "getoneplot",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-logo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.getoneplot.app",
@@ -20,12 +14,8 @@
         "NSAppTransportSecurity": {
           "NSAllowsLocalNetworking": true
         },
-        "ITSAppUsesNonExemptEncryption": false
-      },
-      "splash": {
-        "image": "./assets/splash-logo.png",
-        "resizeMode": "contain",
-        "backgroundColor": "#ffffff"
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSPhotoLibraryUsageDescription": "Get One Plot needs access to your photo library so you can add photos to your property listing."
       },
       "config": {
         "googleMapsApiKey": ""
@@ -33,11 +23,6 @@
     },
     "android": {
       "package": "com.getoneplot.app",
-      "splash": {
-        "image": "./assets/splash-logo.png",
-        "resizeMode": "contain",
-        "backgroundColor": "#ffffff"
-      },
       "adaptiveIcon": {
         "backgroundColor": "#05014c",
         "foregroundImage": "./assets/android-icon-foreground.png",

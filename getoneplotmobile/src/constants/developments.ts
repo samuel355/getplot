@@ -45,7 +45,7 @@ export const DEVELOPMENTS: Development[] = [
     title: 'New Trabuom',
     subtitle: 'Kumasi',
     table: 'new_trabuom',
-    interestTable: 'trabuom_interests',
+    interestTable: 'new_trabuom_interests',
     center: { latitude: 6.5967673180000475, longitude: -1.7712607859999707 },
   },
   {

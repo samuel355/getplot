@@ -3,26 +3,16 @@ import { formatGhs } from "./plotService";
 import { fetchMobileApi } from "./api";
 
 /**
- * Sends an SMS via the Arkesel API.
- * Uses environment variable EXPO_PUBLIC_ARKESEL_SMS_API
+ * Sends an SMS by proxying through the mobile API's /api/send-sms route,
+ * which holds the Arkesel API key server-side (never shipped in the app bundle).
  */
 export async function sendArkeselSMS(phone: string, message: string) {
-  const apiKey = process.env.EXPO_PUBLIC_ARKESEL_SMS_API;
-  if (!apiKey) {
-    console.warn("ARKESEL_SMS_API not configured");
-    return;
-  }
-
-  const sender = "GetOnePlot";
-  const url = `https://sms.arkesel.com/sms/api?action=send-sms&api_key=${apiKey}&to=${phone}&from=${sender}&sms=${encodeURIComponent(
-    message,
-  )}`;
-
   try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      console.warn("Failed to send SMS via Arkesel", await response.text());
-    }
+    await fetchMobileApi("/api/send-sms", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone, message }),
+    });
   } catch (error) {
     console.error("Error sending SMS:", error);
   }

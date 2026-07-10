@@ -2,6 +2,71 @@ import ejs from "ejs";
 import path from "path";
 import { promises as fs } from "fs";
 import nodemailer from "nodemailer";
+import PDFDocument from "pdfkit";
+
+function buildPlotPdf(params: {
+  firstname: string;
+  lastname: string;
+  plotArea: string;
+  amount: string;
+  plotDetails: string;
+  plotSize: string;
+  type: "buy" | "reserve";
+}): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({ margin: 40 });
+    const chunks: Buffer[] = [];
+    doc.on("data", (chunk) => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+
+    const label = params.type === "reserve" ? "Reservation" : "Purchase";
+
+    const drawTable = (title: string, rows: [string, string][]) => {
+      doc.fontSize(13).fillColor("#0B0E2D").text(title);
+      doc.moveDown(0.3);
+      rows.forEach(([key, value]) => {
+        doc.fontSize(10).fillColor("#555").text(`${key}:`, { continued: true });
+        doc.fillColor("#111").text(` ${value}`);
+      });
+      doc.moveDown(1);
+    };
+
+    doc.fontSize(18).fillColor("#0B0E2D").text(`Plot ${label} Details`);
+    doc.moveDown(0.5);
+    doc.fontSize(11).fillColor("#333").text(`Dear ${params.firstname} ${params.lastname},`);
+    doc.moveDown(0.5);
+    doc.text(`Thank you for your ${label.toLowerCase()} request. Here are the plot details and next steps.`);
+    doc.moveDown(1);
+
+    drawTable("Plot Details", [
+      ["Plot", params.plotDetails],
+      ["Location", params.plotArea],
+      ["Size", params.plotSize],
+      [params.type === "reserve" ? "Deposit Required" : "Amount Due", params.amount],
+    ]);
+
+    drawTable("Cedis (GHS) Account", [
+      ["Bank Name", "STANBIC BANK"],
+      ["Account Name", "LAND AND HOMES CONSULT"],
+      ["Account Number", "9040009771047"],
+      ["Branch", "KNUST, KUMASI GHANA"],
+    ]);
+
+    drawTable("International (Dollar) Account", [
+      ["Bank Name", "STANBIC BANK"],
+      ["Account Name", "LAND AND HOMES CONSULT"],
+      ["Account Number", "9040011449268"],
+      ["Branch", "KNUST, KUMASI GHANA"],
+    ]);
+
+    doc.fontSize(10).fillColor("#555").text(
+      "To secure ownership, kindly make payment to either account above and present your receipt at our office in Kumasi Dichemso, or email it to sales@getoneplot.com. For more information call 0322008282 / +233 54 855 4216.",
+    );
+
+    doc.end();
+  });
+}
 
 export async function POST(request: Request) {
   try {
@@ -71,11 +136,28 @@ export async function POST(request: Request) {
       },
     });
 
+    const pdfBuffer = await buildPlotPdf({
+      firstname,
+      lastname,
+      plotArea,
+      amount,
+      plotDetails,
+      plotSize,
+      type: type === "reserve" ? "reserve" : "buy",
+    });
+
     await transporter.sendMail({
       from: `"Get One Plot" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
       to: to,
       subject: type === 'reserve' ? "Plot Reservation Details" : "Plot Purchase Details",
       html,
+      attachments: [
+        {
+          filename: "plot_details.pdf",
+          content: pdfBuffer,
+          contentType: "application/pdf",
+        },
+      ],
     });
 
     return Response.json({ success: true });

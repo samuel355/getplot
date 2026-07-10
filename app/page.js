@@ -114,7 +114,7 @@ export default function LandingPage() {
                 <Link href="/marketplace" className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-teal px-6 py-3 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
                   Browse Listed Properties <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/sites/trabuom-sector-1" className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">
+                <Link href="/sites" className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">
                   Browse our Land locations
                 </Link>
               </div>
@@ -211,8 +211,8 @@ export default function LandingPage() {
                 desc="Open each location to inspect available, reserved, sold, hold, and other plot statuses on Google Maps."
                 dark
               />
-              <Link href="/sites/trabuom-sector-1" className="inline-flex w-fit items-center gap-2 rounded-lg bg-brand-teal px-5 py-3 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
-                Open featured map <ArrowRight className="h-4 w-4" />
+              <Link href="/sites" className="inline-flex w-fit items-center gap-2 rounded-lg bg-brand-teal px-5 py-3 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
+                View all locations <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 

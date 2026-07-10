@@ -15,7 +15,8 @@
           "NSAllowsLocalNetworking": true
         },
         "ITSAppUsesNonExemptEncryption": false,
-        "NSPhotoLibraryUsageDescription": "Get One Plot needs access to your photo library so you can add photos to your property listing."
+        "NSPhotoLibraryUsageDescription": "Get One Plot needs access to your photo library so you can add photos to your property listing.",
+        "NSLocationWhenInUseUsageDescription": "Get One Plot uses your location to show your position on the map relative to available land plots."
       },
       "config": {
         "googleMapsApiKey": ""

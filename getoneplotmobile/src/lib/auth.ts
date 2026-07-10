@@ -1,6 +1,7 @@
 import { ACCEPTED_ROLES } from '../constants/developments';
 
 export const AUTO_APPROVED_EMAIL = 'samueloseiboatenglistowell57@gmail.com';
+export const AUTO_APPROVED_ROLE = 'sysadmin';
 export const SUPPORT_EMAIL = 'landandhomesconsult@gmail.com';
 
 export type ApprovalStatus = {
@@ -23,14 +24,16 @@ export function getApprovalFromClerkUser(user: ClerkUserLike | null | undefined)
   const userEmail =
     user?.primaryEmailAddress?.emailAddress ||
     user?.emailAddresses?.[0]?.emailAddress;
+  const isAutoApproved = userEmail?.trim().toLowerCase() === AUTO_APPROVED_EMAIL;
+  const effectiveRole = isAutoApproved ? AUTO_APPROVED_ROLE : userRole;
 
   const isApproved =
-    userEmail === AUTO_APPROVED_EMAIL ||
-    (!!userRole && ACCEPTED_ROLES.includes(userRole as (typeof ACCEPTED_ROLES)[number]));
+    isAutoApproved ||
+    (!!effectiveRole && ACCEPTED_ROLES.includes(effectiveRole as (typeof ACCEPTED_ROLES)[number]));
 
   return {
     isApproved: !!isApproved,
-    role: userRole,
+    role: effectiveRole,
     area: userArea,
     lastChecked: new Date().toISOString(),
   };

@@ -3,13 +3,14 @@ import { redirect } from "next/navigation";
 import Header from "./properties/components/header";
 import Sidebar from "./properties/components/sidebar";
 import { SidebarProvider } from "./properties/contexts/sidebar-context";
+import { getEffectiveRole } from "@/lib/autoApproval";
 
 export default async function PropertiesLayout({ children }) {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
   const user = await currentUser();
-  const role = user?.publicMetadata?.role;
+  const role = getEffectiveRole(user);
 
   if (!role) redirect("/approval");
 

@@ -1,13 +1,22 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Sidebar from "@/app/_components/nav/Sidebar";
+import {
+  AUTO_SYSADMIN_ROLE,
+  ensureAutoSysadminMetadata,
+  getEffectiveRole,
+} from "@/lib/autoApproval";
 
 export default async function DashboardLayout({ children }) {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
   const user = await currentUser();
-  const role = user?.publicMetadata?.role;
+  const role = getEffectiveRole(user);
+  if (role === AUTO_SYSADMIN_ROLE && user?.publicMetadata?.role !== AUTO_SYSADMIN_ROLE) {
+    const client = await clerkClient();
+    await ensureAutoSysadminMetadata(client, user);
+  }
   if (role !== "sysadmin" && role !== "admin") redirect("/unauthorized");
 
   return (

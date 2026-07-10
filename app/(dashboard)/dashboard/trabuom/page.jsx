@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 export default function Trabuom() {
   const [plotData, setPlotData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(null);
   const databaseName = "trabuom";
 
   useEffect(() => {
@@ -20,15 +21,14 @@ export default function Trabuom() {
   const fetchPlotData = async () => {
     setLoading(true);
     try {
-      // Fetch data in batches
-      const batchSize = 985; // Adjust as needed
+      const batchSize = 1000;
       let allRecords = [];
-      let startIndex = 0;
-      let hasMoreData = true;
+      let from = 0;
+      let expectedTotal = null;
 
-      while (hasMoreData) {
-        const { data: records, error } = await supabase
-          .from("trabuom")
+      while (true) {
+        const { data: records, error, count } = await supabase
+          .from(databaseName)
           .select(
             `
             id,
@@ -42,23 +42,31 @@ export default function Trabuom() {
             plotTotalAmount,
             paidAmount,
             remainingAmount
-          `
+          `,
+            { count: "exact" }
           )
-          .range(startIndex, startIndex + batchSize - 1);
+          .order("id", { ascending: true })
+          .range(from, from + batchSize - 1);
 
         if (error) {
           console.log(error);
-          setLoading(false);
           toast.error("Error fetching plot data.");
           return;
         }
 
-        if (records && records.length > 0) {
-          allRecords = [...allRecords, ...records];
-          startIndex += batchSize;
-        } else {
-          hasMoreData = false;
+        if (expectedTotal === null && typeof count === "number") {
+          expectedTotal = count;
+          setTotalCount(count);
         }
+
+        if (!records?.length) break;
+
+        allRecords = [...allRecords, ...records];
+
+        if (records.length < batchSize) break;
+        if (expectedTotal !== null && allRecords.length >= expectedTotal) break;
+
+        from += batchSize;
       }
 
       setPlotData(allRecords);
@@ -76,7 +84,10 @@ export default function Trabuom() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-slate-900">Trabuom Sector 1</h1>
-          <p className="text-sm text-slate-400 mt-0.5">{plotData.length.toLocaleString()} plots loaded</p>
+          <p className="text-sm text-slate-400 mt-0.5">
+            {plotData.length.toLocaleString()}
+            {totalCount !== null ? ` of ${totalCount.toLocaleString()}` : ""} plots loaded
+          </p>
         </div>
         <Link
           href={"/sites/trabuom-sector-1"}

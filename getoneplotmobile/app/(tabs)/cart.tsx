@@ -80,7 +80,7 @@ export default function CartScreen() {
                 Plot {item.properties?.Plot_No ?? item.id.slice(0, 8)}
               </Text>
               <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.sm }]}>
-                {item.properties?.Site ?? "Standard Plot"}
+                {item.siteName || "Standard Plot"}
                 {item.properties?.Street_Nam
                   ? ` • ${formatStreet(item.properties.Street_Nam)}`
                   : ""}
@@ -175,8 +175,8 @@ export default function CartScreen() {
           fullWidth
         />
         <Text style={[styles.secureText, { color: colors.textMuted }]}>
-          <Ionicons name="lock-closed-outline" size={12} color={colors.textMuted} /> Secure checkout
-          powered by Paystack
+          <Ionicons name="mail-outline" size={12} color={colors.textMuted} /> Bank details sent
+          by email and SMS
         </Text>
       </View>
     </View>

@@ -106,6 +106,24 @@ export default function ExpressInterestPage() {
         }),
       });
 
+      await fetch("/api/company-alert", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subject: `New plot interest: Plot ${plotNo}`,
+          message: [
+            "New plot interest",
+            `Client: ${form.firstname} ${form.lastname}`,
+            `Phone: ${form.phone}`,
+            `Email: ${form.email}`,
+            `Country: ${form.country || "N/A"}`,
+            `Plot: Plot No. ${plotNo} at ${site.name}`,
+            `Amount: ${plotAmount ? `GHS ${Number(plotAmount).toLocaleString()}` : "Contact team"}`,
+            `Message: ${form.message || "No message provided"}`,
+          ].join("\n"),
+        }),
+      });
+
       setDone(true);
     } catch (err) {
       console.error(err);

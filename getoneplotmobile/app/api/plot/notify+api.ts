@@ -25,15 +25,23 @@ export async function POST(request: Request) {
     const templatePath = path.resolve("src/api/templates", templateName);
 
     const INLINE_TEMPLATE = `
-      <h2>Plot ${type === 'reserve' ? 'Reservation' : 'Purchase'} Details</h2>
+      <h2>Plot ${type === 'reserve' ? 'Reservation' : 'Purchase'} Request</h2>
       <p>Dear <%= firstname %> <%= lastname %>,</p>
-      <p>Thank you for your ${type === 'reserve' ? 'reservation' : 'purchase'} of a plot at <strong><%= plotArea %></strong>.</p>
+      <p>We received your ${type === 'reserve' ? 'reservation' : 'purchase'} request for a plot at <strong><%= plotArea %></strong>.</p>
       <table style="border-collapse:collapse;width:100%">
         <tr><td style="padding:8px;border:1px solid #ddd">Plot</td><td style="padding:8px;border:1px solid #ddd"><%= plotDetails %></td></tr>
         <tr><td style="padding:8px;border:1px solid #ddd">Size</td><td style="padding:8px;border:1px solid #ddd"><%= plotSize %></td></tr>
-        <tr><td style="padding:8px;border:1px solid #ddd">Amount</td><td style="padding:8px;border:1px solid #ddd"><%= amount %></td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd">${type === 'reserve' ? 'Deposit Required' : 'Amount Due'}</td><td style="padding:8px;border:1px solid #ddd"><%= amount %></td></tr>
       </table>
-      <p>Our team will be in touch with you shortly.</p>
+      <h3>Bank Details</h3>
+      <table style="border-collapse:collapse;width:100%">
+        <tr><td style="padding:8px;border:1px solid #ddd">Bank Name</td><td style="padding:8px;border:1px solid #ddd">STANBIC BANK</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd">Account Name</td><td style="padding:8px;border:1px solid #ddd">LAND AND HOMES CONSULT</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd">Cedis Account</td><td style="padding:8px;border:1px solid #ddd">9040009771047</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd">Dollar Account</td><td style="padding:8px;border:1px solid #ddd">9040011449268</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd">Branch</td><td style="padding:8px;border:1px solid #ddd">KNUST, KUMASI-GHANA</td></tr>
+      </table>
+      <p>Please make payment at the bank and bring your receipt to our Kumasi Dichemso office to finalize the plot sale or reservation.</p>
       <p>— Get One Plot Team</p>
     `;
 

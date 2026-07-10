@@ -43,7 +43,7 @@ export default function PaymentErrorScreen() {
         <View style={styles.infoBox}>
           <Ionicons name="help-circle-outline" size={20} color={colors.textSecondary} />
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-            If funds were deducted from your account, please contact our support team at 0322008282 with your reference.
+            If this continues, please contact our support team at 0322008282 / +233 54 855 4216.
           </Text>
         </View>
 

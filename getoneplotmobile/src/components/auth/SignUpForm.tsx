@@ -139,48 +139,50 @@ export function SignUpForm({
 
       {!pendingVerification ? (
         <>
-          <View style={viewStyles.nameRow}>
-            <View style={viewStyles.nameField}>
-              <Input
-                label="First name"
-                value={firstName}
-                onChangeText={setFirstName}
-                autoComplete="given-name"
-                placeholder="First"
-                icon={<Ionicons name="person-outline" size={20} color={colors.textMuted} />}
-              />
+          <View style={viewStyles.fields}>
+            <View style={viewStyles.nameRow}>
+              <View style={viewStyles.nameField}>
+                <Input
+                  label="First name"
+                  value={firstName}
+                  onChangeText={setFirstName}
+                  autoComplete="given-name"
+                  placeholder="First"
+                  icon={<Ionicons name="person-outline" size={20} color={colors.textMuted} />}
+                />
+              </View>
+              <View style={viewStyles.nameField}>
+                <Input
+                  label="Last name"
+                  value={lastName}
+                  onChangeText={setLastName}
+                  autoComplete="family-name"
+                  placeholder="Last"
+                  icon={<Ionicons name="person-outline" size={20} color={colors.textMuted} />}
+                />
+              </View>
             </View>
-            <View style={viewStyles.nameField}>
-              <Input
-                label="Last name"
-                value={lastName}
-                onChangeText={setLastName}
-                autoComplete="family-name"
-                placeholder="Last"
-                icon={<Ionicons name="person-outline" size={20} color={colors.textMuted} />}
-              />
-            </View>
+            <Input
+              label="Email"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              autoComplete="email"
+              value={email}
+              onChangeText={setEmail}
+              placeholder="you@example.com"
+              icon={<Ionicons name="mail-outline" size={20} color={colors.textMuted} />}
+            />
+            <Input
+              label="Password"
+              secureTextEntry
+              autoComplete="new-password"
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Min. 8 characters"
+              icon={<Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} />}
+              hint="Use at least 8 characters with letters and numbers."
+            />
           </View>
-          <Input
-            label="Email"
-            autoCapitalize="none"
-            keyboardType="email-address"
-            autoComplete="email"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="you@example.com"
-            icon={<Ionicons name="mail-outline" size={20} color={colors.textMuted} />}
-          />
-          <Input
-            label="Password"
-            secureTextEntry
-            autoComplete="new-password"
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Min. 8 characters"
-            icon={<Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} />}
-            hint="Use at least 8 characters with letters and numbers."
-          />
           <Button title="Create account" onPress={onSignUp} loading={loading} fullWidth size="lg" style={{ marginTop: spacing.lg }} />
         </>
       ) : (
@@ -243,6 +245,7 @@ export function getSignUpShellCopy(pendingVerification: boolean, email: string) 
 }
 
 const viewStyles = StyleSheet.create({
+  fields: { gap: spacing.md },
   nameRow: { flexDirection: 'row', gap: spacing.md },
   nameField: { flex: 1 },
   actions: { gap: spacing.sm },

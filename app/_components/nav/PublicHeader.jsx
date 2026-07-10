@@ -60,10 +60,10 @@ export default function PublicHeader() {
       if (event.key === "Escape") setOpenMenu(null);
     };
 
-    document.addEventListener("mousedown", closeOnOutsideClick);
+    document.addEventListener("mousedown", closeOnOutsideClick, true);
     document.addEventListener("keydown", closeOnEscape);
     return () => {
-      document.removeEventListener("mousedown", closeOnOutsideClick);
+      document.removeEventListener("mousedown", closeOnOutsideClick, true);
       document.removeEventListener("keydown", closeOnEscape);
     };
   }, []);

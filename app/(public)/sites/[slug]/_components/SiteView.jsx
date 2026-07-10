@@ -30,7 +30,14 @@ const GOOGLE_MAPS_KEY =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ??
   process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 
-const STATUSES = ["Available", "Reserved", "Sold", "Hold"];
+const STATUSES = ["Available", "Reserved", "Sold", "On Hold"];
+const STATUS_FILTERS = [
+  { key: "all", label: "All" },
+  { key: "available", label: "Available" },
+  { key: "reserved", label: "Reserved" },
+  { key: "sold", label: "Sold" },
+  { key: "hold", label: "On Hold" },
+];
 const CONTACT_PHONE = "+233548554216";
 const MAP_CONTAINER_STYLE = { width: "100%", height: "100%" };
 const POPUP_PAN_OFFSET_Y = -170;
@@ -64,12 +71,31 @@ function statusKey(status) {
   return "other";
 }
 
+function statusLabel(status) {
+  const key = statusKey(status);
+  if (key === "hold") return "On Hold";
+  if (key === "available") return "Available";
+  if (key === "reserved") return "Reserved";
+  if (key === "sold") return "Sold";
+  return status || "Other";
+}
+
 function isAvailable(plot) {
   return statusKey(plotStatus(plot)) === "available";
 }
 
 function getPlotStyle(plot) {
   return STATUS_STYLE[statusKey(plotStatus(plot))] ?? STATUS_STYLE.other;
+}
+
+function buildPlotStats(items) {
+  return {
+    total: items.length,
+    available: items.filter((plot) => statusKey(plotStatus(plot)) === "available").length,
+    reserved: items.filter((plot) => statusKey(plotStatus(plot)) === "reserved").length,
+    sold: items.filter((plot) => statusKey(plotStatus(plot)) === "sold").length,
+    hold: items.filter((plot) => statusKey(plotStatus(plot)) === "hold").length,
+  };
 }
 
 function getPolygonPath(plot) {
@@ -124,16 +150,18 @@ export default function SiteView({ site }) {
   const mapRef = useRef(null);
   const [plots, setPlots] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [editingPlot, setEditingPlot] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("map");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [mapType, setMapType] = useState("satellite");
   const [isMapTypeMenuOpen, setIsMapTypeMenuOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [stats, setStats] = useState({ total: 0, available: 0, reserved: 0, sold: 0 });
+  const [stats, setStats] = useState({ total: 0, available: 0, reserved: 0, sold: 0, hold: 0 });
   const role = user?.publicMetadata?.role;
-  const canManagePlots = role === "sysadmin" || role === "land_manager";
-  const canEditPlots = role === "sysadmin";
+  const canManagePlots = ["sysadmin", "admin", "land_manager", "chief", "chief_asst"].includes(role);
+  const canEditPlots = role === "sysadmin" || role === "admin";
 
   const changeMapType = (type) => {
     setMapType(type);
@@ -161,6 +189,11 @@ export default function SiteView({ site }) {
     const firstPath = plots.map(getPolygonPath).find((path) => path.length);
     return getPolygonCenter(firstPath ?? []) ?? { lat: 6.6885, lng: -1.6244 };
   }, [plots]);
+
+  const filteredPlots = useMemo(() => {
+    if (statusFilter === "all") return plots;
+    return plots.filter((plot) => statusKey(plotStatus(plot)) === statusFilter);
+  }, [plots, statusFilter]);
 
   useEffect(() => { fetchPlots(); }, [site.table]);
 
@@ -190,12 +223,7 @@ export default function SiteView({ site }) {
 
     const valid = all.filter((plot) => getPolygonPath(plot).length >= 3);
     setPlots(valid);
-    setStats({
-      total: valid.length,
-      available: valid.filter((plot) => statusKey(plotStatus(plot)) === "available").length,
-      reserved: valid.filter((plot) => statusKey(plotStatus(plot)) === "reserved").length,
-      sold: valid.filter((plot) => statusKey(plotStatus(plot)) === "sold").length,
-    });
+    setStats(buildPlotStats(valid));
     setLoading(false);
   };
 
@@ -207,16 +235,11 @@ export default function SiteView({ site }) {
     revealPopupOnMap(mapRef.current, center);
   };
 
-  const handleStatusSaved = (plotId, status) => {
-    const nextPlots = plots.map((plot) => plot.id === plotId ? { ...plot, status } : plot);
+  const handlePlotSaved = (plotId, patch) => {
+    const nextPlots = plots.map((plot) => plot.id === plotId ? { ...plot, ...patch } : plot);
     setPlots(nextPlots);
-    setSelected((plot) => plot?.id === plotId ? { ...plot, status } : plot);
-    setStats((current) => ({
-      ...current,
-      available: nextPlots.filter((plot) => statusKey(plotStatus(plot)) === "available").length,
-      reserved: nextPlots.filter((plot) => statusKey(plotStatus(plot)) === "reserved").length,
-      sold: nextPlots.filter((plot) => statusKey(plotStatus(plot)) === "sold").length,
-    }));
+    setSelected((plot) => plot?.id === plotId ? { ...plot, ...patch } : plot);
+    setStats(buildPlotStats(nextPlots));
   };
 
   return (
@@ -338,7 +361,8 @@ export default function SiteView({ site }) {
                           setSelected(null);
                           setPopupPosition(null);
                         }}
-                        onStatusSaved={handleStatusSaved}
+                        onPlotSaved={handlePlotSaved}
+                        onEditPlot={() => setEditingPlot(selected)}
                       />
                     </OverlayView>
                   )}
@@ -376,8 +400,40 @@ export default function SiteView({ site }) {
         {view === "list" && !loading && (
           <div className="h-full overflow-y-auto p-4 sm:p-6">
             <div className="max-w-5xl mx-auto">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">Plots</p>
+                  <p className="text-xs text-gray-400">
+                    Showing {filteredPlots.length.toLocaleString()} of {plots.length.toLocaleString()} plots
+                  </p>
+                </div>
+                <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:justify-end sm:overflow-visible sm:pb-0">
+                  {STATUS_FILTERS.map(({ key, label }) => {
+                    const active = statusFilter === key;
+                    const count = key === "all" ? stats.total : stats[key] ?? 0;
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => setStatusFilter(key)}
+                        className={cn(
+                          "inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border px-3 text-xs font-semibold transition-colors",
+                          active
+                            ? "border-brand-navy bg-brand-navy text-white"
+                            : "border-slate-200 bg-white text-slate-600 hover:border-brand-teal hover:text-brand-navy",
+                        )}
+                      >
+                        {label}
+                        <span className={cn("rounded-full px-1.5 py-0.5 text-[10px]", active ? "bg-white/15 text-white" : "bg-slate-100 text-slate-500")}>
+                          {count.toLocaleString()}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {plots.map((plot) => (
+                {filteredPlots.map((plot) => (
                   <PlotCard
                     key={plot.id}
                     plot={plot}
@@ -386,10 +442,38 @@ export default function SiteView({ site }) {
                   />
                 ))}
               </div>
+              {!filteredPlots.length && (
+                <div className="rounded-lg border border-dashed border-slate-200 bg-white p-8 text-center">
+                  <p className="text-sm font-semibold text-slate-700">
+                    {statusFilter === "all"
+                      ? "No plots found."
+                      : `No ${STATUS_FILTERS.find((item) => item.key === statusFilter)?.label.toLowerCase()} plots found.`}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setStatusFilter("all")}
+                    className="mt-3 text-xs font-semibold text-brand-navy hover:underline"
+                  >
+                    Clear filter
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
       </div>
+
+      {editingPlot && (
+        <PlotEditModal
+          plot={editingPlot}
+          site={site}
+          onClose={() => setEditingPlot(null)}
+          onSaved={(patch) => {
+            handlePlotSaved(editingPlot.id, patch);
+            setEditingPlot(null);
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -516,7 +600,7 @@ function MobileMapTypeSheet({ open, mapType, onChangeMapType, onClose }) {
   );
 }
 
-function PlotPopup({ plot, site, canManage, canEdit, onClose, onStatusSaved }) {
+function PlotPopup({ plot, site, canManage, canEdit, onClose, onPlotSaved, onEditPlot }) {
   const props = plot.properties ?? {};
   const status = plotStatus(plot);
   const available = isAvailable(plot);
@@ -526,6 +610,10 @@ function PlotPopup({ plot, site, canManage, canEdit, onClose, onStatusSaved }) {
   const [statusValue, setStatusValue] = useState(status);
   const [saving, setSaving] = useState(false);
   const dirty = statusValue !== status;
+
+  useEffect(() => {
+    setStatusValue(status);
+  }, [status]);
 
   const stopPopupEvent = (event) => {
     event.stopPropagation?.();
@@ -542,7 +630,7 @@ function PlotPopup({ plot, site, canManage, canEdit, onClose, onStatusSaved }) {
     setSaving(true);
     const { error } = await supabase.from(site.table).update({ status: statusValue }).eq("id", plot.id);
     setSaving(false);
-    if (!error) onStatusSaved(plot.id, statusValue);
+    if (!error) onPlotSaved(plot.id, { status: statusValue });
   };
 
   return (
@@ -619,9 +707,9 @@ function PlotPopup({ plot, site, canManage, canEdit, onClose, onStatusSaved }) {
             </button>
           </div>
           {canEdit && (
-            <Link href={`/dashboard/edit-plot/${plot.id}?table=${site.table}&slug=${site.slug}`} className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-slate-200 py-1.5 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50">
+            <button type="button" onClick={onEditPlot} className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-slate-200 py-1.5 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50">
               <Pencil className="h-3 w-3" /> Edit plot
-            </Link>
+            </button>
           )}
         </div>
       )}
@@ -629,6 +717,164 @@ function PlotPopup({ plot, site, canManage, canEdit, onClose, onStatusSaved }) {
       {/* Caret */}
       <span className="absolute left-1/2 top-full h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rotate-45 border-b border-r border-slate-200/80 bg-white" />
     </div>
+  );
+}
+
+function PlotEditModal({ plot, site, onClose, onSaved }) {
+  const props = plot.properties ?? {};
+  const initialTotal = Number(plot.plotTotalAmount ?? props.plotAmount ?? 0) || 0;
+  const initialPaid = Number(plot.paidAmount ?? 0) || 0;
+  const [form, setForm] = useState({
+    status: plotStatus(plot),
+    plotTotalAmount: initialTotal,
+    paidAmount: initialPaid,
+    remainingAmount: Number(plot.remainingAmount ?? Math.max(initialTotal - initialPaid, 0)) || 0,
+    firstname: plot.firstname ?? "",
+    lastname: plot.lastname ?? "",
+    email: plot.email ?? "",
+    phone: plot.phone ?? "",
+    country: plot.country ?? "",
+    residentialAddress: plot.residentialAddress ?? "",
+    agent: plot.agent ?? "",
+    remarks: plot.remarks ?? "",
+  });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  const plotNo = props.Plot_No ?? plot.id;
+
+  const updateField = (name, value) => {
+    setError("");
+    setForm((current) => {
+      const next = { ...current, [name]: value };
+      if (name === "plotTotalAmount" || name === "paidAmount") {
+        const total = Number(name === "plotTotalAmount" ? value : next.plotTotalAmount) || 0;
+        const paid = Number(name === "paidAmount" ? value : next.paidAmount) || 0;
+        next.remainingAmount = Math.max(total - paid, 0);
+      }
+      return next;
+    });
+  };
+
+  const savePlot = async (event) => {
+    event.preventDefault();
+    const total = Number(form.plotTotalAmount) || 0;
+    const paid = Number(form.paidAmount) || 0;
+
+    if (paid > total) {
+      setError("Paid amount cannot be greater than the plot amount.");
+      return;
+    }
+
+    setSaving(true);
+    const payload = {
+      status: form.status,
+      plotTotalAmount: total,
+      paidAmount: paid,
+      remainingAmount: Math.max(total - paid, 0),
+      firstname: form.firstname.trim(),
+      lastname: form.lastname.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim(),
+      country: form.country.trim(),
+      residentialAddress: form.residentialAddress.trim(),
+      agent: form.agent.trim(),
+      remarks: form.remarks.trim(),
+    };
+
+    const { error: saveError } = await supabase
+      .from(site.table)
+      .update(payload)
+      .eq("id", plot.id);
+
+    setSaving(false);
+    if (saveError) {
+      setError("Could not update this plot. Please try again.");
+      return;
+    }
+
+    onSaved(payload);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-3" onClick={onClose}>
+      <form
+        onSubmit={savePlot}
+        className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-xl bg-white shadow-2xl"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white px-4 py-3">
+          <div>
+            <p className="text-sm font-bold text-slate-900">Edit Plot {plotNo}</p>
+            <p className="text-xs text-slate-400">{site.name}</p>
+          </div>
+          <button type="button" onClick={onClose} className="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="grid gap-4 p-4 sm:grid-cols-2">
+          <EditField label="Status">
+            <select value={form.status} onChange={(event) => updateField("status", event.target.value)} className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30">
+              {STATUSES.map((item) => <option key={item} value={item}>{item}</option>)}
+            </select>
+          </EditField>
+          <EditField label="Plot Amount (GHS)">
+            <input type="number" min="0" value={form.plotTotalAmount} onChange={(event) => updateField("plotTotalAmount", event.target.value)} className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+          </EditField>
+          <EditField label="Paid Amount (GHS)">
+            <input type="number" min="0" value={form.paidAmount} onChange={(event) => updateField("paidAmount", event.target.value)} className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+          </EditField>
+          <EditField label="Remaining Amount (GHS)">
+            <input type="number" value={form.remainingAmount} readOnly className="h-10 w-full rounded-md border border-slate-200 bg-slate-50 px-3 text-sm text-slate-500" />
+          </EditField>
+          <EditField label="First Name">
+            <input value={form.firstname} onChange={(event) => updateField("firstname", event.target.value)} className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+          </EditField>
+          <EditField label="Last Name">
+            <input value={form.lastname} onChange={(event) => updateField("lastname", event.target.value)} className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+          </EditField>
+          <EditField label="Email">
+            <input type="email" value={form.email} onChange={(event) => updateField("email", event.target.value)} className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+          </EditField>
+          <EditField label="Phone">
+            <input value={form.phone} onChange={(event) => updateField("phone", event.target.value)} className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+          </EditField>
+          <EditField label="Country">
+            <input value={form.country} onChange={(event) => updateField("country", event.target.value)} className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+          </EditField>
+          <EditField label="Agent">
+            <input value={form.agent} onChange={(event) => updateField("agent", event.target.value)} className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+          </EditField>
+          <EditField label="Residential Address" className="sm:col-span-2">
+            <input value={form.residentialAddress} onChange={(event) => updateField("residentialAddress", event.target.value)} className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+          </EditField>
+          <EditField label="Remarks" className="sm:col-span-2">
+            <textarea value={form.remarks} onChange={(event) => updateField("remarks", event.target.value)} rows={3} className="w-full resize-none rounded-md border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-teal/30" />
+          </EditField>
+        </div>
+
+        {error && <p className="px-4 pb-2 text-sm font-medium text-red-600">{error}</p>}
+
+        <div className="sticky bottom-0 flex justify-end gap-2 border-t border-slate-100 bg-white px-4 py-3">
+          <button type="button" onClick={onClose} className="h-10 rounded-lg border border-slate-200 px-4 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+            Cancel
+          </button>
+          <button type="submit" disabled={saving} className="h-10 rounded-lg bg-brand-navy px-4 text-sm font-semibold text-white hover:bg-brand-navy/90 disabled:cursor-not-allowed disabled:opacity-60">
+            {saving ? "Saving..." : "Save changes"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function EditField({ label, className, children }) {
+  return (
+    <label className={cn("space-y-1.5", className)}>
+      <span className="text-xs font-semibold text-slate-500">{label}</span>
+      {children}
+    </label>
   );
 }
 
@@ -645,7 +891,7 @@ function StatusBadge({ status }) {
   return (
     <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold", statusCls)}>
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
-      {status}
+      {statusLabel(status)}
     </span>
   );
 }

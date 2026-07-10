@@ -1,33 +1,23 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/approval(.*)",
-  "/unauthorized(.*)",
-  "/contact(.*)",
-  "/privacy(.*)",
-  "/terms(.*)",
-  "/message(.*)",
-  "/marketplace(.*)",
-  "/sites(.*)",
-  "/api/approval-status",
-  "/api/properties/list",
-  "/api/properties/:id",
-  "/api/receive-email",
-  "/api/properties/notify-interest",
-  "/api/reserve-plot",
-  "/api/buy-plot",
-  "/api/send-sms",
+const isProtectedRoute = createRouteMatcher([
+  "/dashboard(.*)",
+  "/manager(.*)",
+  "/agent(.*)",
+  "/properties(.*)",
+  "/my-properties(.*)",
+  "/api/admin(.*)",
+  "/api/cache/clear",
+  "/api/edit-user-role",
+  "/api/get-user",
+  "/api/users",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
-  const isPublic = isPublicRoute(req);
 
-  if (!isPublic && !userId) {
+  if (isProtectedRoute(req) && !userId) {
     if (req.nextUrl.pathname.startsWith("/api")) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }

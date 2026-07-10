@@ -40,7 +40,7 @@ export default function PublicHeader() {
   const groupedSites = useMemo(() => groupSitesByLocation(SITES), []);
   const isAdmin = role === "sysadmin" || role === "admin";
   const dashboardHref = isAdmin ? null : DASHBOARD_ROLES[role] ?? null;
-  const isSiteActive = SITES.some((site) => pathname === `/sites/${site.slug}`);
+  const isSiteActive = pathname === "/sites" || SITES.some((site) => pathname === `/sites/${site.slug}`);
   const isDashActive =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/properties") ||
@@ -169,8 +169,8 @@ export default function PublicHeader() {
               <p className="mt-2 text-sm leading-6 text-slate-500">
                 Open a site to inspect plot boundaries, live status, prices, and buyer actions.
               </p>
-              <Link href="/sites/trabuom-sector-1" className="mt-4 inline-flex items-center text-sm font-semibold text-brand-navy hover:underline">
-                Open featured site
+              <Link href="/sites" className="mt-4 inline-flex items-center text-sm font-semibold text-brand-navy hover:underline">
+                View all locations
               </Link>
             </div>
           </div>

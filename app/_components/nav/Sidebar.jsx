@@ -14,6 +14,7 @@ import {
   X,
   Home,
   ChevronRight,
+  HeartHandshake,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SITES } from "@/lib/sites";
@@ -24,12 +25,14 @@ const NAV = {
   sysadmin: [
     { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { label: "Sites", href: "/dashboard/sites", icon: MapPin },
+    { label: "Interests", href: "/dashboard/interests", icon: HeartHandshake },
     { label: "Users", href: "/dashboard/users", icon: Users },
     { label: "Properties", href: "/properties/all-properties", icon: List },
   ],
   admin: [
     { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { label: "Sites", href: "/dashboard/sites", icon: MapPin },
+    { label: "Interests", href: "/dashboard/interests", icon: HeartHandshake },
     { label: "Users", href: "/dashboard/users", icon: Users },
     { label: "Properties", href: "/properties/all-properties", icon: List },
   ],

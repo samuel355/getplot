@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { colors, fontSize, spacing, borderRadius } from "../../constants/theme";
 import { formatClerkError } from "../../lib/auth";
 import { AuthMessage } from "./AuthMessage";
@@ -18,8 +17,7 @@ type Props = {
 export function OAuthButtons({ mode, onError }: Props) {
   const router = useRouter();
   const { startOAuthFlow: startGoogleFlow } = useOAuth({ strategy: "oauth_google" });
-  const { startOAuthFlow: startAppleFlow } = useOAuth({ strategy: "oauth_apple" });
-  const [loading, setLoading] = useState<string | null>(null); // 'google' | 'apple' | null
+  const [loading, setLoading] = useState<string | null>(null); // 'google' | null
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -29,12 +27,11 @@ export function OAuthButtons({ mode, onError }: Props) {
     };
   }, []);
 
-  const handleOAuth = async (strategy: "google" | "apple") => {
+  const handleOAuth = async (strategy: "google") => {
     setError(null);
     setLoading(strategy);
     try {
-      const startFlow = strategy === "google" ? startGoogleFlow : startAppleFlow;
-      const { createdSessionId, setActive, signIn, signUp } = await startFlow();
+      const { createdSessionId, setActive, signIn, signUp } = await startGoogleFlow();
 
       if (createdSessionId && setActive) {
         await setActive({ session: createdSessionId });
@@ -87,29 +84,6 @@ export function OAuthButtons({ mode, onError }: Props) {
               </View>
               <Text style={styles.btnText}>
                 {mode === "sign-in" ? "Continue with Google" : "Sign up with Google"}
-              </Text>
-            </>
-          )}
-        </Pressable>
-
-        <Pressable
-          style={({ pressed }) => [
-            styles.btn,
-            { backgroundColor: colors.black, borderColor: colors.black },
-            pressed && { opacity: 0.8 },
-            loading === "apple" && styles.btnDisabled,
-          ]}
-          onPress={() => handleOAuth("apple")}
-          disabled={!!loading}
-          accessibilityRole="button"
-        >
-          {loading === "apple" ? (
-            <ActivityIndicator color={colors.white} />
-          ) : (
-            <>
-              <Ionicons name="logo-apple" size={20} color={colors.white} />
-              <Text style={[styles.btnText, { color: colors.white }]}>
-                {mode === "sign-in" ? "Continue with Apple" : "Sign up with Apple"}
               </Text>
             </>
           )}

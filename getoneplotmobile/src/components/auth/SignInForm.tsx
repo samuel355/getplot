@@ -140,40 +140,42 @@ export function SignInForm({ onSwitchToSignUp, showSwitchLink = true, onStepChan
         <OAuthButtons mode="sign-in" onError={(text) => setMessage({ text, variant: 'error' })} />
       )}
 
-      <Input
-        label="Email"
-        autoCapitalize="none"
-        keyboardType="email-address"
-        autoComplete="email"
-        value={email}
-        onChangeText={setEmail}
-        placeholder="you@example.com"
-        icon={<Ionicons name="mail-outline" size={20} color={colors.textMuted} />}
-      />
-
-      {step !== 'forgot' && (
+      <View style={viewStyles.fields}>
         <Input
-          label={step === 'reset' ? 'New password' : 'Password'}
-          secureTextEntry
-          autoComplete={step === 'sign-in' ? 'password' : 'new-password'}
-          value={password}
-          onChangeText={setPassword}
-          placeholder="••••••••"
-          icon={<Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} />}
+          label="Email"
+          autoCapitalize="none"
+          keyboardType="email-address"
+          autoComplete="email"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="you@example.com"
+          icon={<Ionicons name="mail-outline" size={20} color={colors.textMuted} />}
         />
-      )}
 
-      {step === 'reset' && (
-        <Input
-          label="Reset code"
-          value={code}
-          onChangeText={setCode}
-          placeholder="6-digit code"
-          keyboardType="number-pad"
-          maxLength={6}
-          icon={<Ionicons name="key-outline" size={20} color={colors.textMuted} />}
-        />
-      )}
+        {step !== 'forgot' && (
+          <Input
+            label={step === 'reset' ? 'New password' : 'Password'}
+            secureTextEntry
+            autoComplete={step === 'sign-in' ? 'password' : 'new-password'}
+            value={password}
+            onChangeText={setPassword}
+            placeholder="••••••••"
+            icon={<Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} />}
+          />
+        )}
+
+        {step === 'reset' && (
+          <Input
+            label="Reset code"
+            value={code}
+            onChangeText={setCode}
+            placeholder="6-digit code"
+            keyboardType="number-pad"
+            maxLength={6}
+            icon={<Ionicons name="key-outline" size={20} color={colors.textMuted} />}
+          />
+        )}
+      </View>
 
       {step === 'sign-in' && (
         <View style={viewStyles.actions}>
@@ -245,6 +247,7 @@ export function getSignInShellCopy(step: Step) {
 }
 
 const viewStyles = StyleSheet.create({
+  fields: { gap: spacing.md },
   actions: { gap: spacing.sm, marginTop: spacing.lg },
   footerRow: {
     flexDirection: 'row',

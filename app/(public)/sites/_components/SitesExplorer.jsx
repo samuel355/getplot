@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { GoogleMap, InfoWindow, OverlayView, useJsApiLoader } from "@react-google-maps/api";
+import { DirectionsRenderer, GoogleMap, InfoWindow, OverlayView, useJsApiLoader } from "@react-google-maps/api";
 import {
   ArrowRight,
   Bike,
@@ -13,7 +13,6 @@ import {
   Loader2,
   LocateFixed,
   MapPin,
-  Navigation,
   Search,
   ZoomIn,
   ZoomOut,
@@ -66,27 +65,27 @@ function useTravelDirections(origin, destination, enabled) {
     let alive = true;
     setState({ status: "loading", results: null });
 
-    const service = new window.google.maps.DistanceMatrixService();
+    const service = new window.google.maps.DirectionsService();
 
     Promise.all(
       TRAVEL_MODES.map(
         (travelMode) =>
           new Promise((resolve) => {
-            service.getDistanceMatrix(
+            service.route(
               {
-                origins: [origin],
-                destinations: [destination],
+                origin,
+                destination,
                 travelMode: window.google.maps.TravelMode[travelMode.mode],
-                unitSystem: window.google.maps.UnitSystem.METRIC,
               },
-              (response, status) => {
-                const element = status === "OK" ? response?.rows?.[0]?.elements?.[0] : null;
-                if (!element || element.status !== "OK") return resolve({ ...travelMode, ok: false });
+              (result, status) => {
+                const leg = status === "OK" ? result?.routes?.[0]?.legs?.[0] : null;
+                if (!leg) return resolve({ ...travelMode, ok: false });
                 resolve({
                   ...travelMode,
                   ok: true,
-                  duration: element.duration?.text,
-                  distance: element.distance?.text,
+                  duration: leg.duration?.text,
+                  distance: leg.distance?.text,
+                  route: result,
                 });
               },
             );
@@ -113,6 +112,10 @@ export default function SitesExplorer({ sites }) {
   const [activeSite, setActiveSite] = useState(null);
   const [counts, setCounts] = useState({});
   const [loadingCounts, setLoadingCounts] = useState(true);
+  const [userLocation, setUserLocation] = useState(null);
+  const [locationStatus, setLocationStatus] = useState("idle");
+  const [travelMode, setTravelMode] = useState("DRIVING");
+  const [activeRoute, setActiveRoute] = useState(null);
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: "site-locations-map",
@@ -192,6 +195,7 @@ export default function SitesExplorer({ sites }) {
 
   const focusSite = (site) => {
     setActiveSite(site);
+    setActiveRoute(null);
     setView("map");
     if (!mapRef.current) return;
     mapRef.current.panTo(site.coordinates);
@@ -204,6 +208,22 @@ export default function SitesExplorer({ sites }) {
       mapRef.current.setZoom(12);
     }
   }, [activeSite, view]);
+
+  const requestUserLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationStatus("denied");
+      return;
+    }
+    setLocationStatus("loading");
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+        setLocationStatus("granted");
+      },
+      () => setLocationStatus("denied"),
+      { enableHighAccuracy: true, timeout: 8000 },
+    );
+  };
 
   return (
     <div className="bg-slate-50">
@@ -340,12 +360,42 @@ export default function SitesExplorer({ sites }) {
                     </OverlayView>
                   ))}
 
+                  {userLocation && (
+                    <OverlayView position={userLocation} mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
+                      <UserLocationDot />
+                    </OverlayView>
+                  )}
+
+                  {activeRoute && (
+                    <DirectionsRenderer
+                      directions={activeRoute}
+                      options={{
+                        suppressMarkers: true,
+                        preserveViewport: false,
+                        polylineOptions: { strokeColor: "#30D5C7", strokeWeight: 5, strokeOpacity: 0.9 },
+                      }}
+                    />
+                  )}
+
                   {activeSite && (
                     <InfoWindow
                       position={activeSite.coordinates}
-                      onCloseClick={() => setActiveSite(null)}
+                      onCloseClick={() => {
+                        setActiveSite(null);
+                        setActiveRoute(null);
+                      }}
                     >
-                      <MapInfo site={activeSite} counts={counts[activeSite.slug]} loading={loadingCounts} />
+                      <MapInfo
+                        site={activeSite}
+                        counts={counts[activeSite.slug]}
+                        loading={loadingCounts}
+                        userLocation={userLocation}
+                        locationStatus={locationStatus}
+                        onRequestLocation={requestUserLocation}
+                        travelMode={travelMode}
+                        onTravelModeChange={setTravelMode}
+                        onRouteChange={setActiveRoute}
+                      />
                     </InfoWindow>
                   )}
                 </GoogleMap>
@@ -497,7 +547,17 @@ function SiteCounts({ counts, loading }) {
   );
 }
 
-function MapInfo({ site, counts, loading }) {
+function MapInfo({
+  site,
+  counts,
+  loading,
+  userLocation,
+  locationStatus,
+  onRequestLocation,
+  travelMode,
+  onTravelModeChange,
+  onRouteChange,
+}) {
   return (
     <div className="w-64 p-1">
       <div className="flex items-start gap-2">
@@ -513,7 +573,15 @@ function MapInfo({ site, counts, loading }) {
       <div className="mt-3">
         <SiteCounts counts={counts ?? emptyCounts()} loading={loading} />
       </div>
-      <DirectionsPanel destination={site.coordinates} />
+      <DirectionsPanel
+        destination={site.coordinates}
+        userLocation={userLocation}
+        locationStatus={locationStatus}
+        onRequestLocation={onRequestLocation}
+        travelMode={travelMode}
+        onTravelModeChange={onTravelModeChange}
+        onRouteChange={onRouteChange}
+      />
       <Link href={`/sites/${site.slug}`} className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-brand-navy px-3 py-2 text-xs font-semibold text-white">
         View all plots <ArrowRight className="h-3.5 w-3.5" />
       </Link>
@@ -521,82 +589,88 @@ function MapInfo({ site, counts, loading }) {
   );
 }
 
-function DirectionsPanel({ destination }) {
-  const [userLocation, setUserLocation] = useState(null);
-  const [locStatus, setLocStatus] = useState("idle");
+function DirectionsPanel({
+  destination,
+  userLocation,
+  locationStatus,
+  onRequestLocation,
+  travelMode,
+  onTravelModeChange,
+  onRouteChange,
+}) {
+  const { status, results } = useTravelDirections(userLocation, destination, locationStatus === "granted");
 
-  const requestLocation = () => {
-    if (!navigator.geolocation) {
-      setLocStatus("denied");
+  useEffect(() => {
+    if (status !== "ready") {
+      onRouteChange(null);
       return;
     }
-    setLocStatus("loading");
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-        setLocStatus("granted");
-      },
-      () => setLocStatus("denied"),
-      { enableHighAccuracy: true, timeout: 8000 },
-    );
-  };
-
-  const { status, results } = useTravelDirections(userLocation, destination, locStatus === "granted");
-
-  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${destination.lat},${destination.lng}${
-    userLocation ? `&origin=${userLocation.lat},${userLocation.lng}` : ""
-  }`;
+    const match = results.find((result) => result.mode === travelMode) ?? results[0];
+    onRouteChange(match?.route ?? null);
+  }, [status, results, travelMode]);
 
   return (
     <div className="mt-3 rounded-lg border border-slate-100 bg-slate-50 p-2.5">
       <div className="flex items-center justify-between gap-2">
         <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Travel time</p>
-        {locStatus !== "granted" && (
+        {locationStatus !== "granted" && (
           <button
             type="button"
-            onClick={requestLocation}
-            disabled={locStatus === "loading"}
+            onClick={onRequestLocation}
+            disabled={locationStatus === "loading"}
             className="text-[11px] font-semibold text-brand-navy hover:underline disabled:opacity-60"
           >
-            {locStatus === "loading" ? "Locating..." : locStatus === "denied" ? "Retry" : "Use my location"}
+            {locationStatus === "loading" ? "Locating..." : locationStatus === "denied" ? "Retry" : "Use my location"}
           </button>
         )}
       </div>
 
-      {locStatus === "denied" && (
-        <p className="mt-1.5 text-[11px] leading-4 text-slate-400">Enable location access to see estimated travel time.</p>
+      {locationStatus === "denied" && (
+        <p className="mt-1.5 text-[11px] leading-4 text-slate-400">Enable location access to see the route and travel time.</p>
       )}
 
       {status === "loading" && (
         <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-slate-400">
-          <Loader2 className="h-3 w-3 animate-spin" /> Calculating travel time...
+          <Loader2 className="h-3 w-3 animate-spin" /> Calculating route...
         </p>
       )}
 
       {status === "error" && (
-        <p className="mt-1.5 text-[11px] leading-4 text-slate-400">Couldn&apos;t calculate travel time right now.</p>
+        <p className="mt-1.5 text-[11px] leading-4 text-slate-400">Couldn&apos;t calculate a route right now.</p>
       )}
 
       {status === "ready" && (
         <div className="mt-1.5 grid grid-cols-3 gap-1.5">
           {results.map((result) => (
-            <div key={result.mode} className="rounded-md bg-white px-1.5 py-1.5 text-center shadow-sm">
-              <result.icon className="mx-auto h-3.5 w-3.5 text-brand-navy" />
-              <p className="mt-1 text-[11px] font-bold text-slate-900">{result.duration}</p>
-              <p className="text-[9px] text-slate-400">{result.distance}</p>
-            </div>
+            <button
+              key={result.mode}
+              type="button"
+              onClick={() => onTravelModeChange(result.mode)}
+              className={cn(
+                "rounded-md px-1.5 py-1.5 text-center shadow-sm transition",
+                result.mode === travelMode ? "bg-brand-navy text-white" : "bg-white text-slate-900 hover:bg-white/70",
+              )}
+            >
+              <result.icon className={cn("mx-auto h-3.5 w-3.5", result.mode === travelMode ? "text-brand-teal" : "text-brand-navy")} />
+              <p className="mt-1 text-[11px] font-bold">{result.duration}</p>
+              <p className={cn("text-[9px]", result.mode === travelMode ? "text-white/70" : "text-slate-400")}>{result.distance}</p>
+            </button>
           ))}
         </div>
       )}
 
-      <a
-        href={directionsUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-md border border-brand-navy/15 px-3 py-1.5 text-[11px] font-semibold text-brand-navy transition-colors hover:bg-white"
-      >
-        <Navigation className="h-3 w-3" /> Get directions
-      </a>
+      {status === "ready" && (
+        <p className="mt-2 text-[10px] leading-4 text-slate-400">Route shown on the map above.</p>
+      )}
     </div>
+  );
+}
+
+function UserLocationDot() {
+  return (
+    <span className="relative flex h-4 w-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+      <span className="absolute h-4 w-4 animate-ping rounded-full bg-sky-500/50" />
+      <span className="relative h-2.5 w-2.5 rounded-full border-2 border-white bg-sky-500 shadow-md" />
+    </span>
   );
 }

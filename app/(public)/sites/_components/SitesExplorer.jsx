@@ -465,7 +465,7 @@ function SiteMapPin({ site, active, onClick }) {
       title={site.name}
     >
       <span className="flex items-center gap-1.5">
-        <span className={cn("h-2.5 w-2.5 rounded-full", active ? "bg-brand-teal" : "bg-brand-teal/70")} />
+        <span className="h-2.5 w-2.5 rounded-full bg-brand-teal" />
         <span className="text-[11px] font-bold text-brand-navy">{label}</span>
       </span>
       <span className="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1/2 rotate-45 border-b border-r border-white bg-white group-hover:border-brand-teal" />

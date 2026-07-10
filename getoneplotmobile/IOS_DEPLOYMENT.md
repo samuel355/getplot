@@ -6,11 +6,8 @@ Config-level bugs and gaps have already been fixed in the codebase (Google Maps 
 - Confirm you have an active Apple Developer Program membership ($99/yr).
 - Note your **Team ID** (Apple Developer portal → Membership).
 
-## 2. EAS login
-```
-eas login
-```
-Confirm you're logged into the account that owns this project (`extra.eas.projectId` in `app.json` is already set to `2367f3f8-9676-4c60-95d5-c39c44bc065d`).
+## 2. EAS login — DONE
+Already logged in as `sobal_official` (confirmed via `eas whoami`), owner of this project (`extra.eas.projectId` in `app.json` is `2367f3f8-9676-4c60-95d5-c39c44bc065d`).
 
 ## 3. Create the App Store Connect app record
 - In App Store Connect → My Apps → New App.
@@ -18,29 +15,14 @@ Confirm you're logged into the account that owns this project (`extra.eas.projec
 - Platform: iOS.
 - Once created, copy the **App Store Connect App ID** (a numeric ID, e.g. `1234567890`) — you'll need it for step 5.
 
-## 4. Set EAS environment variables for production
-Do **not** hardcode these into `eas.json` (it's committed to git). Use `eas env:create` per variable, or the EAS dashboard (Project → Environment Variables), targeting the `production` environment (and `preview` if you want that profile working too). Pull the actual values from `getoneplotmobile/.env.local`:
+## 4. Set EAS environment variables for production — DONE
+All 16 variables below were pushed to both the `production` and `preview` EAS environments (visibility: `sensitive`), sourced from `getoneplotmobile/.env.local`. Verified via `eas env:list --environment production`. Not hardcoded into `eas.json` (which is committed to git).
 
-**Client-bundled (`EXPO_PUBLIC_*`, safe to expose in the app binary):**
-- `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`
-- `EXPO_PUBLIC_SUPABASE_URL`
-- `EXPO_PUBLIC_SUPABASE_ANON_KEY`
-- `EXPO_PUBLIC_GOOGLE_MAPS_API_KEY`
-- `EXPO_PUBLIC_PAYSTACK_PUBLIC_KEY`
-- `EXPO_PUBLIC_ARKESEL_SMS_API` (kept as a fallback in code; not used for the actual send anymore, see `notificationService.ts`)
-- `EXPO_PUBLIC_COMPANY_NUMBER`
-- `EXPO_PUBLIC_IMAGE_URL`, `EXPO_PUBLIC_IMAGE_LAND_URL`
+**Client-bundled (`EXPO_PUBLIC_*`):** `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`, `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`, `EXPO_PUBLIC_GOOGLE_MAPS_API_KEY`, `EXPO_PUBLIC_PAYSTACK_PUBLIC_KEY`, `EXPO_PUBLIC_ARKESEL_SMS_API`, `EXPO_PUBLIC_COMPANY_NUMBER`, `EXPO_PUBLIC_IMAGE_URL`, `EXPO_PUBLIC_IMAGE_LAND_URL`
 
-**Server-only (used by `app/api/*+api.ts` routes when deployed):**
-- `CLERK_SECRET_KEY`
-- `ARKESEL_SMS_API`
-- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_EMAIL`, `SMTP_FROM`
+**Server-only (used by `app/api/*+api.ts` routes):** `CLERK_SECRET_KEY`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_EMAIL`, `SMTP_FROM`
 
-Example for one variable:
-```
-eas env:create --environment production --name EXPO_PUBLIC_GOOGLE_MAPS_API_KEY --value "<value from .env.local>" --visibility sensitive
-```
-Repeat for each, or check `eas env --help` / the dashboard for bulk-import support.
+If you rotate any of these values later, update with `eas env:create --force` (same flags) rather than editing `eas.json`.
 
 ## 5. Fill in `eas.json` submit config
 Once step 3 gives you a real App Store Connect App ID, update `eas.json`:

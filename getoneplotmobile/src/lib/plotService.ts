@@ -37,6 +37,8 @@ export async function updatePlotOnHold(table: string, plotId: string, buyer: Buy
     })
     .eq("id", plotId);
 
+  if (res.error) throw res.error;
+
   // Best-effort cache invalidation — fire-and-forget with a 4s cap so it never blocks the UI
   const apiURL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000";
   const clearCache = (body: object) => {

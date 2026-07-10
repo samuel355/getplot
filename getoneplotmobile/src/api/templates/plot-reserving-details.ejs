@@ -22,23 +22,32 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Plot Reservation Confirmation</h1>
-      <p>Your plot has been reserved</p>
+      <h1>Plot Reservation Request</h1>
+      <p>Bank deposit details</p>
     </div>
     <div class="content">
-      <span class="badge">⏳ Reservation Active</span>
+      <span class="badge">⏳ Request Received</span>
       <p>Dear <strong><%= firstname %> <%= lastname %></strong>,</p>
-      <p>Your plot reservation has been received. Here are your reservation details:</p>
+      <p>Your plot reservation request has been received. Please make the required deposit using the bank details below, then bring your receipt to our office at Kumasi Dichemso to finalize the reservation.</p>
       <div class="details">
         <table>
           <tr><td>Location</td><td><%= plotArea %></td></tr>
           <tr><td>Plot</td><td><%= plotDetails %></td></tr>
           <tr><td>Plot Size</td><td><%= plotSize %></td></tr>
-          <tr><td>Deposit Paid</td><td><%= amount %></td></tr>
+          <tr><td>Deposit Required</td><td><%= amount %></td></tr>
+        </table>
+      </div>
+      <div class="details">
+        <table>
+          <tr><td>Bank Name</td><td>STANBIC BANK</td></tr>
+          <tr><td>Account Name</td><td>LAND AND HOMES CONSULT</td></tr>
+          <tr><td>Cedis Account</td><td>9040009771047</td></tr>
+          <tr><td>Dollar Account</td><td>9040011449268</td></tr>
+          <tr><td>Branch</td><td>KNUST, KUMASI-GHANA</td></tr>
         </table>
       </div>
       <div class="notice">
-        <strong>Next Step:</strong> Please complete the full payment to secure ownership of this plot. Our team will contact you to guide you through the process.
+        <strong>Next Step:</strong> Pay at the bank and bring your receipt to our Kumasi Dichemso office. Call 0322008282 / +233 54 855 4216 if you need help.
       </div>
       <p>If you have any questions, please contact us at <a href="mailto:landandhomesconsult@gmail.com">landandhomesconsult@gmail.com</a>.</p>
       <p>Best regards,<br><strong>The Get One Plot Team</strong></p>

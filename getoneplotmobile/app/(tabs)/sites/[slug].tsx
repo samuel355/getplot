@@ -158,7 +158,7 @@ export default function SiteMapScreen() {
         onAddToCart={() => {
           if (!selected) return;
           requireAuth(() => {
-            addPlot(selected);
+            addPlot({ ...selected, table: development.table, siteName: development.title });
             Alert.alert("Added", "Plot added to cart");
           });
         }}

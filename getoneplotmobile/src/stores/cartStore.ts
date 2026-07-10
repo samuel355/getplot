@@ -3,11 +3,11 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { PlotFeature } from '../types/plot';
 
-export type CartPlot = PlotFeature & { quantity: number };
+export type CartPlot = PlotFeature & { quantity: number; table?: string; siteName?: string };
 
 type CartState = {
   plots: CartPlot[];
-  addPlot: (item: PlotFeature, quantity?: number) => void;
+  addPlot: (item: PlotFeature & { table?: string; siteName?: string }, quantity?: number) => void;
   removePlot: (id: string) => void;
   clearCart: () => void;
   isInCart: (id: string) => boolean;

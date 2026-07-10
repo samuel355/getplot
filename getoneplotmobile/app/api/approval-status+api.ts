@@ -5,6 +5,7 @@ const clerkClient = createClerkClient({ secretKey });
 
 const acceptedRoles = ["sysadmin", "admin", "property_agent", "chief", "chief_asst"];
 const AUTO_APPROVED_EMAIL = "samueloseiboatenglistowell57@gmail.com";
+const AUTO_APPROVED_ROLE = "sysadmin";
 
 export async function GET(request: Request) {
   try {
@@ -26,14 +27,25 @@ export async function GET(request: Request) {
     const userArea = user.publicMetadata?.area as string;
     const userEmail =
       user.primaryEmailAddress?.emailAddress || user.emailAddresses?.[0]?.emailAddress;
+    const isAutoApproved = userEmail?.trim().toLowerCase() === AUTO_APPROVED_EMAIL;
+    const effectiveRole = isAutoApproved ? AUTO_APPROVED_ROLE : userRole;
 
     const isApproved =
-      userEmail === AUTO_APPROVED_EMAIL || (userRole && acceptedRoles.includes(userRole));
+      isAutoApproved || (effectiveRole && acceptedRoles.includes(effectiveRole));
+
+    if (isAutoApproved && userRole !== AUTO_APPROVED_ROLE) {
+      await clerkClient.users.updateUserMetadata(userId, {
+        publicMetadata: {
+          ...user.publicMetadata,
+          role: AUTO_APPROVED_ROLE,
+        },
+      });
+    }
 
     return Response.json({
       isApproved: !!isApproved,
       area: userArea,
-      role: userRole,
+      role: effectiveRole,
       lastChecked: new Date().toISOString(),
     });
   } catch (error: any) {

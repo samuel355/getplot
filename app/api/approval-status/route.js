@@ -1,25 +1,30 @@
 import { NextResponse } from "next/server";
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { getOrSetCache } from "@/lib/redis";
+import {
+  AUTO_SYSADMIN_ROLE,
+  ensureAutoSysadminMetadata,
+  getEffectiveRole,
+  getUserPrimaryEmail,
+  isAutoSysadminEmail,
+} from "@/lib/autoApproval";
 
 export const dynamic = "force-dynamic";
 
 const acceptedRoles = ["sysadmin", "admin", "property_agent", "chief", "chief_asst"];
-const AUTO_APPROVED_EMAIL = "samueloseiboatenglistowell57@gmail.com";
 
 function buildApprovalResponse(user) {
-  const userRole = user.publicMetadata?.role;
+  const userRole = getEffectiveRole(user);
   const userArea = user.publicMetadata?.area;
-  const userEmail =
-    user.primaryEmailAddress?.emailAddress || user.emailAddresses?.[0]?.emailAddress;
+  const userEmail = getUserPrimaryEmail(user);
 
   const isApproved =
-    userEmail === AUTO_APPROVED_EMAIL || (userRole && acceptedRoles.includes(userRole));
+    isAutoSysadminEmail(userEmail) || (userRole && acceptedRoles.includes(userRole));
 
   return {
     isApproved: !!isApproved,
     area: userArea,
-    role: userRole,
+    role: isAutoSysadminEmail(userEmail) ? AUTO_SYSADMIN_ROLE : userRole,
     lastChecked: new Date().toISOString(),
   };
 }
@@ -47,6 +52,11 @@ export async function GET() {
 
     if (!user) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
+    if (getEffectiveRole(user) === AUTO_SYSADMIN_ROLE) {
+      const client = await clerkClient();
+      await ensureAutoSysadminMetadata(client, user);
     }
 
     return NextResponse.json(buildApprovalResponse(user));

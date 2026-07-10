@@ -55,3 +55,21 @@ export const sendSMS = async (phone, message1) => {
     console.error("Error sending messages:", error);
   }
 };
+
+export const sendCompanyAlert = async ({ subject, message }) => {
+  try {
+    const res = await fetch("/api/company-alert", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ subject, message }),
+    });
+
+    if (!res.ok) {
+      console.error("Company alert failed:", await res.text());
+    }
+  } catch (error) {
+    console.error("Error sending company alert:", error);
+  }
+};

@@ -1,249 +1,378 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUser, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
-import { Menu, X, ChevronDown, MapPin, LayoutDashboard, Building2 } from "lucide-react";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
+import {
+  Building2,
+  ChevronDown,
+  Home,
+  LandPlot,
+  LayoutDashboard,
+  MapPin,
+  Menu,
+  Phone,
+  Store,
+  UserRound,
+  X,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SITES } from "@/lib/sites";
 import { LogoLateral } from "@/app/_components/Logo";
 
+const DASHBOARD_ROLES = {
+  agent: "/agent",
+  property_agent: "/agent",
+  land_manager: "/manager",
+  chief: "/manager",
+  chief_asst: "/manager",
+};
+
 export default function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [sitesOpen, setSitesOpen] = useState(false);
-  const [dashOpen, setDashOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null);
   const pathname = usePathname();
   const { user } = useUser();
   const role = user?.publicMetadata?.role;
+  const headerRef = useRef(null);
 
+  const groupedSites = useMemo(() => groupSitesByLocation(SITES), []);
   const isAdmin = role === "sysadmin" || role === "admin";
-  const isActive = (href) => pathname === href;
-  const isSiteActive = SITES.some((s) => pathname === `/sites/${s.slug}`);
-  const isDashActive = pathname.startsWith("/dashboard") || pathname.startsWith("/properties") || pathname.startsWith("/agent") || pathname.startsWith("/manager");
+  const dashboardHref = isAdmin ? null : DASHBOARD_ROLES[role] ?? null;
+  const isSiteActive = SITES.some((site) => pathname === `/sites/${site.slug}`);
+  const isDashActive =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/properties") ||
+    pathname.startsWith("/agent") ||
+    pathname.startsWith("/manager");
 
-  const singleDashHref =
-    isAdmin ? null
-    : role === "agent" ? "/agent"
-    : role === "land_manager" ? "/manager"
-    : null;
+  useEffect(() => {
+    setOpenMenu(null);
+    setMobileOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const closeOnOutsideClick = (event) => {
+      if (!headerRef.current?.contains(event.target)) setOpenMenu(null);
+    };
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setOpenMenu(null);
+    };
+
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("mousedown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-brand-navy text-white shadow-lg shadow-brand-navy/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <LogoLateral variant="light" height={56} />
+    <header ref={headerRef} className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-brand-navy text-white shadow-lg shadow-brand-navy/15">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between gap-4">
+          <Link href="/" className="flex shrink-0 items-center" aria-label="GetOnePlot home">
+            <LogoLateral variant="light" height={52} />
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1">
-            <NavLink href="/" active={isActive("/")}>Home</NavLink>
+          <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+            <NavLink href="/" active={pathname === "/"} icon={Home}>
+              Home
+            </NavLink>
 
-            {/* Sites dropdown */}
-            <div className="relative" onMouseLeave={() => setSitesOpen(false)}>
-              <button
-                onMouseEnter={() => setSitesOpen(true)}
-                className={cn(
-                  "flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-white/10",
-                  isSiteActive && "bg-white/15 text-brand-teal"
-                )}
-              >
-                Our Sites <ChevronDown className="w-4 h-4" />
-              </button>
-              {sitesOpen && (
-                <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-lg shadow-xl overflow-hidden border border-slate-200">
-                  {SITES.map((site) => (
-                    <Link
-                      key={site.slug}
-                      href={`/sites/${site.slug}`}
-                      onClick={() => setSitesOpen(false)}
-                      className={cn(
-                        "flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0",
-                        pathname === `/sites/${site.slug}` && "bg-brand-teal/10"
-                      )}
-                    >
-                      <MapPin className="w-4 h-4 text-brand-navy mt-0.5 shrink-0" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">{site.name}</p>
-                        <p className="text-xs text-gray-500">{site.location}</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+            <MenuButton
+              active={isSiteActive}
+              open={openMenu === "sites"}
+              onClick={() => setOpenMenu((current) => current === "sites" ? null : "sites")}
+              icon={LandPlot}
+            >
+              Sites
+            </MenuButton>
 
-            <NavLink href="/marketplace" active={isActive("/marketplace")}>Marketplace</NavLink>
-            <NavLink href="/contact" active={isActive("/contact")}>Contact</NavLink>
+            <NavLink href="/marketplace" active={pathname === "/marketplace"} icon={Store}>
+              Marketplace
+            </NavLink>
+            <NavLink href="/contact" active={pathname === "/contact"} icon={Phone}>
+              Contact
+            </NavLink>
 
-            {/* Dashboard — visible when signed in */}
             <SignedIn>
               {isAdmin ? (
-                <div className="relative" onMouseLeave={() => setDashOpen(false)}>
-                  <button
-                    onMouseEnter={() => setDashOpen(true)}
-                    className={cn(
-                      "flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-white/10",
-                      isDashActive && "bg-white/15 text-brand-teal"
-                    )}
-                  >
-                    Dashboard <ChevronDown className="w-4 h-4" />
-                  </button>
-                  {dashOpen && (
-                    <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-xl overflow-hidden border border-slate-200">
-                      <Link
-                        href="/dashboard"
-                        onClick={() => setDashOpen(false)}
-                        className={cn(
-                          "flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors border-b border-slate-100",
-                          pathname.startsWith("/dashboard") && "bg-brand-teal/10"
-                        )}
-                      >
-                        <LayoutDashboard className="w-4 h-4 text-brand-navy mt-0.5 shrink-0" />
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">Land Dashboard</p>
-                          <p className="text-xs text-gray-500">Sites, plots & users</p>
-                        </div>
-                      </Link>
-                      <Link
-                        href="/properties"
-                        onClick={() => setDashOpen(false)}
-                        className={cn(
-                          "flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors",
-                          pathname.startsWith("/properties") && "bg-brand-teal/10"
-                        )}
-                      >
-                        <Building2 className="w-4 h-4 text-brand-navy mt-0.5 shrink-0" />
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">Properties Dashboard</p>
-                          <p className="text-xs text-gray-500">Marketplace listings</p>
-                        </div>
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              ) : singleDashHref ? (
-                <NavLink href={singleDashHref} active={isDashActive}>Dashboard</NavLink>
+                <MenuButton
+                  active={isDashActive}
+                  open={openMenu === "dashboard"}
+                  onClick={() => setOpenMenu((current) => current === "dashboard" ? null : "dashboard")}
+                  icon={LayoutDashboard}
+                >
+                  Dashboard
+                </MenuButton>
+              ) : dashboardHref ? (
+                <NavLink href={dashboardHref} active={isDashActive} icon={LayoutDashboard}>
+                  Dashboard
+                </NavLink>
               ) : null}
             </SignedIn>
           </nav>
 
-          {/* Right: auth */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden shrink-0 items-center gap-3 lg:flex">
             <SignedIn>
               <UserButton afterSignOutUrl="/" />
             </SignedIn>
             <SignedOut>
-              <Link
-                href="/sign-in"
-                className="text-sm font-medium px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-              >
-                Sign In
+              <Link href="/sign-in" className="inline-flex h-10 items-center rounded-lg px-4 text-sm font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-white">
+                Sign in
               </Link>
-              <Link
-                href="/sign-up"
-                className="text-sm font-medium px-4 py-2 rounded-lg bg-brand-teal hover:bg-brand-teal/90 text-brand-navy transition-colors"
-              >
-                Get Started
+              <Link href="/sign-up" className="inline-flex h-10 items-center rounded-lg bg-brand-teal px-4 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
+                Get started
               </Link>
             </SignedOut>
           </div>
 
-          {/* Mobile hamburger */}
           <button
-            className="md:hidden p-2 rounded-md hover:bg-white/10"
-            onClick={() => setMobileOpen((o) => !o)}
+            type="button"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white lg:hidden"
+            onClick={() => setMobileOpen((open) => !open)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
           >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="md:hidden bg-brand-navy border-t border-white/10 px-4 pb-4 space-y-1">
-          <MobileNavLink href="/" onClick={() => setMobileOpen(false)}>Home</MobileNavLink>
-          <div className="pt-1 pb-1">
-            <p className="text-xs uppercase tracking-wider text-white/40 px-3 py-1">Our Sites</p>
-            {SITES.map((site) => (
-              <MobileNavLink key={site.slug} href={`/sites/${site.slug}`} onClick={() => setMobileOpen(false)}>
-                {site.name}
-              </MobileNavLink>
-            ))}
-          </div>
-          <MobileNavLink href="/marketplace" onClick={() => setMobileOpen(false)}>Marketplace</MobileNavLink>
-          <MobileNavLink href="/contact" onClick={() => setMobileOpen(false)}>Contact</MobileNavLink>
+      {openMenu === "sites" && (
+        <DesktopPanel className="left-1/2 w-[min(52rem,calc(100vw-2rem))] -translate-x-1/2">
+          <div className="grid gap-5 md:grid-cols-[1fr_17rem]">
+            <div className="grid gap-5 sm:grid-cols-2">
+              {groupedSites.map(({ location, sites }) => (
+                <div key={location}>
+                  <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-slate-400">{location}</p>
+                  <div className="space-y-1">
+                    {sites.map((site) => (
+                      <PanelLink
+                        key={site.slug}
+                        href={`/sites/${site.slug}`}
+                        active={pathname === `/sites/${site.slug}`}
+                        icon={MapPin}
+                        title={site.name}
+                        text={site.description}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
 
-          {/* Dashboard in mobile */}
-          <SignedIn>
-            {isAdmin ? (
-              <div className="pt-1 pb-1">
-                <p className="text-xs uppercase tracking-wider text-white/40 px-3 py-1">Dashboard</p>
-                <MobileNavLink href="/dashboard" onClick={() => setMobileOpen(false)}>
-                  Land Dashboard
-                </MobileNavLink>
-                <MobileNavLink href="/properties" onClick={() => setMobileOpen(false)}>
-                  Properties Dashboard
-                </MobileNavLink>
+            <div className="rounded-lg bg-slate-50 p-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-navy text-white">
+                <LandPlot className="h-5 w-5" />
               </div>
-            ) : singleDashHref ? (
-              <MobileNavLink href={singleDashHref} onClick={() => setMobileOpen(false)}>
-                Dashboard
-              </MobileNavLink>
-            ) : null}
-          </SignedIn>
-
-          <div className="pt-2 flex gap-2">
-            <SignedIn>
-              <UserButton afterSignOutUrl="/" />
-            </SignedIn>
-            <SignedOut>
-              <Link
-                href="/sign-in"
-                onClick={() => setMobileOpen(false)}
-                className="flex-1 text-center text-sm font-medium px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-              >
-                Sign In
+              <h2 className="mt-4 font-semibold text-slate-950">Mapped land inventory</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                Open a site to inspect plot boundaries, live status, prices, and buyer actions.
+              </p>
+              <Link href="/sites/trabuom-sector-1" className="mt-4 inline-flex items-center text-sm font-semibold text-brand-navy hover:underline">
+                Open featured site
               </Link>
-              <Link
-                href="/sign-up"
-                onClick={() => setMobileOpen(false)}
-                className="flex-1 text-center text-sm font-medium px-4 py-2 rounded-lg bg-brand-teal hover:bg-brand-teal/90 text-brand-navy transition-colors"
-              >
-                Get Started
-              </Link>
-            </SignedOut>
+            </div>
           </div>
-        </div>
+        </DesktopPanel>
+      )}
+
+      {openMenu === "dashboard" && (
+        <DesktopPanel className="right-[max(1rem,calc((100vw-80rem)/2+1rem))] w-80">
+          <div className="space-y-1">
+            <PanelLink
+              href="/dashboard"
+              active={pathname.startsWith("/dashboard")}
+              icon={LayoutDashboard}
+              title="Land dashboard"
+              text="Manage sites, plots, interests, and user roles."
+            />
+            <PanelLink
+              href="/properties"
+              active={pathname.startsWith("/properties")}
+              icon={Building2}
+              title="Properties dashboard"
+              text="Manage marketplace property listings and approvals."
+            />
+          </div>
+        </DesktopPanel>
+      )}
+
+      {mobileOpen && (
+        <MobileMenu
+          groupedSites={groupedSites}
+          isAdmin={isAdmin}
+          dashboardHref={dashboardHref}
+          onClose={() => setMobileOpen(false)}
+        />
       )}
     </header>
   );
 }
 
-function NavLink({ href, active, children }) {
+function groupSitesByLocation(sites) {
+  const groups = sites.reduce((acc, site) => {
+    const key = site.location || "Other";
+    acc[key] = acc[key] ? [...acc[key], site] : [site];
+    return acc;
+  }, {});
+
+  return Object.entries(groups).map(([location, sites]) => ({ location, sites }));
+}
+
+function NavLink({ href, active, icon: Icon, children }) {
   return (
     <Link
       href={href}
       className={cn(
-        "px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-white/10",
-        active && "bg-white/15 text-brand-teal"
+        "inline-flex h-10 items-center gap-2 rounded-lg px-3 text-sm font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white",
+        active && "bg-white/10 text-brand-teal",
       )}
     >
+      {Icon ? <Icon className="h-4 w-4" /> : null}
       {children}
     </Link>
   );
 }
 
-function MobileNavLink({ href, onClick, children }) {
+function MenuButton({ active, open, onClick, icon: Icon, children }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "inline-flex h-10 items-center gap-2 rounded-lg px-3 text-sm font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white",
+        (active || open) && "bg-white/10 text-brand-teal",
+      )}
+      aria-expanded={open}
+    >
+      {Icon ? <Icon className="h-4 w-4" /> : null}
+      {children}
+      <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
+    </button>
+  );
+}
+
+function DesktopPanel({ children, className }) {
+  return (
+    <div className={cn("absolute top-[calc(100%+0.5rem)] rounded-lg border border-slate-200 bg-white p-3 text-slate-900 shadow-2xl shadow-brand-navy/20", className)}>
+      {children}
+    </div>
+  );
+}
+
+function PanelLink({ href, active, icon: Icon, title, text }) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "flex gap-3 rounded-lg p-3 transition-colors hover:bg-slate-50",
+        active && "bg-brand-teal/10",
+      )}
+    >
+      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-navy/5 text-brand-navy">
+        <Icon className="h-4 w-4" />
+      </span>
+      <span className="min-w-0">
+        <span className="block text-sm font-semibold text-slate-950">{title}</span>
+        {text ? <span className="mt-0.5 line-clamp-2 block text-xs leading-5 text-slate-500">{text}</span> : null}
+      </span>
+    </Link>
+  );
+}
+
+function MobileMenu({ groupedSites, isAdmin, dashboardHref, onClose }) {
+  const [sitesOpen, setSitesOpen] = useState(false);
+  const [dashOpen, setDashOpen] = useState(false);
+
+  return (
+    <div className="border-t border-white/10 bg-brand-navy px-4 pb-5 lg:hidden">
+      <div className="space-y-1 py-3">
+        <MobileLink href="/" onClick={onClose} icon={Home}>Home</MobileLink>
+        <MobileDisclosure label="Sites" icon={LandPlot} open={sitesOpen} onClick={() => setSitesOpen((open) => !open)} />
+        {sitesOpen && (
+          <div className="space-y-3 border-l border-white/10 py-2 pl-3">
+            {groupedSites.map(({ location, sites }) => (
+              <div key={location}>
+                <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-white/35">{location}</p>
+                {sites.map((site) => (
+                  <MobileLink key={site.slug} href={`/sites/${site.slug}`} onClick={onClose}>
+                    {site.name}
+                  </MobileLink>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+        <MobileLink href="/marketplace" onClick={onClose} icon={Store}>Marketplace</MobileLink>
+        <MobileLink href="/contact" onClick={onClose} icon={Phone}>Contact</MobileLink>
+
+        <SignedIn>
+          {isAdmin ? (
+            <>
+              <MobileDisclosure label="Dashboard" icon={LayoutDashboard} open={dashOpen} onClick={() => setDashOpen((open) => !open)} />
+              {dashOpen && (
+                <div className="border-l border-white/10 py-2 pl-3">
+                  <MobileLink href="/dashboard" onClick={onClose}>Land dashboard</MobileLink>
+                  <MobileLink href="/properties" onClick={onClose}>Properties dashboard</MobileLink>
+                </div>
+              )}
+            </>
+          ) : dashboardHref ? (
+            <MobileLink href={dashboardHref} onClick={onClose} icon={LayoutDashboard}>Dashboard</MobileLink>
+          ) : null}
+        </SignedIn>
+      </div>
+
+      <div className="border-t border-white/10 pt-4">
+        <SignedIn>
+          <div className="flex items-center gap-3 rounded-lg bg-white/5 px-3 py-2">
+            <UserButton afterSignOutUrl="/" />
+            <span className="text-sm font-medium text-white/75">Account</span>
+          </div>
+        </SignedIn>
+        <SignedOut>
+          <div className="grid grid-cols-2 gap-2">
+            <Link href="/sign-in" onClick={onClose} className="inline-flex h-10 items-center justify-center rounded-lg bg-white/10 text-sm font-semibold text-white transition-colors hover:bg-white/15">
+              Sign in
+            </Link>
+            <Link href="/sign-up" onClick={onClose} className="inline-flex h-10 items-center justify-center rounded-lg bg-brand-teal text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
+              Get started
+            </Link>
+          </div>
+        </SignedOut>
+      </div>
+    </div>
+  );
+}
+
+function MobileDisclosure({ label, icon: Icon, open, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+      aria-expanded={open}
+    >
+      <Icon className="h-4 w-4" />
+      <span className="flex-1 text-left">{label}</span>
+      <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
+    </button>
+  );
+}
+
+function MobileLink({ href, onClick, icon: Icon, children }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className="block px-3 py-2 rounded-md text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-white/75 transition-colors hover:bg-white/10 hover:text-white"
     >
-      {children}
+      {Icon ? <Icon className="h-4 w-4" /> : <span className="h-4 w-4" />}
+      <span className="min-w-0 truncate">{children}</span>
     </Link>
   );
 }

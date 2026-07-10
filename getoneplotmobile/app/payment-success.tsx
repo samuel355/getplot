@@ -42,13 +42,13 @@ export default function PaymentSuccessScreen() {
             },
           ]}
         >
-          {isReserve ? "Reservation Received" : "Purchase Successful"}
+          {isReserve ? "Reservation Received" : "Purchase Request Received"}
         </Text>
 
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
           {isReserve
-            ? "Your deposit has been successfully processed."
-            : "Your payment has been successfully processed."}
+            ? "Your reservation request has been received. Bank deposit instructions have been sent to your email and phone."
+            : "Your purchase request has been received. Bank payment instructions have been sent to your email and phone."}
         </Text>
 
         <View
@@ -63,7 +63,9 @@ export default function PaymentSuccessScreen() {
           ]}
         >
           <View style={styles.receiptHeader}>
-            <Text style={[styles.receiptLabel, { color: colors.textMuted }]}>Amount Paid</Text>
+            <Text style={[styles.receiptLabel, { color: colors.textMuted }]}>
+              {isReserve ? "Deposit Required" : "Amount Due"}
+            </Text>
             <Text
               style={[
                 styles.receiptValue,
@@ -97,7 +99,7 @@ export default function PaymentSuccessScreen() {
             <Text style={[styles.detailLabel, { color: colors.textMuted }]}>Status</Text>
             <View style={[styles.statusBadge, { backgroundColor: colors.success + "15" }]}>
               <Text style={[styles.statusText, { color: colors.success }]}>
-                {isReserve ? "RESERVED" : "HOLD (48H)"}
+                {isReserve ? "REQUEST RECEIVED" : "ON HOLD"}
               </Text>
             </View>
           </View>
@@ -106,8 +108,8 @@ export default function PaymentSuccessScreen() {
         <View style={styles.infoBox}>
           <Ionicons name="information-circle-outline" size={20} color={colors.textSecondary} />
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-            A confirmation email with the official receipt and next steps has been sent to your
-            registered email address.
+            Check your email for bank details. Make payment at the bank and bring your receipt
+            to our Kumasi Dichemso office to finalize the plot sale or reservation.
           </Text>
         </View>
 

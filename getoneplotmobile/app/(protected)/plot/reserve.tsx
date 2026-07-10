@@ -2,7 +2,6 @@ import { useUser } from "@clerk/clerk-expo";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View, type TextStyle } from "react-native";
-import { PaystackCheckout } from "../../../src/components/PaystackCheckout";
 import { Button } from "../../../src/components/ui/Button";
 import { Input } from "../../../src/components/ui/Input";
 import { Loading } from "../../../src/components/ui/Loading";
@@ -33,7 +32,6 @@ export default function ReservePlotScreen() {
   const [plot, setPlot] = useState<PlotFeature | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
-  const [payVisible, setPayVisible] = useState(false);
   const [buyer, setBuyer] = useState<BuyerInfo>({
     firstname: user?.firstName || "",
     lastname: user?.lastName || "",
@@ -74,25 +72,19 @@ export default function ReservePlotScreen() {
     return null;
   };
 
-  const onPay = () => {
+  const submitReservationRequest = async () => {
     const err = validate();
     if (err) {
       Alert.alert("Required Fields", err);
       return;
     }
-    setPayVisible(true);
-  };
-
-  const onPaymentSuccess = async () => {
-    setPayVisible(false);
     if (!plot || !table || !id) return;
 
     setProcessing(true);
     try {
-      // 1. Update Plot Status (Critical)
+      // Paystack is intentionally disabled. Buyers receive bank details and bring receipt to the office.
       await updatePlotOnHold(table, id, buyer);
 
-      // 2. Trigger Notifications (Non-blocking for UI speed)
       notifyPlotPurchaseSuccess({
         phone: buyer.phone,
         email: buyer.email,
@@ -105,7 +97,6 @@ export default function ReservePlotScreen() {
         areaAcres: formatAreaSize(plot.properties?.Area),
       }).catch((err) => console.error("Notification background error:", err));
 
-      // 3. Move to success screen immediately
       setProcessing(false);
       router.replace({
         pathname: "/payment-success",
@@ -117,13 +108,13 @@ export default function ReservePlotScreen() {
         },
       });
     } catch (e) {
-      console.error("Post-payment error:", e);
+      console.error("Reservation request error:", e);
       setProcessing(false);
       router.replace({
         pathname: "/payment-error",
         params: {
           message:
-            "Deposit received, but we couldn't update the plot status. Please contact support.",
+            "We couldn't submit your reservation request. Please try again or contact support.",
         },
       });
     }
@@ -143,7 +134,7 @@ export default function ReservePlotScreen() {
             textAlign: "center",
           }}
         >
-          Finalizing your reservation...{"\n"}Please do not close the app.
+          Submitting your reservation request...{"\n"}Please do not close the app.
         </Text>
       </View>
     );
@@ -161,8 +152,6 @@ export default function ReservePlotScreen() {
   }
 
   const deposit = buyer.paidAmount || 0;
-  const reference = `reserve_${id}_${Date.now()}`;
-
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
@@ -342,9 +331,9 @@ export default function ReservePlotScreen() {
         </View>
 
         <View style={styles.secureBadge}>
-          <Ionicons name="shield-checkmark" size={14} color={colors.success} />
+          <Ionicons name="mail" size={14} color={colors.success} />
           <Text style={[styles.secureText, { color: colors.textMuted }]}>
-            Safe and Secure Reservation
+            Bank deposit instructions will be sent by email and SMS
           </Text>
         </View>
       </ScrollView>
@@ -360,27 +349,8 @@ export default function ReservePlotScreen() {
           },
         ]}
       >
-        <Button title={`Reserve Now • ${formatGhs(deposit)}`} onPress={onPay} size="lg" fullWidth />
+        <Button title={`Send Bank Details • ${formatGhs(deposit)}`} onPress={submitReservationRequest} size="lg" fullWidth />
       </View>
-
-      <PaystackCheckout
-        visible={payVisible}
-        email={buyer.email}
-        amount={deposit}
-        reference={reference}
-        onSuccess={onPaymentSuccess}
-        onClose={() => {
-          if (!processing) {
-            setPayVisible(false);
-            router.push({
-              pathname: "/payment-error",
-              params: {
-                message: "Reservation was cancelled. You can try again whenever you're ready.",
-              },
-            });
-          }
-        }}
-      />
     </View>
   );
 }

@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { cedisAccount } from "./cedis-account";
 import { dollarAccount } from "./dollar-account";
 import { supabase } from "@/utils/supabase/client";
-import { sendSMS } from "./send-sms";
+import { sendCompanyAlert, sendSMS } from "./send-sms";
 
 export const BuyPlotCheckout = async (
   plots,
@@ -220,6 +220,21 @@ export const BuyPlotCheckout = async (
     const message1 = `To claim ownership of the chosen plot, kindly make the payment to either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 54 855 4216 or check your email for more info`;
     //send SMS
     sendSMS(plotData.phone, message1);
+    sendCompanyAlert({
+      subject: `New cart plot purchase request: ${plots.length} plot(s)`,
+      message: [
+        "New cart plot purchase request",
+        `Client: ${plotData.firstname} ${plotData.lastname}`,
+        `Phone: ${plotData.phone}`,
+        `Email: ${plotData.email}`,
+        `Country: ${plotData.country}`,
+        `Total: GHS ${total.toLocaleString()}`,
+        `Plots: ${plotDetails
+          .map((plot) => `${plot.plotNo} ${plot.streetName || ""} at ${plot.location}`)
+          .join("; ")}`,
+        "Follow up and confirm bank receipt at the office.",
+      ].join("\n"),
+    });
 
     setVerifyLoading(false);
     return { success: true };

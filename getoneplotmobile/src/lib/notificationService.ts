@@ -52,6 +52,21 @@ export async function sendEmailNotification(payload: {
   }
 }
 
+export async function sendCompanyAlert(payload: {
+  subject: string;
+  message: string;
+}) {
+  try {
+    await fetchMobileApi("/api/company-alert", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    console.error("Error sending company alert:", error);
+  }
+}
+
 /**
  * Standardized success notification flow for plots.
  */
@@ -68,15 +83,15 @@ export async function notifyPlotPurchaseSuccess(params: {
 }) {
   const plotInfo = `Plot ${params.plotNo}, ${params.siteName}`;
   const amountStr = formatGhs(params.amount);
+  const officeInstructions =
+    "Make payment to the Stanbic Bank account sent to your email and bring your receipt to our Kumasi Dichemso office to finalize the plot sale.";
 
-  // 1. Send SMS via Arkesel
   const smsMessage = params.isFullPayment
-    ? `Thank you ${params.firstname} for your purchase of ${plotInfo}. A confirmation email with plot details has been sent to ${params.email}.`
-    : `Payment of ${amountStr} received for ${plotInfo}. Kindly complete payment to claim ownership. Check your email for details.`;
+    ? `Hello ${params.firstname}, your purchase request for ${plotInfo} has been received. ${officeInstructions}`
+    : `Hello ${params.firstname}, your reservation request for ${plotInfo} has been received. Deposit required: ${amountStr}. ${officeInstructions}`;
 
   await sendArkeselSMS(params.phone, smsMessage);
 
-  // 2. Send Email via Mobile API (app/api/plot/notify)
   await sendEmailNotification({
     to: params.email,
     firstname: params.firstname,
@@ -86,5 +101,21 @@ export async function notifyPlotPurchaseSuccess(params: {
     plotDetails: `Plot Number ${params.plotNo}`,
     plotSize: params.areaAcres ? `${params.areaAcres}` : "N/A",
     type: params.isFullPayment ? "buy" : "reserve",
+  });
+
+  await sendCompanyAlert({
+    subject: params.isFullPayment
+      ? `New plot purchase request: ${plotInfo}`
+      : `New plot reservation request: ${plotInfo}`,
+    message: [
+      params.isFullPayment ? "New plot purchase request" : "New plot reservation request",
+      `Client: ${params.firstname} ${params.lastname}`,
+      `Phone: ${params.phone}`,
+      `Email: ${params.email}`,
+      `Plot: ${plotInfo}`,
+      `Amount: ${amountStr}`,
+      `Size: ${params.areaAcres || "N/A"}`,
+      "Follow up and confirm bank receipt at the office.",
+    ].join("\n"),
   });
 }

@@ -1,6 +1,7 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Sidebar from "@/app/_components/nav/Sidebar";
+import { getEffectiveRole } from "@/lib/autoApproval";
 import { getUserSites } from "@/lib/roles";
 
 export default async function ManagerLayout({ children }) {
@@ -8,7 +9,7 @@ export default async function ManagerLayout({ children }) {
   if (!userId) redirect("/sign-in");
 
   const user = await currentUser();
-  const role = user?.publicMetadata?.role;
+  const role = getEffectiveRole(user);
   const managerRoles = ["land_manager", "chief", "chief_asst"];
   if (!managerRoles.includes(role) && role !== "sysadmin" && role !== "admin") {
     redirect("/unauthorized");

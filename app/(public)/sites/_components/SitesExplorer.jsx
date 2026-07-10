@@ -5,11 +5,15 @@ import Link from "next/link";
 import { GoogleMap, InfoWindow, OverlayView, useJsApiLoader } from "@react-google-maps/api";
 import {
   ArrowRight,
+  Bike,
+  Car,
+  Footprints,
   LayoutGrid,
   List,
   Loader2,
   LocateFixed,
   MapPin,
+  Navigation,
   Search,
   ZoomIn,
   ZoomOut,
@@ -42,6 +46,64 @@ function normalizeStatus(status) {
 
 function emptyCounts() {
   return { total: 0, available: 0, reserved: 0, sold: 0, hold: 0 };
+}
+
+const TRAVEL_MODES = [
+  { mode: "DRIVING", label: "Drive", icon: Car },
+  { mode: "WALKING", label: "Walk", icon: Footprints },
+  { mode: "BICYCLING", label: "Bike", icon: Bike },
+];
+
+function useTravelDirections(origin, destination, enabled) {
+  const [state, setState] = useState({ status: "idle", results: null });
+
+  useEffect(() => {
+    if (!enabled || !origin || !destination || !window.google?.maps) {
+      setState({ status: "idle", results: null });
+      return;
+    }
+
+    let alive = true;
+    setState({ status: "loading", results: null });
+
+    const service = new window.google.maps.DistanceMatrixService();
+
+    Promise.all(
+      TRAVEL_MODES.map(
+        (travelMode) =>
+          new Promise((resolve) => {
+            service.getDistanceMatrix(
+              {
+                origins: [origin],
+                destinations: [destination],
+                travelMode: window.google.maps.TravelMode[travelMode.mode],
+                unitSystem: window.google.maps.UnitSystem.METRIC,
+              },
+              (response, status) => {
+                const element = status === "OK" ? response?.rows?.[0]?.elements?.[0] : null;
+                if (!element || element.status !== "OK") return resolve({ ...travelMode, ok: false });
+                resolve({
+                  ...travelMode,
+                  ok: true,
+                  duration: element.duration?.text,
+                  distance: element.distance?.text,
+                });
+              },
+            );
+          }),
+      ),
+    ).then((results) => {
+      if (!alive) return;
+      const ok = results.filter((result) => result.ok);
+      setState({ status: ok.length ? "ready" : "error", results: ok.length ? ok : null });
+    });
+
+    return () => {
+      alive = false;
+    };
+  }, [enabled, origin?.lat, origin?.lng, destination?.lat, destination?.lng]);
+
+  return state;
 }
 
 export default function SitesExplorer({ sites }) {
@@ -437,7 +499,7 @@ function SiteCounts({ counts, loading }) {
 
 function MapInfo({ site, counts, loading }) {
   return (
-    <div className="w-60 p-1">
+    <div className="w-64 p-1">
       <div className="flex items-start gap-2">
         <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-navy text-white">
           <MapPin className="h-4 w-4" />
@@ -451,9 +513,90 @@ function MapInfo({ site, counts, loading }) {
       <div className="mt-3">
         <SiteCounts counts={counts ?? emptyCounts()} loading={loading} />
       </div>
-      <Link href={`/sites/${site.slug}`} className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-brand-navy px-3 py-2 text-xs font-semibold text-white">
+      <DirectionsPanel destination={site.coordinates} />
+      <Link href={`/sites/${site.slug}`} className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-brand-navy px-3 py-2 text-xs font-semibold text-white">
         View all plots <ArrowRight className="h-3.5 w-3.5" />
       </Link>
+    </div>
+  );
+}
+
+function DirectionsPanel({ destination }) {
+  const [userLocation, setUserLocation] = useState(null);
+  const [locStatus, setLocStatus] = useState("idle");
+
+  const requestLocation = () => {
+    if (!navigator.geolocation) {
+      setLocStatus("denied");
+      return;
+    }
+    setLocStatus("loading");
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+        setLocStatus("granted");
+      },
+      () => setLocStatus("denied"),
+      { enableHighAccuracy: true, timeout: 8000 },
+    );
+  };
+
+  const { status, results } = useTravelDirections(userLocation, destination, locStatus === "granted");
+
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${destination.lat},${destination.lng}${
+    userLocation ? `&origin=${userLocation.lat},${userLocation.lng}` : ""
+  }`;
+
+  return (
+    <div className="mt-3 rounded-lg border border-slate-100 bg-slate-50 p-2.5">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Travel time</p>
+        {locStatus !== "granted" && (
+          <button
+            type="button"
+            onClick={requestLocation}
+            disabled={locStatus === "loading"}
+            className="text-[11px] font-semibold text-brand-navy hover:underline disabled:opacity-60"
+          >
+            {locStatus === "loading" ? "Locating..." : locStatus === "denied" ? "Retry" : "Use my location"}
+          </button>
+        )}
+      </div>
+
+      {locStatus === "denied" && (
+        <p className="mt-1.5 text-[11px] leading-4 text-slate-400">Enable location access to see estimated travel time.</p>
+      )}
+
+      {status === "loading" && (
+        <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-slate-400">
+          <Loader2 className="h-3 w-3 animate-spin" /> Calculating travel time...
+        </p>
+      )}
+
+      {status === "error" && (
+        <p className="mt-1.5 text-[11px] leading-4 text-slate-400">Couldn&apos;t calculate travel time right now.</p>
+      )}
+
+      {status === "ready" && (
+        <div className="mt-1.5 grid grid-cols-3 gap-1.5">
+          {results.map((result) => (
+            <div key={result.mode} className="rounded-md bg-white px-1.5 py-1.5 text-center shadow-sm">
+              <result.icon className="mx-auto h-3.5 w-3.5 text-brand-navy" />
+              <p className="mt-1 text-[11px] font-bold text-slate-900">{result.duration}</p>
+              <p className="text-[9px] text-slate-400">{result.distance}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <a
+        href={directionsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-md border border-brand-navy/15 px-3 py-1.5 text-[11px] font-semibold text-brand-navy transition-colors hover:bg-white"
+      >
+        <Navigation className="h-3 w-3" /> Get directions
+      </a>
     </div>
   );
 }

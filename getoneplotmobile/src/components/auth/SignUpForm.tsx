@@ -9,6 +9,7 @@ import { OAuthButtons } from './OAuthButtons';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { formatClerkError } from '../../lib/auth';
+import { sendCompanyAlert } from '../../lib/notificationService';
 import { colors, fontSize, spacing } from '../../constants/theme';
 
 const SIGN_UP_STEPS = ['Your details', 'Verify email'];
@@ -102,6 +103,16 @@ export function SignUpForm({
       const result = await signUp.attemptEmailAddressVerification({ code: code.trim() });
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId });
+        sendCompanyAlert({
+          subject: `New user signup needs approval: ${firstName.trim()} ${lastName.trim()}`,
+          message: [
+            'New user signup needs approval',
+            `Name: ${firstName.trim()} ${lastName.trim()}`,
+            `Email: ${email.trim()}`,
+            'Source: Mobile app email signup',
+            'Open the admin users dashboard to review and approve this account.',
+          ].join('\n'),
+        }).catch((alertErr) => console.log('Signup company alert error:', alertErr));
         router.replace('/approval');
       } else {
         setMessage({

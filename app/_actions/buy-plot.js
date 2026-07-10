@@ -4,7 +4,7 @@ import { cedisAccount } from "./cedis-account";
 import { dollarAccount } from "./dollar-account";
 import { toast } from "react-toastify";
 import { updatePlotStatus } from "./update-plot-status";
-import { sendSMS } from "./send-sms";
+import { sendCompanyAlert, sendSMS } from "./send-sms";
 
 export const buyPlot = async (
   allDetails,
@@ -217,6 +217,20 @@ export const buyPlot = async (
     const message1 = `To claim ownership of the chosen plot (Plot No. ${plot_info_to_send} ), kindly make the payment to either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 54 855 4216 or check your email for more info`;
     //send SMS
     sendSMS(phone, message1);
+    sendCompanyAlert({
+      subject: `New plot purchase request: Plot ${allDetails.properties.Plot_No}`,
+      message: [
+        "New plot purchase request",
+        `Client: ${firstname} ${lastname}`,
+        `Phone: ${phone}`,
+        `Email: ${email}`,
+        `Country: ${country}`,
+        `Plot: ${plot_info_to_send}`,
+        `Amount: GHS ${plotTotalAmount.toLocaleString()}`,
+        `Address: ${residentialAddress || "N/A"}`,
+        "Follow up and confirm bank receipt at the office.",
+      ].join("\n"),
+    });
   } catch (error) {
     setLoader3(false);
     toast.error("Sorry something went wrong try again later");

@@ -1,6 +1,11 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { getPortalPath } from "@/lib/roles";
+import {
+  AUTO_SYSADMIN_ROLE,
+  ensureAutoSysadminMetadata,
+  getEffectiveRole,
+} from "@/lib/autoApproval";
 import { Clock } from "lucide-react";
 import Link from "next/link";
 import { SignOutButton } from "@clerk/nextjs";
@@ -10,7 +15,11 @@ export default async function ApprovalPage() {
   const user = await currentUser();
   if (!user) redirect("/sign-in");
 
-  const role = user.publicMetadata?.role;
+  const role = getEffectiveRole(user);
+  if (role === AUTO_SYSADMIN_ROLE && user.publicMetadata?.role !== AUTO_SYSADMIN_ROLE) {
+    const client = await clerkClient();
+    await ensureAutoSysadminMetadata(client, user);
+  }
   if (role) redirect(getPortalPath(role));
 
   return (

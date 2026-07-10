@@ -21,6 +21,7 @@ import {
   formatStreet,
 } from "../../src/lib/plotService";
 import { fetchMobileApi } from "../../src/lib/api";
+import { sendCompanyAlert } from "../../src/lib/notificationService";
 import type { PlotFeature } from "../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -94,6 +95,21 @@ export default function ExpressInterestScreen() {
         console.log("Interest email error:", mailErr);
       }
 
+      sendCompanyAlert({
+        subject: `New plot interest — Plot ${plot?.properties?.Plot_No ?? id}`,
+        message: [
+          "New plot interest",
+          `Client: ${form.firstname} ${form.lastname}`,
+          `Phone: ${form.phone}`,
+          `Email: ${form.email}`,
+          `Plot: ${plot?.properties?.Plot_No ?? id}`,
+          `Street: ${formatStreet(plot?.properties?.Street_Nam) || "N/A"}`,
+          `Amount: ${formatGhs(plot?.plotTotalAmount || 0)}`,
+          `Size: ${formatAreaSize(plot?.properties?.Area) || "N/A"}`,
+          `Message: ${form.message}`,
+        ].join("\n"),
+      }).catch((alertErr) => console.log("Company interest alert error:", alertErr));
+
       Alert.alert(
         "Message Sent",
         "Thank you for your interest! We will get in touch with you soon.",
@@ -151,7 +167,7 @@ export default function ExpressInterestScreen() {
                 Plot {plot.properties?.Plot_No ?? "N/A"}
               </Text>
               <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.sm }]}>
-                {plot.properties?.Site ?? "Standard Development"}
+                {plot.properties?.Site ? String(plot.properties.Site) : "Standard Development"}
               </Text>
               {plot.properties?.Street_Nam ? (
                 <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.xs }]}>

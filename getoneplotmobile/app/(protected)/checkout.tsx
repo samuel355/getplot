@@ -2,11 +2,11 @@ import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View, type TextStyle } from "react-native";
-import { PaystackCheckout } from "../../src/components/PaystackCheckout";
 import { Button } from "../../src/components/ui/Button";
 import { Input } from "../../src/components/ui/Input";
 import { useTheme } from "../../src/constants/theme";
-import { formatGhs, formatStreet } from "../../src/lib/plotService";
+import { formatAreaSize, formatGhs, formatStreet, updatePlotOnHold } from "../../src/lib/plotService";
+import { notifyPlotPurchaseSuccess } from "../../src/lib/notificationService";
 import { useCartStore } from "../../src/stores/cartStore";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -16,7 +16,7 @@ export default function CheckoutScreen() {
   const { user } = useUser();
   const router = useRouter();
 
-  const [payVisible, setPayVisible] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [buyer, setBuyer] = useState({
     firstname: user?.firstName || "",
     lastname: user?.lastName || "",
@@ -53,7 +53,7 @@ export default function CheckoutScreen() {
     );
   }
 
-  const handlePay = () => {
+  const submitBankDepositRequest = async () => {
     if (
       !buyer.firstname ||
       !buyer.lastname ||
@@ -64,7 +64,60 @@ export default function CheckoutScreen() {
       Alert.alert("Required Fields", "Please complete all buyer information fields.");
       return;
     }
-    setPayVisible(true);
+
+    const missingTable = plots.find((plot) => !plot.table);
+    if (missingTable) {
+      Alert.alert(
+        "Cart needs refresh",
+        "Please remove and add this plot again so we can submit the request correctly.",
+      );
+      return;
+    }
+
+    setProcessing(true);
+    try {
+      for (const plot of plots) {
+        const buyerPayload = {
+          ...buyer,
+          plotTotalAmount: plot.plotTotalAmount || 0,
+        };
+
+        await updatePlotOnHold(plot.table!, plot.id, buyerPayload);
+
+        notifyPlotPurchaseSuccess({
+          phone: buyer.phone,
+          email: buyer.email,
+          firstname: buyer.firstname,
+          lastname: buyer.lastname,
+          plotNo: plot.properties?.Plot_No ?? "N/A",
+          siteName: plot.siteName || String(plot.properties?.Site || "Standard Development"),
+          amount: plot.plotTotalAmount || 0,
+          isFullPayment: true,
+          areaAcres: formatAreaSize(plot.properties?.Area),
+        }).catch((err) => console.error("Notification background error:", err));
+      }
+
+      clearCart();
+      router.replace({
+        pathname: "/payment-success",
+        params: {
+          type: "buy",
+          amount: String(total),
+          plotNo: plots.length === 1 ? plots[0].properties?.Plot_No ?? "N/A" : `${plots.length} plots`,
+          site: plots.length === 1 ? plots[0].siteName || "Standard Site" : "Multiple sites",
+        },
+      });
+    } catch (error) {
+      console.error("Cart checkout request error:", error);
+      router.replace({
+        pathname: "/payment-error",
+        params: {
+          message: "We couldn't submit your purchase request. Please try again or contact support.",
+        },
+      });
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -125,7 +178,7 @@ export default function CheckoutScreen() {
                   Plot {p.properties?.Plot_No ?? "N/A"}
                 </Text>
                 <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.xs }]}>
-                  {p.properties?.Site ?? "Investment Plot"}
+                  {p.siteName || "Investment Plot"}
                   {p.properties?.Street_Nam ? ` • ${formatStreet(p.properties.Street_Nam)}` : ""}
                 </Text>
               </View>
@@ -224,9 +277,9 @@ export default function CheckoutScreen() {
         </View>
 
         <View style={styles.secureSection}>
-          <Ionicons name="shield-checkmark" size={16} color={colors.success} />
+          <Ionicons name="mail" size={16} color={colors.success} />
           <Text style={[styles.secureText, { color: colors.textMuted }]}>
-            Encrypted and Secure Payment
+            Bank details will be sent by email and SMS
           </Text>
         </View>
       </ScrollView>
@@ -242,39 +295,16 @@ export default function CheckoutScreen() {
           },
         ]}
       >
-        <Button title={`Pay ${formatGhs(total)}`} onPress={handlePay} size="lg" fullWidth />
+        <Button
+          title={processing ? "Submitting request..." : `Send Bank Details • ${formatGhs(total)}`}
+          onPress={submitBankDepositRequest}
+          size="lg"
+          fullWidth
+          disabled={processing}
+        />
       </View>
-
-      <PaystackCheckout
-        visible={payVisible}
-        email={buyer.email}
-        amount={total}
-        reference={`cart_${Date.now()}`}
-        onSuccess={() => {
-          setPayVisible(false);
-          clearCart();
-          Alert.alert(
-            "Success",
-            "Your payment was successful. All plots are now on hold for you.",
-            [{ text: "OK", onPress: () => router.replace("/(tabs)/marketplace") }],
-          );
-        }}
-        onClose={() => {
-          setPayVisible(false);
-          router.push({
-            pathname: "/payment-error",
-            params: { message: "Checkout was cancelled. Your items are still in your cart." },
-          });
-        }}
-      />
     </View>
   );
-}
-
-// Mock useUser hook if clerk import is tricky (but it's already used in the project)
-function userUser() {
-  const { user } = useUser();
-  return { user };
 }
 
 const styles = StyleSheet.create({

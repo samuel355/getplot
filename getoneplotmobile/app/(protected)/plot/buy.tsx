@@ -2,7 +2,6 @@ import { useUser } from "@clerk/clerk-expo";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View, type TextStyle } from "react-native";
-import { PaystackCheckout } from "../../../src/components/PaystackCheckout";
 import { Button } from "../../../src/components/ui/Button";
 import { Input } from "../../../src/components/ui/Input";
 import { Loading } from "../../../src/components/ui/Loading";
@@ -31,7 +30,6 @@ export default function BuyPlotScreen() {
   const [plot, setPlot] = useState<PlotFeature | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
-  const [payVisible, setPayVisible] = useState(false);
   const [buyer, setBuyer] = useState<BuyerInfo>({
     firstname: user?.firstName || "",
     lastname: user?.lastName || "",
@@ -63,25 +61,19 @@ export default function BuyPlotScreen() {
     return null;
   };
 
-  const onPay = () => {
+  const submitBankDepositRequest = async () => {
     const err = validate();
     if (err) {
       Alert.alert("Required Fields", err);
       return;
     }
-    setPayVisible(true);
-  };
-
-  const onPaymentSuccess = async () => {
-    setPayVisible(false);
     if (!plot || !table || !id) return;
 
     setProcessing(true);
     try {
-      // 1. Update Plot Status (Critical)
+      // Paystack is intentionally disabled. Buyers receive bank details and bring receipt to the office.
       await updatePlotOnHold(table, id, buyer);
 
-      // 2. Trigger Notifications (Non-blocking for UI speed)
       notifyPlotPurchaseSuccess({
         phone: buyer.phone,
         email: buyer.email,
@@ -94,7 +86,6 @@ export default function BuyPlotScreen() {
         areaAcres: formatAreaSize(plot.properties?.Area),
       }).catch((err) => console.error("Notification background error:", err));
 
-      // 3. Move to success screen immediately
       setProcessing(false);
       router.replace({
         pathname: "/payment-success",
@@ -106,13 +97,13 @@ export default function BuyPlotScreen() {
         },
       });
     } catch (e) {
-      console.error("Post-payment error:", e);
+      console.error("Purchase request error:", e);
       setProcessing(false);
       router.replace({
         pathname: "/payment-error",
         params: {
           message:
-            "Payment was successful, but we couldn't update the plot status. Please contact support.",
+            "We couldn't submit your purchase request. Please try again or contact support.",
         },
       });
     }
@@ -132,7 +123,7 @@ export default function BuyPlotScreen() {
             textAlign: "center",
           }}
         >
-          Finalizing your purchase...{"\n"}Please do not close the app.
+          Submitting your purchase request...{"\n"}Please do not close the app.
         </Text>
       </View>
     );
@@ -148,8 +139,6 @@ export default function BuyPlotScreen() {
       </View>
     );
   }
-
-  const reference = `buy_${id}_${Date.now()}`;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -307,14 +296,14 @@ export default function BuyPlotScreen() {
         </View>
 
         <View style={styles.secureBadge}>
-          <Ionicons name="lock-closed" size={12} color={colors.textMuted} />
+          <Ionicons name="mail" size={12} color={colors.textMuted} />
           <Text style={[styles.secureText, { color: colors.textMuted }]}>
-            Encrypted and Secure Payment
+            Bank details will be sent by email and SMS
           </Text>
         </View>
       </ScrollView>
 
-      {/* Payment Action */}
+      {/* Bank deposit request action */}
       <View
         style={[
           styles.footer,
@@ -326,30 +315,12 @@ export default function BuyPlotScreen() {
         ]}
       >
         <Button
-          title={`Secure Checkout • ${formatGhs(buyer.plotTotalAmount)}`}
-          onPress={onPay}
+          title={`Send Bank Details • ${formatGhs(buyer.plotTotalAmount)}`}
+          onPress={submitBankDepositRequest}
           size="lg"
           fullWidth
         />
       </View>
-
-      <PaystackCheckout
-        visible={payVisible}
-        email={buyer.email}
-        amount={buyer.plotTotalAmount}
-        reference={reference}
-        onSuccess={onPaymentSuccess}
-        onClose={() => {
-          // Only treat as cancellation — onSuccess already handles the success path
-          if (!processing) {
-            setPayVisible(false);
-            router.push({
-              pathname: "/payment-error",
-              params: { message: "Payment was cancelled. You can try again whenever you're ready." },
-            });
-          }
-        }}
-      />
     </View>
   );
 }

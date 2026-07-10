@@ -28,7 +28,7 @@ const { width } = Dimensions.get("window");
 const FEATURED_SITE_SLUGS = [
   "royal-court-estate",
   "legon-hills",
-  "trabuom",
+  "trabuom-sector-1",
   "yabi",
   "berekuso",
   "asokore-mampong",

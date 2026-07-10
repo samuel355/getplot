@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "expo-router";
 import {
   FlatList,
@@ -11,17 +11,55 @@ import {
   type TextStyle,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { DEVELOPMENTS } from "../../../src/constants/developments";
+import { DEVELOPMENTS, type Development } from "../../../src/constants/developments";
 import { useTheme } from "../../../src/constants/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { supabase } from "../../../src/lib/supabase";
 
 function getInitials(title: string) {
-  return title
-    .split(" ")
+  const words = title.match(/[A-Za-z0-9]+/g) ?? [];
+  return words
     .map((w) => w[0])
     .slice(0, 2)
     .join("")
     .toUpperCase();
+}
+
+type PlotCounts = { total: number; available: number; sold: number };
+
+function normalizeStatus(status: unknown): "available" | "reserved" | "sold" | "hold" {
+  const value = String(status || "Available").toLowerCase();
+  if (value === "sold") return "sold";
+  if (value === "reserved") return "reserved";
+  if (value === "hold" || value === "on hold") return "hold";
+  return "available";
+}
+
+// Mirrors the web app's SitesExplorer: paginate through each site's plot table and
+// tally real status counts, rather than showing a generic "Verified" badge.
+async function fetchPlotCounts(development: Development): Promise<PlotCounts> {
+  const counts: PlotCounts = { total: 0, available: 0, sold: 0 };
+  const batchSize = 1000;
+  let from = 0;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from(development.table)
+      .select("status")
+      .range(from, from + batchSize - 1);
+
+    if (error || !data?.length) break;
+    data.forEach((plot: { status: unknown }) => {
+      const key = normalizeStatus(plot.status);
+      counts.total += 1;
+      if (key === "available") counts.available += 1;
+      if (key === "sold") counts.sold += 1;
+    });
+    if (data.length < batchSize) break;
+    from += batchSize;
+  }
+
+  return counts;
 }
 
 export default function SitesScreen() {
@@ -30,6 +68,24 @@ export default function SitesScreen() {
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState("All");
+  const [counts, setCounts] = useState<Record<string, PlotCounts>>({});
+  const [countsLoading, setCountsLoading] = useState(true);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const results = await Promise.all(
+        DEVELOPMENTS.map(async (d) => [d.slug, await fetchPlotCounts(d)] as const),
+      );
+      if (alive) {
+        setCounts(Object.fromEntries(results));
+        setCountsLoading(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const COLOR_PALETTE = [
     colors.primaryAccent,
@@ -189,18 +245,22 @@ export default function SitesScreen() {
                 {item.subtitle}
               </Text>
 
-              <View style={styles.metaRow}>
-                <View style={[styles.metaPill, { backgroundColor: colors.surfaceAlt }]}>
-                  <Ionicons name="map-outline" size={12} color={colors.primaryAccent} />
-                  <Text style={[styles.metaText, { color: colors.textSecondary }]}>
-                    Explore Site
-                  </Text>
-                </View>
-
-                <View style={[styles.metaPillOutline, { borderColor: colors.border }]}>
-                  <Ionicons name="shield-checkmark-outline" size={12} color={colors.success} />
-                  <Text style={[styles.metaText, { color: colors.textSecondary }]}>Verified</Text>
-                </View>
+              <View style={[styles.statsRow, { borderColor: colors.border }]}>
+                <SiteStat
+                  label="Plots"
+                  value={countsLoading ? "..." : counts[item.slug]?.total}
+                  color={colors.text}
+                />
+                <SiteStat
+                  label="Available"
+                  value={countsLoading ? "..." : counts[item.slug]?.available}
+                  color={colors.success}
+                />
+                <SiteStat
+                  label="Sold"
+                  value={countsLoading ? "..." : counts[item.slug]?.sold}
+                  color={colors.error}
+                />
               </View>
             </View>
 
@@ -211,6 +271,29 @@ export default function SitesScreen() {
     />
   );
 }
+
+function SiteStat({ label, value, color }: { label: string; value?: number | string; color: string }) {
+  const { colors, fontSize, fontWeight } = useTheme();
+  return (
+    <View style={statStyles.item}>
+      <Text
+        style={[
+          statStyles.value,
+          { color, fontSize: fontSize.sm, fontWeight: fontWeight.bold as TextStyle["fontWeight"] },
+        ]}
+      >
+        {value ?? 0}
+      </Text>
+      <Text style={[statStyles.label, { color: colors.textMuted, fontSize: 10 }]}>{label}</Text>
+    </View>
+  );
+}
+
+const statStyles = StyleSheet.create({
+  item: { marginRight: 18 },
+  value: {},
+  label: { marginTop: 1 },
+});
 
 const styles = StyleSheet.create({
   headerWrap: {},
@@ -250,21 +333,10 @@ const styles = StyleSheet.create({
   cardBody: { flex: 1, marginLeft: 16 },
   title: {},
   subtitle: { marginTop: 2 },
-  metaRow: { flexDirection: "row", marginTop: 12, gap: 8 },
-  metaPill: {
+  statsRow: {
     flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
+    marginTop: 12,
+    paddingTop: 10,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
-  metaPillOutline: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  metaText: { marginLeft: 6, fontSize: 10, fontWeight: "600" },
 });

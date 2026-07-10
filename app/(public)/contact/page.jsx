@@ -42,7 +42,7 @@ export default function ContactPage() {
               {
                 icon: Clock,
                 title: "Hours",
-                lines: ["Mon – Fri: 8am – 6pm", "Sat: 9am – 4pm"],
+                lines: ["Mon – Fri: 8:30am – 4:30pm"],
               },
             ].map(({ icon: Icon, title, lines }) => (
               <div key={title} className="bg-white rounded-lg border border-slate-200 p-5 flex items-start gap-4">

@@ -84,7 +84,7 @@ export default function SavedProperties() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Saved Properties</h1>
         <Button variant="outline" asChild>
-          <Link href="/market-place">Browse More Properties</Link>
+          <Link href="/marketplace">Browse More Properties</Link>
         </Button>
       </div>
 
@@ -98,7 +98,7 @@ export default function SavedProperties() {
               find properties you like.
             </p>
             <Button asChild>
-              <Link href="/market-place">Browse Properties</Link>
+              <Link href="/marketplace">Browse Properties</Link>
             </Button>
           </CardContent>
         </Card>

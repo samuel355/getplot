@@ -4,6 +4,10 @@ import { getOrSetCache } from "@/lib/redis";
 
 export const dynamic = "force-dynamic";
 
+function isClerkNotFound(error) {
+  return error?.status === 404 || error?.errors?.some((item) => item?.code === "resource_not_found");
+}
+
 export async function GET(request) {
   try {
     // Mobile / API callers: auth() handles both Bearer token and session cookie in Next.js
@@ -57,6 +61,10 @@ export async function GET(request) {
 
     return NextResponse.json(responseData, { status: 200 });
   } catch (error) {
+    if (isClerkNotFound(error)) {
+      return NextResponse.json({ error: "User not found", code: "user_not_found" }, { status: 404 });
+    }
+
     console.error("Error in /api/users:", error);
     return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
   }

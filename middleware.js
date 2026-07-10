@@ -15,6 +15,10 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
+  if (req.nextUrl.pathname === "/api/clerk/webhook") {
+    return NextResponse.next();
+  }
+
   const { userId } = await auth();
 
   if (isProtectedRoute(req) && !userId) {

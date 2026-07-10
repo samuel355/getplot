@@ -68,7 +68,7 @@ export default function NotFound() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/market-place"
+                href="/marketplace"
                 className="flex items-center justify-center gap-2 text-primary hover:text-primary-dark transition duration-300"
               >
                 <svg

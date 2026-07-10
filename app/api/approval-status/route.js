@@ -13,6 +13,10 @@ export const dynamic = "force-dynamic";
 
 const acceptedRoles = ["sysadmin", "admin", "property_agent", "chief", "chief_asst"];
 
+function isClerkNotFound(error) {
+  return error?.status === 404 || error?.errors?.some((item) => item?.code === "resource_not_found");
+}
+
 function buildApprovalResponse(user) {
   const userRole = getEffectiveRole(user);
   const userArea = user.publicMetadata?.area;
@@ -61,6 +65,10 @@ export async function GET() {
 
     return NextResponse.json(buildApprovalResponse(user));
   } catch (error) {
+    if (isClerkNotFound(error)) {
+      return NextResponse.json({ error: "User not found", code: "user_not_found" }, { status: 404 });
+    }
+
     console.error("Error in approval status API:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

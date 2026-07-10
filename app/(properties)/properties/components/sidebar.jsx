@@ -29,7 +29,7 @@ const USER_NAV = [
   { name: "My Dashboard", href: "/properties/my-dashboard", icon: LayoutDashboard },
   { name: "My Properties", href: "/properties/list", icon: Home },
   { name: "Saved Properties", href: "/properties/saved", icon: Bookmark },
-  { name: "Market Place", href: "/market-place", icon: Store },
+  { name: "Market Place", href: "/marketplace", icon: Store },
   { name: "Add Property", href: "/properties/add-listing", icon: PlusCircle },
 ];
 

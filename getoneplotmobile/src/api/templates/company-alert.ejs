@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= subject %></title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    .container {
+      max-width: 560px;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .header {
+      background-color: #0B0E2D;
+      padding: 24px 30px;
+    }
+
+    .header img {
+      height: 32px;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background-color: #30D5C7;
+      color: #0B0E2D;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .header h1 {
+      color: #fff;
+      font-size: 20px;
+      margin: 10px 0 0;
+    }
+
+    .body {
+      padding: 24px 30px 30px;
+    }
+
+    .intro {
+      font-size: 14px;
+      color: #555;
+      margin: 0 0 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    td {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    td.label {
+      color: #888;
+      width: 40%;
+      font-weight: 600;
+    }
+
+    td.value {
+      color: #111;
+      font-weight: 500;
+    }
+
+    .note {
+      margin-top: 20px;
+      padding: 14px 16px;
+      background-color: #FEF3C7;
+      border-left: 4px solid #D97706;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #78350F;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 12px;
+      color: #999;
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://getoneplot.com/logo-lateral.svg" alt="GetOnePlot">
+      <div class="badge">Internal Notification</div>
+      <h1><%= subject %></h1>
+    </div>
+
+    <div class="body">
+      <% if (intro) { %>
+        <p class="intro"><%= intro %></p>
+      <% } %>
+
+      <table>
+        <% rows.forEach(function(row) { %>
+          <tr>
+            <td class="label"><%= row.label %></td>
+            <td class="value"><%= row.value %></td>
+          </tr>
+        <% }); %>
+      </table>
+
+      <% if (note) { %>
+        <div class="note"><%= note %></div>
+      <% } %>
+    </div>
+
+    <div class="footer">
+      GetOnePlot &middot; This is an automated alert sent to the internal team. Do not reply.
+    </div>
+  </div>
+</body>
+
+</html>

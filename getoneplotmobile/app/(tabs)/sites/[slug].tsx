@@ -27,7 +27,8 @@ export default function SiteMapScreen() {
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [selected, setSelected] = useState<PlotFeature | null>(null);
-  const { addPlot, isInCart } = useCartStore();
+  const addPlot = useCartStore((s) => s.addPlot);
+  const isInCart = useCartStore((s) => s.isInCart);
 
   const goBack = useCallback(() => {
     if (returnTo === "admin-plots") {

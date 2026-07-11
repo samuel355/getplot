@@ -1,5 +1,5 @@
 import Constants from "expo-constants";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import MapView, {
   Polygon,
@@ -68,7 +68,7 @@ function zoomRegion(region: Region, factor: number): Region {
   };
 }
 
-export function PlotMap({ development, plots, loading, onPlotPress, onRefresh }: Props) {
+function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh }: Props) {
   const mapRef = useRef<MapView>(null);
   const useGoogle = canUseGoogleProvider();
   const [mapReady, setMapReady] = useState(false);
@@ -167,25 +167,9 @@ export function PlotMap({ development, plots, loading, onPlotPress, onRefresh }:
           fitAll();
         }}
       >
-        {plots.map((plot) => {
-          const coords = getPolygonRing(plot);
-          if (coords.length < 3) return null;
-
-          const amount = plot.plotTotalAmount || 0;
-          const status = plot.status ?? null;
-
-          return (
-            <Polygon
-              key={plot.id}
-              coordinates={coords}
-              fillColor={getPlotFillColor(status, amount)}
-              strokeColor={getPlotStrokeColor(status, amount)}
-              strokeWidth={2.5}
-              tappable
-              onPress={() => onPlotPress(plot)}
-            />
-          );
-        })}
+        {plots.map((plot) => (
+          <PlotPolygon key={plot.id} plot={plot} onPress={onPlotPress} />
+        ))}
       </MapView>
 
       {!loading && plots.length > 0 ? (
@@ -202,6 +186,37 @@ export function PlotMap({ development, plots, loading, onPlotPress, onRefresh }:
     </View>
   );
 }
+
+export const PlotMap = memo(PlotMapComponent);
+
+// Memoized per polygon so that updating one plot (e.g. after a status change) only
+// re-renders that single polygon instead of re-creating all ~3,000 of them, and a
+// stable per-plot onPress instead of a new inline closure on every PlotMap render.
+const PlotPolygon = memo(function PlotPolygon({
+  plot,
+  onPress,
+}: {
+  plot: PlotFeature;
+  onPress: (plot: PlotFeature) => void;
+}) {
+  const handlePress = useCallback(() => onPress(plot), [onPress, plot]);
+  const coords = getPolygonRing(plot);
+  if (coords.length < 3) return null;
+
+  const amount = plot.plotTotalAmount || 0;
+  const status = plot.status ?? null;
+
+  return (
+    <Polygon
+      coordinates={coords}
+      fillColor={getPlotFillColor(status, amount)}
+      strokeColor={getPlotStrokeColor(status, amount)}
+      strokeWidth={2.5}
+      tappable
+      onPress={handlePress}
+    />
+  );
+});
 
 const styles = StyleSheet.create({
   container: {

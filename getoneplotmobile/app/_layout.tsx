@@ -22,6 +22,13 @@ const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 function InnerLayout() {
   const { colors, isDark } = useTheme();
 
+  // Hide the splash screen as soon as this actually mounts, i.e. right after
+  // ClerkLoaded resolves — event-driven instead of a fixed timer, so we never wait
+  // longer than necessary and never hide early onto a blank screen if auth is slow.
+  useEffect(() => {
+    SplashScreen.hideAsync().catch(() => {});
+  }, []);
+
   return (
     <>
       <StatusBar style={isDark ? "light" : "dark"} />
@@ -65,13 +72,6 @@ export default function RootLayout() {
   if (!publishableKey) {
     console.warn("Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY");
   }
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      SplashScreen.hideAsync().catch(() => {});
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <ClerkProvider publishableKey={publishableKey || ""} tokenCache={tokenCache}>

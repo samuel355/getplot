@@ -25,7 +25,7 @@ type Props = {
 
 const googleMapsKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-function canUseGoogleProvider() {
+export function canUseGoogleProvider() {
   if (Platform.OS === "web" || !googleMapsKey) return false;
   if (Constants.appOwnership === "expo") return false;
   return true;

@@ -15,6 +15,9 @@ import { DEVELOPMENTS, type Development } from "../../../src/constants/developme
 import { useTheme } from "../../../src/constants/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { supabase } from "../../../src/lib/supabase";
+import { SitesMap } from "../../../src/components/SitesMap";
+
+type SiteView = "list" | "map";
 
 function getInitials(title: string) {
   const words = title.match(/[A-Za-z0-9]+/g) ?? [];
@@ -54,6 +57,7 @@ export default function SitesScreen() {
   const { colors, spacing, fontSize, fontWeight, borderRadius, isDark } = useTheme();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const [view, setView] = useState<SiteView>("list");
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState("All");
   const [counts, setCounts] = useState<Record<string, PlotCounts>>({});
@@ -98,11 +102,12 @@ export default function SitesScreen() {
     });
   }, [query, region]);
 
-  const ListHeader = () => (
+  const Header = () => (
     <View
       style={{
         paddingTop: insets.top + spacing.md,
         paddingBottom: spacing.sm,
+        paddingHorizontal: spacing.lg,
         backgroundColor: colors.background,
       }}
     >
@@ -119,6 +124,21 @@ export default function SitesScreen() {
         >
           Explore our sites
         </Text>
+
+        <View style={[styles.viewToggle, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <ViewToggleButton
+            icon="list"
+            active={view === "list"}
+            onPress={() => setView("list")}
+            colors={colors}
+          />
+          <ViewToggleButton
+            icon="map"
+            active={view === "map"}
+            onPress={() => setView("map")}
+            colors={colors}
+          />
+        </View>
       </View>
 
       <View
@@ -178,85 +198,115 @@ export default function SitesScreen() {
   );
 
   return (
-    <FlatList
-      data={filtered}
-      keyExtractor={(item) => item.slug}
-      contentContainerStyle={{
-        paddingHorizontal: spacing.lg,
-        paddingBottom: 120,
-        backgroundColor: colors.background,
-      }}
-      style={{ backgroundColor: colors.background }}
-      ListHeaderComponent={ListHeader}
-      stickyHeaderIndices={[0]}
-      ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
-      renderItem={({ item, index }) => {
-        const bg = COLOR_PALETTE[index % COLOR_PALETTE.length];
-        return (
-          <Pressable
-            style={({ pressed }) => [
-              styles.card,
-              {
-                backgroundColor: colors.surface,
-                borderColor: colors.border,
-                borderRadius: borderRadius.lg,
-              },
-              pressed && { opacity: 0.9, transform: [{ scale: 0.98 }] },
-            ]}
-            onPress={() => router.push(`/(tabs)/sites/${item.slug}`)}
-          >
-            <View style={[styles.thumb, { backgroundColor: bg, borderRadius: borderRadius.md }]}>
-              <Text
-                style={[
-                  styles.thumbText,
-                  { fontWeight: fontWeight.extrabold as TextStyle["fontWeight"] },
-                ]}
-              >
-                {getInitials(item.title)}
-              </Text>
-            </View>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <Header />
 
-            <View style={styles.cardBody}>
-              <Text
-                style={[
-                  styles.title,
+      {view === "map" ? (
+        <SitesMap sites={filtered} counts={counts} countsLoading={countsLoading} />
+      ) : (
+        <FlatList
+          data={filtered}
+          keyExtractor={(item) => item.slug}
+          contentContainerStyle={{
+            paddingHorizontal: spacing.lg,
+            paddingBottom: 120,
+            backgroundColor: colors.background,
+          }}
+          style={{ backgroundColor: colors.background }}
+          ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
+          renderItem={({ item, index }) => {
+            const bg = COLOR_PALETTE[index % COLOR_PALETTE.length];
+            return (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.card,
                   {
-                    color: colors.text,
-                    fontSize: fontSize.md,
-                    fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+                    backgroundColor: colors.surface,
+                    borderColor: colors.border,
+                    borderRadius: borderRadius.lg,
                   },
+                  pressed && { opacity: 0.9, transform: [{ scale: 0.98 }] },
                 ]}
+                onPress={() => router.push(`/(tabs)/sites/${item.slug}`)}
               >
-                {item.title}
-              </Text>
-              <Text style={[styles.subtitle, { color: colors.textMuted, fontSize: fontSize.sm }]}>
-                {item.subtitle}
-              </Text>
+                <View style={[styles.thumb, { backgroundColor: bg, borderRadius: borderRadius.md }]}>
+                  <Text
+                    style={[
+                      styles.thumbText,
+                      { fontWeight: fontWeight.extrabold as TextStyle["fontWeight"] },
+                    ]}
+                  >
+                    {getInitials(item.title)}
+                  </Text>
+                </View>
 
-              <View style={[styles.statsRow, { borderColor: colors.border }]}>
-                <SiteStat
-                  label="Plots"
-                  value={countsLoading ? "..." : counts[item.slug]?.total}
-                  color={colors.text}
-                />
-                <SiteStat
-                  label="Available"
-                  value={countsLoading ? "..." : counts[item.slug]?.available}
-                  color={colors.success}
-                />
-                <SiteStat
-                  label="Sold"
-                  value={countsLoading ? "..." : counts[item.slug]?.sold}
-                  color={colors.error}
-                />
-              </View>
-            </View>
+                <View style={styles.cardBody}>
+                  <Text
+                    style={[
+                      styles.title,
+                      {
+                        color: colors.text,
+                        fontSize: fontSize.md,
+                        fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+                      },
+                    ]}
+                  >
+                    {item.title}
+                  </Text>
+                  <Text style={[styles.subtitle, { color: colors.textMuted, fontSize: fontSize.sm }]}>
+                    {item.subtitle}
+                  </Text>
 
-            <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
-          </Pressable>
-        );
-      }}
-    />
+                  <View style={[styles.statsRow, { borderColor: colors.border }]}>
+                    <SiteStat
+                      label="Plots"
+                      value={countsLoading ? "..." : counts[item.slug]?.total}
+                      color={colors.text}
+                    />
+                    <SiteStat
+                      label="Available"
+                      value={countsLoading ? "..." : counts[item.slug]?.available}
+                      color={colors.success}
+                    />
+                    <SiteStat
+                      label="Sold"
+                      value={countsLoading ? "..." : counts[item.slug]?.sold}
+                      color={colors.error}
+                    />
+                  </View>
+                </View>
+
+                <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+              </Pressable>
+            );
+          }}
+        />
+      )}
+    </View>
+  );
+}
+
+function ViewToggleButton({
+  icon,
+  active,
+  onPress,
+  colors,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  active: boolean;
+  onPress: () => void;
+  colors: ReturnType<typeof useTheme>["colors"];
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[
+        styles.viewToggleBtn,
+        active && { backgroundColor: colors.primary },
+      ]}
+    >
+      <Ionicons name={icon} size={16} color={active ? colors.white : colors.textMuted} />
+    </Pressable>
   );
 }
 
@@ -284,8 +334,22 @@ const statStyles = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-  headerWrap: {},
+  headerWrap: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   pageHeading: {},
+  viewToggle: {
+    flexDirection: "row",
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 3,
+    gap: 2,
+  },
+  viewToggleBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   searchRow: {
     flexDirection: "row",
     alignItems: "center",

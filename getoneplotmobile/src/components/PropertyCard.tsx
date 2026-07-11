@@ -1,4 +1,5 @@
 import { Image } from "expo-image";
+import { memo } from "react";
 import { Pressable, StyleSheet, Text, View, type TextStyle } from "react-native";
 import { useTheme } from "../constants/theme";
 import { resolveImageUrl } from "../lib/images";
@@ -14,7 +15,12 @@ type Props = {
   onFavoritPress?: () => void;
 };
 
-export function PropertyCard({ property, onPress, favorited, onFavoritPress }: Props) {
+export const PropertyCard = memo(function PropertyCard({
+  property,
+  onPress,
+  favorited,
+  onFavoritPress,
+}: Props) {
   const { colors, spacing, borderRadius, fontWeight, fontSize } = useTheme();
   const image = property.images?.[0];
   const price =
@@ -175,7 +181,7 @@ export function PropertyCard({ property, onPress, favorited, onFavoritPress }: P
       </View>
     </Pressable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: {

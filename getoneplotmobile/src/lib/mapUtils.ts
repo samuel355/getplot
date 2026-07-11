@@ -124,31 +124,48 @@ export function getPlotStrokeColor(status: string | null, amount: number): strin
   return PLOT_STATUS.unpriced.stroke;
 }
 
-/** Batch-fetch plot rows from Supabase (same ranges as web fetchPolygons). */
+/**
+ * Batch-fetch plot rows from Supabase, one 1000-row page at a time, stopping as soon
+ * as a short page comes back (so small sites don't pay for empty trailing requests
+ * the way the old hardcoded-4-batches version did). `maxBatches` is a hard ceiling
+ * so this can never loop indefinitely even if every request errors.
+ *
+ * Deliberately sequential, not parallel: an earlier version fired batches
+ * concurrently, which measurably stalled the on-device fetch for a large site
+ * (Trabuom Sector 1, ~2,943 rows / 3 batches) — reproduced twice in testing,
+ * pinning the app around 80% CPU with the request never resolving. The plain
+ * Node.js Supabase client had no such issue with the identical query pattern, so
+ * this looks specific to how concurrent large-payload requests are handled by
+ * React Native's networking stack (possibly compounded by the Metro dev-server
+ * LAN proxy) rather than a logic bug — reliability here matters more than the
+ * latency win, so keeping this sequential until that can be verified safely.
+ */
 export async function fetchPlotsForTable(table: string): Promise<PlotFeature[]> {
   const { supabase } = await import("./supabase");
-  const batches = [
-    [0, 999],
-    [1000, 1999],
-    [2000, 2999],
-    [3000, 3999],
-  ];
+  const batchSize = 1000;
+  const maxBatches = 10;
+
   const all: PlotFeature[] = [];
   let lastError: string | null = null;
 
-  for (const [start, end] of batches) {
-    const { data, error } = await supabase.from(table).select("*").range(start, end);
+  for (let batchIndex = 0; batchIndex < maxBatches; batchIndex++) {
+    const start = batchIndex * batchSize;
+    const { data, error } = await supabase.from(table).select("*").range(start, start + batchSize - 1);
+
     if (error) {
       lastError = error.message;
       console.warn(`fetch ${table} batch error`, error.message);
-      continue;
+      break;
     }
+
     for (const row of data || []) {
       const plot = normalizePlot(row as Record<string, unknown>);
       if (plot && getPolygonRing(plot).length >= 3) {
         all.push(plot);
       }
     }
+
+    if (!data || data.length < batchSize) break;
   }
 
   if (all.length === 0 && lastError) {

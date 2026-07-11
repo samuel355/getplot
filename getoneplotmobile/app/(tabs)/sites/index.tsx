@@ -27,39 +27,27 @@ function getInitials(title: string) {
 
 type PlotCounts = { total: number; available: number; sold: number };
 
-function normalizeStatus(status: unknown): "available" | "reserved" | "sold" | "hold" {
-  const value = String(status || "Available").toLowerCase();
-  if (value === "sold") return "sold";
-  if (value === "reserved") return "reserved";
-  if (value === "hold" || value === "on hold") return "hold";
-  return "available";
-}
-
-// Mirrors the web app's SitesExplorer: paginate through each site's plot table and
-// tally real status counts, rather than showing a generic "Verified" badge.
+// Status values are stored as "Available" / "Sold" / "Reserved" (Title Case) or null
+// (treated as available), consistently across every site table — confirmed by sampling
+// each table directly. head:true count queries return only a count header, no row
+// payload, so this is 3 lightweight requests per site instead of paginating through
+// every row just to tally 3 numbers client-side (the previous approach transferred
+// ~2,943 rows for Trabuom Sector 1 alone, repeated for all 9 sites on every mount).
 async function fetchPlotCounts(development: Development): Promise<PlotCounts> {
-  const counts: PlotCounts = { total: 0, available: 0, sold: 0 };
-  const batchSize = 1000;
-  let from = 0;
-
-  while (true) {
-    const { data, error } = await supabase
+  const [totalRes, soldRes, availableRes] = await Promise.all([
+    supabase.from(development.table).select("*", { count: "exact", head: true }),
+    supabase.from(development.table).select("*", { count: "exact", head: true }).eq("status", "Sold"),
+    supabase
       .from(development.table)
-      .select("status")
-      .range(from, from + batchSize - 1);
+      .select("*", { count: "exact", head: true })
+      .or("status.eq.Available,status.is.null"),
+  ]);
 
-    if (error || !data?.length) break;
-    data.forEach((plot: { status: unknown }) => {
-      const key = normalizeStatus(plot.status);
-      counts.total += 1;
-      if (key === "available") counts.available += 1;
-      if (key === "sold") counts.sold += 1;
-    });
-    if (data.length < batchSize) break;
-    from += batchSize;
-  }
-
-  return counts;
+  return {
+    total: totalRes.count ?? 0,
+    sold: soldRes.count ?? 0,
+    available: availableRes.count ?? 0,
+  };
 }
 
 export default function SitesScreen() {

@@ -61,28 +61,39 @@ export default function AdminPlotsScreen() {
     setError(null);
 
     try {
+      // Count-only (head:true) queries instead of fetching every row and filtering
+      // client-side: Supabase caps unbounded selects at 1000 rows, which was silently
+      // under-counting any site with more plots than that (e.g. Trabuom Sector 1 has
+      // ~2,943). These return just a count header, no row payload.
       const results = await Promise.all(
         DEVELOPMENTS.map(async (dev) => {
-          const [{ data: plots, error: plotsError }, { count: interested }] = await Promise.all([
-            supabase.from(dev.table).select('status'),
+          const base = () => supabase.from(dev.table).select('*', { count: 'exact', head: true });
+          const [totalRes, availableRes, soldRes, reservedRes, interestedRes] = await Promise.all([
+            base(),
+            base().or('status.eq.Available,status.is.null'),
+            base().eq('status', 'Sold'),
+            base().eq('status', 'Reserved'),
             supabase.from(dev.interestTable).select('*', { count: 'exact', head: true }),
           ]);
 
-          if (plotsError) throw plotsError;
+          if (totalRes.error) throw totalRes.error;
 
-          const rows = plots || [];
+          const total = totalRes.count ?? 0;
+          const available = availableRes.count ?? 0;
+          const sold = soldRes.count ?? 0;
+          const reserved = reservedRes.count ?? 0;
           return {
             slug: dev.slug,
             title: dev.title,
             subtitle: dev.subtitle,
             table: dev.table,
             interestTable: dev.interestTable,
-            total: rows.length,
-            available: rows.filter((plot) => !plot.status || plot.status === 'Available').length,
-            sold: rows.filter((plot) => plot.status === 'Sold').length,
-            reserved: rows.filter((plot) => plot.status === 'Reserved').length,
-            onHold: rows.filter((plot) => plot.status === 'On Hold').length,
-            interested: interested || 0,
+            total,
+            available,
+            sold,
+            reserved,
+            onHold: Math.max(0, total - available - sold - reserved),
+            interested: interestedRes.count || 0,
           };
         })
       );

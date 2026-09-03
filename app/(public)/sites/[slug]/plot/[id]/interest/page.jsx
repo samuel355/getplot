@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/utils/supabase/client";
 import { getSiteBySlug } from "@/lib/sites";
@@ -10,10 +10,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle, HeartHandshake, Loader2, MapPin } from "lucide-react";
 import { toast } from "react-toastify";
 import CountrySelect from "@/app/_components/ui/CountrySelect";
+import { formatCalculatedPlotSize } from "@/lib/plotGeometry";
 
 export default function ExpressInterestPage() {
   const { slug, id } = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const embedded = searchParams.get("embedded") === "1";
   const site = getSiteBySlug(slug);
 
   const [plot, setPlot] = useState(null);
@@ -49,6 +52,7 @@ export default function ExpressInterestPage() {
 
   const plotNo = plot?.properties?.Plot_No ?? id;
   const plotAmount = plot?.plotTotalAmount ?? plot?.properties?.plotAmount ?? 0;
+  const plotSize = formatCalculatedPlotSize(plot);
 
   const validate = () => {
     const required = ["firstname", "lastname", "email", "phone"];
@@ -67,7 +71,7 @@ export default function ExpressInterestPage() {
     try {
       // 1. Save to interests table
       const interestsTable = `${site.table}_interests`;
-      await supabase.from(interestsTable).insert({
+      const { error: insertError } = await supabase.from(interestsTable).insert({
         firstname: form.firstname,
         lastname: form.lastname,
         email: form.email,
@@ -78,9 +82,10 @@ export default function ExpressInterestPage() {
         plot_amount: plotAmount,
         message: form.message,
       });
+      if (insertError) throw insertError;
 
       // 2. Email admin
-      await fetch("/api/mail-from-interests", {
+      const emailResponse = await fetch("/api/mail-from-interests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -95,9 +100,10 @@ export default function ExpressInterestPage() {
           message: form.message || "No message provided",
         }),
       });
+      if (!emailResponse.ok) throw new Error("Could not send interest email");
 
       // 3. SMS to user
-      await fetch("/api/send-sms", {
+      const smsResponse = await fetch("/api/send-sms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -105,8 +111,9 @@ export default function ExpressInterestPage() {
           message: `Hi ${form.firstname}, thank you for your interest in Plot No. ${plotNo} at ${site.name}. Our team will contact you shortly. Call 0322008282 / +233 54 855 4216 for immediate assistance.`,
         }),
       });
+      if (!smsResponse.ok) throw new Error("Could not send interest confirmation");
 
-      await fetch("/api/company-alert", {
+      const alertResponse = await fetch("/api/company-alert", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -123,8 +130,13 @@ export default function ExpressInterestPage() {
           ].join("\n"),
         }),
       });
+      if (!alertResponse.ok) throw new Error("Could not notify the sales team");
 
-      setDone(true);
+      if (embedded && window.parent !== window) {
+        window.parent.postMessage({ type: "plot-action-complete", action: "interest" }, window.location.origin);
+      } else {
+        setDone(true);
+      }
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong. Please try again.");
@@ -188,6 +200,10 @@ export default function ExpressInterestPage() {
           <div>
             <p className="text-xs text-gray-400 uppercase tracking-wider">Site</p>
             <p className="font-semibold text-gray-900">{site.name}</p>
+          </div>
+          <div>
+            <p className="text-xs text-gray-400 uppercase tracking-wider">Plot size</p>
+            <p className="font-semibold text-gray-900">{plotSize}</p>
           </div>
           {plotAmount > 0 && (
             <div>

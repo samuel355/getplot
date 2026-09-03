@@ -2,6 +2,7 @@ import Constants from "expo-constants";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import MapView, {
+  Marker,
   Polygon,
   PROVIDER_DEFAULT,
   PROVIDER_GOOGLE,
@@ -73,6 +74,7 @@ function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh 
   const useGoogle = canUseGoogleProvider();
   const [mapReady, setMapReady] = useState(false);
   const [mapType, setMapType] = useState<MapTypeOption>(useGoogle ? "hybrid" : "satellite");
+  const [showPlotNumbers, setShowPlotNumbers] = useState(false);
   const regionRef = useRef<Region>(regionFromPlots(plots, development));
   const insets = useSafeAreaInsets();
 
@@ -158,6 +160,7 @@ function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh 
         initialRegion={initialRegion}
         onRegionChangeComplete={(r) => {
           regionRef.current = r;
+          setShowPlotNumbers(r.latitudeDelta <= 0.0021);
         }}
         showsUserLocation={false}
         showsCompass
@@ -170,6 +173,24 @@ function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh 
         {plots.map((plot) => (
           <PlotPolygon key={plot.id} plot={plot} onPress={onPlotPress} />
         ))}
+        {showPlotNumbers ? plots.map((plot) => {
+          const ring = getPolygonRing(plot);
+          if (ring.length < 3) return null;
+          const center = ring.reduce(
+            (sum, point) => ({
+              latitude: sum.latitude + point.latitude / ring.length,
+              longitude: sum.longitude + point.longitude / ring.length,
+            }),
+            { latitude: 0, longitude: 0 },
+          );
+          return (
+            <Marker key={`number-${plot.id}`} coordinate={center} onPress={() => onPlotPress(plot)} tracksViewChanges={false}>
+              <View style={styles.plotNumberBadge}>
+                <Text style={styles.plotNumberText}>{plot.properties?.Plot_No ?? plot.id}</Text>
+              </View>
+            </Marker>
+          );
+        }) : null}
       </MapView>
 
       {!loading && plots.length > 0 ? (
@@ -232,8 +253,19 @@ const styles = StyleSheet.create({
   controls: {
     right: spacing.md,
   },
+  plotNumberBadge: {
+    backgroundColor: "transparent",
+  },
+  plotNumberText: {
+    color: colors.white,
+    fontSize: 12,
+    fontWeight: "800",
+    textShadowColor: "rgba(0,0,0,0.95)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
+  },
   loadingOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     zIndex: 2,
     backgroundColor: "rgba(255,255,255,0.92)",
     justifyContent: "center",
@@ -241,7 +273,7 @@ const styles = StyleSheet.create({
   },
   loadingText: { marginTop: spacing.md, color: colors.textMuted, fontSize: fontSize.sm },
   emptyOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     zIndex: 2,
     justifyContent: "center",
     alignItems: "center",

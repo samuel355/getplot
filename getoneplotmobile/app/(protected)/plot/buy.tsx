@@ -10,13 +10,13 @@ import {
   formatGhs,
   getPlotById,
   updatePlotOnHold,
-  formatAreaSize,
   formatStreet,
 } from "../../../src/lib/plotService";
 import { notifyPlotPurchaseSuccess } from "../../../src/lib/notificationService";
 import type { BuyerInfo, PlotFeature } from "../../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
 import { getDevelopment } from "../../../src/constants/developments";
+import { formatCoordinatePlotSize } from "../../../src/lib/plotGeometry";
 
 export default function BuyPlotScreen() {
   const { colors, spacing, borderRadius, fontWeight, fontSize, isDark } = useTheme();
@@ -80,10 +80,11 @@ export default function BuyPlotScreen() {
         firstname: buyer.firstname,
         lastname: buyer.lastname,
         plotNo: plot.properties?.Plot_No ?? "N/A",
+        streetName: formatStreet(plot.properties?.Street_Nam),
         siteName: siteName,
         amount: buyer.plotTotalAmount,
         isFullPayment: true,
-        areaAcres: formatAreaSize(plot.properties?.Area),
+        areaAcres: formatCoordinatePlotSize(plot),
       }).catch((err) => console.error("Notification background error:", err));
 
       setProcessing(false);
@@ -93,6 +94,7 @@ export default function BuyPlotScreen() {
           type: "buy",
           amount: String(buyer.plotTotalAmount),
           plotNo: plot.properties?.Plot_No ?? "N/A",
+          streetName: formatStreet(plot.properties?.Street_Nam),
           site: siteName,
         },
       });
@@ -195,7 +197,7 @@ export default function BuyPlotScreen() {
             <View style={styles.stat}>
               <Text style={[styles.statLabel, { color: colors.textMuted }]}>Area Size</Text>
               <Text style={[styles.statValue, { color: colors.text }]}>
-                {formatAreaSize(plot.properties?.Area)}
+                {formatCoordinatePlotSize(plot)}
               </Text>
             </View>
             <View style={[styles.statDivider, { backgroundColor: colors.borderLight }]} />

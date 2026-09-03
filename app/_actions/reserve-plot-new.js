@@ -5,6 +5,8 @@ import { dollarAccount } from "./dollar-account";
 import { toast } from "react-toastify";
 import { updatePlotStatus } from "./update-plot-status";
 import { sendSMS } from "./send-sms";
+import { calculatePlotAreaAcres, formatCalculatedPlotSize } from "@/lib/plotGeometry";
+import { getSiteLabel } from "@/lib/sites";
 
 export const reservePlotNew = async (
   loading,
@@ -25,31 +27,7 @@ export const reservePlotNew = async (
   setReservePlotDialog
 ) => {
   setLoading(true);
-  let plot_location = ''
-  if (table && table === "nthc") {
-    plot_location = "Kumasi Kwadaso";
-  }
-  if (table && table === "dar-es-salaam") {
-    plot_location = "Kumasi Ejisu";
-  }
-  if (table && table === "trabuom") {
-    plot_location = "Kumasi Atwima Trabuom";
-  }
-  if (table && table === "legon-hills") {
-    plot_location = "East Legon Hills";
-  }
-  if (table && table === "yabi") {
-    plot_location = "Kumasi Atwima Yabi";
-  }
-  if (table && table === "berekuso") {
-    plot_location = "Berekuso - Eastern Region";
-  }
-  if (table && table === "asokore-mampong") {
-    plot_location = "Asokore Mampong";
-  }
-  if (table && table === "saadi") {
-    plot_location = "Atwima Yabi - Kumasi";
-  }
+  const plot_location = getSiteLabel(table);
 
   const doc = new jsPDF();
   try {
@@ -62,13 +40,15 @@ export const reservePlotNew = async (
       { header: "Minimum Deposit (GHS)", dataKey: "initialDeposit" },
     ];
 
-    allDetails.properties.plotAmount = plotTotalAmount;
-    allDetails.properties.initialDeposit = initialDeposit;
-    allDetails.properties.plotArea = plot_location;
-    allDetails.properties.Area = parseFloat(allDetails.properties.Area).toFixed(
-      2
-    );
-    const plotRows = [allDetails.properties];
+    const plotAreaAcres = calculatePlotAreaAcres(allDetails);
+    const plotProperties = {
+      ...allDetails.properties,
+      plotAmount: plotTotalAmount,
+      initialDeposit,
+      plotArea: plot_location,
+      Area: plotAreaAcres ? plotAreaAcres.toFixed(2) : "Size unavailable",
+    };
+    const plotRows = [plotProperties];
 
     const topMargin = 25;
 
@@ -160,22 +140,7 @@ export const reservePlotNew = async (
 
     //doc.save("plot_details.pdf");
 
-    let plotArea = "";
-    if (databaseName === "yabi") {
-      plotArea = "Yabi-Kumasi";
-    } else if (databaseName === "trabuom") {
-      plotArea = "Trabuom - Kumasi";
-    } else if (databaseName === "dar_es_salaam") {
-      plotArea = "Ejisu - Kumasi";
-    } else if (databaseName === "legon_hills") {
-      plotArea = "East Legon Hills - Accra";
-    } else if (databaseName === "nthc") {
-      plotArea = "Kwadaso - Kumasi";
-    }else if (databaseName === "asokore_mampong") {
-      plotArea = "Asokore Mampong - Kumasi";
-    }else if (databaseName === "saadi") {
-      plotArea = "Saadi - Kumasi";
-    }
+    const plotArea = getSiteLabel(databaseName);
 
     const pdfBlob = doc.output("blob"); // Get PDF as a Blob
 
@@ -195,14 +160,14 @@ export const reservePlotNew = async (
     formData.append(
       "plotDetails",
       "Plot Number " +
-        allDetails.properties.Plot_No +
+        plotProperties.Plot_No +
         " " +
-        allDetails.properties.Street_Nam
+        plotProperties.Street_Nam
     );
 
     formData.append(
       "plotSize",
-      parseFloat(allDetails.properties.Area).toFixed(2) + " Acres "
+      formatCalculatedPlotSize(allDetails)
     );
 
     const res = await fetch("/api/reserve-plot", {
@@ -248,7 +213,7 @@ export const reservePlotNew = async (
     setReservePlotDialog(false)
     toast.success("The plot information and instructions has been sent to your email. Thank you")
 
-    const plot_info_to_send = `${allDetails.properties.Plot_No}, ${allDetails.properties.Street_Nam} at ${plotArea}`;
+    const plot_info_to_send = `${plotProperties.Plot_No}, ${plotProperties.Street_Nam} at ${plotArea}`;
     const message1 = `To claim ownership of the chosen plot (Plot No. ${plot_info_to_send} ), kindly make the payment to either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 54 855 4216 or check your email for more info`;
     //send SMS
     sendSMS(phone, message1);

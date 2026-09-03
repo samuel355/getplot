@@ -90,24 +90,37 @@ export async function POST(request: Request) {
     const templatePath = path.resolve("src/api/templates", templateName);
 
     const INLINE_TEMPLATE = `
-      <h2>Plot ${type === 'reserve' ? 'Reservation' : 'Purchase'} Request</h2>
-      <p>Dear <%= firstname %> <%= lastname %>,</p>
-      <p>We received your ${type === 'reserve' ? 'reservation' : 'purchase'} request for a plot at <strong><%= plotArea %></strong>.</p>
-      <table style="border-collapse:collapse;width:100%">
-        <tr><td style="padding:8px;border:1px solid #ddd">Plot</td><td style="padding:8px;border:1px solid #ddd"><%= plotDetails %></td></tr>
-        <tr><td style="padding:8px;border:1px solid #ddd">Size</td><td style="padding:8px;border:1px solid #ddd"><%= plotSize %></td></tr>
-        <tr><td style="padding:8px;border:1px solid #ddd">${type === 'reserve' ? 'Deposit Required' : 'Amount Due'}</td><td style="padding:8px;border:1px solid #ddd"><%= amount %></td></tr>
-      </table>
-      <h3>Bank Details</h3>
-      <table style="border-collapse:collapse;width:100%">
-        <tr><td style="padding:8px;border:1px solid #ddd">Bank Name</td><td style="padding:8px;border:1px solid #ddd">STANBIC BANK</td></tr>
-        <tr><td style="padding:8px;border:1px solid #ddd">Account Name</td><td style="padding:8px;border:1px solid #ddd">LAND AND HOMES CONSULT</td></tr>
-        <tr><td style="padding:8px;border:1px solid #ddd">Cedis Account</td><td style="padding:8px;border:1px solid #ddd">9040009771047</td></tr>
-        <tr><td style="padding:8px;border:1px solid #ddd">Dollar Account</td><td style="padding:8px;border:1px solid #ddd">9040011449268</td></tr>
-        <tr><td style="padding:8px;border:1px solid #ddd">Branch</td><td style="padding:8px;border:1px solid #ddd">KNUST, KUMASI-GHANA</td></tr>
-      </table>
-      <p>Please make payment at the bank and bring your receipt to our Kumasi Dichemso office to finalize the plot sale or reservation.</p>
-      <p>— Get One Plot Team</p>
+      <div style="font-family:Arial,Helvetica,sans-serif;max-width:620px;margin:0 auto;background:#fff;color:#172033">
+        <div style="padding:28px 32px;background:#0b0e2d;color:#fff">
+          <img src="https://getoneplot.com/logo-lateral.svg" alt="GetOnePlot" style="width:150px;max-width:60%;margin-bottom:20px">
+          <h1 style="margin:0;font-size:24px">Plot ${type === 'reserve' ? 'Reservation' : 'Purchase'} Request</h1>
+          <p style="margin:7px 0 0;color:#b9c5df">Payment instructions and plot details</p>
+        </div>
+        <div style="padding:32px">
+          <p style="display:inline-block;padding:5px 12px;border-radius:999px;background:${type === 'reserve' ? '#fef3c7;color:#92400e' : '#dcfce7;color:#166534'};font-size:12px;font-weight:bold">Request received</p>
+          <p>Dear <strong><%= firstname %> <%= lastname %></strong>,</p>
+          <p style="color:#475569">Thank you for choosing GetOnePlot. We have received your request for the plot below. Please review the details and follow the payment instructions to proceed.</p>
+          <h2 style="margin:28px 0 10px;color:#0b0e2d;font-size:14px;text-transform:uppercase">Selected plot</h2>
+          <table style="width:100%;border:1px solid #e2e8f0;border-collapse:collapse">
+            <tr><td style="padding:12px;background:#f8fafc;color:#64748b">Location</td><td style="padding:12px;font-weight:bold"><%= plotArea %></td></tr>
+            <tr><td style="padding:12px;background:#f8fafc;color:#64748b">Plot details</td><td style="padding:12px;font-weight:bold"><%= plotDetails %></td></tr>
+            <tr><td style="padding:12px;background:#f8fafc;color:#64748b">Plot size</td><td style="padding:12px;font-weight:bold"><%= plotSize %></td></tr>
+            <tr><td style="padding:12px;background:#f8fafc;color:#64748b">${type === 'reserve' ? 'Deposit required' : 'Amount due'}</td><td style="padding:12px;font-weight:bold"><%= amount %></td></tr>
+          </table>
+          <h2 style="margin:28px 0 10px;color:#0b0e2d;font-size:14px;text-transform:uppercase">Payment account</h2>
+          <table style="width:100%;border:1px solid #e2e8f0;border-collapse:collapse">
+            <tr><td style="padding:12px;background:#f8fafc;color:#64748b">Bank</td><td style="padding:12px;font-weight:bold">STANBIC BANK</td></tr>
+            <tr><td style="padding:12px;background:#f8fafc;color:#64748b">Account name</td><td style="padding:12px;font-weight:bold">LAND AND HOMES CONSULT</td></tr>
+            <tr><td style="padding:12px;background:#f8fafc;color:#64748b">Cedis account</td><td style="padding:12px;font-weight:bold">9040009771047</td></tr>
+            <tr><td style="padding:12px;background:#f8fafc;color:#64748b">Dollar account</td><td style="padding:12px;font-weight:bold">9040011449268</td></tr>
+            <tr><td style="padding:12px;background:#f8fafc;color:#64748b">Branch</td><td style="padding:12px;font-weight:bold">KNUST, KUMASI GHANA</td></tr>
+          </table>
+          <p style="margin-top:24px;padding:16px;background:#f0f9ff;border:1px solid #bae6fd;color:#164e63">Make payment to the account above, then bring your receipt to our Kumasi Dichemso office or email it to <a href="mailto:sales@getoneplot.com">sales@getoneplot.com</a>.</p>
+          <p style="color:#475569">For assistance, call <strong>0322008282</strong> or <strong>+233 54 855 4216</strong>.</p>
+          <p>Best regards,<br><strong>The GetOnePlot Team</strong></p>
+        </div>
+        <div style="padding:22px;background:#f8fafc;color:#64748b;text-align:center;font-size:12px">&copy; <%= new Date().getFullYear() %> GetOnePlot. All rights reserved.</div>
+      </div>
     `;
 
     let template: string;

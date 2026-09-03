@@ -5,10 +5,11 @@ import { Alert, ScrollView, StyleSheet, Text, View, type TextStyle } from "react
 import { Button } from "../../src/components/ui/Button";
 import { Input } from "../../src/components/ui/Input";
 import { useTheme } from "../../src/constants/theme";
-import { formatAreaSize, formatGhs, formatStreet, updatePlotOnHold } from "../../src/lib/plotService";
+import { formatGhs, formatStreet, updatePlotOnHold } from "../../src/lib/plotService";
 import { notifyPlotPurchaseSuccess } from "../../src/lib/notificationService";
 import { useCartStore } from "../../src/stores/cartStore";
 import { Ionicons } from "@expo/vector-icons";
+import { formatCoordinatePlotSize } from "../../src/lib/plotGeometry";
 
 export default function CheckoutScreen() {
   const { colors, spacing, borderRadius, fontWeight, fontSize, isDark } = useTheme();
@@ -90,10 +91,11 @@ export default function CheckoutScreen() {
           firstname: buyer.firstname,
           lastname: buyer.lastname,
           plotNo: plot.properties?.Plot_No ?? "N/A",
+          streetName: formatStreet(plot.properties?.Street_Nam),
           siteName: plot.siteName || String(plot.properties?.Site || "Standard Development"),
           amount: plot.plotTotalAmount || 0,
           isFullPayment: true,
-          areaAcres: formatAreaSize(plot.properties?.Area),
+          areaAcres: formatCoordinatePlotSize(plot),
         }).catch((err) => console.error("Notification background error:", err));
       }
 
@@ -104,6 +106,7 @@ export default function CheckoutScreen() {
           type: "buy",
           amount: String(total),
           plotNo: plots.length === 1 ? plots[0].properties?.Plot_No ?? "N/A" : `${plots.length} plots`,
+          streetName: plots.length === 1 ? formatStreet(plots[0].properties?.Street_Nam) : "",
           site: plots.length === 1 ? plots[0].siteName || "Standard Site" : "Multiple sites",
         },
       });

@@ -288,6 +288,104 @@ div.dev-banner > p {
   animation: heartbeat 1s ease-in-out;
 }
 
+@keyframes brand-loader-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes brand-loader-pulse {
+  0%, 100% { transform: scale(0.96); opacity: 0.72; }
+  50% { transform: scale(1.04); opacity: 1; }
+}
+
+@keyframes brand-loader-dot {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.35; }
+  40% { transform: translateY(-4px); opacity: 1; }
+}
+
+.brand-loader {
+  position: relative;
+  display: flex;
+  min-height: 100%;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(circle at center, rgba(104, 201, 205, 0.12), transparent 30%), #191347;
+  color: white;
+}
+
+.brand-loader-logo {
+  position: relative;
+  z-index: 1;
+  animation: brand-loader-pulse 2.2s ease-in-out infinite;
+}
+
+.brand-loader-orbit {
+  position: absolute;
+  width: 156px;
+  height: 156px;
+  border: 1px solid rgba(104, 201, 205, 0.22);
+  border-radius: 999px;
+  animation: brand-loader-spin 2.8s linear infinite;
+}
+
+.brand-loader-orbit::before,
+.brand-loader-orbit::after,
+.brand-loader-orbit span {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #68c9cd;
+  box-shadow: 0 0 16px rgba(104, 201, 205, 0.85);
+  content: "";
+}
+
+.brand-loader-orbit::before { left: 19px; top: 19px; }
+.brand-loader-orbit::after { right: 10px; bottom: 32px; opacity: 0.55; }
+.brand-loader-orbit span { left: 50%; bottom: -3px; transform: translateX(-50%); }
+
+.brand-loader-label {
+  position: relative;
+  z-index: 1;
+  margin: 24px 0 10px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.brand-loader-dots {
+  display: flex;
+  gap: 5px;
+}
+
+.brand-loader-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #68c9cd;
+  animation: brand-loader-dot 1.2s ease-in-out infinite;
+}
+
+.brand-loader-dots span:nth-child(2) { animation-delay: 0.15s; }
+.brand-loader-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes arrow-right {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+.animate-arrow-right {
+  animation: arrow-right 1.2s ease-in-out infinite;
+}
+
 /* Pulse animation enhancement */
 .animate-pulse {
   animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;

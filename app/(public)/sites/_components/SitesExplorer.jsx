@@ -36,6 +36,22 @@ const MAP_OPTIONS = {
   gestureHandling: "greedy",
 };
 
+const SITE_CLUSTER_ICON = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+    <defs>
+      <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="2.5" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <circle cx="24" cy="24" r="19" fill="#68c9cd" fill-opacity="0.3"/>
+    <circle cx="24" cy="24" r="15" fill="#68c9cd" stroke="#ffffff" stroke-width="3" filter="url(#glow)"/>
+  </svg>
+`)}`;
+
 function normalizeStatus(status) {
   const value = String(status || "Available").toLowerCase();
   if (value === "sold") return "sold";
@@ -373,7 +389,22 @@ export default function SitesExplorer({ sites }) {
                     window.setTimeout(fitGhana, 150);
                   }}
                 >
-                  <MarkerClustererF options={{ gridSize: 52, minimumClusterSize: 2, maxZoom: 11, zoomOnClick: true }}>
+                  <MarkerClustererF
+                    options={{
+                      gridSize: 52,
+                      minimumClusterSize: 2,
+                      maxZoom: 11,
+                      zoomOnClick: true,
+                      styles: [{
+                        url: SITE_CLUSTER_ICON,
+                        height: 48,
+                        width: 48,
+                        textColor: "#191347",
+                        textSize: 14,
+                        fontWeight: "800",
+                      }],
+                    }}
+                  >
                     {(clusterer) => (
                       <>
                         {filteredSites.map((site) => {
@@ -469,7 +500,7 @@ export default function SitesExplorer({ sites }) {
 function MapControls({ mapType, onMapTypeChange, onZoomIn, onZoomOut, onFit }) {
   const [typesOpen, setTypesOpen] = useState(false);
   return (
-    <div className="absolute bottom-4 left-1/2 z-10 grid w-[min(18rem,calc(100%-1.5rem))] -translate-x-1/2 grid-cols-2 rounded-2xl border border-white/70 bg-white/95 p-1.5 shadow-elevated backdrop-blur-xl md:bottom-auto md:left-auto md:right-4 md:top-4 md:flex md:w-auto md:translate-x-0 md:flex-col">
+    <div className="absolute bottom-4 left-1/2 z-10 grid w-[min(19rem,calc(100%-1.5rem))] -translate-x-1/2 grid-cols-2 rounded-2xl border border-brand-navy/25 bg-white/95 p-2 shadow-elevated backdrop-blur-xl md:bottom-auto md:left-auto md:right-4 md:top-4 md:flex md:w-auto md:translate-x-0 md:flex-col">
       <MapControlButton label="Zoom in" icon={ZoomIn} onClick={onZoomIn} />
       <MapControlButton label="Zoom out" icon={ZoomOut} onClick={onZoomOut} />
       <div className="mx-1 my-1 hidden w-[calc(100%-0.5rem)] border-t border-slate-200 md:block" />
@@ -492,8 +523,8 @@ function MapControls({ mapType, onMapTypeChange, onZoomIn, onZoomOut, onFit }) {
 
 function MapControlButton({ label, icon: Icon, onClick, active }) {
   return (
-    <button type="button" onClick={onClick} title={label} className={cn("flex h-10 w-full items-center justify-center gap-2 rounded-xl px-2 text-xs font-bold text-brand-navy transition-colors hover:bg-brand-teal/15 md:w-28 md:justify-start md:px-3", active && "bg-brand-teal/15")}>
-      <Icon className="h-5 w-5 shrink-0" /> <span>{label}</span>
+    <button type="button" onClick={onClick} title={label} className={cn("flex h-11 w-full items-center justify-center gap-2 rounded-xl px-2 text-xs font-bold text-brand-navy transition-colors hover:bg-brand-teal/15 md:w-32 md:justify-start md:px-3", active && "bg-brand-navy/10")}>
+      <Icon className="h-6 w-6 shrink-0" /> <span>{label}</span>
     </button>
   );
 }

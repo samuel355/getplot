@@ -14,6 +14,7 @@ export default function PaymentSuccessScreen() {
     type: "buy" | "reserve";
     amount: string;
     plotNo: string;
+    streetName?: string;
     site: string;
   }>();
 
@@ -94,6 +95,15 @@ export default function PaymentSuccessScreen() {
               {params.site || "Standard Site"}
             </Text>
           </View>
+
+          {params.streetName ? (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: colors.textMuted }]}>Street</Text>
+              <Text style={[styles.detailValue, { color: colors.text }]} numberOfLines={2}>
+                {params.streetName}
+              </Text>
+            </View>
+          ) : null}
 
           <View style={styles.detailRow}>
             <Text style={[styles.detailLabel, { color: colors.textMuted }]}>Status</Text>

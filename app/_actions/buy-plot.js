@@ -5,6 +5,8 @@ import { dollarAccount } from "./dollar-account";
 import { toast } from "react-toastify";
 import { updatePlotStatus } from "./update-plot-status";
 import { sendCompanyAlert, sendSMS } from "./send-sms";
+import { calculatePlotAreaAcres, formatCalculatedPlotSize } from "@/lib/plotGeometry";
+import { getSiteLabel } from "@/lib/sites";
 
 export const buyPlot = async (
   allDetails,
@@ -18,7 +20,8 @@ export const buyPlot = async (
   lastname,
   phone,
   country,
-  residentialAddress
+  residentialAddress,
+  embedded = false
 ) => {
   setLoader3(true);
   const doc = new jsPDF();
@@ -31,12 +34,14 @@ export const buyPlot = async (
       { header: "Plot Amount (GHS)", dataKey: "plotAmount" },
     ];
 
-    allDetails.properties.plotAmount = plotTotalAmount;
-    allDetails.properties.plotArea = "Yabi Kumasi";
-    allDetails.properties.Area = parseFloat(allDetails.properties.Area).toFixed(
-      2
-    );
-    const plotRows = [allDetails.properties];
+    const plotAreaAcres = calculatePlotAreaAcres(allDetails);
+    const plotProperties = {
+      ...allDetails.properties,
+      plotAmount: plotTotalAmount,
+      plotArea: getSiteLabel(databaseName),
+      Area: plotAreaAcres ? plotAreaAcres.toFixed(2) : "Size unavailable",
+    };
+    const plotRows = [plotProperties];
 
     const topMargin = 25;
 
@@ -128,22 +133,7 @@ export const buyPlot = async (
 
     //doc.save("plot_details.pdf");
 
-    let plotArea = "";
-    if (databaseName === "yabi") {
-      plotArea = "Yabi-Kumasi";
-    } else if (databaseName === "trabuom") {
-      plotArea = "Trabuom - Kumasi";
-    } else if (databaseName === "dar_es_salaam") {
-      plotArea = "Ejisu - Kumasi";
-    } else if (databaseName === "legon_hills") {
-      plotArea = "East Legon Hills - Accra";
-    } else if (databaseName === "nthc") {
-      plotArea = "Kwadaso - Kumasi";
-    }else if (databaseName === "asokore_mampong") {
-      plotArea = "Asokore Mampong - Kumasi";
-    }else if (databaseName === "saadi") {
-      plotArea = "Saadi - Kumasi";
-    }
+    const plotArea = getSiteLabel(databaseName);
 
     const pdfBlob = doc.output("blob"); // Get PDF as a Blob
 
@@ -159,15 +149,12 @@ export const buyPlot = async (
     formData.append(
       "plotDetails",
       "Plot Number " +
-        allDetails.properties.Plot_No +
+        plotProperties.Plot_No +
         " " +
-        allDetails.properties.Street_Nam
+        plotProperties.Street_Nam
     );
 
-    formData.append(
-      "plotSize",
-      parseFloat(allDetails.properties.Area).toFixed(2) + " Acres "
-    );
+    formData.append("plotSize", formatCalculatedPlotSize(allDetails));
 
     const res = await fetch("/api/buy-plot", {
       method: "POST",
@@ -179,6 +166,7 @@ export const buyPlot = async (
       // Handle the error appropriately
       console.error("Error sending email:", await res.text());
       toast.error("Sorry something went wrong. Try again later");
+      return;
     }
 
     let redirect = "";
@@ -198,10 +186,8 @@ export const buyPlot = async (
       redirect = "/royal-court-estate";
     }
 
-    router.push(`/message`);
-
     //Update plot status to hold for 24 hours
-    updatePlotStatus(
+    await updatePlotStatus(
       databaseName,
       id,
       firstname,
@@ -213,12 +199,18 @@ export const buyPlot = async (
     );
 
     setLoader3(false);
-    const plot_info_to_send = `${allDetails.properties.Plot_No}, ${allDetails.properties.Street_Nam} at ${plotArea}`;
+    if (embedded && window.parent !== window) {
+      window.parent.postMessage({ type: "plot-action-complete", action: "buy" }, window.location.origin);
+    } else {
+      router.push(`/message`);
+    }
+
+    const plot_info_to_send = `${plotProperties.Plot_No}, ${plotProperties.Street_Nam} at ${plotArea}`;
     const message1 = `To claim ownership of the chosen plot (Plot No. ${plot_info_to_send} ), kindly make the payment to either the dollar account or the cedis account and present your receipt in our office at Kumasi Dichemso. Or Call 0322008282/+233 54 855 4216 or check your email for more info`;
     //send SMS
     sendSMS(phone, message1);
     sendCompanyAlert({
-      subject: `New plot purchase request: Plot ${allDetails.properties.Plot_No}`,
+      subject: `New plot purchase request: Plot ${plotProperties.Plot_No}`,
       message: [
         "New plot purchase request",
         `Client: ${firstname} ${lastname}`,

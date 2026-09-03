@@ -10,13 +10,13 @@ import {
   formatGhs,
   getPlotById,
   updatePlotOnHold,
-  formatAreaSize,
   formatStreet,
 } from "../../../src/lib/plotService";
 import { notifyPlotPurchaseSuccess } from "../../../src/lib/notificationService";
 import type { BuyerInfo, PlotFeature } from "../../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
 import { getDevelopment } from "../../../src/constants/developments";
+import { formatCoordinatePlotSize } from "../../../src/lib/plotGeometry";
 
 const DEPOSIT_RATE = 0.1;
 
@@ -91,10 +91,11 @@ export default function ReservePlotScreen() {
         firstname: buyer.firstname,
         lastname: buyer.lastname,
         plotNo: plot.properties?.Plot_No ?? "N/A",
+        streetName: formatStreet(plot.properties?.Street_Nam),
         siteName: siteName,
         amount: buyer.paidAmount || 0,
         isFullPayment: false,
-        areaAcres: formatAreaSize(plot.properties?.Area),
+        areaAcres: formatCoordinatePlotSize(plot),
       }).catch((err) => console.error("Notification background error:", err));
 
       setProcessing(false);
@@ -104,6 +105,7 @@ export default function ReservePlotScreen() {
           type: "reserve",
           amount: String(buyer.paidAmount),
           plotNo: plot.properties?.Plot_No ?? "N/A",
+          streetName: formatStreet(plot.properties?.Street_Nam),
           site: siteName,
         },
       });
@@ -158,6 +160,13 @@ export default function ReservePlotScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 40 }}
       >
+        <View style={[styles.instructionCard, { backgroundColor: colors.primaryAccent + "16", borderColor: colors.primaryAccent + "45" }]}>
+          <Ionicons name="mail-unread-outline" size={22} color={colors.primary} />
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.instructionTitle, { color: colors.primary }]}>What happens after you submit?</Text>
+            <Text style={[styles.instructionText, { color: colors.textSecondary }]}>We&apos;ll send our bank details and payment instructions to your email address or phone number.</Text>
+          </View>
+        </View>
         {/* Plot Info Card */}
         <View
           style={[
@@ -207,7 +216,7 @@ export default function ReservePlotScreen() {
             <View style={styles.stat}>
               <Text style={[styles.statLabel, { color: colors.textMuted }]}>Area Size</Text>
               <Text style={[styles.statValue, { color: colors.text }]}>
-                {formatAreaSize(plot.properties?.Area)}
+                {formatCoordinatePlotSize(plot)}
               </Text>
             </View>
             <View style={[styles.statDivider, { backgroundColor: colors.borderLight }]} />
@@ -359,6 +368,18 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 40 },
   errorText: { marginBottom: 20, textAlign: "center" },
+  instructionCard: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+    marginHorizontal: 20,
+    marginTop: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderRadius: 14,
+  },
+  instructionTitle: { fontSize: 14, fontWeight: "800" },
+  instructionText: { marginTop: 4, fontSize: 12, lineHeight: 18 },
   card: {
     margin: 20,
     padding: 20,

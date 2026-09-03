@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { GoogleMap, OverlayView, Polygon, useJsApiLoader } from "@react-google-maps/api";
 import { useUser } from "@clerk/nextjs";
 import {
@@ -25,6 +24,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/utils/supabase/client";
 import { cn } from "@/lib/utils";
+import { toast } from "react-toastify";
 
 const GOOGLE_MAPS_KEY =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ??
@@ -129,6 +129,64 @@ function getPolygonCenter(path) {
   return { lat: sum.lat / path.length, lng: sum.lng / path.length };
 }
 
+function distanceInFeet(a, b) {
+  const radians = (value) => (value * Math.PI) / 180;
+  const earthRadiusFeet = 20902231;
+  const lat = radians(b.lat - a.lat);
+  const lng = radians(b.lng - a.lng);
+  const value =
+    Math.sin(lat / 2) ** 2 +
+    Math.cos(radians(a.lat)) * Math.cos(radians(b.lat)) * Math.sin(lng / 2) ** 2;
+  return earthRadiusFeet * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
+}
+
+function getPlotDimensions(plot) {
+  const props = plot.properties ?? {};
+  const stored = props.Dimensions ?? props.Dimension ?? props.Plot_Size ?? props.Size;
+  if (stored) return String(stored).replace(/\s*(ft|feet)?\s*$/i, " feet");
+
+  const path = getPolygonPath(plot);
+  if (path.length < 3) return null;
+  const edges = path
+    .map((point, index) => distanceInFeet(point, path[(index + 1) % path.length]))
+    .filter((length) => Number.isFinite(length) && length > 3)
+    .sort((a, b) => b - a);
+  if (edges.length < 2) return null;
+
+  const longest = edges[0];
+  const shorter = edges.find((edge) => edge < longest * 0.9) ?? edges[edges.length - 1];
+  return `${Math.round(longest)}x${Math.round(shorter)} feet`;
+}
+
+function getPlotAreaAcres(plot) {
+  const props = plot.properties ?? {};
+  const path = getPolygonPath(plot);
+  if (path.length >= 3) {
+    const earthRadiusMetres = 6378137;
+    const averageLatitude = path.reduce((sum, point) => sum + point.lat, 0) / path.length;
+    const latitudeScale = Math.cos((averageLatitude * Math.PI) / 180);
+    const points = path.map((point) => ({
+      x: earthRadiusMetres * ((point.lng * Math.PI) / 180) * latitudeScale,
+      y: earthRadiusMetres * ((point.lat * Math.PI) / 180),
+    }));
+    const squareMetres = Math.abs(points.reduce((sum, point, index) => {
+      const next = points[(index + 1) % points.length];
+      return sum + point.x * next.y - next.x * point.y;
+    }, 0)) / 2;
+    const calculatedAcres = squareMetres / 4046.8564224;
+    if (Number.isFinite(calculatedAcres) && calculatedAcres > 0) return calculatedAcres;
+  }
+
+  const direct = Number(props.Area ?? props.area ?? plot.Area);
+  if (Number.isFinite(direct) && direct > 0) return direct;
+
+  const gisArea = Number(props.SHAPE_Area ?? props.Shape_Area ?? props.shape_area);
+  if (Number.isFinite(gisArea) && gisArea > 0) {
+    return gisArea * 3109111.525693;
+  }
+  return null;
+}
+
 function fitMapToPlots(map, plots) {
   const allCoords = plots.flatMap(getPolygonPath);
   if (!map || !allCoords.length || !window.google?.maps) return;
@@ -154,6 +212,8 @@ export default function SiteView({ site }) {
   const [selected, setSelected] = useState(null);
   const [editingPlot, setEditingPlot] = useState(null);
   const [popupPosition, setPopupPosition] = useState(null);
+  const [actionModal, setActionModal] = useState(null);
+  const [mapZoom, setMapZoom] = useState(15);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("map");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -205,6 +265,27 @@ export default function SiteView({ site }) {
       fitMapToPlots(mapRef.current, plots);
     }
   }, [isLoaded, plots]);
+
+  useEffect(() => {
+    const handlePlotActionComplete = (event) => {
+      if (event.origin !== window.location.origin || event.data?.type !== "plot-action-complete") return;
+      const actionLabels = {
+        buy: "Purchase request submitted successfully.",
+        reserve: "Reservation request submitted successfully.",
+        interest: "Interest submitted successfully.",
+      };
+      setActionModal(null);
+      setSelected(null);
+      setPopupPosition(null);
+      setEditingPlot(null);
+      setIsMapTypeMenuOpen(false);
+      toast.success(actionLabels[event.data.action] ?? "Plot request submitted successfully.");
+      fetchPlots();
+    };
+
+    window.addEventListener("message", handlePlotActionComplete);
+    return () => window.removeEventListener("message", handlePlotActionComplete);
+  }, [site.table]);
 
   const fetchPlots = async () => {
     setLoading(true);
@@ -327,6 +408,7 @@ export default function SiteView({ site }) {
                     setSelected(null);
                     setPopupPosition(null);
                   }}
+                  onZoomChanged={() => setMapZoom(mapRef.current?.getZoom() ?? 15)}
                 >
                   {filteredPlots.map((plot) => {
                     const path = getPolygonPath(plot);
@@ -352,6 +434,26 @@ export default function SiteView({ site }) {
                     );
                   })}
 
+                  {mapZoom >= 17.4 && filteredPlots.map((plot) => {
+                    const center = getPolygonCenter(getPolygonPath(plot));
+                    if (!center) return null;
+                    return (
+                      <OverlayView key={`label-${plot.id}`} position={center} mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            selectPlot(plot);
+                          }}
+                          className="-translate-x-1/2 -translate-y-1/2 bg-transparent p-0 text-xs font-extrabold leading-none text-white [text-shadow:0_1px_4px_rgba(0,0,0,1)] transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2"
+                          title={`Plot ${plot.properties?.Plot_No ?? plot.id}`}
+                        >
+                          {plot.properties?.Plot_No ?? plot.id}
+                        </button>
+                      </OverlayView>
+                    );
+                  })}
+
                   {selected && popupPosition && (
                     <OverlayView
                       position={popupPosition}
@@ -369,6 +471,7 @@ export default function SiteView({ site }) {
                         }}
                         onPlotSaved={handlePlotSaved}
                         onEditPlot={() => setEditingPlot(selected)}
+                        onAction={(action) => setActionModal({ action, plot: selected })}
                       />
                     </OverlayView>
                   )}
@@ -458,8 +561,8 @@ export default function SiteView({ site }) {
                   <PlotCard
                     key={plot.id}
                     plot={plot}
-                    siteSlug={site.slug}
                     onClick={() => { selectPlot(plot); setView("map"); }}
+                    onAction={(action) => setActionModal({ action, plot })}
                   />
                 ))}
               </div>
@@ -481,6 +584,15 @@ export default function SiteView({ site }) {
               )}
             </div>
           </div>
+        )}
+
+        {actionModal && (
+          <PlotActionModal
+            action={actionModal.action}
+            plot={actionModal.plot}
+            site={site}
+            onClose={() => setActionModal(null)}
+          />
         )}
       </div>
 
@@ -508,19 +620,19 @@ const MAP_TYPES = [
 
 function MapControls({ mapType, isMapTypeMenuOpen, onToggleMapTypeMenu, onChangeMapType, isFullscreen, onToggleFullscreen, onZoomIn, onZoomOut, onFit, onRefresh, loading }) {
   return (
-    <div className="absolute right-4 top-4 z-10 hidden flex-col overflow-visible rounded-2xl border border-white/70 bg-white/90 p-1.5 shadow-elevated backdrop-blur-xl md:flex">
-      <button type="button" onClick={onZoomIn} title="Zoom in" className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
-        <ZoomIn className="h-5 w-5 text-brand-navy" />
+    <div className="absolute right-4 top-4 z-10 hidden flex-col overflow-visible rounded-2xl border border-brand-navy/25 bg-white/95 p-2 shadow-elevated backdrop-blur-xl md:flex">
+      <button type="button" onClick={onZoomIn} title="Zoom in" className="flex h-11 w-11 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
+        <ZoomIn className="h-6 w-6 text-brand-navy" />
       </button>
-      <button type="button" onClick={onZoomOut} title="Zoom out" className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
-        <ZoomOut className="h-5 w-5 text-brand-navy" />
+      <button type="button" onClick={onZoomOut} title="Zoom out" className="flex h-11 w-11 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
+        <ZoomOut className="h-6 w-6 text-brand-navy" />
       </button>
 
       <div className="mx-1 my-1 border-t border-slate-200" />
 
       <div className="relative">
-        <button type="button" onClick={onToggleMapTypeMenu} title="Change map type" className={cn("flex h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-brand-teal/15", isMapTypeMenuOpen && "bg-brand-teal/15")}>
-          <Layers className="h-5 w-5 text-brand-navy" />
+        <button type="button" onClick={onToggleMapTypeMenu} title="Change map type" className={cn("flex h-11 w-11 items-center justify-center rounded-xl transition-colors hover:bg-brand-teal/15", isMapTypeMenuOpen && "bg-brand-teal/15")}>
+          <Layers className="h-6 w-6 text-brand-navy" />
         </button>
         {isMapTypeMenuOpen && (
           <div className="absolute right-full mr-3 top-0 min-w-[150px] overflow-hidden rounded-xl border border-slate-200 bg-white/95 p-1.5 shadow-elevated backdrop-blur-xl">
@@ -538,25 +650,25 @@ function MapControls({ mapType, isMapTypeMenuOpen, onToggleMapTypeMenu, onChange
         )}
       </div>
 
-      <button type="button" onClick={onToggleFullscreen} title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"} className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
-        {isFullscreen ? <Minimize className="h-5 w-5 text-brand-navy" /> : <Maximize className="h-5 w-5 text-brand-navy" />}
+      <button type="button" onClick={onToggleFullscreen} title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"} className="flex h-11 w-11 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
+        {isFullscreen ? <Minimize className="h-6 w-6 text-brand-navy" /> : <Maximize className="h-6 w-6 text-brand-navy" />}
       </button>
 
-      <button type="button" onClick={onFit} title="Fit visible plots" className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
-        <LocateFixed className="h-5 w-5 text-brand-navy" />
+      <button type="button" onClick={onFit} title="Fit visible plots" className="flex h-11 w-11 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
+        <LocateFixed className="h-6 w-6 text-brand-navy" />
       </button>
 
-      <button type="button" onClick={onRefresh} title="Refresh plots" className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
-        <RefreshCw className={cn("h-5 w-5 text-brand-navy", loading && "animate-spin")} />
+      <button type="button" onClick={onRefresh} title="Refresh plots" className="flex h-11 w-11 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
+        <RefreshCw className={cn("h-6 w-6 text-brand-navy", loading && "animate-spin")} />
       </button>
 
       <button
         type="button"
         title="Help"
         onClick={() => alert("Click on any plot to see details and take action.")}
-        className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors"
+        className="flex h-11 w-11 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors"
       >
-        <Info className="h-5 w-5 text-brand-navy" />
+        <Info className="h-6 w-6 text-brand-navy" />
       </button>
     </div>
   );
@@ -600,21 +712,21 @@ function MapFilterBar({ active, stats, onChange }) {
 
 function MobileMapControls({ onZoomIn, onZoomOut, onFit, onOpenMapType }) {
   return (
-    <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-around rounded-2xl border border-white/70 bg-white/90 p-1.5 shadow-elevated backdrop-blur-xl md:hidden">
-      <button type="button" onClick={onZoomIn} className="flex flex-col items-center gap-0.5 p-2 text-gray-700">
-        <ZoomIn size={18} />
+    <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-around rounded-2xl border border-brand-navy/25 bg-white/95 p-2 shadow-elevated backdrop-blur-xl md:hidden">
+      <button type="button" onClick={onZoomIn} className="flex flex-col items-center gap-0.5 rounded-xl p-2 text-brand-navy">
+        <ZoomIn size={21} />
         <span className="text-[10px]">Zoom In</span>
       </button>
-      <button type="button" onClick={onZoomOut} className="flex flex-col items-center gap-0.5 p-2 text-gray-700">
-        <ZoomOut size={18} />
+      <button type="button" onClick={onZoomOut} className="flex flex-col items-center gap-0.5 rounded-xl p-2 text-brand-navy">
+        <ZoomOut size={21} />
         <span className="text-[10px]">Zoom Out</span>
       </button>
-      <button type="button" onClick={onOpenMapType} className="flex flex-col items-center gap-0.5 p-2 text-gray-700">
-        <Layers size={18} />
+      <button type="button" onClick={onOpenMapType} className="flex flex-col items-center gap-0.5 rounded-xl p-2 text-brand-navy">
+        <Layers size={21} />
         <span className="text-[10px]">Map Type</span>
       </button>
-      <button type="button" onClick={onFit} className="flex flex-col items-center gap-0.5 p-2 text-gray-700">
-        <LocateFixed size={18} />
+      <button type="button" onClick={onFit} className="flex flex-col items-center gap-0.5 rounded-xl p-2 text-brand-navy">
+        <LocateFixed size={21} />
         <span className="text-[10px]">All Plots</span>
       </button>
     </div>
@@ -657,12 +769,13 @@ function MobileMapTypeSheet({ open, mapType, onChangeMapType, onClose }) {
   );
 }
 
-function PlotPopup({ plot, site, canManage, canEdit, onClose, onPlotSaved, onEditPlot }) {
+function PlotPopup({ plot, site, canManage, canEdit, onClose, onPlotSaved, onEditPlot, onAction }) {
   const props = plot.properties ?? {};
   const status = plotStatus(plot);
   const available = isAvailable(plot);
   const price = plot.plotTotalAmount ?? props.plotAmount ?? 0;
-  const area = props.Area ?? props.Shape_Length ?? 0;
+  const area = getPlotAreaAcres(plot);
+  const dimensions = getPlotDimensions(plot);
   const plotNo = props.Plot_No ?? plot.id;
   const [statusValue, setStatusValue] = useState(status);
   const [saving, setSaving] = useState(false);
@@ -703,7 +816,7 @@ function PlotPopup({ plot, site, canManage, canEdit, onClose, onPlotSaved, onEdi
         <div className="flex items-center gap-2 min-w-0">
           <StatusDot status={status} />
           <span className="text-sm font-semibold text-slate-900 truncate">Plot {plotNo}</span>
-          {props.Street_Nam && <span className="text-xs text-slate-400 truncate hidden sm:block">{props.Street_Nam}</span>}
+          {props.Street_Nam && <span className="truncate text-xs font-bold text-slate-700">{props.Street_Nam}</span>}
         </div>
         <button
           type="button"
@@ -721,31 +834,30 @@ function PlotPopup({ plot, site, canManage, canEdit, onClose, onPlotSaved, onEdi
         <p className="text-lg font-bold text-slate-900 leading-none">
           {price ? `GHS ${Number(price).toLocaleString()}` : "—"}
         </p>
-        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-400">
-          {area > 0 && <span>{parseFloat(area).toFixed(3)} Acres</span>}
-          {props.landUse && <><span>·</span><span>{props.landUse}</span></>}
-          {plot.firstname && <><span>·</span><span>{plot.firstname} {plot.lastname ?? ""}</span></>}
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] font-semibold text-slate-600">
+          {area && <span>{area.toFixed(2)} Acres</span>}
+          {dimensions && <><span>•</span><span>{dimensions}</span></>}
           {!price && <span className="text-slate-400">Contact team for price</span>}
         </div>
       </div>
 
       {/* Actions */}
-      <div className="px-3.5 pb-3 pt-1 grid grid-cols-2 gap-1.5">
+      <div className="grid grid-cols-1 gap-1.5 px-3.5 pb-3 pt-1">
         {available && (
           <>
-            <Link href={`/sites/${site.slug}/plot/${plot.id}/reserve`} className="col-span-1 inline-flex items-center justify-center gap-1 rounded-lg bg-brand-navy px-2.5 py-1.5 text-[11px] font-semibold text-white transition-colors hover:bg-brand-navy/90">
-              Reserve <ArrowRight className="h-3 w-3" />
-            </Link>
-            <Link href={`/sites/${site.slug}/plot/${plot.id}/buy`} className="col-span-1 inline-flex items-center justify-center gap-1 rounded-lg bg-brand-teal px-2.5 py-1.5 text-[11px] font-semibold text-brand-navy transition-colors hover:bg-brand-teal/90">
-              Buy <ArrowRight className="h-3 w-3" />
-            </Link>
+            <button type="button" onClick={() => onAction("buy")} className="group inline-flex items-center justify-center gap-1.5 rounded-lg bg-brand-teal px-3 py-2.5 text-xs font-bold text-brand-navy shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#86dadd] hover:shadow-[0_8px_18px_rgba(104,201,205,0.35)] active:translate-y-0">
+              Buy this plot <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+            </button>
+            <button type="button" onClick={() => onAction("reserve")} className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-brand-navy px-3 py-2.5 text-xs font-bold text-white transition-colors hover:bg-brand-navy/90">
+              Reserve this plot <ArrowRight className="h-3.5 w-3.5" />
+            </button>
           </>
         )}
-        <Link href={`/sites/${site.slug}/plot/${plot.id}/interest`} className="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50">
-          <HeartHandshake className="h-3 w-3" /> Interest
-        </Link>
-        <a href={`tel:${CONTACT_PHONE}`} className="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50">
-          <Phone className="h-3 w-3" /> Call
+        <button type="button" onClick={() => onAction("interest")} className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50">
+          <HeartHandshake className="h-3.5 w-3.5" /> Express interest
+        </button>
+        <a href={`tel:${CONTACT_PHONE}`} className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50">
+          <Phone className="h-3.5 w-3.5" /> Call for this plot
         </a>
       </div>
 
@@ -773,6 +885,72 @@ function PlotPopup({ plot, site, canManage, canEdit, onClose, onPlotSaved, onEdi
 
       {/* Caret */}
       <span className="absolute left-1/2 top-full h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rotate-45 border-b border-r border-slate-200/80 bg-white" />
+    </div>
+  );
+}
+
+function PlotActionModal({ action, plot, site, onClose }) {
+  const [frameReady, setFrameReady] = useState(false);
+  const plotNo = plot.properties?.Plot_No ?? plot.id;
+  const streetName = plot.properties?.Street_Nam ?? plot.properties?.Street_Name;
+  const acres = getPlotAreaAcres(plot);
+  const dimensions = getPlotDimensions(plot);
+  const plotSize = [acres ? `${acres.toFixed(2)} Acres` : null, dimensions].filter(Boolean).join(" • ");
+  const labels = {
+    buy: "Buy this plot",
+    reserve: "Reserve this plot",
+    interest: "Express interest",
+  };
+  const url = `/sites/${site.slug}/plot/${plot.id}/${action}?embedded=1`;
+
+  useEffect(() => {
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [onClose]);
+
+  const prepareEmbeddedPage = (event) => {
+    const frameDocument = event.currentTarget.contentDocument;
+    if (!frameDocument) return;
+    frameDocument.querySelectorAll("header, footer").forEach((element) => {
+      element.style.display = "none";
+    });
+    const main = frameDocument.querySelector("main");
+    if (main) main.style.paddingTop = "0";
+    frameDocument.querySelectorAll(`a[href="/sites/${site.slug}"]`).forEach((element) => {
+      element.style.display = "none";
+    });
+    setFrameReady(true);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-brand-navy/65 p-2 backdrop-blur-sm sm:p-5" role="dialog" aria-modal="true" aria-label={`${labels[action]} — Plot ${plotNo}`}>
+      <div className="relative flex h-[min(92vh,860px)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-white/20 bg-white shadow-2xl">
+        <div className="flex h-14 flex-shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-5">
+          <div>
+            <p className="text-sm font-extrabold text-brand-navy">{labels[action]}</p>
+            <p className="text-[11px] text-slate-500">
+              {site.name} · Plot {plotNo}{streetName ? ` · ${streetName}` : ""}{plotSize ? ` · ${plotSize}` : ""}
+            </p>
+          </div>
+          <button type="button" onClick={onClose} className="rounded-full border border-slate-200 p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900" aria-label="Close and return to map">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        {!frameReady && (
+          <div className="absolute inset-x-0 bottom-0 top-14 z-10 flex items-center justify-center bg-slate-50">
+            <Loader2 className="h-7 w-7 animate-spin text-brand-navy" />
+          </div>
+        )}
+        <iframe
+          src={url}
+          title={`${labels[action]} — Plot ${plotNo}`}
+          onLoad={prepareEmbeddedPage}
+          className={cn("min-h-0 flex-1 border-0 bg-slate-50 transition-opacity", frameReady ? "opacity-100" : "opacity-0")}
+        />
+      </div>
     </div>
   );
 }
@@ -984,36 +1162,42 @@ function MapUnavailable({ onViewList }) {
   );
 }
 
-function PlotCard({ plot, siteSlug, onClick }) {
+function PlotCard({ plot, onClick, onAction }) {
   const props = plot.properties ?? {};
   const status = plotStatus(plot);
   const available = isAvailable(plot);
   const price = plot.plotTotalAmount ?? props.plotAmount ?? 0;
-  const area = props.Area ?? 0;
+  const area = getPlotAreaAcres(plot);
 
   return (
     <div className={cn("bg-white rounded-lg border p-4 hover:shadow-md transition-all", available && "hover:border-brand-teal/40")}>
       <div className="flex items-start justify-between mb-3">
         <div>
           <p className="font-semibold text-gray-900">Plot No. {props.Plot_No ?? plot.id}</p>
-          {props.Street_Nam && <p className="text-xs text-gray-400">{props.Street_Nam}</p>}
+          {props.Street_Nam && <p className="text-xs font-bold text-slate-700">{props.Street_Nam}</p>}
         </div>
         <StatusBadge status={status} />
       </div>
 
       <div className="flex items-center justify-between text-sm mb-4">
-        {area > 0 && <span className="text-gray-500">{parseFloat(area).toFixed(3)} Acres</span>}
+        {area && <span className="text-gray-500">{area.toFixed(2)} Acres {getPlotDimensions(plot) ? `• ${getPlotDimensions(plot)}` : ""}</span>}
         {price > 0 && <span className="font-semibold text-brand-navy">GHS {Number(price).toLocaleString()}</span>}
       </div>
 
       {available ? (
-        <div className="flex gap-2">
-          <Link href={`/sites/${siteSlug}/plot/${plot.id}/reserve`} className="flex-1 text-center text-xs font-medium bg-brand-navy text-white py-2 rounded-lg hover:bg-brand-navy/90 transition-colors">
-            Reserve
-          </Link>
-          <Link href={`/sites/${siteSlug}/plot/${plot.id}/buy`} className="flex-1 text-center text-xs font-medium bg-brand-teal text-brand-navy py-2 rounded-lg hover:bg-brand-teal/90 transition-colors">
-            Buy
-          </Link>
+        <div className="grid grid-cols-2 gap-2">
+          <button type="button" onClick={() => onAction("buy")} className="group inline-flex items-center justify-center gap-1.5 rounded-lg bg-brand-teal py-2 text-center text-xs font-bold text-brand-navy shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#86dadd] hover:shadow-[0_8px_18px_rgba(104,201,205,0.35)] active:translate-y-0">
+            Buy this plot <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+          </button>
+          <button type="button" onClick={() => onAction("reserve")} className="rounded-lg bg-brand-navy py-2 text-center text-xs font-bold text-white hover:bg-brand-navy/90">
+            Reserve this plot
+          </button>
+          <button type="button" onClick={() => onAction("interest")} className="rounded-lg border border-slate-200 py-2 text-center text-xs font-semibold text-slate-700 hover:bg-slate-50">
+            Express interest
+          </button>
+          <a href={`tel:${CONTACT_PHONE}`} className="rounded-lg border border-slate-200 py-2 text-center text-xs font-semibold text-slate-700 hover:bg-slate-50">
+            Call for this plot
+          </a>
         </div>
       ) : (
         <button onClick={onClick} className="w-full text-xs text-gray-400 text-center py-2 rounded-lg border hover:bg-gray-50 transition-colors">

@@ -47,7 +47,7 @@ function InnerLayout() {
         <Stack.Screen name="approval" options={{ title: "Approval", headerShown: false }} />
         <Stack.Screen
           name="plot/interest"
-          options={{ title: "Express Interest", headerBackTitle: "Back" }}
+          options={{ title: "Express Interest", headerBackTitle: "Back", presentation: "modal" }}
         />
         <Stack.Screen
           name="property/[id]"

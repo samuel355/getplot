@@ -68,20 +68,58 @@ type AdminForm = {
 const STATUS_OPTIONS = ["Available", "Reserved", "Sold"] as const;
 type AdminAction = "edit" | "price" | "status" | null;
 
-function buildDetailRows(props: PlotProperties): DetailRow[] {
-  const rows: DetailRow[] = [];
+function plotDimensionsFeet(plot: PlotFeature): string | null {
+  const ring = plot.geometry?.coordinates?.[0] ?? [];
+  if (ring.length < 3) return null;
+  const rad = (value: number) => (value * Math.PI) / 180;
+  const lengths = ring.map((point, index) => {
+    const next = ring[(index + 1) % ring.length];
+    const [lng1, lat1] = point;
+    const [lng2, lat2] = next;
+    const dLat = rad(lat2 - lat1);
+    const dLng = rad(lng2 - lng1);
+    const value = Math.sin(dLat / 2) ** 2 + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLng / 2) ** 2;
+    return 20902231 * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
+  }).filter((value) => Number.isFinite(value) && value > 3).sort((a, b) => b - a);
+  if (lengths.length < 2) return null;
+  const shorter = lengths.find((value) => value < lengths[0] * 0.9) ?? lengths[lengths.length - 1];
+  return `${Math.round(lengths[0])}x${Math.round(shorter)} feet`;
+}
 
-  const size = formatAreaSize(props.Area);
-  if (size) rows.push({ label: "Size", value: size });
-
-  const useType = props.For;
-  if (useType && String(useType).trim()) {
-    rows.push({ label: "Use", value: String(useType).trim() });
+function plotAreaAcres(plot: PlotFeature): number | null {
+  const ring = plot.geometry?.coordinates?.[0] ?? [];
+  if (ring.length >= 3) {
+    const earthRadiusMetres = 6378137;
+    const averageLatitude = ring.reduce((sum, point) => sum + Number(point[1]), 0) / ring.length;
+    const latitudeScale = Math.cos((averageLatitude * Math.PI) / 180);
+    const points = ring.map(([longitude, latitude]) => ({
+      x: earthRadiusMetres * ((Number(longitude) * Math.PI) / 180) * latitudeScale,
+      y: earthRadiusMetres * ((Number(latitude) * Math.PI) / 180),
+    }));
+    const squareMetres = Math.abs(points.reduce((sum, point, index) => {
+      const next = points[(index + 1) % points.length];
+      return sum + point.x * next.y - next.x * point.y;
+    }, 0)) / 2;
+    const acres = squareMetres / 4046.8564224;
+    if (Number.isFinite(acres) && acres > 0) return acres;
   }
 
-  const agent = props.Agent;
-  if (agent && String(agent).trim()) {
-    rows.push({ label: "Agent", value: String(agent).trim() });
+  const props = plot.properties ?? {};
+  const directArea = Number(props.Area ?? props.area);
+  if (Number.isFinite(directArea) && directArea > 0) return directArea;
+  const gisArea = Number(props.SHAPE_Area ?? props.Shape_Area ?? props.shape_area);
+  return Number.isFinite(gisArea) && gisArea > 0 ? gisArea * 3109111.525693 : null;
+}
+
+function buildDetailRows(plot: PlotFeature): DetailRow[] {
+  const props = plot.properties ?? {};
+  const rows: DetailRow[] = [];
+
+  const acres = plotAreaAcres(plot);
+  const size = acres ? `${acres.toFixed(2)} Acres` : "";
+  const dimensions = plotDimensionsFeet(plot);
+  if (size || dimensions) {
+    rows.push({ label: "Plot size", value: [size, dimensions].filter(Boolean).join(" • ") });
   }
 
   const description = props.allDetails;
@@ -152,7 +190,7 @@ export function PlotDetailSheet({
   const insets = useSafeAreaInsets();
 
   const props = plot?.properties || {};
-  const detailRows = useMemo(() => buildDetailRows(props), [props]);
+  const detailRows = useMemo(() => buildDetailRows(plot), [plot]);
 
   const [favorite, setFavorite] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
@@ -774,10 +812,13 @@ export function PlotDetailSheet({
                   <View style={[styles.footer, { paddingBottom: 12 + (insets.bottom ?? 0) }]}>
                     {actions.isAvailable ? (
                       <>
+                        {actions.showBuy ? (
+                          <Button title="Buy this plot" fullWidth onPress={onBuy} />
+                        ) : null}
                         <View style={styles.footerSecondary}>
                           {actions.showReserve ? (
                             <Button
-                              title="Reserve plot"
+                              title="Reserve this plot"
                               variant="outline"
                               onPress={onReserve}
                               style={styles.footerHalf}
@@ -792,9 +833,7 @@ export function PlotDetailSheet({
                             />
                           ) : null}
                         </View>
-                        {actions.showBuy ? (
-                          <Button title="Buy plot" fullWidth onPress={onBuy} />
-                        ) : null}
+                        <Button title="Call for this plot" variant="ghost" fullWidth onPress={handleCallForInfo} />
                       </>
                     ) : actions.showCallForInfo ? (
                       <Button title="Call for info" fullWidth onPress={handleCallForInfo} />
@@ -898,7 +937,8 @@ const styles = StyleSheet.create({
   },
   street: {
     fontSize: fontSize.sm,
-    color: colors.textSecondary,
+    color: colors.text,
+    fontWeight: "700",
     marginTop: 4,
     textTransform: "capitalize",
   },

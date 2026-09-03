@@ -17,13 +17,13 @@ import {
   formatGhs,
   getPlotById,
   submitPlotInterest,
-  formatAreaSize,
   formatStreet,
 } from "../../src/lib/plotService";
 import { fetchMobileApi } from "../../src/lib/api";
 import { sendCompanyAlert } from "../../src/lib/notificationService";
 import type { PlotFeature } from "../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
+import { formatCoordinatePlotSize } from "../../src/lib/plotGeometry";
 
 export default function ExpressInterestScreen() {
   const { colors, spacing, borderRadius, fontWeight, fontSize, isDark } = useTheme();
@@ -105,7 +105,7 @@ export default function ExpressInterestScreen() {
           `Plot: ${plot?.properties?.Plot_No ?? id}`,
           `Street: ${formatStreet(plot?.properties?.Street_Nam) || "N/A"}`,
           `Amount: ${formatGhs(plot?.plotTotalAmount || 0)}`,
-          `Size: ${formatAreaSize(plot?.properties?.Area) || "N/A"}`,
+          `Size: ${formatCoordinatePlotSize(plot)}`,
           `Message: ${form.message}`,
         ].join("\n"),
       }).catch((alertErr) => console.log("Company interest alert error:", alertErr));
@@ -191,7 +191,7 @@ export default function ExpressInterestScreen() {
             <View style={styles.stat}>
               <Text style={[styles.statLabel, { color: colors.textMuted }]}>Area Size</Text>
               <Text style={[styles.statValue, { color: colors.text }]}>
-                {formatAreaSize(plot.properties?.Area) || "Unknown"}
+                {formatCoordinatePlotSize(plot)}
               </Text>
             </View>
             <View style={[styles.statDivider, { backgroundColor: colors.borderLight }]} />

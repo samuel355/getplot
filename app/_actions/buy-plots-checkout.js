@@ -5,6 +5,7 @@ import { cedisAccount } from "./cedis-account";
 import { dollarAccount } from "./dollar-account";
 import { supabase } from "@/utils/supabase/client";
 import { sendCompanyAlert, sendSMS } from "./send-sms";
+import { formatCalculatedPlotSize } from "@/lib/plotGeometry";
 
 export const BuyPlotCheckout = async (
   plots,
@@ -41,9 +42,7 @@ export const BuyPlotCheckout = async (
     const plotRows = plots.map((plot) => ({
       Plot_No: plot.properties.Plot_No,
       Street_Nam: plot.properties.Street_Nam,
-      Area: plot.properties.Area
-        ? parseFloat(plot.properties.Area).toFixed(2)
-        : (plot.properties.SHAPE_Area * 3109111.525693).toFixed(3),
+      Area: formatCalculatedPlotSize(plot),
       location: plot.location,
       plotTotalAmount: plot.plotTotalAmount.toLocaleString(),
     }));
@@ -193,9 +192,7 @@ export const BuyPlotCheckout = async (
     const plotDetails = plots.map((plot) => ({
       plotNo: plot.properties.Plot_No,
       streetName: plot.properties.Street_Nam,
-      area: plot.properties.Area
-        ? parseFloat(plot.properties.Area).toFixed(2)
-        : (plot.properties.SHAPE_Area * 3109111.525693).toFixed(3),
+      area: formatCalculatedPlotSize(plot),
       location: plot.location,
       amount: plot.plotTotalAmount,
     }));

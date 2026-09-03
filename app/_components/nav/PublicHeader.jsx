@@ -13,6 +13,7 @@ import {
   MapPin,
   Menu,
   Phone,
+  ArrowRight,
   Store,
   UserRound,
   X,
@@ -121,7 +122,8 @@ export default function PublicHeader() {
             </SignedIn>
             <SignedOut>
               <Link href="/sites" className="inline-flex h-10 items-center rounded-xl bg-brand-teal px-5 text-sm font-bold text-brand-navy shadow-lg shadow-black/10 transition-all hover:-translate-y-0.5 hover:bg-brand-teal/90">
-                Get started
+                Get One Plot
+                <ArrowRight className="h-4 w-4 animate-arrow-right" />
               </Link>
             </SignedOut>
           </div>
@@ -334,7 +336,8 @@ function MobileMenu({ groupedSites, isAdmin, dashboardHref, onClose }) {
         <SignedOut>
           <div>
             <Link href="/sites" onClick={onClose} className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-brand-teal text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
-              Get started
+              Get One Plot
+              <ArrowRight className="h-4 w-4 animate-arrow-right" />
             </Link>
           </div>
         </SignedOut>

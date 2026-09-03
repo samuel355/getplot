@@ -1,12 +1,5 @@
-import { Loader } from "lucide-react";
-import React from "react";
+import BrandLoader from "@/app/_components/BrandLoader";
 
-const loading = () => {
-  return (
-    <div className="flex flex-col justify-center items-center">
-      <Loader className="animate-spin" />
-    </div>
-  );
-};
-
-export default loading;
+export default function Loading() {
+  return <BrandLoader label="Loading plot editor..." />;
+}

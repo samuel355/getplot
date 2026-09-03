@@ -257,6 +257,7 @@ const SitePin = memo(function SitePin({
         pinStyles.pill,
         { borderColor: active ? colors.primaryAccent : colors.white },
         active && { borderWidth: 2 },
+        active && pinStyles.activeGlow,
       ]}
     >
       <View style={[pinStyles.dot, { backgroundColor: colors.primaryAccent }]} />
@@ -278,12 +279,12 @@ function MapButton({
 }) {
   return (
     <Pressable
-      style={[btnStyles.btn, { backgroundColor: colors.white, borderColor: colors.border }]}
+      style={[btnStyles.btn, { backgroundColor: colors.white, borderColor: colors.primaryAccent + "80" }]}
       onPress={onPress}
       accessibilityLabel={label}
       accessibilityRole="button"
     >
-      <Ionicons name={icon} size={20} color={colors.primary} />
+      <Ionicons name={icon} size={23} color={colors.primary} />
     </Pressable>
   );
 }
@@ -361,26 +362,32 @@ const pinStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: "#fff",
+    backgroundColor: "#68c9cd",
     borderRadius: 999,
     borderWidth: 1.5,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingHorizontal: 13,
+    paddingVertical: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4,
   },
-  dot: { width: 8, height: 8, borderRadius: 4 },
-  label: { fontSize: 11, fontWeight: "800" },
+  dot: { width: 9, height: 9, borderRadius: 5 },
+  label: { fontSize: 13, fontWeight: "800", color: "#191347" },
+  activeGlow: {
+    shadowColor: "#68c9cd",
+    shadowOpacity: 0.55,
+    shadowRadius: 9,
+    elevation: 8,
+  },
 });
 
 const btnStyles = StyleSheet.create({
   btn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
@@ -389,6 +396,7 @@ const btnStyles = StyleSheet.create({
     shadowOpacity: 0.12,
     shadowRadius: 6,
     elevation: 4,
+    borderColor: "#19134740",
   },
 });
 

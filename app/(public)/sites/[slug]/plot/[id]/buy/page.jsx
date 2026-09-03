@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/utils/supabase/client";
 import { getSiteBySlug } from "@/lib/sites";
@@ -10,12 +10,15 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Loader2, MapPin } from "lucide-react";
 import { toast } from "react-toastify";
 import CountrySelect from "@/app/_components/ui/CountrySelect";
+import { formatCalculatedPlotSize } from "@/lib/plotGeometry";
 
 const STEPS = ["Plot Details", "Your Info", "Confirm"];
 
 export default function BuyPlotPage() {
   const { slug, id } = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const embedded = searchParams.get("embedded") === "1";
   const site = getSiteBySlug(slug);
 
   const [step, setStep] = useState(0);
@@ -29,7 +32,6 @@ export default function BuyPlotPage() {
     phone: "",
     country: "",
     residentialAddress: "",
-    agent: "",
   });
 
   useEffect(() => {
@@ -52,7 +54,8 @@ export default function BuyPlotPage() {
 
   const plotAmount = plot?.plotTotalAmount ?? plot?.properties?.plotAmount ?? 0;
   const plotNo = plot?.properties?.Plot_No ?? id;
-  const plotSize = plot?.properties?.Area ?? plot?.properties?.Shape_Length ?? 0;
+  const streetName = plot?.properties?.Street_Nam ?? plot?.properties?.Street_Name;
+  const plotSize = formatCalculatedPlotSize(plot);
 
   const validateStep0 = () => {
     if (!plotAmount) { toast.error("Plot price not set — contact admin"); return false; }
@@ -89,7 +92,8 @@ export default function BuyPlotPage() {
       form.lastname,
       form.phone,
       form.country,
-      form.residentialAddress
+      form.residentialAddress,
+      embedded
     );
   };
 
@@ -120,7 +124,8 @@ export default function BuyPlotPage() {
             <div className="space-y-5">
               <h2 className="font-semibold text-gray-900">Plot Information</h2>
               <InfoRow label="Plot Number" value={`Plot No. ${plotNo}`} />
-              <InfoRow label="Size" value={`${parseFloat(plotSize).toFixed(3)} Acres`} />
+              <InfoRow label="Street" value={streetName || "Not specified"} />
+              <InfoRow label="Size" value={plotSize} />
               <InfoRow label="Total Amount" value={`GHS ${Number(plotAmount).toLocaleString()}`} />
               <div className="bg-brand-teal/10 border border-brand-teal/25 rounded-lg p-4 text-sm text-brand-navy">
                 After submitting your details, you will receive an email with our bank account information to complete your purchase.
@@ -144,7 +149,6 @@ export default function BuyPlotPage() {
                 </div>
               </div>
               <FormField label="Residential Address" name="residentialAddress" value={form.residentialAddress} onChange={field} />
-              <FormField label="Agent (optional)" name="agent" value={form.agent} onChange={field} />
             </div>
           )}
 
@@ -155,6 +159,8 @@ export default function BuyPlotPage() {
                 <p className="text-xs font-semibold uppercase text-gray-400 tracking-wider">Plot</p>
                 <InfoRow label="Plot No." value={`Plot No. ${plotNo}`} />
                 <InfoRow label="Site" value={site.name} />
+                <InfoRow label="Street" value={streetName || "Not specified"} />
+                <InfoRow label="Size" value={plotSize} />
                 <InfoRow label="Total Amount" value={`GHS ${Number(plotAmount).toLocaleString()}`} />
               </div>
               <div className="bg-gray-50 rounded-lg p-4 space-y-3">

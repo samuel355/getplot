@@ -91,6 +91,7 @@ export default function ProtectedLayout() {
           name="plot/buy"
           options={{
             title: "Buy Plot",
+            presentation: "modal",
             headerLeft: () => backButton("Back"),
           }}
         />
@@ -98,6 +99,7 @@ export default function ProtectedLayout() {
           name="plot/reserve"
           options={{
             title: "Reserve Plot",
+            presentation: "modal",
             headerLeft: () => backButton("Back"),
           }}
         />

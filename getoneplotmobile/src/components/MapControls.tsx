@@ -1,6 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, View, type ViewStyle } from "react-native";
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
 import { colors, fontSize, spacing } from "../constants/theme";
 
 export type MapTypeOption = "standard" | "satellite" | "hybrid" | "terrain";
@@ -19,7 +27,7 @@ type Props = {
   onZoomOut: () => void;
   onFitAll: () => void;
   onRefresh?: () => void;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function MapControls({
@@ -105,7 +113,7 @@ function ControlButton({
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
     >
-      <Ionicons name={icon} size={20} color={colors.primary} />
+      <Ionicons name={icon} size={23} color={colors.primary} />
     </Pressable>
   );
 }
@@ -120,9 +128,9 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   btn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
@@ -132,10 +140,10 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.primary + "40",
   },
   btnActive: {
-    backgroundColor: "rgba(5, 1, 76, 0.08)",
+    backgroundColor: colors.primary + "12",
     borderColor: colors.primary,
   },
   divider: {
@@ -149,7 +157,7 @@ const styles = StyleSheet.create({
   },
   menu: {
     position: "absolute",
-    right: 52,
+    right: 58,
     top: 0,
     backgroundColor: colors.white,
     borderRadius: 10,
@@ -168,7 +176,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   menuItemActive: {
-    backgroundColor: "rgba(5, 1, 76, 0.08)",
+    backgroundColor: colors.primary + "12",
   },
   menuText: {
     fontSize: fontSize.sm,

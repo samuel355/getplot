@@ -37,6 +37,7 @@ function InnerLayout() {
           headerStyle: { backgroundColor: colors.background },
           headerTintColor: colors.text,
           headerTitleStyle: { fontWeight: "700" },
+          headerShadowVisible: false,
           contentStyle: { backgroundColor: colors.background },
         }}
       >

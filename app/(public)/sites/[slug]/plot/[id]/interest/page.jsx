@@ -200,14 +200,14 @@ export default function ExpressInterestPage() {
         <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 space-y-5">
           <h2 className="font-semibold text-gray-900">Your Information</h2>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField label="First Name" name="firstname" value={form.firstname} onChange={field} />
             <FormField label="Last Name" name="lastname" value={form.lastname} onChange={field} />
           </div>
 
           <FormField label="Email Address" name="email" type="email" value={form.email} onChange={field} />
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField label="Phone Number" name="phone" type="tel" value={form.phone} onChange={field} placeholder="+233..." />
             <div>
               <label className="text-sm font-medium text-gray-700 block mb-1.5">Country</label>

@@ -7,7 +7,7 @@ import {
   type TextStyle,
   type ViewStyle,
 } from "react-native";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { useTheme } from "../../constants/theme";
 
 type Props = TextInputProps & {
@@ -18,8 +18,19 @@ type Props = TextInputProps & {
   containerStyle?: ViewStyle;
 };
 
-export function Input({ label, error, hint, icon, containerStyle, style, ...rest }: Props) {
+export function Input({
+  label,
+  error,
+  hint,
+  icon,
+  containerStyle,
+  style,
+  onFocus,
+  onBlur,
+  ...rest
+}: Props) {
   const { colors, spacing, borderRadius, fontSize, fontWeight } = useTheme();
+  const [focused, setFocused] = useState(false);
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -43,8 +54,11 @@ export function Input({ label, error, hint, icon, containerStyle, style, ...rest
           styles.inputWrap,
           {
             backgroundColor: colors.surface,
-            borderColor: error ? colors.error : colors.border,
-            borderRadius: borderRadius.md,
+            borderColor: error ? colors.error : focused ? colors.primaryAccent : colors.border,
+            borderRadius: borderRadius.lg,
+            shadowColor: focused ? colors.primaryAccent : "transparent",
+            shadowOpacity: focused ? 0.16 : 0,
+            shadowRadius: 10,
           },
         ]}
       >
@@ -62,6 +76,14 @@ export function Input({ label, error, hint, icon, containerStyle, style, ...rest
             style,
           ]}
           placeholderTextColor={colors.textMuted}
+          onFocus={(event) => {
+            setFocused(true);
+            onFocus?.(event);
+          }}
+          onBlur={(event) => {
+            setFocused(false);
+            onBlur?.(event);
+          }}
           {...rest}
         />
       </View>
@@ -92,6 +114,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: "row",
     alignItems: "center",
+    minHeight: 52,
   },
   icon: {
     paddingLeft: 12,

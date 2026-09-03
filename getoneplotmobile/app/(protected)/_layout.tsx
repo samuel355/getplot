@@ -76,6 +76,7 @@ export default function ProtectedLayout() {
           headerStyle: { backgroundColor: colors.background },
           headerTintColor: colors.text,
           headerTitleStyle: { fontWeight: "700" },
+          headerShadowVisible: false,
           contentStyle: { flex: 1, backgroundColor: colors.background },
         }}
       >

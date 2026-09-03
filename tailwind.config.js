@@ -25,11 +25,11 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         brand: {
-          navy: "#0B0E2D",
-          teal: "#30D5C7",
+          navy: "#191347",
+          teal: "#68C9CD",
         },
         primary: {
-          DEFAULT: "#0B0E2D",
+          DEFAULT: "#191347",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -59,8 +59,12 @@ module.exports = {
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "calc(var(--radius) - 4px)",
+        sm: "calc(var(--radius) - 8px)",
+      },
+      boxShadow: {
+        soft: "0 10px 30px rgba(25, 19, 71, 0.08)",
+        elevated: "0 18px 50px rgba(25, 19, 71, 0.14)",
       },
       keyframes: {
         "accordion-down": {

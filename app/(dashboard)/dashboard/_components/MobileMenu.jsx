@@ -19,27 +19,27 @@ import { useClerk, useUser, UserButton } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 
 const SITES = [
-  { href: "/dashboard/trabuom",            label: "Trabuom Sector 1" },
   { href: "/dashboard/new-trabuom",        label: "Trabuom Sector 2" },
-  { href: "/dashboard/nthc",               label: "NTHC Kwadaso" },
-  { href: "/dashboard/legon-hills",        label: "East Legon Hills" },
-  { href: "/dashboard/dar-es-salaam",      label: "Dar Es Salaam" },
-  { href: "/dashboard/yabi",               label: "Yabi" },
-  { href: "/dashboard/berekuso",           label: "Berekuso" },
   { href: "/dashboard/asokore-mampong",    label: "Asokore Mampong" },
+  { href: "/dashboard/yabi",               label: "Yabi" },
   { href: "/dashboard/royal-court-estate", label: "Royal Court Estate" },
+  { href: "/dashboard/trabuom",            label: "Trabuom Sector 1" },
+  { href: "/dashboard/nthc",               label: "NTHC Kwadaso" },
+  { href: "/dashboard/dar-es-salaam",      label: "Ejisu - Adense" },
+  { href: "/dashboard/legon-hills",        label: "East Legon Hills" },
+  { href: "/dashboard/berekuso",           label: "Berekuso" },
 ];
 
 const INTERESTS = [
-  { href: "/dashboard/trabuom-interested-clients",         label: "Trabuom S1" },
   { href: "/dashboard/new-trabuom-interested-clients",     label: "Trabuom S2" },
-  { href: "/dashboard/kwadaso-interested-clients",         label: "NTHC Kwadaso" },
-  { href: "/dashboard/legon-hills-interested-clients",     label: "East Legon Hills" },
-  { href: "/dashboard/adense-interested-clients",          label: "Dar Es Salaam" },
-  { href: "/dashboard/yabi-interested-clients",            label: "Yabi" },
-  { href: "/dashboard/berekuso-interested-clients",        label: "Berekuso" },
   { href: "/dashboard/asokore-mampong-interested-clients", label: "Asokore Mampong" },
+  { href: "/dashboard/yabi-interested-clients",            label: "Yabi" },
   { href: "/dashboard/royal-court-interested-clients",     label: "Royal Court Estate" },
+  { href: "/dashboard/trabuom-interested-clients",         label: "Trabuom S1" },
+  { href: "/dashboard/kwadaso-interested-clients",         label: "NTHC Kwadaso" },
+  { href: "/dashboard/adense-interested-clients",          label: "Ejisu - Adense" },
+  { href: "/dashboard/legon-hills-interested-clients",     label: "East Legon Hills" },
+  { href: "/dashboard/berekuso-interested-clients",        label: "Berekuso" },
 ];
 
 function DrawerLink({ href, label, icon: Icon, pathname, onClick }) {

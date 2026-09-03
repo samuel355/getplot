@@ -5,46 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client Email</title>
 </head>
-<body style="font-family: Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 20px;">
-    <table style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-collapse: collapse; border: 1px solid #ddd;">
-        <tr style="background-color: #060053; color: #ffffff;">
-            <td style="padding: 20px; text-align: center; font-size: 24px;">
-                New Client Message
+<body style="font-family: Arial, Helvetica, sans-serif; background-color: #f1f5f9; color: #172033; margin: 0; padding: 32px 12px;">
+    <table role="presentation" style="width: 100%; max-width: 640px; margin: 0 auto; background-color: #ffffff; border-collapse: separate; border-spacing: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);">
+        <tr>
+            <td style="padding: 30px; background-color: #060053; color: #ffffff;">
+                <p style="margin: 0 0 8px; color: #5eead4; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;">GetOnePlot website</p>
+                <h1 style="margin: 0; font-size: 26px; line-height: 1.25;">New customer enquiry</h1>
+                <p style="margin: 10px 0 0; color: #cbd5e1; font-size: 14px;">A visitor has sent a message from the contact page.</p>
             </td>
         </tr>
         <tr>
-            <td style="padding: 20px; color: #333333;">
-                <p style="font-size: 18px; margin: 0 0 10px;">Full Name:</p>
-                <p style="font-size: 16px; margin: 0; font-weight: bold;"><%= fullname %></p>
+            <td style="padding: 30px;">
+                <table role="presentation" style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 0 0 18px; width: 50%; vertical-align: top;">
+                            <p style="margin: 0 0 5px; color: #64748b; font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;">Name</p>
+                            <p style="margin: 0; color: #0f172a; font-size: 16px; font-weight: 700;"><%= fullname %></p>
+                        </td>
+                        <td style="padding: 0 0 18px; width: 50%; vertical-align: top;">
+                            <p style="margin: 0 0 5px; color: #64748b; font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;">Phone</p>
+                            <p style="margin: 0; color: #0f172a; font-size: 16px;"><%= phone || 'Not provided' %></p>
+                        </td>
+                    </tr>
+                </table>
+                <p style="margin: 0 0 5px; color: #64748b; font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;">Email</p>
+                <p style="margin: 0 0 24px; font-size: 16px;"><a href="mailto:<%= email %>" style="color: #0f766e; text-decoration: none;"><%= email %></a></p>
+                <div style="padding: 22px; background-color: #f8fafc; border-left: 4px solid #14b8a6; border-radius: 8px;">
+                    <p style="margin: 0 0 10px; color: #64748b; font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;">Message</p>
+                    <p style="margin: 0; color: #334155; font-size: 15px; line-height: 1.7; white-space: pre-wrap;"><%= message %></p>
+                </div>
+                <p style="margin: 24px 0 0; color: #64748b; font-size: 13px; line-height: 1.6;">Reply directly to this email to respond to <%= fullname %>.</p>
             </td>
         </tr>
         <tr>
-            <td style="padding: 20px; color: #333333;">
-                <p style="font-size: 18px; margin: 0 0 10px;">Email:</p>
-                <p style="font-size: 16px; margin: 0; font-weight: bold;"><%= email %></p>
-            </td>
-        </tr>
-        <tr></tr>
-            <td style="padding: 20px; color: #333333;">
-                <p style="font-size: 18px; margin: 0 0 10px;">Phone:</p>
-                <p style="font-size: 16px; margin: 0; font-weight: bold;"><%= phone %></p>
-            </td>
-        </tr>
-        <tr>
-            <td style="padding: 20px; color: #333333;">
-                <p style="font-size: 18px; margin: 0 0 10px;">Subject:</p>
-                <p style="font-size: 16px; margin: 0; font-weight: bold;"><%= subject %></p>
-            </td>
-        </tr>
-        <tr>
-            <td style="padding: 20px; color: #333333;">
-                <p style="font-size: 18px; margin: 0 0 10px;">Message:</p>
-                <p style="font-size: 16px; margin: 0;"><%= message %></p>
-            </td>
-        </tr>
-        <tr style="background-color: #060053; color: #ffffff;">
-            <td style="padding: 10px; text-align: center; font-size: 14px;">
-                &copy; 2024 Land and Homes Consult. All rights reserved.
+            <td style="padding: 18px 30px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 12px; text-align: center;">
+                Land and Homes Consult &middot; GetOnePlot
             </td>
         </tr>
     </table>

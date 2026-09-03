@@ -108,7 +108,12 @@ export async function sendContactEmail(payload: {
   return fetchMobileApi("/api/receive-email", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ...payload, from: payload.email }),
+    body: JSON.stringify({
+      name: payload.fullname,
+      email: payload.email,
+      phone: payload.phone,
+      message: payload.message,
+    }),
   });
 }
 

@@ -7,7 +7,7 @@ type Props = {
 };
 
 export function Card({ children, style }: Props) {
-  const { colors, borderRadius, spacing } = useTheme();
+  const { colors, borderRadius, spacing, isDark } = useTheme();
 
   return (
     <View
@@ -16,8 +16,10 @@ export function Card({ children, style }: Props) {
         {
           backgroundColor: colors.surface,
           borderRadius: borderRadius.lg,
-          padding: spacing.md,
+          padding: spacing.lg,
           borderColor: colors.border,
+          shadowColor: colors.shadow,
+          shadowOpacity: isDark ? 0.22 : 0.08,
         },
         style,
       ]}
@@ -30,10 +32,8 @@ export function Card({ children, style }: Props) {
 const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 18,
+    elevation: 4,
   },
 });

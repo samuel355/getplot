@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Loader2, CheckCircle } from "lucide-react";
+import { Loader2, CheckCircle, X } from "lucide-react";
 import { toast } from "react-toastify";
 
 export default function ContactForm() {
@@ -16,52 +16,48 @@ export default function ContactForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) {
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
       toast.error("Please fill in all required fields");
       return;
     }
     setLoading(true);
     try {
-      await fetch("/api/receive-email", {
+      const response = await fetch("/api/receive-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(result.message || "Message could not be sent");
+      }
+
       setSent(true);
-    } catch {
-      toast.error("Failed to send message. Try calling us directly.");
+      setForm({ name: "", email: "", phone: "", message: "" });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to send message. Try calling us directly.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (sent) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="w-14 h-14 bg-green-50 rounded-lg flex items-center justify-center mb-4">
-          <CheckCircle className="w-7 h-7 text-green-500" />
-        </div>
-        <h3 className="font-semibold text-gray-900 mb-2">Message Sent!</h3>
-        <p className="text-sm text-gray-500">We&apos;ll get back to you within 24 hours.</p>
-      </div>
-    );
-  }
-
   return (
+    <>
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium text-gray-700 block mb-1.5">Full Name *</label>
-          <Input name="name" value={form.name} onChange={field} placeholder="John Mensah" />
+          <Input name="name" value={form.name} onChange={field} placeholder="John Mensah" autoComplete="name" required />
         </div>
         <div>
           <label className="text-sm font-medium text-gray-700 block mb-1.5">Email *</label>
-          <Input name="email" type="email" value={form.email} onChange={field} placeholder="john@example.com" />
+          <Input name="email" type="email" value={form.email} onChange={field} placeholder="john@example.com" autoComplete="email" required />
         </div>
       </div>
       <div>
         <label className="text-sm font-medium text-gray-700 block mb-1.5">Phone</label>
-        <Input name="phone" value={form.phone} onChange={field} placeholder="0200000000" />
+        <Input name="phone" type="tel" value={form.phone} onChange={field} placeholder="0200000000" autoComplete="tel" />
       </div>
       <div>
         <label className="text-sm font-medium text-gray-700 block mb-1.5">Message *</label>
@@ -71,6 +67,7 @@ export default function ContactForm() {
           onChange={field}
           placeholder="Tell us about the plot you're interested in or your question…"
           rows={5}
+          required
         />
       </div>
       <Button
@@ -82,5 +79,46 @@ export default function ContactForm() {
         Send Message
       </Button>
     </form>
+    {sent ? (
+      <div
+        className="fixed inset-0 z-[100] flex items-center justify-center bg-brand-navy/55 px-4 backdrop-blur-sm"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="contact-success-title"
+        onClick={() => setSent(false)}
+      >
+        <div
+          className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/20 bg-white p-7 text-center shadow-2xl sm:p-9"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <button
+            type="button"
+            onClick={() => setSent(false)}
+            className="absolute right-4 top-4 rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            aria-label="Close confirmation"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 ring-8 ring-emerald-50/60">
+            <CheckCircle className="h-8 w-8 text-emerald-600" />
+          </div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-brand-teal">Message received</p>
+          <h3 id="contact-success-title" className="text-2xl font-bold text-brand-navy">
+            Thank you for contacting us!
+          </h3>
+          <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-600">
+            Your message has reached the GetOnePlot team. We&apos;ll review your enquiry and respond to you as soon as possible.
+          </p>
+          <Button
+            type="button"
+            onClick={() => setSent(false)}
+            className="mt-7 w-full bg-brand-navy font-semibold text-white hover:bg-brand-navy/90"
+          >
+            Done
+          </Button>
+        </div>
+      </div>
+    ) : null}
+    </>
   );
 }

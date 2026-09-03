@@ -69,9 +69,9 @@ export default function PublicHeader() {
   }, []);
 
   return (
-    <header ref={headerRef} className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-brand-navy text-white shadow-lg shadow-brand-navy/15">
+    <header ref={headerRef} className="fixed left-3 right-3 top-3 z-50 rounded-2xl border border-white/10 bg-brand-navy/95 text-white shadow-2xl shadow-brand-navy/20 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between gap-4">
+        <div className="flex h-[4.5rem] items-center justify-between gap-4">
           <Link href="/" className="flex shrink-0 items-center" aria-label="GetOnePlot home">
             <LogoLateral variant="light" height={52} />
           </Link>
@@ -120,7 +120,7 @@ export default function PublicHeader() {
               <UserButton afterSignOutUrl="/" />
             </SignedIn>
             <SignedOut>
-              <Link href="/sign-up" className="inline-flex h-10 items-center rounded-lg bg-brand-teal px-4 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
+              <Link href="/sites" className="inline-flex h-10 items-center rounded-xl bg-brand-teal px-5 text-sm font-bold text-brand-navy shadow-lg shadow-black/10 transition-all hover:-translate-y-0.5 hover:bg-brand-teal/90">
                 Get started
               </Link>
             </SignedOut>
@@ -144,7 +144,7 @@ export default function PublicHeader() {
             <div className="grid gap-5 sm:grid-cols-2">
               {groupedSites.map(({ location, sites }) => (
                 <div key={location}>
-                  <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-slate-400">{location}</p>
+                  <p className="mb-2 rounded-lg bg-brand-navy px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-brand-teal">{location}</p>
                   <div className="space-y-1">
                     {sites.map((site) => (
                       <PanelLink
@@ -255,7 +255,7 @@ function MenuButton({ active, open, onClick, icon: Icon, children }) {
 
 function DesktopPanel({ children, className }) {
   return (
-    <div className={cn("absolute top-[calc(100%+0.5rem)] rounded-lg border border-slate-200 bg-white p-3 text-slate-900 shadow-2xl shadow-brand-navy/20", className)}>
+    <div className={cn("absolute top-[calc(100%+0.75rem)] rounded-2xl border border-slate-200/80 bg-white/95 p-3 text-slate-900 shadow-2xl shadow-brand-navy/20 backdrop-blur-xl", className)}>
       {children}
     </div>
   );
@@ -266,7 +266,7 @@ function PanelLink({ href, active, icon: Icon, title, text }) {
     <Link
       href={href}
       className={cn(
-        "flex gap-3 rounded-lg p-3 transition-colors hover:bg-slate-50",
+        "flex gap-3 rounded-xl border border-transparent p-3 transition-all hover:border-brand-teal/40 hover:bg-brand-teal/10 hover:shadow-sm",
         active && "bg-brand-teal/10",
       )}
     >
@@ -294,7 +294,7 @@ function MobileMenu({ groupedSites, isAdmin, dashboardHref, onClose }) {
           <div className="space-y-3 border-l border-white/10 py-2 pl-3">
             {groupedSites.map(({ location, sites }) => (
               <div key={location}>
-                <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-white/35">{location}</p>
+                <p className="mb-1 rounded-lg bg-white/10 px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-brand-teal">{location}</p>
                 {sites.map((site) => (
                   <MobileLink key={site.slug} href={`/sites/${site.slug}`} onClick={onClose}>
                     {site.name}
@@ -333,7 +333,7 @@ function MobileMenu({ groupedSites, isAdmin, dashboardHref, onClose }) {
         </SignedIn>
         <SignedOut>
           <div>
-            <Link href="/sign-up" onClick={onClose} className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-brand-teal text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
+            <Link href="/sites" onClick={onClose} className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-brand-teal text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
               Get started
             </Link>
           </div>

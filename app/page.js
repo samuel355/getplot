@@ -15,19 +15,14 @@ import {
 } from "lucide-react";
 import PublicHeader from "@/app/_components/nav/PublicHeader";
 import Footer from "@/app/_components/Footer";
+import LandMapShowcase from "@/app/_components/LandMapShowcase";
 import { SITES } from "@/lib/sites";
+import { cn } from "@/lib/utils";
 
 const HERO_METRICS = [
   { value: "Verified", label: "Land locations" },
   { value: "Mapped", label: "Plot boundaries" },
   { value: "Guided", label: "Purchase support" },
-];
-
-const STATUS_ITEMS = [
-  { label: "Available", color: "bg-green-600" },
-  { label: "Reserved", color: "bg-neutral-950" },
-  { label: "Sold", color: "bg-red-600" },
-  { label: "Hold", color: "bg-slate-400" },
 ];
 
 const CAPABILITIES = [
@@ -111,11 +106,11 @@ export default function LandingPage() {
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link href="/marketplace" className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-teal px-6 py-3 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
-                  Browse Listed Properties <ArrowRight className="h-4 w-4" />
+                <Link href="/sites" className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-teal px-6 py-3 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
+                  Browse Land Locations <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/sites" className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">
-                  Browse our Land locations
+                <Link href="/marketplace" className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10">
+                  Browse Listed Properties
                 </Link>
               </div>
 
@@ -129,12 +124,40 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <LandMapShowcase />
+            <LandMapShowcase sites={SITES} />
           </div>
         </section>
 
-        <section className="bg-white py-20">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
+        <section className="relative overflow-hidden bg-white py-20">
+          <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full bg-brand-teal/15 blur-3xl" />
+          <div className="pointer-events-none absolute -left-24 bottom-16 h-56 w-56 rounded-full bg-brand-navy/5 blur-3xl" />
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <SectionHeader
+                eyebrow="Land locations"
+                title="Browse verified land locations"
+                desc="Open each location to inspect available, reserved, sold, hold, and other plot statuses on Google Maps."
+              />
+              <Link href="/sites" className="inline-flex w-fit items-center gap-2 rounded-lg bg-brand-navy px-5 py-3 text-sm font-bold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-brand-navy/90">
+                View all locations <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredSites.map((site) => <SiteCard key={site.slug} site={site} />)}
+            </div>
+
+            <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
+              <SiteList title="Kumasi" sites={kumasi} />
+              <SiteList title="Accra" sites={accra} />
+            </div>
+          </div>
+        </section>
+
+        <section className="relative overflow-hidden border-y border-brand-teal/20 bg-[linear-gradient(135deg,#effcfc_0%,#f7f8fc_48%,#eef0fa_100%)] py-20">
+          <div className="pointer-events-none absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-brand-teal to-transparent" />
+          <div className="pointer-events-none absolute -bottom-24 right-[8%] h-64 w-64 rounded-full bg-brand-teal/20 blur-3xl" />
+          <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
             <div>
               <p className="text-sm font-semibold uppercase tracking-wider text-brand-teal">Marketplace</p>
               <h2 className="mt-3 text-3xl font-bold text-brand-navy sm:text-4xl">
@@ -146,8 +169,8 @@ export default function LandingPage() {
 
               <div className="mt-7 space-y-3">
                 {MARKET_FEATURES.map((item) => (
-                  <div key={item} className="flex items-center gap-3 text-sm font-medium text-slate-700">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-teal/15">
+                  <div key={item} className="flex items-center gap-3 rounded-xl border border-white/70 bg-white/60 px-3 py-2.5 text-sm font-medium text-slate-700 shadow-sm backdrop-blur">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-teal/20">
                       <CheckCircle className="h-3.5 w-3.5 text-brand-navy" />
                     </span>
                     {item}
@@ -164,24 +187,24 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="border-b border-slate-200 bg-white">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-px bg-slate-200 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
+        <section className="bg-brand-navy py-6">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-3 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
             {[
               { title: "Verified Land Sites", desc: "Mapped locations with clear plot boundaries and site-level inventory." },
               { title: "Affordable Prices", desc: "Compare price, status, size, and availability before enquiry." },
               { title: "Flexible Payment Plans", desc: "Speak with the team about payment options and documentation support." },
             ].map((item) => (
-              <div key={item.title} className="bg-white px-6 py-7">
-                <CheckCircle className="h-5 w-5 text-brand-teal" />
-                <h2 className="mt-4 font-semibold text-brand-navy">{item.title}</h2>
-                <p className="mt-2 text-sm leading-6 text-slate-500">{item.desc}</p>
+              <div key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.07] px-6 py-7 backdrop-blur transition hover:-translate-y-0.5 hover:border-brand-teal/50 hover:bg-white/[0.11]">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-teal/15"><CheckCircle className="h-5 w-5 text-brand-teal" /></span>
+                <h2 className="mt-4 font-semibold text-white">{item.title}</h2>
+                <p className="mt-2 text-sm leading-6 text-white/55">{item.desc}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="bg-slate-50 py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden bg-[radial-gradient(circle_at_10%_10%,rgba(104,201,205,0.18),transparent_28%),linear-gradient(180deg,#f7f8fc_0%,#ffffff_100%)] py-20">
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <SectionHeader
               eyebrow="Platform"
               title="One place to manage land inventory and convert serious buyers"
@@ -190,8 +213,8 @@ export default function LandingPage() {
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {CAPABILITIES.map(({ icon: Icon, title, desc }) => (
-                <article key={title} className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-navy text-white">
+                <article key={title} className="group rounded-2xl border border-slate-200/80 bg-white/90 p-6 shadow-soft transition-all hover:-translate-y-1 hover:border-brand-teal hover:shadow-elevated">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-navy text-white transition-colors group-hover:bg-brand-teal group-hover:text-brand-navy">
                     <Icon className="h-5 w-5" />
                   </div>
                   <h3 className="mt-5 font-semibold text-slate-900">{title}</h3>
@@ -202,33 +225,9 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="bg-brand-navy py-20 text-white">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-              <SectionHeader
-                eyebrow="Land locations"
-                title="Browse verified land locations"
-                desc="Open each location to inspect available, reserved, sold, hold, and other plot statuses on Google Maps."
-                dark
-              />
-              <Link href="/sites" className="inline-flex w-fit items-center gap-2 rounded-lg bg-brand-teal px-5 py-3 text-sm font-bold text-brand-navy transition-colors hover:bg-brand-teal/90">
-                View all locations <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {featuredSites.map((site) => <SiteCard key={site.slug} site={site} dark />)}
-            </div>
-
-            <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
-              <SiteList title="Kumasi" sites={kumasi} />
-              <SiteList title="Accra" sites={accra} />
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-slate-50 py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden bg-[#eaf8f8] py-20">
+          <div className="pointer-events-none absolute inset-0 opacity-40 [background-image:radial-gradient(#68c9cd_1px,transparent_1px)] [background-size:24px_24px]" />
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <SectionHeader
               eyebrow="Buyer journey"
               title="From inspection to enquiry without losing context"
@@ -236,12 +235,12 @@ export default function LandingPage() {
             />
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               {PROCESS.map(({ icon: Icon, title, desc }, index) => (
-                <article key={title} className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+                <article key={title} className="rounded-2xl border border-white bg-white/90 p-6 shadow-soft backdrop-blur transition-all hover:-translate-y-1 hover:shadow-elevated">
                   <div className="flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-navy text-white">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <span className="text-sm font-bold text-brand-teal">0{index + 1}</span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-teal/20 text-sm font-extrabold text-brand-navy">0{index + 1}</span>
                   </div>
                   <h3 className="mt-5 font-semibold text-slate-900">{title}</h3>
                   <p className="mt-2 text-sm leading-6 text-slate-500">{desc}</p>
@@ -251,8 +250,9 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="bg-white py-20">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:px-8">
+        <section className="relative overflow-hidden bg-[linear-gradient(120deg,#ffffff_0%,#f4f1fb_52%,#eefbfb_100%)] py-20">
+          <div className="pointer-events-none absolute -left-20 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full border-[48px] border-brand-navy/5" />
+          <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:px-8">
             <div>
               <p className="text-sm font-semibold uppercase tracking-wider text-brand-teal">Expert consultation</p>
               <h2 className="mt-3 text-3xl font-bold text-brand-navy sm:text-4xl">
@@ -263,7 +263,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-6">
+            <div className="rounded-3xl border border-white bg-white/70 p-4 shadow-elevated backdrop-blur-xl sm:p-6">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {[
                   { label: "Reserve", desc: "Hold an available plot for follow-up." },
@@ -271,7 +271,7 @@ export default function LandingPage() {
                   { label: "Express interest", desc: "Send enquiry details with context." },
                   { label: "Call for info", desc: "Speak directly with the office." },
                 ].map((item) => (
-                  <div key={item.label} className="rounded-lg bg-white p-4">
+                  <div key={item.label} className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand-teal/50 hover:bg-brand-teal/5">
                     <h3 className="font-semibold text-brand-navy">{item.label}</h3>
                     <p className="mt-2 text-sm leading-6 text-slate-500">{item.desc}</p>
                   </div>
@@ -281,8 +281,10 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="bg-brand-navy py-16 text-white">
-          <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+        <section className="relative overflow-hidden bg-brand-navy py-16 text-white">
+          <div className="pointer-events-none absolute -right-20 -top-40 h-96 w-96 rounded-full bg-brand-teal/20 blur-3xl" />
+          <div className="pointer-events-none absolute inset-0 opacity-10 [background-image:linear-gradient(120deg,transparent_45%,#68c9cd_46%,transparent_47%)] [background-size:80px_80px]" />
+          <div className="relative mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
             <div>
               <h2 className="text-3xl font-bold">Start with verified land locations.</h2>
               <p className="mt-2 max-w-2xl text-white/65">Review land sites, compare listed properties, and speak with an expert before you commit.</p>
@@ -304,83 +306,9 @@ export default function LandingPage() {
   );
 }
 
-function LandMapShowcase() {
-  const plots = [
-    "col-span-2 row-span-2 bg-green-600/80",
-    "bg-green-600/80",
-    "bg-red-600/85",
-    "bg-neutral-950/85",
-    "col-span-2 bg-green-600/80",
-    "bg-slate-400/90",
-    "bg-green-600/80",
-    "col-span-2 row-span-2 bg-green-600/80",
-    "bg-blue-800/80",
-    "bg-red-600/85",
-    "bg-green-600/80",
-    "bg-slate-400/90",
-  ];
-
-  return (
-    <div className="rounded-lg border border-white/15 bg-white p-4 shadow-2xl shadow-black/20">
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Live site map</p>
-          <h2 className="mt-1 font-bold text-brand-navy">Verified Land Site</h2>
-        </div>
-        <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1">
-          <span className="rounded-md bg-white px-3 py-1 text-xs font-semibold text-brand-navy shadow-sm">Map</span>
-          <span className="px-3 py-1 text-xs font-semibold text-slate-500">List</span>
-        </div>
-      </div>
-
-      <div className="grid gap-4 py-4 lg:grid-cols-[1fr_15rem]">
-        <div className="relative min-h-[360px] overflow-hidden rounded-lg bg-slate-100">
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:34px_34px]" />
-          <div className="relative grid h-full grid-cols-5 grid-rows-5 gap-2 p-5">
-            {plots.map((plot, index) => (
-              <div key={index} className={`rounded-md border border-white/80 shadow-sm ${plot}`} />
-            ))}
-          </div>
-          <div className="absolute left-5 top-5 rounded-lg bg-white px-3 py-2 text-xs font-semibold text-brand-navy shadow-sm">
-            Google map polygons
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Selected plot</p>
-              <h3 className="mt-1 text-xl font-bold text-brand-navy">Plot 24</h3>
-            </div>
-            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">Available</span>
-          </div>
-          <div className="mt-5 space-y-3 text-sm">
-            <Fact label="Size" value="0.315 Acres" />
-            <Fact label="Price" value="GHS 85,000" />
-            <Fact label="Use" value="Residential" />
-          </div>
-          <div className="mt-5 grid grid-cols-2 gap-2">
-            <span className="rounded-lg bg-brand-navy px-3 py-2 text-center text-xs font-bold text-white">Reserve</span>
-            <span className="rounded-lg bg-brand-teal px-3 py-2 text-center text-xs font-bold text-brand-navy">Buy</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-3 border-t border-slate-200 pt-4">
-        {STATUS_ITEMS.map((item) => (
-          <div key={item.label} className="flex items-center gap-2 text-xs font-medium text-slate-500">
-            <span className={`h-2.5 w-2.5 rounded-sm ${item.color}`} />
-            {item.label}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function MarketplacePreview() {
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
+    <div className="rounded-3xl border border-white bg-white/75 p-5 shadow-elevated backdrop-blur-xl">
       <div className="flex flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Marketplace search</p>
@@ -400,8 +328,8 @@ function MarketplacePreview() {
           { title: "Modern house", location: "Accra", image: "/hero-main.png", price: "Contact" },
           { title: "Investment plot", location: "Greater Accra", image: "/images/property24a.jpg", price: "GHS 120,000" },
         ].map((item) => (
-          <article key={item.title} className="overflow-hidden rounded-lg bg-white shadow-sm">
-            <div className="h-32 bg-slate-200 bg-cover bg-center" style={{ backgroundImage: `url('${item.image}')` }} />
+          <article key={item.title} className="group overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-elevated">
+            <div className="h-32 bg-slate-200 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style={{ backgroundImage: `url('${item.image}')` }} />
             <div className="p-4">
               <h4 className="font-semibold text-slate-900">{item.title}</h4>
               <p className="mt-1 flex items-center gap-1 text-sm text-slate-500">
@@ -416,20 +344,11 @@ function MarketplacePreview() {
   );
 }
 
-function Fact({ label, value }) {
-  return (
-    <div className="flex items-center justify-between border-b border-slate-100 pb-2 last:border-b-0">
-      <span className="text-slate-400">{label}</span>
-      <span className="font-semibold text-slate-800">{value}</span>
-    </div>
-  );
-}
-
 function SectionHeader({ eyebrow, title, desc, dark }) {
   return (
     <div className="max-w-3xl">
-      <p className="text-sm font-semibold uppercase tracking-wider text-brand-teal">{eyebrow}</p>
-      <h2 className={`mt-3 text-3xl font-bold sm:text-4xl ${dark ? "text-white" : "text-brand-navy"}`}>{title}</h2>
+      <p className={cn("inline-flex rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em]", dark ? "bg-white/10 text-brand-teal" : "bg-brand-teal/15 text-brand-navy")}>{eyebrow}</p>
+      <h2 className={`mt-4 text-3xl font-bold sm:text-4xl ${dark ? "text-white" : "text-brand-navy"}`}>{title}</h2>
       {desc && <p className={`mt-3 leading-7 ${dark ? "text-white/65" : "text-slate-500"}`}>{desc}</p>}
     </div>
   );
@@ -437,14 +356,14 @@ function SectionHeader({ eyebrow, title, desc, dark }) {
 
 function SiteList({ title, sites }) {
   return (
-    <div className="border-t border-white/15 pt-5">
+    <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="font-semibold text-white">{title}</h3>
-        <span className="text-sm text-white/45">{sites.length} sites</span>
+        <h3 className="font-bold text-brand-navy">{title}</h3>
+        <span className="rounded-full bg-brand-navy/5 px-2.5 py-1 text-xs font-semibold text-slate-500">{sites.length} sites</span>
       </div>
       <div className="flex flex-wrap gap-2">
         {sites.map((site) => (
-          <Link key={site.slug} href={`/sites/${site.slug}`} className="rounded-full border border-white/15 px-3 py-1.5 text-sm text-white/70 transition-colors hover:border-brand-teal hover:text-white">
+          <Link key={site.slug} href={`/sites/${site.slug}`} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-600 transition-all hover:-translate-y-0.5 hover:border-brand-teal hover:bg-brand-teal/10 hover:text-brand-navy">
             {site.name}
           </Link>
         ))}
@@ -455,7 +374,7 @@ function SiteList({ title, sites }) {
 
 function SiteCard({ site, dark }) {
   return (
-    <Link href={`/sites/${site.slug}`} className={`group rounded-lg border p-5 transition hover:-translate-y-0.5 ${dark ? "border-white/15 bg-white/5 hover:border-brand-teal/70" : "border-slate-200 bg-white shadow-sm hover:border-brand-teal/50 hover:shadow-md"}`}>
+    <Link href={`/sites/${site.slug}`} className={`group rounded-2xl border p-5 transition-all hover:-translate-y-1 ${dark ? "border-white/15 bg-white/5 hover:border-brand-teal/70" : "border-slate-200/80 bg-white shadow-soft hover:border-brand-teal hover:bg-brand-teal/5 hover:shadow-elevated"}`}>
       <div className="flex items-start justify-between gap-4">
         <div className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${dark ? "bg-white/10 group-hover:bg-brand-teal" : "bg-brand-navy/5 group-hover:bg-brand-navy"}`}>
           <MapPin className={`h-5 w-5 transition-colors ${dark ? "text-brand-teal group-hover:text-brand-navy" : "text-brand-navy group-hover:text-white"}`} />

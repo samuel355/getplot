@@ -22,19 +22,28 @@ async function loadTemplate(): Promise<string> {
 
 export async function POST(request: Request) {
   try {
-    const { from, subject, fullname, phone, message } = await request.json();
+    const body = await request.json();
+    const fullname = String(body.name ?? body.fullname ?? "").trim();
+    const email = String(body.email ?? body.from ?? "").trim().toLowerCase();
+    const phone = String(body.phone ?? "").trim();
+    const message = String(body.message ?? "").trim();
+    const subject = `New website enquiry from ${fullname}`;
+
+    if (!fullname || !email || !message) {
+      return Response.json({ message: "Name, email and message are required." }, { status: 400 });
+    }
 
     const template = await loadTemplate();
     const htmlContent = ejs.render(template, {
       fullname,
-      email: from,
+      email,
       phone,
       subject,
       message,
     });
 
     const smtpPort = parseInt(process.env.SMTP_PORT || "465");
-    let transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || "smtp.gmail.com",
       port: smtpPort,
       secure: smtpPort === 465,
@@ -45,8 +54,9 @@ export async function POST(request: Request) {
     });
 
     await transporter.sendMail({
-      from: from,
+      from: `GetOnePlot Website <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
       to: process.env.SMTP_EMAIL,
+      replyTo: `${fullname} <${email}>`,
       subject: subject,
       html: htmlContent,
     });

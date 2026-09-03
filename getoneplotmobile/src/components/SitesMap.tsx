@@ -95,6 +95,10 @@ function SitesMapComponent({ sites, counts, countsLoading }: Props) {
   }, []);
 
   const siteCounts = selected ? counts[selected.slug] : undefined;
+  const soldOut =
+    !countsLoading &&
+    Number(siteCounts?.total) > 0 &&
+    Number(siteCounts?.sold) === Number(siteCounts?.total);
 
   return (
     <View style={styles.container}>
@@ -174,6 +178,13 @@ function SitesMapComponent({ sites, counts, countsLoading }: Props) {
           <Text style={[styles.cardSubtitle, { color: colors.textMuted, fontSize: fontSize.sm }]}>
             {selected.subtitle}
           </Text>
+
+          {soldOut ? (
+            <View style={[styles.soldOutPill, { backgroundColor: colors.error + "18" }]}>
+              <Ionicons name="checkmark-circle" size={13} color={colors.error} />
+              <Text style={[styles.soldOutText, { color: colors.error }]}>SITE SOLD OUT</Text>
+            </View>
+          ) : null}
 
           <View style={[styles.statsRow, { borderColor: colors.border }]}>
             <CardStat
@@ -315,6 +326,17 @@ const styles = StyleSheet.create({
   cardClose: { position: "absolute", top: 12, right: 12, padding: 4 },
   cardTitle: { paddingRight: 24 },
   cardSubtitle: { marginTop: 2 },
+  soldOutPill: {
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    marginTop: 9,
+    borderRadius: 999,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+  },
+  soldOutText: { fontSize: 10, fontWeight: "800", letterSpacing: 0.6 },
   statsRow: {
     flexDirection: "row",
     marginTop: 12,

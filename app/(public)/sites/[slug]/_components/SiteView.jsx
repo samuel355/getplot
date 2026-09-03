@@ -45,6 +45,8 @@ const MAP_OPTIONS = {
   clickableIcons: false,
   fullscreenControl: false,
   mapTypeControl: false,
+  rotateControl: false,
+  scaleControl: true,
   streetViewControl: false,
   zoomControl: false,
   gestureHandling: "greedy",
@@ -155,7 +157,7 @@ export default function SiteView({ site }) {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("map");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [mapType, setMapType] = useState("satellite");
+  const [mapType, setMapType] = useState("hybrid");
   const [isMapTypeMenuOpen, setIsMapTypeMenuOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [stats, setStats] = useState({ total: 0, available: 0, reserved: 0, sold: 0, hold: 0 });
@@ -194,6 +196,7 @@ export default function SiteView({ site }) {
     if (statusFilter === "all") return plots;
     return plots.filter((plot) => statusKey(plotStatus(plot)) === statusFilter);
   }, [plots, statusFilter]);
+  const soldOut = !loading && stats.total > 0 && stats.sold === stats.total;
 
   useEffect(() => { fetchPlots(); }, [site.table]);
 
@@ -250,7 +253,10 @@ export default function SiteView({ site }) {
             <MapPin className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h1 className="font-semibold text-gray-900 text-sm sm:text-base">{site.name}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="font-semibold text-gray-900 text-sm sm:text-base">{site.name}</h1>
+              {soldOut && <span className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-red-700">Sold out</span>}
+            </div>
             <p className="text-xs text-gray-400">{site.location}</p>
           </div>
         </div>
@@ -322,7 +328,7 @@ export default function SiteView({ site }) {
                     setPopupPosition(null);
                   }}
                 >
-                  {plots.map((plot) => {
+                  {filteredPlots.map((plot) => {
                     const path = getPolygonPath(plot);
                     const style = getPlotStyle(plot);
                     return (
@@ -367,6 +373,21 @@ export default function SiteView({ site }) {
                     </OverlayView>
                   )}
                 </GoogleMap>
+                <MapFilterBar
+                  active={statusFilter}
+                  stats={stats}
+                  onChange={(nextFilter) => {
+                    setStatusFilter(nextFilter);
+                    setSelected(null);
+                    setPopupPosition(null);
+                  }}
+                />
+                {soldOut && (
+                  <div className="absolute bottom-20 left-1/2 z-10 -translate-x-1/2 rounded-2xl border border-red-200 bg-white/95 px-5 py-3 text-center shadow-elevated backdrop-blur-xl md:bottom-4">
+                    <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-red-700">Site sold out</p>
+                    <p className="mt-1 text-[11px] text-slate-500">All {stats.total.toLocaleString()} mapped plots have been sold.</p>
+                  </div>
+                )}
                 <MapControls
                   mapType={mapType}
                   isMapTypeMenuOpen={isMapTypeMenuOpen}
@@ -376,14 +397,14 @@ export default function SiteView({ site }) {
                   onToggleFullscreen={toggleFullscreen}
                   onZoomIn={() => mapRef.current?.setZoom((mapRef.current?.getZoom() ?? 15) + 1)}
                   onZoomOut={() => mapRef.current?.setZoom((mapRef.current?.getZoom() ?? 15) - 1)}
-                  onFit={() => fitMapToPlots(mapRef.current, plots)}
+                  onFit={() => fitMapToPlots(mapRef.current, filteredPlots)}
                   onRefresh={fetchPlots}
                   loading={loading}
                 />
                 <MobileMapControls
                   onZoomIn={() => mapRef.current?.setZoom((mapRef.current?.getZoom() ?? 15) + 1)}
                   onZoomOut={() => mapRef.current?.setZoom((mapRef.current?.getZoom() ?? 15) - 1)}
-                  onFit={() => fitMapToPlots(mapRef.current, plots)}
+                  onFit={() => fitMapToPlots(mapRef.current, filteredPlots)}
                   onOpenMapType={() => setIsMapTypeMenuOpen(true)}
                 />
                 <MobileMapTypeSheet
@@ -487,28 +508,28 @@ const MAP_TYPES = [
 
 function MapControls({ mapType, isMapTypeMenuOpen, onToggleMapTypeMenu, onChangeMapType, isFullscreen, onToggleFullscreen, onZoomIn, onZoomOut, onFit, onRefresh, loading }) {
   return (
-    <div className="absolute right-4 top-4 z-10 hidden md:flex flex-col gap-2 p-2">
-      <button type="button" onClick={onZoomIn} title="Zoom in" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+    <div className="absolute right-4 top-4 z-10 hidden flex-col overflow-visible rounded-2xl border border-white/70 bg-white/90 p-1.5 shadow-elevated backdrop-blur-xl md:flex">
+      <button type="button" onClick={onZoomIn} title="Zoom in" className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
         <ZoomIn className="h-5 w-5 text-brand-navy" />
       </button>
-      <button type="button" onClick={onZoomOut} title="Zoom out" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+      <button type="button" onClick={onZoomOut} title="Zoom out" className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
         <ZoomOut className="h-5 w-5 text-brand-navy" />
       </button>
 
-      <div className="border-t border-gray-200 my-1" />
+      <div className="mx-1 my-1 border-t border-slate-200" />
 
       <div className="relative">
-        <button type="button" onClick={onToggleMapTypeMenu} title="Change map type" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+        <button type="button" onClick={onToggleMapTypeMenu} title="Change map type" className={cn("flex h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-brand-teal/15", isMapTypeMenuOpen && "bg-brand-teal/15")}>
           <Layers className="h-5 w-5 text-brand-navy" />
         </button>
         {isMapTypeMenuOpen && (
-          <div className="absolute right-full mr-2 top-0 bg-white shadow-lg rounded-lg overflow-hidden min-w-[120px]">
+          <div className="absolute right-full mr-3 top-0 min-w-[150px] overflow-hidden rounded-xl border border-slate-200 bg-white/95 p-1.5 shadow-elevated backdrop-blur-xl">
             {MAP_TYPES.map(({ value, label }) => (
               <button
                 key={value}
                 type="button"
                 onClick={() => onChangeMapType(value)}
-                className={cn("px-3 py-2 w-full text-left text-sm hover:bg-slate-50 transition-colors", mapType === value && "bg-brand-navy/10 text-brand-navy font-medium")}
+                className={cn("w-full rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-brand-teal/10", mapType === value && "bg-brand-navy text-white font-semibold")}
               >
                 {label}
               </button>
@@ -517,15 +538,15 @@ function MapControls({ mapType, isMapTypeMenuOpen, onToggleMapTypeMenu, onChange
         )}
       </div>
 
-      <button type="button" onClick={onToggleFullscreen} title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"} className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+      <button type="button" onClick={onToggleFullscreen} title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"} className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
         {isFullscreen ? <Minimize className="h-5 w-5 text-brand-navy" /> : <Maximize className="h-5 w-5 text-brand-navy" />}
       </button>
 
-      <button type="button" onClick={onFit} title="Fit all plots" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+      <button type="button" onClick={onFit} title="Fit visible plots" className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
         <LocateFixed className="h-5 w-5 text-brand-navy" />
       </button>
 
-      <button type="button" onClick={onRefresh} title="Refresh plots" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors">
+      <button type="button" onClick={onRefresh} title="Refresh plots" className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors">
         <RefreshCw className={cn("h-5 w-5 text-brand-navy", loading && "animate-spin")} />
       </button>
 
@@ -533,7 +554,7 @@ function MapControls({ mapType, isMapTypeMenuOpen, onToggleMapTypeMenu, onChange
         type="button"
         title="Help"
         onClick={() => alert("Click on any plot to see details and take action.")}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow hover:bg-gray-100 transition-colors"
+        className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-brand-teal/15 transition-colors"
       >
         <Info className="h-5 w-5 text-brand-navy" />
       </button>
@@ -541,9 +562,45 @@ function MapControls({ mapType, isMapTypeMenuOpen, onToggleMapTypeMenu, onChange
   );
 }
 
+function MapFilterBar({ active, stats, onChange }) {
+  return (
+    <div className="absolute left-3 right-3 top-3 z-10 flex overflow-x-auto rounded-2xl border border-white/70 bg-white/90 p-1.5 shadow-elevated backdrop-blur-xl md:left-4 md:right-auto md:max-w-[calc(100%-6rem)]">
+      {STATUS_FILTERS.map(({ key, label }) => {
+        const selected = active === key;
+        const count = key === "all" ? stats.total : stats[key] ?? 0;
+        return (
+          <button
+            key={key}
+            type="button"
+            onClick={() => onChange(key)}
+            className={cn(
+              "flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-all",
+              selected
+                ? "bg-brand-navy text-white shadow-md"
+                : "text-slate-600 hover:bg-brand-teal/15 hover:text-brand-navy",
+            )}
+          >
+            <span className={cn("h-2 w-2 rounded-full", {
+              "bg-brand-teal": key === "all",
+              "bg-green-600": key === "available",
+              "bg-neutral-900": key === "reserved",
+              "bg-red-600": key === "sold",
+              "bg-slate-400": key === "hold",
+            })} />
+            {label}
+            <span className={cn("rounded-full px-1.5 py-0.5 text-[10px]", selected ? "bg-white/15 text-white" : "bg-slate-100 text-slate-500")}>
+              {count.toLocaleString()}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function MobileMapControls({ onZoomIn, onZoomOut, onFit, onOpenMapType }) {
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg z-20 flex justify-around items-center py-2 border-t border-slate-200">
+    <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-around rounded-2xl border border-white/70 bg-white/90 p-1.5 shadow-elevated backdrop-blur-xl md:hidden">
       <button type="button" onClick={onZoomIn} className="flex flex-col items-center gap-0.5 p-2 text-gray-700">
         <ZoomIn size={18} />
         <span className="text-[10px]">Zoom In</span>

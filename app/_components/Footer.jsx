@@ -98,7 +98,12 @@ export default function Footer() {
               </div>
               <div className="flex items-start gap-3">
                 <Mail className="w-4 h-4 text-brand-teal mt-0.5 shrink-0" />
-                <p className="text-sm text-white/70">landandhomesconsult@gmail.com</p>
+                <a
+                  href="mailto:landandhomesconsult@gmail.com"
+                  className="break-all text-sm text-white/70 transition-colors hover:text-brand-teal"
+                >
+                  landandhomesconsult@gmail.com
+                </a>
               </div>
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-brand-teal mt-0.5 shrink-0" />

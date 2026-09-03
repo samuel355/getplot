@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { DirectionsRenderer, GoogleMap, InfoWindow, OverlayView, useJsApiLoader } from "@react-google-maps/api";
+import { DirectionsRenderer, GoogleMap, InfoWindow, MarkerClustererF, MarkerF, OverlayView, useJsApiLoader } from "@react-google-maps/api";
 import {
   ArrowRight,
   Bike,
   Car,
   Footprints,
   LayoutGrid,
+  Layers,
   List,
   Loader2,
   LocateFixed,
@@ -45,6 +46,10 @@ function normalizeStatus(status) {
 
 function emptyCounts() {
   return { total: 0, available: 0, reserved: 0, sold: 0, hold: 0 };
+}
+
+function isSoldOut(counts, loading = false) {
+  return !loading && Number(counts?.total) > 0 && Number(counts?.sold) === Number(counts?.total);
 }
 
 const TRAVEL_MODES = [
@@ -116,6 +121,7 @@ export default function SitesExplorer({ sites }) {
   const [locationStatus, setLocationStatus] = useState("idle");
   const [travelMode, setTravelMode] = useState("DRIVING");
   const [activeRoute, setActiveRoute] = useState(null);
+  const [mapType, setMapType] = useState("hybrid");
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-scripts",
@@ -174,6 +180,15 @@ export default function SitesExplorer({ sites }) {
       ),
     );
   }, [query, sites]);
+
+  const groupedFilteredSites = useMemo(() => {
+    return ["Kumasi", "Accra"]
+      .map((location) => ({
+        location,
+        sites: filteredSites.filter((site) => site.location === location),
+      }))
+      .filter((group) => group.sites.length > 0);
+  }, [filteredSites]);
 
   const totals = useMemo(() => {
     return sites.reduce((acc, site) => {
@@ -275,9 +290,16 @@ export default function SitesExplorer({ sites }) {
 
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {view === "list" ? (
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {filteredSites.map((site) => (
-              <SiteCard key={site.slug} site={site} counts={counts[site.slug]} loading={loadingCounts} />
+          <div className="space-y-10">
+            {groupedFilteredSites.map(({ location, sites: locationSites }) => (
+              <div key={location}>
+                <LocationHeading location={location} count={locationSites.length} />
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+                  {locationSites.map((site) => (
+                    <SiteCard key={site.slug} site={site} counts={counts[site.slug]} loading={loadingCounts} />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         ) : (
@@ -288,36 +310,41 @@ export default function SitesExplorer({ sites }) {
                 <p className="mt-0.5 text-xs text-slate-400">{filteredSites.length} visible sites on the Ghana map</p>
               </div>
               <div className="max-h-[600px] overflow-y-auto p-3">
-                {filteredSites.map((site) => (
-                  <button
-                    key={site.slug}
-                    type="button"
-                    onClick={() => focusSite(site)}
-                    className={cn(
-                      "mb-2 w-full rounded-xl border p-3 text-left transition",
-                      activeSite?.slug === site.slug
-                        ? "border-brand-teal bg-brand-teal/10 shadow-sm"
-                        : "border-slate-200 bg-white hover:border-brand-teal/50 hover:shadow-sm",
-                    )}
-                  >
-                    <div className="flex items-start gap-3">
-                      <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-navy text-[10px] font-bold text-white">
-                        {site.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="flex items-start justify-between gap-2">
-                          <span className="block text-sm font-semibold text-slate-900">{site.name}</span>
-                          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">{site.location}</span>
-                        </span>
-                        <span className="mt-1.5 block text-xs leading-5 text-slate-400">{site.description}</span>
-                        <span className="mt-3 grid grid-cols-3 rounded-lg border border-slate-100 bg-white/70 text-center">
-                          <MiniCount label="Plots" value={counts[site.slug]?.total} loading={loadingCounts} />
-                          <MiniCount label="Avail." value={counts[site.slug]?.available} loading={loadingCounts} />
-                          <MiniCount label="Sold" value={counts[site.slug]?.sold} loading={loadingCounts} />
-                        </span>
-                      </span>
-                    </div>
-                  </button>
+                {groupedFilteredSites.map(({ location, sites: locationSites }) => (
+                  <div key={location} className="mb-5 last:mb-0">
+                    <LocationHeading location={location} count={locationSites.length} compact />
+                    {locationSites.map((site) => (
+                      <button
+                        key={site.slug}
+                        type="button"
+                        onClick={() => focusSite(site)}
+                        className={cn(
+                          "group mb-2 w-full rounded-xl border p-3 text-left transition-all",
+                          activeSite?.slug === site.slug
+                            ? "border-brand-teal bg-brand-teal/15 shadow-md ring-2 ring-brand-teal/15"
+                            : "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-brand-teal hover:bg-brand-teal/10 hover:shadow-md",
+                        )}
+                      >
+                        <div className="flex items-start gap-3">
+                          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-navy text-[10px] font-bold text-white transition-colors group-hover:bg-brand-teal group-hover:text-brand-navy">
+                            {site.name.split(" ").map((part) => part[0]).join("").slice(0, 2)}
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="flex items-center justify-between gap-2">
+                              <span className="block text-sm font-semibold text-slate-900">{site.name}</span>
+                              {isSoldOut(counts[site.slug], loadingCounts) && <SoldOutBadge compact />}
+                            </span>
+                            <span className="mt-1.5 block text-xs leading-5 text-slate-400">{site.description}</span>
+                            <span className="mt-3 grid grid-cols-3 rounded-lg border border-slate-100 bg-white/70 text-center">
+                              <MiniCount label="Plots" value={counts[site.slug]?.total} loading={loadingCounts} />
+                              <MiniCount label="Avail." value={counts[site.slug]?.available} loading={loadingCounts} />
+                              <MiniCount label="Sold" value={counts[site.slug]?.sold} loading={loadingCounts} />
+                            </span>
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>
@@ -340,25 +367,34 @@ export default function SitesExplorer({ sites }) {
                   mapContainerStyle={MAP_CONTAINER_STYLE}
                   center={GHANA_CENTER}
                   zoom={7}
-                  options={MAP_OPTIONS}
+                  options={{ ...MAP_OPTIONS, mapTypeId: mapType }}
                   onLoad={(map) => {
                     mapRef.current = map;
                     window.setTimeout(fitGhana, 150);
                   }}
                 >
-                  {filteredSites.map((site) => (
-                    <OverlayView
-                      key={site.slug}
-                      position={site.coordinates}
-                      mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-                    >
-                      <SiteMapPin
-                        site={site}
-                        active={activeSite?.slug === site.slug}
-                        onClick={() => focusSite(site)}
-                      />
-                    </OverlayView>
-                  ))}
+                  <MarkerClustererF options={{ gridSize: 52, minimumClusterSize: 2, maxZoom: 11, zoomOnClick: true }}>
+                    {(clusterer) => (
+                      <>
+                        {filteredSites.map((site) => {
+                          const active = activeSite?.slug === site.slug;
+                          const label = site.name.replace(/\([^)]*\)/g, "").split(/\s+/).filter(Boolean).map((part) => part[0]).join("").slice(0, 3).toUpperCase();
+                          return (
+                            <MarkerF
+                              key={site.slug}
+                              position={site.coordinates}
+                              clusterer={clusterer}
+                              title={site.name}
+                              label={{ text: label, color: active ? "#191347" : "#ffffff", fontSize: "10px", fontWeight: "800" }}
+                              icon={{ path: window.google.maps.SymbolPath.CIRCLE, fillColor: active ? "#68C9CD" : "#191347", fillOpacity: 1, strokeColor: "#ffffff", strokeOpacity: 1, strokeWeight: active ? 4 : 3, scale: active ? 18 : 15 }}
+                              zIndex={active ? 100 : 10}
+                              onClick={() => focusSite(site)}
+                            />
+                          );
+                        })}
+                      </>
+                    )}
+                  </MarkerClustererF>
 
                   {userLocation && (
                     <OverlayView position={userLocation} mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
@@ -406,6 +442,8 @@ export default function SitesExplorer({ sites }) {
               </div>
               {GOOGLE_MAPS_KEY && !loadError && isLoaded && (
                 <MapControls
+                  mapType={mapType}
+                  onMapTypeChange={setMapType}
                   onZoomIn={() => mapRef.current?.setZoom((mapRef.current?.getZoom() ?? 7) + 1)}
                   onZoomOut={() => mapRef.current?.setZoom((mapRef.current?.getZoom() ?? 7) - 1)}
                   onFit={fitGhana}
@@ -428,54 +466,41 @@ export default function SitesExplorer({ sites }) {
   );
 }
 
-function MapControls({ onZoomIn, onZoomOut, onFit }) {
+function MapControls({ mapType, onMapTypeChange, onZoomIn, onZoomOut, onFit }) {
+  const [typesOpen, setTypesOpen] = useState(false);
   return (
-    <div className="absolute right-4 top-4 z-10 flex flex-col gap-2">
-      <button type="button" onClick={onZoomIn} title="Zoom in" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-slate-200/80 hover:bg-gray-100 transition-colors">
-        <ZoomIn className="h-5 w-5 text-brand-navy" />
-      </button>
-      <button type="button" onClick={onZoomOut} title="Zoom out" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-slate-200/80 hover:bg-gray-100 transition-colors">
-        <ZoomOut className="h-5 w-5 text-brand-navy" />
-      </button>
-      <button type="button" onClick={onFit} title="Show all Ghana locations" className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-slate-200/80 hover:bg-gray-100 transition-colors">
-        <LocateFixed className="h-5 w-5 text-brand-navy" />
-      </button>
+    <div className="absolute bottom-4 left-1/2 z-10 grid w-[min(18rem,calc(100%-1.5rem))] -translate-x-1/2 grid-cols-2 rounded-2xl border border-white/70 bg-white/95 p-1.5 shadow-elevated backdrop-blur-xl md:bottom-auto md:left-auto md:right-4 md:top-4 md:flex md:w-auto md:translate-x-0 md:flex-col">
+      <MapControlButton label="Zoom in" icon={ZoomIn} onClick={onZoomIn} />
+      <MapControlButton label="Zoom out" icon={ZoomOut} onClick={onZoomOut} />
+      <div className="mx-1 my-1 hidden w-[calc(100%-0.5rem)] border-t border-slate-200 md:block" />
+      <MapControlButton label="Fit all" icon={LocateFixed} onClick={onFit} />
+      <div className="relative">
+        <MapControlButton label="Map style" icon={Layers} onClick={() => setTypesOpen((open) => !open)} active={typesOpen} />
+        {typesOpen && (
+          <div className="absolute bottom-full right-0 mb-3 w-36 rounded-xl border border-slate-200 bg-white p-1.5 shadow-elevated md:bottom-auto md:right-full md:top-0 md:mb-0 md:mr-3">
+            {["roadmap", "satellite", "hybrid", "terrain"].map((type) => (
+              <button key={type} type="button" onClick={() => { onMapTypeChange(type); setTypesOpen(false); }} className={cn("w-full rounded-lg px-3 py-2 text-left text-xs font-semibold capitalize transition-colors hover:bg-brand-teal/15", mapType === type && "bg-brand-navy text-white")}>
+                {type}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-function SiteMapPin({ site, active, onClick }) {
-  const label = site.name
-    .replace(/\([^)]*\)/g, "")
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 3)
-    .toUpperCase();
-
+function MapControlButton({ label, icon: Icon, onClick, active }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "group -translate-x-1/2 -translate-y-full rounded-full border bg-white px-2.5 py-1.5 shadow-xl transition hover:-translate-y-[calc(100%+2px)] hover:border-brand-teal",
-        active ? "border-brand-teal ring-4 ring-brand-teal/25" : "border-white",
-      )}
-      title={site.name}
-    >
-      <span className="flex items-center gap-1.5">
-        <span className="h-2.5 w-2.5 rounded-full bg-brand-teal" />
-        <span className="text-[11px] font-bold text-brand-navy">{label}</span>
-      </span>
-      <span className="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1/2 rotate-45 border-b border-r border-white bg-white group-hover:border-brand-teal" />
+    <button type="button" onClick={onClick} title={label} className={cn("flex h-10 w-full items-center justify-center gap-2 rounded-xl px-2 text-xs font-bold text-brand-navy transition-colors hover:bg-brand-teal/15 md:w-28 md:justify-start md:px-3", active && "bg-brand-teal/15")}>
+      <Icon className="h-5 w-5 shrink-0" /> <span>{label}</span>
     </button>
   );
 }
 
 function SummaryStat({ label, value }) {
   return (
-    <div className="min-w-[6.5rem] border-r border-slate-200 px-4 py-3 last:border-r-0">
+    <div className="min-w-0 border-r border-slate-200 px-2 py-3 last:border-r-0 sm:min-w-[6.5rem] sm:px-4">
       <p className="text-lg font-bold text-brand-navy">{value}</p>
       <p className="text-xs text-slate-400">{label}</p>
     </div>
@@ -500,22 +525,39 @@ function ViewButton({ active, onClick, icon: Icon, children }) {
 
 function SiteCard({ site, counts, loading }) {
   const safeCounts = counts ?? emptyCounts();
+  const soldOut = isSoldOut(safeCounts, loading);
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-teal/60 hover:shadow-md">
+    <article className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-teal hover:bg-brand-teal/5 hover:shadow-elevated">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-navy text-white">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-navy text-white transition-colors group-hover:bg-brand-teal group-hover:text-brand-navy">
           <MapPin className="h-5 w-5" />
         </div>
-        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">{site.location}</span>
+        <div className="flex flex-col items-end gap-2">
+          {soldOut && <SoldOutBadge />}
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">{site.location}</span>
+        </div>
       </div>
       <h2 className="mt-5 text-lg font-bold text-slate-950">{site.name}</h2>
       <p className="mt-2 min-h-10 text-sm leading-6 text-slate-500">{site.description}</p>
       <SiteCounts counts={safeCounts} loading={loading} />
-      <Link href={`/sites/${site.slug}`} className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-navy px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-navy/90">
-        View plots <ArrowRight className="h-4 w-4" />
+      <Link href={`/sites/${site.slug}`} className={cn("mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition", soldOut ? "bg-slate-700 hover:bg-slate-800" : "bg-brand-navy hover:bg-brand-navy/90")}>
+        {soldOut ? "View sold plots" : "View plots"} <ArrowRight className="h-4 w-4" />
       </Link>
     </article>
+  );
+}
+
+function LocationHeading({ location, count, compact = false }) {
+  return (
+    <div className={cn("flex items-center gap-3", compact ? "mb-3" : "mb-5")}>
+      <div className={cn("flex items-center gap-2 rounded-xl bg-brand-navy font-bold uppercase tracking-[0.16em] text-brand-teal", compact ? "px-3 py-2 text-[10px]" : "px-4 py-2.5 text-xs")}>
+        <MapPin className={compact ? "h-3 w-3" : "h-3.5 w-3.5"} />
+        {location}
+      </div>
+      <span className="text-xs font-semibold text-slate-400">{count} {count === 1 ? "site" : "sites"}</span>
+      <span className="h-px flex-1 bg-slate-200" />
+    </div>
   );
 }
 
@@ -547,6 +589,14 @@ function SiteCounts({ counts, loading }) {
   );
 }
 
+function SoldOutBadge({ compact = false }) {
+  return (
+    <span className={cn("inline-flex shrink-0 items-center rounded-full border border-red-200 bg-red-50 font-extrabold uppercase tracking-wide text-red-700", compact ? "px-2 py-0.5 text-[9px]" : "px-2.5 py-1 text-[10px]")}>
+      Sold out
+    </span>
+  );
+}
+
 function MapInfo({
   site,
   counts,
@@ -560,6 +610,7 @@ function MapInfo({
 }) {
   return (
     <div className="w-64 p-1">
+      {isSoldOut(counts, loading) && <div className="mb-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-center text-xs font-extrabold uppercase tracking-wider text-red-700">This site is sold out</div>}
       <div className="flex items-start gap-2">
         <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-navy text-white">
           <MapPin className="h-4 w-4" />

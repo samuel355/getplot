@@ -26,9 +26,9 @@ import type { Property } from "../../src/types/property";
 const { width } = Dimensions.get("window");
 
 const FEATURED_SITE_SLUGS = [
+  "trabuom-sector-2",
   "royal-court-estate",
   "legon-hills",
-  "trabuom-sector-1",
   "yabi",
   "berekuso",
   "asokore-mampong",

@@ -156,12 +156,12 @@ export default function ReservePlotPage() {
           {step === 1 && (
             <div className="space-y-5">
               <h2 className="font-semibold text-gray-900">Your Information</h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <FormField label="First Name" name="firstname" value={form.firstname} onChange={field} />
                 <FormField label="Last Name" name="lastname" value={form.lastname} onChange={field} />
               </div>
               <FormField label="Email Address" name="email" type="email" value={form.email} onChange={field} />
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <FormField label="Phone (10 digits)" name="phone" type="number" value={form.phone} onChange={field} />
                 <div>
                   <label className="text-sm font-medium text-gray-700 block mb-1.5">Country</label>

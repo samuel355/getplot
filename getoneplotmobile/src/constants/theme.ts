@@ -30,11 +30,11 @@ const lightColors = {
   // Neutral palette
   white: "#ffffff",
   black: "#000000",
-  background: "#ffffff",
-  surface: "#f8fafc",
-  surfaceAlt: "#f1f5f9",
-  border: "#e2e8f0",
-  borderLight: "#f1f5f9",
+  background: "#f6f7fb",
+  surface: "#ffffff",
+  surfaceAlt: "#eef1f7",
+  border: "#dde2ec",
+  borderLight: "#edf0f5",
 
   // Text hierarchy
   text: "#0f172a",
@@ -44,7 +44,7 @@ const lightColors = {
   textInverse: "#ffffff",
 
   // Shadow
-  shadow: "rgba(0, 0, 0, 0.1)",
+  shadow: "rgba(25, 19, 71, 0.12)",
 };
 
 const darkColors = {
@@ -144,10 +144,10 @@ export const fontWeight = {
 
 export const borderRadius = {
   none: 0,
-  sm: 4,
-  md: 8,
-  lg: 12,
-  xl: 16,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24,
   full: 9999,
 };
 

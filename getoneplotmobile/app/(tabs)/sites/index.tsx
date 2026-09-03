@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "expo-router";
 import {
-  FlatList,
   Pressable,
+  SectionList,
   ScrollView,
   StyleSheet,
   Text,
@@ -101,6 +101,14 @@ export default function SitesScreen() {
       return matchRegion && matchText;
     });
   }, [query, region]);
+
+  const sections = useMemo(
+    () =>
+      ["Kumasi", "Accra"]
+        .map((title) => ({ title, data: filtered.filter((site) => site.subtitle === title) }))
+        .filter((section) => section.data.length > 0),
+    [filtered],
+  );
 
   const Header = () => (
     <View
@@ -204,8 +212,8 @@ export default function SitesScreen() {
       {view === "map" ? (
         <SitesMap sites={filtered} counts={counts} countsLoading={countsLoading} />
       ) : (
-        <FlatList
-          data={filtered}
+        <SectionList
+          sections={sections}
           keyExtractor={(item) => item.slug}
           contentContainerStyle={{
             paddingHorizontal: spacing.lg,
@@ -214,8 +222,35 @@ export default function SitesScreen() {
           }}
           style={{ backgroundColor: colors.background }}
           ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
+          renderSectionHeader={({ section }) => (
+            <View style={[styles.sectionHeader, { backgroundColor: colors.background }]}>
+              <View style={[styles.sectionTitleWrap, { backgroundColor: colors.primary }]}>
+                <Ionicons name="location" size={13} color={colors.primaryAccent} />
+                <Text
+                  style={[
+                    styles.sectionTitle,
+                    {
+                      color: colors.primaryAccent,
+                      fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+                    },
+                  ]}
+                >
+                  {section.title}
+                </Text>
+              </View>
+              <Text style={[styles.sectionCount, { color: colors.textMuted }]}>
+                {section.data.length} {section.data.length === 1 ? "site" : "sites"}
+              </Text>
+              <View style={[styles.sectionLine, { backgroundColor: colors.border }]} />
+            </View>
+          )}
           renderItem={({ item, index }) => {
             const bg = COLOR_PALETTE[index % COLOR_PALETTE.length];
+            const siteCounts = counts[item.slug];
+            const soldOut =
+              !countsLoading &&
+              Number(siteCounts?.total) > 0 &&
+              Number(siteCounts?.sold) === Number(siteCounts?.total);
             return (
               <Pressable
                 style={({ pressed }) => [
@@ -241,18 +276,25 @@ export default function SitesScreen() {
                 </View>
 
                 <View style={styles.cardBody}>
-                  <Text
-                    style={[
-                      styles.title,
-                      {
-                        color: colors.text,
-                        fontSize: fontSize.md,
-                        fontWeight: fontWeight.bold as TextStyle["fontWeight"],
-                      },
-                    ]}
-                  >
-                    {item.title}
-                  </Text>
+                  <View style={styles.titleRow}>
+                    <Text
+                      style={[
+                        styles.title,
+                        {
+                          color: colors.text,
+                          fontSize: fontSize.md,
+                          fontWeight: fontWeight.bold as TextStyle["fontWeight"],
+                        },
+                      ]}
+                    >
+                      {item.title}
+                    </Text>
+                    {soldOut ? (
+                      <View style={[styles.soldOutPill, { backgroundColor: colors.error + "18" }]}>
+                        <Text style={[styles.soldOutPillText, { color: colors.error }]}>SOLD OUT</Text>
+                      </View>
+                    ) : null}
+                  </View>
                   <Text style={[styles.subtitle, { color: colors.textMuted, fontSize: fontSize.sm }]}>
                     {item.subtitle}
                   </Text>
@@ -260,17 +302,17 @@ export default function SitesScreen() {
                   <View style={[styles.statsRow, { borderColor: colors.border }]}>
                     <SiteStat
                       label="Plots"
-                      value={countsLoading ? "..." : counts[item.slug]?.total}
+                      value={countsLoading ? "..." : siteCounts?.total}
                       color={colors.text}
                     />
                     <SiteStat
                       label="Available"
-                      value={countsLoading ? "..." : counts[item.slug]?.available}
+                      value={countsLoading ? "..." : siteCounts?.available}
                       color={colors.success}
                     />
                     <SiteStat
                       label="Sold"
-                      value={countsLoading ? "..." : counts[item.slug]?.sold}
+                      value={countsLoading ? "..." : siteCounts?.sold}
                       color={colors.error}
                     />
                   </View>
@@ -380,9 +422,30 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
   },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingTop: 20,
+    paddingBottom: 12,
+  },
+  sectionTitleWrap: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  sectionTitle: { fontSize: 11, letterSpacing: 1.2, textTransform: "uppercase" },
+  sectionCount: { fontSize: 11, fontWeight: "600" },
+  sectionLine: { height: StyleSheet.hairlineWidth, flex: 1 },
   thumb: { width: 50, height: 50, alignItems: "center", justifyContent: "center" },
   thumbText: { color: "#fff", fontSize: 18 },
   cardBody: { flex: 1, marginLeft: 16 },
+  titleRow: { flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: 7 },
+  soldOutPill: { borderRadius: 999, paddingHorizontal: 7, paddingVertical: 3 },
+  soldOutPillText: { fontSize: 9, fontWeight: "800", letterSpacing: 0.6 },
   title: {},
   subtitle: { marginTop: 2 },
   statsRow: {

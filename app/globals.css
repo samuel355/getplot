@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 225 29% 97%;
     --foreground: 235 61% 11%;
 
     --card: 0 0% 100%;
@@ -18,23 +18,23 @@
     --primary: 235 61% 11%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 220 24% 95%;
+    --secondary-foreground: 245 56% 18%;
 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+    --muted: 220 24% 95%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 176 66% 51%;
+    --accent: 183 49% 60%;
     --accent-foreground: 235 61% 11%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 176 66% 51%;
+    --border: 220 18% 89%;
+    --input: 220 18% 89%;
+    --ring: 183 49% 60%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
   }
 
   .dark {
@@ -74,6 +74,15 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(circle at 8% 0%, rgba(104, 201, 205, 0.08), transparent 24rem),
+      radial-gradient(circle at 92% 12%, rgba(25, 19, 71, 0.05), transparent 28rem);
+    background-attachment: fixed;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: rgba(104, 201, 205, 0.35);
+    color: #191347;
   }
 }
 
@@ -90,12 +99,54 @@ body {
   overflow-x: hidden;
 }
 
+img,
+video,
+canvas {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  a,
+  span {
+    overflow-wrap: anywhere;
+  }
+}
+
 *::-webkit-scrollbar {
   @apply w-[5px] h-[5px];
 }
 
 *::-webkit-scrollbar-thumb {
-  @apply rounded bg-slate-400;
+  @apply rounded bg-slate-300;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400;
+}
+
+@layer components {
+  .surface-panel {
+    @apply rounded-2xl border border-slate-200/80 bg-white shadow-[0_12px_35px_rgba(25,19,71,0.07)];
+  }
+
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.16em] text-brand-teal;
+  }
 }
 
 *::-webkit-scrollbar-track {

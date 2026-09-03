@@ -13,9 +13,9 @@ export function Badge({ content, variant = "primary", style }: Props) {
   const getVariantStyle = () => {
     switch (variant) {
       case "primary":
-        return { backgroundColor: colors.primary };
+        return { backgroundColor: colors.primary + "14", borderColor: colors.primary + "24" };
       case "secondary":
-        return { backgroundColor: colors.primaryAccent };
+        return { backgroundColor: colors.primaryAccent + "20", borderColor: colors.primaryAccent + "35" };
       case "outline":
         return {
           backgroundColor: "transparent",
@@ -23,11 +23,11 @@ export function Badge({ content, variant = "primary", style }: Props) {
           borderColor: colors.border,
         };
       case "success":
-        return { backgroundColor: colors.success };
+        return { backgroundColor: colors.success + "18", borderColor: colors.success + "30" };
       case "warning":
-        return { backgroundColor: colors.warning };
+        return { backgroundColor: colors.warning + "18", borderColor: colors.warning + "30" };
       case "error":
-        return { backgroundColor: colors.error };
+        return { backgroundColor: colors.error + "18", borderColor: colors.error + "30" };
       default:
         return { backgroundColor: colors.primary };
     }
@@ -35,7 +35,11 @@ export function Badge({ content, variant = "primary", style }: Props) {
 
   const getTextStyle = () => {
     if (variant === "outline") return { color: colors.textSecondary };
-    return { color: colors.white };
+    if (variant === "secondary") return { color: colors.primary };
+    if (variant === "success") return { color: colors.success };
+    if (variant === "warning") return { color: colors.warning };
+    if (variant === "error") return { color: colors.error };
+    return { color: colors.primary };
   };
 
   return (
@@ -70,6 +74,7 @@ export function Badge({ content, variant = "primary", style }: Props) {
 const styles = StyleSheet.create({
   base: {
     alignSelf: "flex-start",
+    borderWidth: 1,
   },
   text: {
     textTransform: "uppercase",

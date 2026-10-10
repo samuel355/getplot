@@ -5,8 +5,16 @@ import { Alert, ScrollView, StyleSheet, Text, View, type TextStyle } from "react
 import { Button } from "../../src/components/ui/Button";
 import { Input } from "../../src/components/ui/Input";
 import { useTheme } from "../../src/constants/theme";
-import { formatGhs, formatStreet, updatePlotOnHold } from "../../src/lib/plotService";
-import { notifyPlotPurchaseSuccess } from "../../src/lib/notificationService";
+import {
+  formatGhs,
+  formatStreet,
+  updatePlotOnHold,
+  validateBuyerInfo,
+} from "../../src/lib/plotService";
+import {
+  notifyPlotCartSuccess,
+  sendPlotCartEmail,
+} from "../../src/lib/notificationService";
 import { useCartStore } from "../../src/stores/cartStore";
 import { Ionicons } from "@expo/vector-icons";
 import { formatCoordinatePlotSize } from "../../src/lib/plotGeometry";
@@ -55,14 +63,9 @@ export default function CheckoutScreen() {
   }
 
   const submitBankDepositRequest = async () => {
-    if (
-      !buyer.firstname ||
-      !buyer.lastname ||
-      !buyer.email ||
-      !buyer.phone ||
-      !buyer.residentialAddress
-    ) {
-      Alert.alert("Required Fields", "Please complete all buyer information fields.");
+    const validationError = validateBuyerInfo(buyer);
+    if (validationError) {
+      Alert.alert("Required Fields", validationError);
       return;
     }
 
@@ -75,29 +78,60 @@ export default function CheckoutScreen() {
       return;
     }
 
+    Alert.alert(
+      "Confirm purchase request",
+      [
+        `${plots.length} plot(s): ${plots.map((plot) => `Plot ${plot.properties?.Plot_No ?? "N/A"} at ${plot.siteName || "site"}`).join("; ")}`,
+        `Total amount due: ${formatGhs(total)}`,
+        `Client: ${buyer.firstname} ${buyer.lastname}`,
+        `Email: ${buyer.email}`,
+        `Phone: ${buyer.phone}`,
+        `Country: ${buyer.country}`,
+        `Address: ${buyer.residentialAddress}`,
+      ].join("\n"),
+      [
+        { text: "Review details", style: "cancel" },
+        { text: "Confirm and send", onPress: () => void submitConfirmedRequest() },
+      ],
+    );
+  };
+
+  const submitConfirmedRequest = async () => {
     setProcessing(true);
     try {
-      for (const plot of plots) {
+      const plotNotifications = plots.map((plot) => ({
+        plotNo: String(plot.properties?.Plot_No ?? "N/A"),
+        streetName: formatStreet(plot.properties?.Street_Nam),
+        siteName: plot.siteName || String(plot.properties?.Site || "Standard Development"),
+        plotSize: formatCoordinatePlotSize(plot),
+        amount: plot.plotTotalAmount || 0,
+      }));
+
+      await Promise.all(plots.map((plot) => {
         const buyerPayload = {
           ...buyer,
           plotTotalAmount: plot.plotTotalAmount || 0,
         };
+        return updatePlotOnHold(plot.table!, plot.id, buyerPayload);
+      }));
 
-        await updatePlotOnHold(plot.table!, plot.id, buyerPayload);
-
-        notifyPlotPurchaseSuccess({
-          phone: buyer.phone,
-          email: buyer.email,
-          firstname: buyer.firstname,
-          lastname: buyer.lastname,
-          plotNo: plot.properties?.Plot_No ?? "N/A",
-          streetName: formatStreet(plot.properties?.Street_Nam),
-          siteName: plot.siteName || String(plot.properties?.Site || "Standard Development"),
-          amount: plot.plotTotalAmount || 0,
-          isFullPayment: true,
-          areaAcres: formatCoordinatePlotSize(plot),
-        }).catch((err) => console.error("Notification background error:", err));
-      }
+      await sendPlotCartEmail({
+        email: buyer.email,
+        firstname: buyer.firstname,
+        lastname: buyer.lastname,
+        amount: total,
+        plots: plotNotifications,
+      });
+      void notifyPlotCartSuccess({
+        phone: buyer.phone,
+        email: buyer.email,
+        firstname: buyer.firstname,
+        lastname: buyer.lastname,
+        country: buyer.country,
+        residentialAddress: buyer.residentialAddress,
+        amount: total,
+        plots: plotNotifications,
+      });
 
       clearCart();
       router.replace({
@@ -266,6 +300,13 @@ export default function CheckoutScreen() {
             placeholder="024 XXX XXXX"
             value={buyer.phone}
             onChangeText={(v) => setBuyer({ ...buyer, phone: v })}
+            containerStyle={styles.inputSpacing}
+          />
+
+          <Input
+            label="Country"
+            value={buyer.country}
+            onChangeText={(v) => setBuyer({ ...buyer, country: v })}
             containerStyle={styles.inputSpacing}
           />
 

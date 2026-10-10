@@ -20,20 +20,26 @@ import {
   formatStreet,
 } from "../../src/lib/plotService";
 import { fetchMobileApi } from "../../src/lib/api";
-import { sendCompanyAlert } from "../../src/lib/notificationService";
+import {
+  sendCompanyAlert,
+  sendInterestConfirmation,
+} from "../../src/lib/notificationService";
 import type { PlotFeature } from "../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
 import { formatCoordinatePlotSize } from "../../src/lib/plotGeometry";
+import { getDevelopment } from "../../src/constants/developments";
 
 export default function ExpressInterestScreen() {
   const { colors, spacing, borderRadius, fontWeight, fontSize, isDark } = useTheme();
-  const { id, table, interestTable } = useLocalSearchParams<{
+  const { id, table, interestTable, slug } = useLocalSearchParams<{
     id: string;
     table: string;
     interestTable: string;
+    slug: string;
   }>();
   const { user } = useUser();
   const router = useRouter();
+  const siteName = getDevelopment(slug || "")?.title || "Standard Development";
 
   const [plot, setPlot] = useState<PlotFeature | null>(null);
   const [loadingPlot, setLoadingPlot] = useState(true);
@@ -60,10 +66,8 @@ export default function ExpressInterestScreen() {
     if (!form.firstname.trim()) return "Enter first name";
     if (!form.lastname.trim()) return "Enter last name";
     if (!form.email.trim()) return "Enter email address";
+    if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) return "Enter a valid email";
     if (!form.phone.trim()) return "Enter phone number";
-    if (form.phone.trim().length !== 10) return "Phone number must be 10 digits";
-    if (!form.message.trim()) return "Please add a message";
-    if (form.message.trim().length < 5) return "Message is too short";
     return null;
   };
 
@@ -76,39 +80,53 @@ export default function ExpressInterestScreen() {
 
     setSubmitting(true);
     try {
-      await submitPlotInterest(interestTable!, table!, id!, form);
+      await submitPlotInterest(interestTable!, table!, id!, {
+        ...form,
+        message: form.message.trim() || "No message provided",
+      }, siteName);
 
-      // Notify admin of interest via mobile API
-      try {
-        await fetchMobileApi("/api/receive-email", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            from: form.email,
-            fullname: `${form.firstname} ${form.lastname}`,
-            phone: form.phone,
-            subject: `Plot Interest — Plot ${plot?.properties?.Plot_No ?? ""}`,
-            message: `${form.message}\n\nPlot: ${plot?.properties?.Street_Nam ?? ""} | Amount: GHS ${plot?.plotTotalAmount ?? ""}`,
-          }),
-        });
-      } catch (mailErr) {
-        console.log("Interest email error:", mailErr);
-      }
+      await fetchMobileApi("/api/receive-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          from: form.email,
+          fullname: `${form.firstname} ${form.lastname}`,
+          phone: form.phone,
+          subject: `Plot Interest — Plot ${plot?.properties?.Plot_No ?? ""}`,
+          message: [
+            `Country: ${form.country || "N/A"}`,
+            `Plot: Plot No. ${plot?.properties?.Plot_No ?? id} at ${siteName}`,
+            `Street: ${formatStreet(plot?.properties?.Street_Nam) || "N/A"}`,
+            `Amount: ${formatGhs(plot?.plotTotalAmount || 0)}`,
+            `Size: ${formatCoordinatePlotSize(plot)}`,
+            `Message: ${form.message.trim() || "No message provided"}`,
+          ].join("\n"),
+        }),
+      });
 
-      sendCompanyAlert({
+      await sendInterestConfirmation({
+        phone: form.phone,
+        firstname: form.firstname,
+        plotNo: String(plot?.properties?.Plot_No ?? id),
+        siteName,
+      });
+
+      await sendCompanyAlert({
         subject: `New plot interest — Plot ${plot?.properties?.Plot_No ?? id}`,
         message: [
           "New plot interest",
           `Client: ${form.firstname} ${form.lastname}`,
           `Phone: ${form.phone}`,
           `Email: ${form.email}`,
+          `Country: ${form.country || "N/A"}`,
+          `Site: ${siteName}`,
           `Plot: ${plot?.properties?.Plot_No ?? id}`,
           `Street: ${formatStreet(plot?.properties?.Street_Nam) || "N/A"}`,
           `Amount: ${formatGhs(plot?.plotTotalAmount || 0)}`,
           `Size: ${formatCoordinatePlotSize(plot)}`,
-          `Message: ${form.message}`,
+          `Message: ${form.message.trim() || "No message provided"}`,
         ].join("\n"),
-      }).catch((alertErr) => console.log("Company interest alert error:", alertErr));
+      });
 
       Alert.alert(
         "Message Sent",
@@ -167,7 +185,7 @@ export default function ExpressInterestScreen() {
                 Plot {plot.properties?.Plot_No ?? "N/A"}
               </Text>
               <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.sm }]}>
-                {plot.properties?.Site ? String(plot.properties.Site) : "Standard Development"}
+                {siteName}
               </Text>
               {plot.properties?.Street_Nam ? (
                 <Text style={[styles.siteName, { color: colors.textMuted, fontSize: fontSize.xs }]}>
@@ -265,8 +283,9 @@ export default function ExpressInterestScreen() {
           />
 
           <Input
-            label="Message *"
+            label="Message"
             placeholder="I'm interested in this plot. Please provide more details."
+            hint="Optional"
             multiline
             numberOfLines={4}
             value={form.message}

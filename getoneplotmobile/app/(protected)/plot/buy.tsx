@@ -11,8 +11,12 @@ import {
   getPlotById,
   updatePlotOnHold,
   formatStreet,
+  validateBuyerInfo,
 } from "../../../src/lib/plotService";
-import { notifyPlotPurchaseSuccess } from "../../../src/lib/notificationService";
+import {
+  notifyPlotPurchaseSuccess,
+  sendPlotRequestEmail,
+} from "../../../src/lib/notificationService";
 import type { BuyerInfo, PlotFeature } from "../../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
 import { getDevelopment } from "../../../src/constants/developments";
@@ -51,41 +55,56 @@ export default function BuyPlotScreen() {
     });
   }, [id, table]);
 
-  const validate = () => {
-    if (!buyer.firstname.trim()) return "Enter first name";
-    if (!buyer.lastname.trim()) return "Enter last name";
-    if (!buyer.email.trim()) return "Enter email";
-    if (!buyer.phone.trim()) return "Enter phone";
-    if (!buyer.residentialAddress.trim()) return "Enter residential address";
-    if (!buyer.plotTotalAmount) return "Plot price not set. Please contact support.";
-    return null;
-  };
-
   const submitBankDepositRequest = async () => {
-    const err = validate();
+    const err = validateBuyerInfo(buyer) ||
+      (!buyer.plotTotalAmount ? "Plot price not set. Please contact support." : null);
     if (err) {
       Alert.alert("Required Fields", err);
       return;
     }
     if (!plot || !table || !id) return;
 
+    Alert.alert(
+      "Confirm purchase request",
+      [
+        `Plot ${plot.properties?.Plot_No ?? "N/A"}${formatStreet(plot.properties?.Street_Nam) ? ` · ${formatStreet(plot.properties?.Street_Nam)}` : ""}`,
+        siteName,
+        `Amount due: ${formatGhs(buyer.plotTotalAmount)}`,
+        `Client: ${buyer.firstname} ${buyer.lastname}`,
+        `Email: ${buyer.email}`,
+        `Phone: ${buyer.phone}`,
+        `Country: ${buyer.country}`,
+        `Address: ${buyer.residentialAddress}`,
+      ].join("\n"),
+      [
+        { text: "Review details", style: "cancel" },
+        { text: "Confirm and send", onPress: () => void submitConfirmedRequest() },
+      ],
+    );
+  };
+
+  const submitConfirmedRequest = async () => {
     setProcessing(true);
     try {
-      // Paystack is intentionally disabled. Buyers receive bank details and bring receipt to the office.
-      await updatePlotOnHold(table, id, buyer);
-
-      notifyPlotPurchaseSuccess({
+      const requestDetails = {
         phone: buyer.phone,
         email: buyer.email,
         firstname: buyer.firstname,
         lastname: buyer.lastname,
+        country: buyer.country,
+        residentialAddress: buyer.residentialAddress,
         plotNo: plot.properties?.Plot_No ?? "N/A",
         streetName: formatStreet(plot.properties?.Street_Nam),
         siteName: siteName,
         amount: buyer.plotTotalAmount,
         isFullPayment: true,
         areaAcres: formatCoordinatePlotSize(plot),
-      }).catch((err) => console.error("Notification background error:", err));
+      };
+
+      await sendPlotRequestEmail(requestDetails);
+      // Paystack is intentionally disabled. Buyers receive bank details and bring receipt to the office.
+      await updatePlotOnHold(table!, id!, buyer);
+      void notifyPlotPurchaseSuccess(requestDetails);
 
       setProcessing(false);
       router.replace({
@@ -284,6 +303,13 @@ export default function BuyPlotScreen() {
             placeholder="024 XXX XXXX"
             value={buyer.phone}
             onChangeText={(v) => setBuyer({ ...buyer, phone: v })}
+            containerStyle={styles.inputSpacing}
+          />
+
+          <Input
+            label="Country"
+            value={buyer.country}
+            onChangeText={(v) => setBuyer({ ...buyer, country: v })}
             containerStyle={styles.inputSpacing}
           />
 

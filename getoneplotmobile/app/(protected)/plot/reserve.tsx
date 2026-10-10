@@ -11,14 +11,18 @@ import {
   getPlotById,
   updatePlotOnHold,
   formatStreet,
+  validateBuyerInfo,
 } from "../../../src/lib/plotService";
-import { notifyPlotPurchaseSuccess } from "../../../src/lib/notificationService";
+import {
+  notifyPlotPurchaseSuccess,
+  sendPlotRequestEmail,
+} from "../../../src/lib/notificationService";
 import type { BuyerInfo, PlotFeature } from "../../../src/types/plot";
 import { Ionicons } from "@expo/vector-icons";
 import { getDevelopment } from "../../../src/constants/developments";
 import { formatCoordinatePlotSize } from "../../../src/lib/plotGeometry";
 
-const DEPOSIT_RATE = 0.1;
+const DEPOSIT_RATE = 0.25;
 
 export default function ReservePlotScreen() {
   const { colors, spacing, borderRadius, fontWeight, fontSize, isDark } = useTheme();
@@ -49,7 +53,7 @@ export default function ReservePlotScreen() {
     getPlotById(table, id).then((p) => {
       if (p) {
         const total = p.plotTotalAmount || 0;
-        const paid = Math.round(total * DEPOSIT_RATE);
+        const paid = Number((total * DEPOSIT_RATE).toFixed(2));
         setPlot(p);
         setBuyer((b) => ({
           ...b,
@@ -62,41 +66,64 @@ export default function ReservePlotScreen() {
     });
   }, [id, table]);
 
-  const validate = () => {
-    if (!buyer.firstname.trim()) return "Enter first name";
-    if (!buyer.lastname.trim()) return "Enter last name";
-    if (!buyer.email.trim()) return "Enter email";
-    if (!buyer.phone.trim()) return "Enter phone";
-    if (!buyer.residentialAddress.trim()) return "Enter residential address";
-    if (!buyer.paidAmount) return "Deposit amount not set.";
-    return null;
-  };
-
   const submitReservationRequest = async () => {
-    const err = validate();
+    const minimumDeposit = Number((buyer.plotTotalAmount * DEPOSIT_RATE).toFixed(2));
+    const err = validateBuyerInfo(buyer) ||
+      (!buyer.plotTotalAmount ? "Plot price not set. Please contact support." : null) ||
+      (!Number.isFinite(buyer.paidAmount) || buyer.paidAmount == null || buyer.paidAmount < minimumDeposit
+        ? `Minimum deposit is ${formatGhs(minimumDeposit)}`
+        : null) ||
+      (buyer.paidAmount > buyer.plotTotalAmount
+        ? "Deposit cannot exceed plot amount"
+        : null);
     if (err) {
       Alert.alert("Required Fields", err);
       return;
     }
     if (!plot || !table || !id) return;
 
+    Alert.alert(
+      "Confirm reservation request",
+      [
+        `Plot ${plot.properties?.Plot_No ?? "N/A"}${formatStreet(plot.properties?.Street_Nam) ? ` · ${formatStreet(plot.properties?.Street_Nam)}` : ""}`,
+        siteName,
+        `Full price: ${formatGhs(buyer.plotTotalAmount)}`,
+        `Deposit required: ${formatGhs(buyer.paidAmount || 0)}`,
+        `Client: ${buyer.firstname} ${buyer.lastname}`,
+        `Email: ${buyer.email}`,
+        `Phone: ${buyer.phone}`,
+        `Country: ${buyer.country}`,
+        `Address: ${buyer.residentialAddress}`,
+      ].join("\n"),
+      [
+        { text: "Review details", style: "cancel" },
+        { text: "Confirm and send", onPress: () => void submitConfirmedRequest() },
+      ],
+    );
+  };
+
+  const submitConfirmedRequest = async () => {
     setProcessing(true);
     try {
-      // Paystack is intentionally disabled. Buyers receive bank details and bring receipt to the office.
-      await updatePlotOnHold(table, id, buyer);
-
-      notifyPlotPurchaseSuccess({
+      const requestDetails = {
         phone: buyer.phone,
         email: buyer.email,
         firstname: buyer.firstname,
         lastname: buyer.lastname,
+        country: buyer.country,
+        residentialAddress: buyer.residentialAddress,
         plotNo: plot.properties?.Plot_No ?? "N/A",
         streetName: formatStreet(plot.properties?.Street_Nam),
         siteName: siteName,
         amount: buyer.paidAmount || 0,
         isFullPayment: false,
         areaAcres: formatCoordinatePlotSize(plot),
-      }).catch((err) => console.error("Notification background error:", err));
+      };
+
+      await sendPlotRequestEmail(requestDetails);
+      // Paystack is intentionally disabled. Buyers receive bank details and bring receipt to the office.
+      await updatePlotOnHold(table!, id!, buyer);
+      void notifyPlotPurchaseSuccess(requestDetails);
 
       setProcessing(false);
       router.replace({
@@ -258,7 +285,7 @@ export default function ReservePlotScreen() {
               ]}
             >
               <Text style={[styles.totalLabel, { color: colors.primary, fontWeight: "800" }]}>
-                Required Deposit (10%)
+                Chosen Deposit
               </Text>
               <Text
                 style={[
@@ -274,6 +301,21 @@ export default function ReservePlotScreen() {
               </Text>
             </View>
           </View>
+          <Input
+            label={`Initial Deposit (GHS) — minimum ${formatGhs(Number((buyer.plotTotalAmount * DEPOSIT_RATE).toFixed(2)))}`}
+            keyboardType="decimal-pad"
+            value={String(buyer.paidAmount ?? "")}
+            onChangeText={(value) => {
+              const parsedAmount = value.trim() ? Number(value) : 0;
+              const paidAmount = Number.isFinite(parsedAmount) ? parsedAmount : 0;
+              setBuyer((current) => ({
+                ...current,
+                paidAmount,
+                remainingAmount: Math.max(current.plotTotalAmount - paidAmount, 0),
+              }));
+            }}
+            containerStyle={{ marginTop: spacing.md }}
+          />
         </View>
 
         {/* Reserver Form */}
@@ -326,6 +368,13 @@ export default function ReservePlotScreen() {
             placeholder="024 XXX XXXX"
             value={buyer.phone}
             onChangeText={(v) => setBuyer({ ...buyer, phone: v })}
+            containerStyle={styles.inputSpacing}
+          />
+
+          <Input
+            label="Country"
+            value={buyer.country}
+            onChangeText={(v) => setBuyer({ ...buyer, country: v })}
             containerStyle={styles.inputSpacing}
           />
 

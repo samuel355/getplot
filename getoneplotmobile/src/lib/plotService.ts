@@ -59,6 +59,21 @@ export async function updatePlotOnHold(table: string, plotId: string, buyer: Buy
   return res;
 }
 
+export function validateBuyerInfo(buyer: Pick<
+  BuyerInfo,
+  "firstname" | "lastname" | "email" | "phone" | "country" | "residentialAddress"
+>): string | null {
+  if (!buyer.firstname.trim()) return "Enter first name";
+  if (!buyer.lastname.trim()) return "Enter last name";
+  if (!buyer.email.trim()) return "Enter email";
+  if (!/^\S+@\S+\.\S+$/.test(buyer.email.trim())) return "Enter a valid email";
+  if (!buyer.phone.trim()) return "Enter phone";
+  if (!/^\d{10}$/.test(buyer.phone.trim())) return "Phone must be 10 digits";
+  if (!buyer.country.trim()) return "Enter country";
+  if (!buyer.residentialAddress.trim()) return "Enter residential address";
+  return null;
+}
+
 export async function submitPlotInterest(
   interestTable: string,
   plotTable: string,
@@ -71,6 +86,7 @@ export async function submitPlotInterest(
     country: string;
     message: string;
   },
+  siteName: string,
 ) {
   const { data: plotRows } = await supabase.from(plotTable).select("*").eq("id", plotId);
   const plot = plotRows?.[0];
@@ -86,7 +102,7 @@ export async function submitPlotInterest(
       country: customer.country,
       message: customer.message,
       plot_number: plot.properties?.Plot_No,
-      plot_name: plot.properties?.Street_Nam,
+      plot_name: siteName,
       plot_amount: plot.plotTotalAmount,
       plot_details: plot, // Keeping full object for mobile app compatibility
     },

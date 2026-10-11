@@ -1,5 +1,5 @@
 import { PLOT_STATUS } from "../constants/plotStatus";
-import type { PlotFeature } from "../types/plot";
+import type { PlotFeature, PlotProperties } from "../types/plot";
 
 export type MapBounds = {
   south: number;
@@ -42,35 +42,30 @@ export function normalizePlot(raw: Record<string, unknown>): PlotFeature | null 
 
 /** Extract outer ring coordinates from Polygon / MultiPolygon GeoJSON. */
 export function getPolygonRing(plot: PlotFeature): LatLng[] {
-  const geometry = plot.geometry;
-  const coords = geometry?.coordinates;
-  if (!coords?.length) return [];
+  const coords: unknown = plot.geometry?.coordinates;
+  if (!Array.isArray(coords) || !Array.isArray(coords[0])) return [];
 
-  // MultiPolygon: coordinates[polygonIndex][ringIndex][pointIndex]
-  if (Array.isArray(coords[0]) && Array.isArray(coords[0][0]) && Array.isArray(coords[0][0][0])) {
-    const ring = coords[0][0] as number[][];
-    return ringToLatLng(ring);
-  }
-
-  // Polygon: coordinates[ringIndex][pointIndex] — Supabase often omits geometry.type
-  const ring = coords[0] as number[][];
-  if (!Array.isArray(ring?.[0])) return [];
-  // Point ring: [[lng, lat], ...]
-  if (typeof ring[0][0] === "number") {
-    return ringToLatLng(ring);
-  }
-
-  return [];
+  const firstLevel = coords[0];
+  const firstPoint = Array.isArray(firstLevel[0]) ? firstLevel[0][0] : null;
+  // MultiPolygon coordinates add a polygon level; Supabase may omit geometry.type.
+  const ring = Array.isArray(firstPoint) ? firstLevel[0] : firstLevel;
+  return Array.isArray(ring) ? ringToLatLng(ring) : [];
 }
 
-function ringToLatLng(ring: number[][]): LatLng[] {
+function ringToLatLng(ring: unknown[]): LatLng[] {
   return ring
-    .filter((c) => Array.isArray(c) && c.length >= 2)
-    .map(([lng, lat]) => ({
-      latitude: Number(lat),
-      longitude: Number(lng),
+    .filter((coordinate): coordinate is unknown[] => Array.isArray(coordinate) && coordinate.length >= 2)
+    .map((coordinate) => ({
+      latitude: Number(coordinate[1]),
+      longitude: Number(coordinate[0]),
     }))
-    .filter((c) => !Number.isNaN(c.latitude) && !Number.isNaN(c.longitude));
+    .filter(
+      (c) =>
+        Number.isFinite(c.latitude) &&
+        Number.isFinite(c.longitude) &&
+        Math.abs(c.latitude) <= 90 &&
+        Math.abs(c.longitude) <= 180,
+    );
 }
 
 export const calculateBoundingBox = (plot: PlotFeature) => {

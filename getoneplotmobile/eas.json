@@ -5,6 +5,7 @@
   },
   "build": {
     "development": {
+      "node": "24.16.0",
       "developmentClient": true,
       "distribution": "internal",
       "env": {
@@ -13,6 +14,7 @@
       }
     },
     "preview": {
+      "node": "24.16.0",
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_APP_URL": "https://getoneplot.com",
@@ -20,6 +22,7 @@
       }
     },
     "production": {
+      "node": "24.16.0",
       "autoIncrement": true,
       "env": {
         "EXPO_PUBLIC_APP_URL": "https://getoneplot.com",
@@ -28,6 +31,13 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "track": "internal"
+      },
+      "ios": {
+        "ascAppId": "6789732741"
+      }
+    }
   }
 }

@@ -25,6 +25,60 @@ type Props = {
 };
 
 const googleMapsKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
+const MAX_RENDERED_PLOTS = 400;
+const MAX_VISIBLE_PLOT_NUMBERS = 150;
+const PLOT_NUMBER_ZOOM_THRESHOLD = 0.0021;
+
+type PreparedPlot = {
+  plot: PlotFeature;
+  coordinates: ReturnType<typeof getPolygonRing>;
+  center: { latitude: number; longitude: number };
+  bounds: { minLat: number; maxLat: number; minLng: number; maxLng: number };
+};
+
+function preparePlot(plot: PlotFeature): PreparedPlot | null {
+  const ring = getPolygonRing(plot);
+  if (ring.length < 3) return null;
+  const center = ring.reduce(
+    (center, point) => ({
+      latitude: center.latitude + point.latitude / ring.length,
+      longitude: center.longitude + point.longitude / ring.length,
+    }),
+    { latitude: 0, longitude: 0 },
+  );
+  const bounds = ring.reduce(
+    (current, point) => ({
+      minLat: Math.min(current.minLat, point.latitude),
+      maxLat: Math.max(current.maxLat, point.latitude),
+      minLng: Math.min(current.minLng, point.longitude),
+      maxLng: Math.max(current.maxLng, point.longitude),
+    }),
+    { minLat: Infinity, maxLat: -Infinity, minLng: Infinity, maxLng: -Infinity },
+  );
+  return { plot, coordinates: ring, center, bounds };
+}
+
+function getVisiblePlots(plots: PreparedPlot[], region: Region) {
+  const latitudePadding = region.latitudeDelta * 0.6;
+  const longitudePadding = region.longitudeDelta * 0.6;
+  return plots
+    .filter(
+      ({ bounds }) =>
+        bounds.maxLat >= region.latitude - latitudePadding &&
+        bounds.minLat <= region.latitude + latitudePadding &&
+        bounds.maxLng >= region.longitude - longitudePadding &&
+        bounds.minLng <= region.longitude + longitudePadding,
+    )
+    .map((prepared) => ({
+      ...prepared,
+      distance: Math.hypot(
+        (prepared.center.latitude - region.latitude) / region.latitudeDelta,
+        (prepared.center.longitude - region.longitude) / region.longitudeDelta,
+      ),
+    }))
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, MAX_RENDERED_PLOTS);
+}
 
 export function canUseGoogleProvider() {
   if (Platform.OS === "web" || !googleMapsKey) return false;
@@ -74,32 +128,34 @@ function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh 
   const useGoogle = canUseGoogleProvider();
   const [mapReady, setMapReady] = useState(false);
   const [mapType, setMapType] = useState<MapTypeOption>(useGoogle ? "hybrid" : "satellite");
-  const [showPlotNumbers, setShowPlotNumbers] = useState(false);
-  const regionRef = useRef<Region>(regionFromPlots(plots, development));
   const insets = useSafeAreaInsets();
 
   const initialRegion = useMemo(() => regionFromPlots(plots, development), [plots, development]);
+  const [region, setRegion] = useState(initialRegion);
+  const regionRef = useRef(initialRegion);
+  const preparedPlots = useMemo(
+    () => plots.map(preparePlot).filter((plot): plot is PreparedPlot => plot !== null),
+    [plots],
+  );
+  const visiblePlots = useMemo(
+    () => getVisiblePlots(preparedPlots, region),
+    [preparedPlots, region],
+  );
 
   useEffect(() => {
     if (plots.length > 0) {
-      regionRef.current = regionFromPlots(plots, development);
+      const next = regionFromPlots(plots, development);
+      regionRef.current = next;
+      setRegion(next);
     }
   }, [plots, development]);
 
   const fitAll = useCallback(() => {
     if (!plots.length || !mapRef.current) return;
-    const coords = plots.flatMap((p) => getPolygonRing(p));
-    if (coords.length < 1) return;
-    try {
-      mapRef.current.fitToCoordinates(coords, {
-        edgePadding: { top: 120, right: 56, bottom: 180, left: 56 },
-        animated: true,
-      });
-    } catch {
-      const next = regionFromPlots(plots, development);
-      regionRef.current = next;
-      mapRef.current.animateToRegion(next, 500);
-    }
+    const next = regionFromPlots(plots, development);
+    regionRef.current = next;
+    setRegion(next);
+    mapRef.current.animateToRegion(next, 500);
   }, [plots, development]);
 
   useEffect(() => {
@@ -116,12 +172,14 @@ function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh 
   const zoomIn = () => {
     const next = zoomRegion(regionRef.current, 0.5);
     regionRef.current = next;
+    setRegion(next);
     mapRef.current?.animateToRegion(next, 250);
   };
 
   const zoomOut = () => {
     const next = zoomRegion(regionRef.current, 2);
     regionRef.current = next;
+    setRegion(next);
     mapRef.current?.animateToRegion(next, 250);
   };
 
@@ -148,7 +206,11 @@ function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh 
           style={[styles.countBadge, { top: (insets.top ?? spacing.md) + 8 }]}
           pointerEvents="none"
         >
-          <Text style={styles.countText}>{plots.length} plots</Text>
+          <Text style={styles.countText}>
+            {visiblePlots.length < preparedPlots.length
+              ? `Showing ${visiblePlots.length} of ${preparedPlots.length} plots · zoom or pan to explore`
+              : `${preparedPlots.length} plots`}
+          </Text>
         </View>
       ) : null}
 
@@ -160,7 +222,7 @@ function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh 
         initialRegion={initialRegion}
         onRegionChangeComplete={(r) => {
           regionRef.current = r;
-          setShowPlotNumbers(r.latitudeDelta <= 0.0021);
+          setRegion(r);
         }}
         showsUserLocation={false}
         showsCompass
@@ -170,27 +232,28 @@ function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh 
           fitAll();
         }}
       >
-        {plots.map((plot) => (
-          <PlotPolygon key={plot.id} plot={plot} onPress={onPlotPress} />
+        {visiblePlots.map((prepared) => (
+          <PlotPolygon
+            key={prepared.plot.id}
+            plot={prepared.plot}
+            coordinates={prepared.coordinates}
+            onPress={onPlotPress}
+          />
         ))}
-        {showPlotNumbers ? plots.map((plot) => {
-          const ring = getPolygonRing(plot);
-          if (ring.length < 3) return null;
-          const center = ring.reduce(
-            (sum, point) => ({
-              latitude: sum.latitude + point.latitude / ring.length,
-              longitude: sum.longitude + point.longitude / ring.length,
-            }),
-            { latitude: 0, longitude: 0 },
-          );
-          return (
-            <Marker key={`number-${plot.id}`} coordinate={center} onPress={() => onPlotPress(plot)} tracksViewChanges={false}>
-              <View style={styles.plotNumberBadge}>
-                <Text style={styles.plotNumberText}>{plot.properties?.Plot_No ?? plot.id}</Text>
-              </View>
-            </Marker>
-          );
-        }) : null}
+        {region.latitudeDelta <= PLOT_NUMBER_ZOOM_THRESHOLD
+          ? visiblePlots.slice(0, MAX_VISIBLE_PLOT_NUMBERS).map(({ plot, center }) => (
+              <Marker
+                key={`number-${plot.id}`}
+                coordinate={center}
+                onPress={() => onPlotPress(plot)}
+                tracksViewChanges={false}
+              >
+                <View style={styles.plotNumberBadge}>
+                  <Text style={styles.plotNumberText}>{plot.properties?.Plot_No ?? plot.id}</Text>
+                </View>
+              </Marker>
+            ))
+          : null}
       </MapView>
 
       {!loading && plots.length > 0 ? (
@@ -215,21 +278,21 @@ export const PlotMap = memo(PlotMapComponent);
 // stable per-plot onPress instead of a new inline closure on every PlotMap render.
 const PlotPolygon = memo(function PlotPolygon({
   plot,
+  coordinates,
   onPress,
 }: {
   plot: PlotFeature;
+  coordinates: NonNullable<ReturnType<typeof preparePlot>>["coordinates"];
   onPress: (plot: PlotFeature) => void;
 }) {
   const handlePress = useCallback(() => onPress(plot), [onPress, plot]);
-  const coords = getPolygonRing(plot);
-  if (coords.length < 3) return null;
 
   const amount = plot.plotTotalAmount || 0;
   const status = plot.status ?? null;
 
   return (
     <Polygon
-      coordinates={coords}
+      coordinates={coordinates}
       fillColor={getPlotFillColor(status, amount)}
       strokeColor={getPlotStrokeColor(status, amount)}
       strokeWidth={2.5}

@@ -215,8 +215,8 @@ export default function HomeScreen() {
 
         <View style={styles.heroActions}>
           <Button
-            title="Browse Marketplace"
-            onPress={() => router.push("/(tabs)/marketplace")}
+            title="Browse Available Lands"
+            onPress={() => router.push("/(tabs)/sites")}
             style={{ flex: 1 }}
           />
           <Pressable

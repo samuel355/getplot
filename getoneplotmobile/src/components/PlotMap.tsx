@@ -25,8 +25,8 @@ type Props = {
 };
 
 const googleMapsKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
-const MAX_RENDERED_PLOTS = 400;
-const MAX_VISIBLE_PLOT_NUMBERS = 150;
+const MAX_RENDERED_PLOTS = 80;
+const MAX_VISIBLE_PLOT_NUMBERS = 40;
 const PLOT_NUMBER_ZOOM_THRESHOLD = 0.0021;
 
 type PreparedPlot = {
@@ -125,7 +125,8 @@ function zoomRegion(region: Region, factor: number): Region {
 
 function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh }: Props) {
   const mapRef = useRef<MapView>(null);
-  const useGoogle = canUseGoogleProvider();
+  // Google Maps iOS polygons segfault in GMSPolygon with recycled views; Apple Maps is stable on iOS.
+  const useGoogle = canUseGoogleProvider() && Platform.OS !== "ios";
   const [mapReady, setMapReady] = useState(false);
   const [mapType, setMapType] = useState<MapTypeOption>(useGoogle ? "hybrid" : "satellite");
   const insets = useSafeAreaInsets();

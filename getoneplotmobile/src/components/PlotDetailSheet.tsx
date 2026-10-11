@@ -190,7 +190,7 @@ export function PlotDetailSheet({
   const insets = useSafeAreaInsets();
 
   const props = plot?.properties || {};
-  const detailRows = useMemo(() => buildDetailRows(plot), [plot]);
+  const detailRows = useMemo(() => (plot ? buildDetailRows(plot) : []), [plot]);
 
   const [favorite, setFavorite] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);

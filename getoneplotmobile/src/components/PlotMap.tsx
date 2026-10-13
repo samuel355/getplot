@@ -25,7 +25,8 @@ type Props = {
 };
 
 const googleMapsKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
-const MAX_RENDERED_PLOTS = 80;
+const MAX_RENDERED_PLOTS = 400;
+const MAX_RENDERED_PLOTS_OVERVIEW = 3000;
 const MAX_VISIBLE_PLOT_NUMBERS = 40;
 const PLOT_NUMBER_ZOOM_THRESHOLD = 0.0021;
 
@@ -58,7 +59,8 @@ function preparePlot(plot: PlotFeature): PreparedPlot | null {
   return { plot, coordinates: ring, center, bounds };
 }
 
-function getVisiblePlots(plots: PreparedPlot[], region: Region) {
+function getVisiblePlots(plots: PreparedPlot[], region: Region, overview: boolean) {
+  if (overview) return plots.slice(0, MAX_RENDERED_PLOTS_OVERVIEW);
   const latitudePadding = region.latitudeDelta * 0.6;
   const longitudePadding = region.longitudeDelta * 0.6;
   return plots
@@ -139,8 +141,14 @@ function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh 
     [plots],
   );
   const visiblePlots = useMemo(
-    () => getVisiblePlots(preparedPlots, region),
-    [preparedPlots, region],
+    // Show every plot at the initial fit-all zoom; cull to the viewport once zoomed in.
+    () =>
+      getVisiblePlots(
+        preparedPlots,
+        region,
+        region.latitudeDelta >= initialRegion.latitudeDelta * 0.6,
+      ),
+    [preparedPlots, region, initialRegion],
   );
 
   useEffect(() => {
@@ -188,8 +196,7 @@ function PlotMapComponent({ development, plots, loading, onPlotPress, onRefresh 
     <View style={styles.container}>
       {loading && plots.length === 0 ? (
         <View style={styles.loadingOverlay}>
-          <Loading fullScreen={false} />
-          <Text style={styles.loadingText}>Loading plots…</Text>
+          <Loading fullScreen={false} label="Loading plots" />
         </View>
       ) : null}
 
@@ -296,7 +303,7 @@ const PlotPolygon = memo(function PlotPolygon({
       coordinates={coordinates}
       fillColor={getPlotFillColor(status, amount)}
       strokeColor={getPlotStrokeColor(status, amount)}
-      strokeWidth={2.5}
+      strokeWidth={1}
       tappable
       onPress={handlePress}
     />

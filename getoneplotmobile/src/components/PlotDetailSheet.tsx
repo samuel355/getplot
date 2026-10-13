@@ -442,7 +442,7 @@ export function PlotDetailSheet({
               <Animated.View
                 style={[
                   styles.sheet,
-                  { paddingBottom: 20 + (insets.bottom ?? 0), transform: [{ translateY }] },
+                  { paddingBottom: adminAction ? 20 + (insets.bottom ?? 0) : 0, transform: [{ translateY }] },
                 ]}
               >
                 <View style={styles.handleRow}>
@@ -462,8 +462,9 @@ export function PlotDetailSheet({
                 </View>
 
                 <ScrollView
+                  style={{ flexShrink: 1 }}
                   showsVerticalScrollIndicator={false}
-                  contentContainerStyle={{ paddingBottom: adminAction ? 60 : 140 }}
+                  contentContainerStyle={{ paddingBottom: spacing.lg }}
                   keyboardShouldPersistTaps="handled"
                 >
                   <View style={styles.header}>
@@ -882,7 +883,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    maxHeight: "82%",
+    maxHeight: "92%",
     overflow: "hidden",
   },
   handleRow: {
@@ -1033,10 +1034,6 @@ const styles = StyleSheet.create({
   cartBtnText: { color: colors.white, fontWeight: "700", fontSize: fontSize.sm },
 
   footer: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.sm,
     backgroundColor: colors.white,
